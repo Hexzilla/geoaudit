@@ -1,5 +1,69 @@
 <div class="map-container">
   <div class="map-frame">
     <div id="map"></div>
+
+    <div id="sidebar" class="leaflet-sidebar collapsed">
+      <!-- Nav tabs -->
+      <div class="leaflet-sidebar-tabs">
+        <ul role="tablist">
+          <!-- top aligned tabs -->
+          <li>
+            <a href="#home" role="tab">
+                <fa-icon [icon]="faBars"></fa-icon>
+            </a>
+          </li>
+          <li class="disabled">
+            <a href="#messages" role="tab">
+                <fa-icon [icon]="faEnvelope"></fa-icon>
+            </a>
+          </li>
+          <li>
+            <a href="#profile" role="tab">
+                <fa-icon [icon]="faCoffee"></fa-icon
+            ></a>
+          </li>
+        </ul>
+
+        <ul role="tablist">
+          <!-- bottom aligned tabs -->
+          <li>
+            <a href="#settings" role="tab">
+                <fa-icon [icon]="faCog"></fa-icon>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Tab panes -->
+      <div class="leaflet-sidebar-content">
+        <div class="leaflet-sidebar-pane" id="home">
+          <h1 class="leaflet-sidebar-header">
+            sidebar-v2
+            <div class="leaflet-sidebar-close">
+              <fa-icon [icon]="faCaretLeft"></fa-icon>
+            </div>
+          </h1>
+          <p>A responsive sidebar for mapping libraries</p>
+        </div>
+
+        <div class="leaflet-sidebar-pane" id="messages">
+          <h1 class="leaflet-sidebar-header">
+            Messages
+            <div class="leaflet-sidebar-close">
+                <fa-icon [icon]="faCaretLeft"></fa-icon>
+            </div>
+          </h1>
+        </div>
+
+        <div class="leaflet-sidebar-pane" id="profile">
+          <h1 class="leaflet-sidebar-header">
+            Profile
+            <div class="leaflet-sidebar-close">
+                <fa-icon [icon]="faCaretLeft"></fa-icon>
+            </div>
+          </h1>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
