@@ -51,7 +51,10 @@
               "apps/geoaudit/src/favicon.ico",
               "apps/geoaudit/src/assets"
             ],
-            "styles": ["apps/geoaudit/src/styles.scss"],
+            "styles": [
+              "./node_modules/leaflet/dist/leaflet.css",
+              "apps/geoaudit/src/styles.scss"
+            ],
             "scripts": []
           },
           "configurations": {
