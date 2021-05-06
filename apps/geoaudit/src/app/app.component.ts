@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { Auth } from './models';
+import { AuthService } from './services';
 
 @Component({
   selector: 'geoaudit-root',
@@ -6,5 +8,13 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  title = 'geoaudit';
+  auth: Auth;
+
+  constructor(private authService: AuthService) {
+      this.authService.auth.subscribe(x => this.auth = x);
+  }
+
+  logout() {
+      this.authService.logout();
+  }
 }
