@@ -20,6 +20,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { ErrorInterceptor, JwtInterceptor } from './helpers';
 import { AlertComponent } from './components/alert/alert.component';
 import { HomeComponent } from './home/home.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { HomeComponent } from './home/home.component';
     HttpClientModule,
     FontAwesomeModule,
     AppRoutingModule,
+    BrowserAnimationsModule,
   ],
   providers: [
     MarkerService,
