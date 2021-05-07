@@ -5,13 +5,10 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 // Components
 import { AppComponent } from './app.component';
-import { MapComponent } from './map/map.component';
 
 import { MarkerService } from './services/marker.service';
 import { PopupService } from './services/popup.service';
 import { ShapeService } from './services/shape.service';
-
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 // Routing
 import { AppRoutingModule } from './app-routing.module';
@@ -26,14 +23,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
   declarations: [
     AppComponent,
     AlertComponent,
-    HomeComponent, 
-    MapComponent
   ],
   imports: [
     BrowserModule,
     ReactiveFormsModule,
     HttpClientModule,
-    FontAwesomeModule,
     AppRoutingModule,
     BrowserAnimationsModule,
   ],
