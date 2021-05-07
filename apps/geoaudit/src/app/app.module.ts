@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import {MatSnackBarModule} from '@angular/material/snack-bar'; 
 
 // Components
 import { AppComponent } from './app.component';
@@ -30,6 +31,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     HttpClientModule,
     AppRoutingModule,
     BrowserAnimationsModule,
+
+    // Material
+    MatSnackBarModule
   ],
   providers: [
     MarkerService,

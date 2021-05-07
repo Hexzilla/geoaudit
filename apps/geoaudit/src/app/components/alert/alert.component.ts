@@ -1,7 +1,12 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { Router, NavigationStart } from '@angular/router';
 import { Subscription } from 'rxjs';
-
+import {
+    MatSnackBar,
+    MatSnackBarHorizontalPosition,
+    MatSnackBarVerticalPosition,
+  } from '@angular/material/snack-bar';
+  
 import { Alert, AlertType } from '../../models';
 import { AlertService } from '../../services';
 
@@ -11,6 +16,9 @@ import { AlertService } from '../../services';
   styleUrls: ['./alert.component.scss']
 })
 export class AlertComponent implements OnInit, OnDestroy {
+    horizontalPosition: MatSnackBarHorizontalPosition = 'right';
+    verticalPosition: MatSnackBarVerticalPosition = 'top';
+
   @Input() id = 'default-alert';
   @Input() fade = true;
 
@@ -18,7 +26,7 @@ export class AlertComponent implements OnInit, OnDestroy {
   alertSubscription: Subscription;
   routeSubscription: Subscription;
 
-  constructor(private router: Router, private alertService: AlertService) { }
+  constructor(private router: Router, private alertService: AlertService, private _snackBar: MatSnackBar) { }
 
   ngOnInit() {
       // subscribe to new alert notifications
@@ -36,6 +44,12 @@ export class AlertComponent implements OnInit, OnDestroy {
 
               // add alert to array
               this.alerts.push(alert);
+
+              this._snackBar.open(alert.message, 'Dismiss', {
+                horizontalPosition: this.horizontalPosition,
+                verticalPosition: this.verticalPosition,
+                duration: 5000
+              });
 
               // auto close alert if required
               if (alert.autoClose) {
