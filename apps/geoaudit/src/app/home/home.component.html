@@ -78,12 +78,14 @@
             </div> -->
           </h1>
 
-          <router-outlet></router-outlet>
+          <div class="leaflet-sidebar-router-outlet">
+            <router-outlet></router-outlet>
 
-          <p>A page where we display a summary and overview of all things.</p>
-          <a routerLink="/home/abc" role="tab">
-            <fa-icon [icon]="faListOl"></fa-icon>
-          </a>
+            <p>A page where we display a summary and overview of all things.</p>
+            <a routerLink="/home/abc" role="tab">
+              <fa-icon [icon]="faListOl"></fa-icon>
+            </a>
+          </div>
         </div>
 
         <div class="leaflet-sidebar-pane" id="messages">

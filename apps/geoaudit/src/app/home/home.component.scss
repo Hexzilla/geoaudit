@@ -18,8 +18,17 @@
 
 .leaflet-sidebar-header-a {
   color: inherit;
+  text-decoration: none;
 }
 
 .leaflet-sidebar-right .leaflet-sidebar-header {
   padding-left: 20px;
+}
+
+.leaflet-sidebar-pane {
+  padding: 0px;
+}
+
+.leaflet-sidebar-router-outlet {
+  padding: 0px 20px;
 }
