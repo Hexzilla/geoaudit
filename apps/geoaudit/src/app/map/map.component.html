@@ -9,23 +9,53 @@
           <!-- top aligned tabs -->
           <li>
             <a href="#home" role="tab">
-                <fa-icon [icon]="faBars"></fa-icon>
+                <fa-icon [icon]="faColumns"></fa-icon>
             </a>
           </li>
-          <li class="disabled">
+          <li>
             <a href="#messages" role="tab">
-                <fa-icon [icon]="faEnvelope"></fa-icon>
+                <fa-icon [icon]="faListOl"></fa-icon>
             </a>
           </li>
           <li>
             <a href="#profile" role="tab">
-                <fa-icon [icon]="faCoffee"></fa-icon
+                <fa-icon [icon]="faBriefcase"></fa-icon
             ></a>
+          </li>
+          <li>
+            <a href="#messages" role="tab">
+                <fa-icon [icon]="faChartPie"></fa-icon>
+            </a>
+          </li>
+          <li>
+            <a href="#messages" role="tab">
+                <fa-icon [icon]="faHistory"></fa-icon>
+            </a>
+          </li>
+          <li>
+            <a href="#messages" role="tab">
+                <fa-icon [icon]="faThumbsUp"></fa-icon>
+            </a>
           </li>
         </ul>
 
         <ul role="tablist">
           <!-- bottom aligned tabs -->
+          <li>
+            <a href="#settings" role="tab">
+                <fa-icon [icon]="faCalendar"></fa-icon>
+            </a>
+          </li>
+          <li>
+            <a href="#settings" role="tab">
+                <fa-icon [icon]="faBell"></fa-icon>
+            </a>
+          </li>
+          <li>
+            <a href="#settings" role="tab">
+                <fa-icon [icon]="faUser"></fa-icon>
+            </a>
+          </li>
           <li>
             <a href="#settings" role="tab">
                 <fa-icon [icon]="faCog"></fa-icon>
@@ -38,12 +68,12 @@
       <div class="leaflet-sidebar-content">
         <div class="leaflet-sidebar-pane" id="home">
           <h1 class="leaflet-sidebar-header">
-            sidebar-v2
+            Summary
             <div class="leaflet-sidebar-close">
               <fa-icon [icon]="faCaretLeft"></fa-icon>
             </div>
           </h1>
-          <p>A responsive sidebar for mapping libraries</p>
+          <p>A page where we display a summary and overview of all things.</p>
         </div>
 
         <div class="leaflet-sidebar-pane" id="messages">

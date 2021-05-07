@@ -2,7 +2,7 @@ import { Component, AfterViewInit } from '@angular/core';
 import L from 'leaflet';
 import 'leaflet-sidebar-v2';
 
-import { faBars, faCaretLeft, faCoffee, faEnvelope, faCog } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faBell, faBriefcase, faCalendar, faCaretLeft, faChartPie, faCoffee, faColumns, faEnvelope, faCog, faHistory, faListOl, faUser, faThumbsUp } from '@fortawesome/free-solid-svg-icons';
 
 import { MarkerService } from '../services/marker.service';
 import { ShapeService } from '../services/shape.service';
@@ -30,10 +30,19 @@ L.Marker.prototype.options.icon = iconDefault;
 export class MapComponent implements AfterViewInit {
 
   faBars = faBars;
+  faBell = faBell;
+  faBriefcase = faBriefcase;
+  faCalendar = faCalendar;
   faCaretLeft = faCaretLeft;
+  faChartPie = faChartPie;
   faCoffee = faCoffee;
   faCog = faCog;
+  faColumns = faColumns;
   faEnvelope = faEnvelope;
+  faHistory = faHistory;
+  faListOl = faListOl;
+  faThumbsUp = faThumbsUp;
+  faUser = faUser;
 
   constructor(
     private markerService: MarkerService,
