@@ -169,4 +169,20 @@ export class HomeComponent implements AfterViewInit {
       fillColor: '#6DB65B',
     });
   }
+
+  toDoList(): void {
+    console.log('toDoList');
+  }
+
+  jobs(): void {
+    console.log('jobs');
+  }
+
+  recentSurveys(): void {
+    console.log('recentSurveys');
+  }
+
+  approve(): void {
+    console.log('approve');
+  }
 }

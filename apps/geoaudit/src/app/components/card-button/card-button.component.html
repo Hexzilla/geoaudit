@@ -1,0 +1,22 @@
+<mat-card style="cursor: pointer; margin-top: 20px;" (click)="click()">
+    <div fxLayout="row" class="card-button-container">
+        <div fxLayout="row">
+            <div fxLayoutAlign="center center" class="icon">
+                <button mat-mini-fab color="primary" aria-label="Example icon button with a plus one icon">
+                    <mat-icon>{{ icon }}</mat-icon>
+                </button>
+            </div>
+            
+            <div fxLayout="column">
+                <span class="title">{{ title }}</span>
+                <span>{{ text }}</span>
+            </div>
+        </div>
+
+        <div>
+            <button mat-icon-button color="accent" aria-label="Example icon button with a plus one icon">
+                <mat-icon>chevron_right</mat-icon>
+            </button>
+        </div>
+    </div>
+</mat-card>

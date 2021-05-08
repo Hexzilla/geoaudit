@@ -81,10 +81,14 @@
           <div class="leaflet-sidebar-router-outlet">
             <router-outlet></router-outlet>
 
-            <p>A page where we display a summary and overview of all things.</p>
-            <a routerLink="/home/abc" role="tab">
-              <fa-icon [icon]="faListOl"></fa-icon>
-            </a>
+            <geoaudit-card-button title="To Do List" text="N surveys to complete" icon="list" (onClick)="toDoList()"></geoaudit-card-button>
+
+            <geoaudit-card-button title="Jobs" text="N surveys to complete" icon="work" (onClick)="jobs()"></geoaudit-card-button>
+
+            <geoaudit-card-button title="Recent Surveys" text="N surveys previously completed" icon="history" (onClick)="recentSurveys()"></geoaudit-card-button>
+
+            <geoaudit-card-button title="Approve" text="N approvals required" icon="thumb_up" (onClick)="approve()"></geoaudit-card-button>
+
           </div>
         </div>
 
