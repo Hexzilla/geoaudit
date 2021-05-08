@@ -104,7 +104,7 @@ export class HomeComponent implements AfterViewInit {
       autopan: false, // whether to maintain the centered map point when opening the sidebar
       closeButton: true, // whether t add a close button to the panes
       container: 'sidebar', // the DOM container or #ID of a predefined sidebar container that should be used
-      position: 'right', // left or right
+      position: 'right', // left or right,
     });
 
     sidebar.addTo(this.map);
@@ -124,6 +124,8 @@ export class HomeComponent implements AfterViewInit {
     sidebar.on('content', function(e) {
       // e.id contains the id of the opened panel
     })
+    
+    sidebar.open('home');
   }
 
   private initStatesLayer() {
@@ -171,18 +173,38 @@ export class HomeComponent implements AfterViewInit {
   }
 
   toDoList(): void {
-    console.log('toDoList');
+    this.router.navigate(['/home/todolist']);
   }
 
   jobs(): void {
-    console.log('jobs');
+    this.router.navigate(['/home/jobs']);
   }
 
   recentSurveys(): void {
-    console.log('recentSurveys');
+    this.router.navigate(['/home/surveys']);
   }
 
   approve(): void {
-    console.log('approve');
+    this.router.navigate(['/home/approvals']);
+  }
+
+  search(): void {
+    this.router.navigate(['/home/search']);
+  }
+
+  calendar(): void {
+    this.router.navigate(['/home/calendar']);
+  }
+
+  notifications(): void {
+    this.router.navigate(['/home/notifications']);
+  }
+
+  profile(): void {
+    this.router.navigate(['/home/profile']);
+  }
+
+  get isRoot(): boolean {
+    return this.router.url === '/home';
   }
 }

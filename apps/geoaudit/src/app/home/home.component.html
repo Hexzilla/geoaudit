@@ -68,11 +68,26 @@
       <div class="leaflet-sidebar-content">
         <div class="leaflet-sidebar-pane" id="home">
           <h1 class="leaflet-sidebar-header">
-            <div>
+            <div fxLayout="row" fxLayoutAlign="space-between">
               <a routerLink="/home" class="leaflet-sidebar-header-a">
                 <!-- <fa-icon routerLink="/home" [icon]="faHome"></fa-icon> -->
                 Geoaudit
               </a>
+
+              <div>
+                <button mat-icon-button color="accent" aria-label="search icon button" (click)="search()">
+                  <mat-icon>search</mat-icon>
+                </button>
+                <button mat-icon-button color="accent" aria-label="search icon button" (click)="calendar()">
+                  <mat-icon>date_range</mat-icon>
+                </button>
+                <button mat-icon-button color="accent" aria-label="search icon button" (click)="notifications()">
+                  <mat-icon>notifications</mat-icon>
+                </button>
+                <button mat-icon-button color="accent" aria-label="search icon button" (click)="profile()">
+                  <mat-icon>person</mat-icon>
+                </button>
+              </div>
             </div>
             <!-- <div class="leaflet-sidebar-close">
             </div> -->
@@ -81,14 +96,15 @@
           <div class="leaflet-sidebar-router-outlet">
             <router-outlet></router-outlet>
 
-            <geoaudit-card-button title="To Do List" text="N surveys to complete" icon="list" (onClick)="toDoList()"></geoaudit-card-button>
+            <ng-container *ngIf="isRoot">
+              <geoaudit-card-button title="To Do List" text="N surveys to complete" icon="list" (onClick)="toDoList()"></geoaudit-card-button>
 
-            <geoaudit-card-button title="Jobs" text="N surveys to complete" icon="work" (onClick)="jobs()"></geoaudit-card-button>
-
-            <geoaudit-card-button title="Recent Surveys" text="N surveys previously completed" icon="history" (onClick)="recentSurveys()"></geoaudit-card-button>
-
-            <geoaudit-card-button title="Approve" text="N approvals required" icon="thumb_up" (onClick)="approve()"></geoaudit-card-button>
-
+              <geoaudit-card-button title="Jobs" text="N surveys to complete" icon="work" (onClick)="jobs()"></geoaudit-card-button>
+  
+              <geoaudit-card-button title="Recent Surveys" text="N surveys previously completed" icon="history" (onClick)="recentSurveys()"></geoaudit-card-button>
+  
+              <geoaudit-card-button title="Approve" text="N approvals required" icon="thumb_up" (onClick)="approve()"></geoaudit-card-button>
+            </ng-container>
           </div>
         </div>
 
