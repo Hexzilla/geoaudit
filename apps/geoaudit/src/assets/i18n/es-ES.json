@@ -1,0 +1,37 @@
+{
+	"CONTAINERS": {
+		"auth": {
+			"form": {
+				"login": "Iniciar sesión",
+				"password": "Contraseña",
+				"required": {
+					"password": "se requiere contraseña",
+					"username": "Se requiere nombre de usuario"
+				},
+				"username": "Nombre de usuario"
+			},
+			"geoaudit": "Geoaudit"
+		},
+		"home": {
+			"buttons": {
+				"approvals": {
+					"text": "Se requieren aprobaciones N",
+					"title": "Aprobar"
+				},
+				"jobs": {
+					"text": "N encuestas para completar",
+					"title": "Trabajos"
+				},
+				"surveys": {
+					"text": "N encuestas completadas previamente",
+					"title": "Encuestas recientes"
+				},
+				"to_do_list": {
+					"text": "N encuestas para completar",
+					"title": "Lista de quehaceres"
+				}
+			},
+			"geoaudit": "Geoaudit"
+		}
+	}
+}

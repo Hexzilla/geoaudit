@@ -56,7 +56,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     FontAwesomeModule,
     FlexLayoutModule,
     TranslateModule.forChild({
-      defaultLanguage: 'en',
+      defaultLanguage: 'en-GB',
       loader: {
         provide: TranslateLoader,
         useFactory: HttpLoaderFactory,

@@ -29,7 +29,7 @@ export function HttpLoaderFactory(http: HttpClient) {
         AuthRoutingModule,
         FlexLayoutModule,
         TranslateModule.forChild({
-            defaultLanguage: 'en',
+            defaultLanguage: 'en-GB',
             loader: {
               provide: TranslateLoader,
               useFactory: HttpLoaderFactory,

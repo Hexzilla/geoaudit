@@ -1,0 +1,37 @@
+{
+	"CONTAINERS": {
+		"auth": {
+			"form": {
+				"login": "ログイン",
+				"password": "パスワード",
+				"required": {
+					"password": "パスワードが必要です",
+					"username": "ユーザー名は必須です"
+				},
+				"username": "ユーザー名"
+			},
+			"geoaudit": "Geoaudit"
+		},
+		"home": {
+			"buttons": {
+				"approvals": {
+					"text": "N件の承認が必要",
+					"title": "承認する"
+				},
+				"jobs": {
+					"text": "完了するNの調査",
+					"title": "仕事"
+				},
+				"surveys": {
+					"text": "以前に完了したN件の調査",
+					"title": "最近の調査"
+				},
+				"to_do_list": {
+					"text": "完了するNの調査",
+					"title": "やることリスト"
+				}
+			},
+			"geoaudit": "Geoaudit"
+		}
+	}
+}

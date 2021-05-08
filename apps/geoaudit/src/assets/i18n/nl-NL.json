@@ -1,0 +1,37 @@
+{
+	"CONTAINERS": {
+		"auth": {
+			"form": {
+				"login": "log in",
+				"password": "Wachtwoord",
+				"required": {
+					"password": "Een wachtwoord is verplicht",
+					"username": "gebruikersnaam is vereist"
+				},
+				"username": "Gebruikersnaam"
+			},
+			"geoaudit": "Geoaudit"
+		},
+		"home": {
+			"buttons": {
+				"approvals": {
+					"text": "N goedkeuringen vereist",
+					"title": "Goedkeuren"
+				},
+				"jobs": {
+					"text": "N enquêtes om in te vullen",
+					"title": "Jobs"
+				},
+				"surveys": {
+					"text": "N eerder voltooide enquêtes",
+					"title": "Recente enquêtes"
+				},
+				"to_do_list": {
+					"text": "N enquêtes om in te vullen",
+					"title": "Te doen lijst"
+				}
+			},
+			"geoaudit": "Geoaudit"
+		}
+	}
+}
