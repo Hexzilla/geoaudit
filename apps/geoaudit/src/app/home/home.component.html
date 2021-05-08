@@ -71,7 +71,7 @@
             <div fxLayout="row" fxLayoutAlign="space-between">
               <a routerLink="/home" class="leaflet-sidebar-header-a">
                 <!-- <fa-icon routerLink="/home" [icon]="faHome"></fa-icon> -->
-                Geoaudit
+                {{ 'CONTAINERS.home.geoaudit' | translate }}
               </a>
 
               <div>
@@ -97,18 +97,18 @@
             <router-outlet></router-outlet>
 
             <ng-container *ngIf="isRoot">
-              <geoaudit-card-button title="To Do List" text="N surveys to complete" icon="list" (onClick)="toDoList()"></geoaudit-card-button>
+              <geoaudit-card-button title="CONTAINERS.home.buttons.to_do_list.title" text="CONTAINERS.home.buttons.to_do_list.text" icon="list" (onClick)="toDoList()"></geoaudit-card-button>
 
-              <geoaudit-card-button title="Jobs" text="N surveys to complete" icon="work" (onClick)="jobs()"></geoaudit-card-button>
+              <geoaudit-card-button title="CONTAINERS.home.buttons.jobs.title" text="CONTAINERS.home.buttons.to_do_list.text" icon="work" (onClick)="jobs()"></geoaudit-card-button>
   
-              <geoaudit-card-button title="Recent Surveys" text="N surveys previously completed" icon="history" (onClick)="recentSurveys()"></geoaudit-card-button>
+              <geoaudit-card-button title="CONTAINERS.home.buttons.surveys.title" text="CONTAINERS.home.buttons.to_do_list.text" icon="history" (onClick)="recentSurveys()"></geoaudit-card-button>
   
-              <geoaudit-card-button title="Approve" text="N approvals required" icon="thumb_up" (onClick)="approve()"></geoaudit-card-button>
+              <geoaudit-card-button title="CONTAINERS.home.buttons.approvals.title" text="CONTAINERS.home.buttons.approvals.title" icon="thumb_up" (onClick)="approve()"></geoaudit-card-button>
             </ng-container>
           </div>
         </div>
 
-        <div class="leaflet-sidebar-pane" id="messages">
+        <!-- <div class="leaflet-sidebar-pane" id="messages">
           <h1 class="leaflet-sidebar-header">
             Messages
             <div class="leaflet-sidebar-close">
@@ -124,7 +124,7 @@
               <fa-icon [icon]="faCaretLeft"></fa-icon>
             </div>
           </h1>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>

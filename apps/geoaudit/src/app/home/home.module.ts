@@ -1,5 +1,8 @@
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
@@ -27,6 +30,11 @@ import { JobsComponent } from './jobs/jobs.component';
 import { SurveysComponent } from './surveys/surveys.component';
 import { ApprovalsComponent } from './approvals/approvals.component';
 
+// required for AOT compilation
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http);
+}
+
 @NgModule({
   declarations: [
     HomeComponent,
@@ -43,9 +51,18 @@ import { ApprovalsComponent } from './approvals/approvals.component';
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    HttpClientModule,
     HomeRoutingModule,
     FontAwesomeModule,
     FlexLayoutModule,
+    TranslateModule.forChild({
+      defaultLanguage: 'en',
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
+      }
+    }),
 
     // Material
     MatButtonModule,
