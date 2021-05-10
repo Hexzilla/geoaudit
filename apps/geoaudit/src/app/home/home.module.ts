@@ -10,7 +10,11 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { MatButtonModule } from '@angular/material/button';
 import {MatCardModule} from '@angular/material/card';
 import {MatIconModule} from '@angular/material/icon'; 
+import {MatInputModule} from '@angular/material/input'; 
+import {MatFormFieldModule} from '@angular/material/form-field'; 
+import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatTooltipModule} from '@angular/material/tooltip'; 
+import {MatTableModule} from '@angular/material/table'; 
 
 // Routing
 import { HomeRoutingModule } from './home-routing.module';
@@ -73,7 +77,11 @@ export function HttpLoaderFactory(http: HttpClient) {
     MatButtonModule,
     MatCardModule,
     MatIconModule,
-    MatTooltipModule
+    MatFormFieldModule,
+    MatInputModule,
+    MatPaginatorModule,
+    MatTooltipModule,
+    MatTableModule
   ],
   providers: [
   ],
