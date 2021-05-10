@@ -10,6 +10,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { MatButtonModule } from '@angular/material/button';
 import {MatCardModule} from '@angular/material/card';
 import {MatIconModule} from '@angular/material/icon'; 
+import {MatTooltipModule} from '@angular/material/tooltip'; 
 
 // Routing
 import { HomeRoutingModule } from './home-routing.module';
@@ -30,6 +31,7 @@ import { JobsComponent } from './jobs/jobs.component';
 import { SurveysComponent } from './surveys/surveys.component';
 import { ApprovalsComponent } from './approvals/approvals.component';
 import { SidebarHeaderComponent } from '../components/sidebar-header/sidebar-header.component';
+import { SidebarActionsComponent } from '../components/sidebar-actions/sidebar-actions.component';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient) {
@@ -48,7 +50,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     JobsComponent,
     SurveysComponent,
     ApprovalsComponent,
-    SidebarHeaderComponent
+    SidebarHeaderComponent,
+    SidebarActionsComponent
   ],
   imports: [
     CommonModule,
@@ -69,7 +72,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     // Material
     MatButtonModule,
     MatCardModule,
-    MatIconModule
+    MatIconModule,
+    MatTooltipModule
   ],
   providers: [
   ],
