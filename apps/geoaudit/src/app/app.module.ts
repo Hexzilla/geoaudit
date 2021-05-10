@@ -21,7 +21,6 @@ import { AppRoutingModule } from './app-routing.module';
 // Helpers
 import { ErrorInterceptor, JwtInterceptor } from './helpers';
 import { AlertComponent } from './components/alert/alert.component';
-import { HomeComponent } from './home/home.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 // required for AOT compilation

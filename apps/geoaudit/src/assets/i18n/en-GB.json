@@ -31,7 +31,10 @@
 					"title": "To Do List"
 				}
 			},
-			"geoaudit": "Geoaudit"
+			"geoaudit": "Geoaudit",
+			"to_do_list": {
+				"title": "To Do List"
+			}
 		}
 	}
 }

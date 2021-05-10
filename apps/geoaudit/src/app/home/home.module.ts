@@ -29,6 +29,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { JobsComponent } from './jobs/jobs.component';
 import { SurveysComponent } from './surveys/surveys.component';
 import { ApprovalsComponent } from './approvals/approvals.component';
+import { SidebarHeaderComponent } from '../components/sidebar-header/sidebar-header.component';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient) {
@@ -46,7 +47,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     ProfileComponent,
     JobsComponent,
     SurveysComponent,
-    ApprovalsComponent
+    ApprovalsComponent,
+    SidebarHeaderComponent
   ],
   imports: [
     CommonModule,
