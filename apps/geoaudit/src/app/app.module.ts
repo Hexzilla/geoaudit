@@ -22,6 +22,10 @@ import { AppRoutingModule } from './app-routing.module';
 import { ErrorInterceptor, JwtInterceptor } from './helpers';
 import { AlertComponent } from './components/alert/alert.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { StoreModule } from '@ngrx/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { environment } from '../environments/environment';
+import { EffectsModule } from '@ngrx/effects';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient) {
@@ -49,7 +53,13 @@ export function HttpLoaderFactory(http: HttpClient) {
     }),
 
     // Material
-    MatSnackBarModule
+    MatSnackBarModule,
+
+    StoreModule.forRoot({}, {}),
+
+    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
+
+    EffectsModule.forRoot([])
   ],
   providers: [
     MarkerService,
