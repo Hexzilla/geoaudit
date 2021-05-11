@@ -3,6 +3,10 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
+import { Store } from '@ngrx/store';
+
+import * as fromApp from '../../store';
+import * as SurveyActions from '../../store/survey/survey.actions';
 
 export interface SurveyData {
   id: number;
@@ -27,7 +31,8 @@ export class ToDoListComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private store: Store<fromApp.State>
   ) {
     this.form = this.formBuilder.group({
       filter: ['']
@@ -51,6 +56,7 @@ export class ToDoListComponent implements OnInit, AfterViewInit {
   get f() { return this.form.controls; }
 
   ngOnInit(): void {
+    this.store.dispatch(SurveyActions.fetchSurveys());
   }
 
   ngAfterViewInit() {

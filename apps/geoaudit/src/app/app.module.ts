@@ -22,15 +22,28 @@ import { AppRoutingModule } from './app-routing.module';
 import { ErrorInterceptor, JwtInterceptor } from './helpers';
 import { AlertComponent } from './components/alert/alert.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { StoreModule } from '@ngrx/store';
+import { ActionReducer, MetaReducer, StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
 import { EffectsModule } from '@ngrx/effects';
+import { reducers } from './store';
+import { SurveyEffects } from './store/survey/survey.effects';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
 }
+
+export function debug(reducer: ActionReducer<any>): ActionReducer<any> {
+  return function(state, action) {
+    console.log('state', state);
+    console.log('action', action);
+ 
+    return reducer(state, action);
+  };
+}
+ 
+export const metaReducers: MetaReducer<any>[] = [debug];
 
 @NgModule({
   declarations: [
@@ -55,11 +68,11 @@ export function HttpLoaderFactory(http: HttpClient) {
     // Material
     MatSnackBarModule,
 
-    StoreModule.forRoot({}, {}),
+    StoreModule.forRoot(reducers, { metaReducers }),
 
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
 
-    EffectsModule.forRoot([])
+    EffectsModule.forRoot([SurveyEffects])
   ],
   providers: [
     MarkerService,
