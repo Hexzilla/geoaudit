@@ -14,10 +14,18 @@ export class SurveyEffects {
         private surveyService: SurveyService
     ) {}
 
+    countSurveys$ = createEffect(() => this.actions$.pipe(
+        ofType(SurveyActions.COUNT_SURVEYS),
+        mergeMap(() => this.surveyService.count()
+            .pipe(
+                map(count => ({ type: SurveyActions.SET_COUNT, count}))
+            ))
+    ))
+
     fetchSurveys$ = createEffect(() => this.actions$.pipe(
         ofType(SurveyActions.FETCH_SURVEYS),
         tap(console.log),
-        mergeMap(() => this.surveyService.getSurveys()
+        mergeMap((payload) => this.surveyService.getSurveys(payload)
             .pipe(
                 map(surveys => ({ type: SurveyActions.SET_SURVEYS, surveys })),
                 catchError(() => EMPTY)

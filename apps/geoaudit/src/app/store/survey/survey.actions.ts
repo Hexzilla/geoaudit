@@ -1,15 +1,29 @@
 import { createAction, props } from '@ngrx/store';
-import { Survey } from '../../models';
+import { Parameters, Survey } from '../../models';
 
-export const FETCH_SURVEYS = '[To Do List - Surveys] Fetch';
-export const SET_SURVEYS = '[To Do List - Surveys] Set';
+export const COUNT_SURVEYS = '[To Do List - Surveys] Count';
+export const SET_COUNT = '[To Do List - Surveys] Set count';
+export const FETCH_SURVEYS = '[To Do List - Surveys] Fetch surveys';
+export const SET_SURVEYS = '[To Do List - Surveys] Set surveys';
+
+export const countSurveys = createAction(
+    COUNT_SURVEYS
+);
+
+export const setCount = createAction(
+    SET_COUNT,
+    props<{
+        count: any
+    }>()
+);
 
 export const fetchSurveys = createAction(
-    '[To Do List - Surveys] Fetch'
+    FETCH_SURVEYS,
+    props<Parameters>()
 );
 
 export const setSurveys = createAction(
-    '[To Do List - Surveys] Set',
+    SET_SURVEYS,
     props<{
         surveys: Array<Survey>
     }>()

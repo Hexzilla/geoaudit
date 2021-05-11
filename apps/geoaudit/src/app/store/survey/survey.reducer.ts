@@ -4,19 +4,26 @@ import { Survey } from "../../models";
 import * as SurveyActions from './survey.actions';
 
 export interface State {
+    count: number,
     surveys: Array<Survey>
 }
 
 export const initialState: State = {
+    count: 0,
     surveys: []
 }
 
 const surveyReducer = createReducer(
     initialState,
+    on(SurveyActions.setCount, (state, action) => {
+        return {
+            ...state,
+            count: action.count
+        }
+    }),
     on(SurveyActions.fetchSurveys, (state, action) => {
         return {
             ...state,
-            surveys: []
         }
     }),
     on(SurveyActions.setSurveys, (state, action) => {

@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import {MatPaginator} from '@angular/material/paginator';
+import {MatPaginator, PageEvent} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 import { Store } from '@ngrx/store';
@@ -24,6 +24,14 @@ export class ToDoListComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
+  // MatPaginator Inputs
+  length = 100;
+  pageSize = 10;
+  pageSizeOptions: number[] = [5, 10, 25, 100];
+
+  // MatPaginator Output
+  pageEvent: PageEvent;
+
   constructor(
     private formBuilder: FormBuilder,
     private store: Store<fromApp.State>
@@ -37,9 +45,11 @@ export class ToDoListComponent implements OnInit, AfterViewInit {
   get f() { return this.form.controls; }
 
   ngOnInit(): void {
-    this.store.dispatch(SurveyActions.fetchSurveys());
+    this.store.dispatch(SurveyActions.countSurveys());
+    this.store.dispatch(SurveyActions.fetchSurveys({ start: 0, limit: this.pageSize } ));
 
     this.store.select('survey').subscribe(state => {
+      this.length = state.count;
       this.dataSource = new MatTableDataSource(state.surveys);
     })
   }
@@ -60,5 +70,10 @@ export class ToDoListComponent implements OnInit, AfterViewInit {
 
   calendar(): void {
     
+  }
+
+  onPageEvent(event?: PageEvent) {
+    this.store.dispatch(SurveyActions.fetchSurveys({ start: event.pageIndex * event.pageSize, limit: event.pageSize } ));
+    return event;
   }
 }
