@@ -4,16 +4,10 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 import { Store } from '@ngrx/store';
+import { Survey } from '../../models';
 
 import * as fromApp from '../../store';
 import * as SurveyActions from '../../store/survey/survey.actions';
-
-export interface SurveyData {
-  id: number;
-  name: string;
-  date_delivery: Date;
-  status: string;
-}
 
 @Component({
   selector: 'geoaudit-to-do-list',
@@ -23,7 +17,7 @@ export interface SurveyData {
 export class ToDoListComponent implements OnInit, AfterViewInit {
 
   displayedColumns: string[] = ['name', 'date_delivery', 'status'];
-  dataSource: MatTableDataSource<SurveyData>;
+  dataSource: MatTableDataSource<Survey>;
 
   form: FormGroup;
 
@@ -37,19 +31,6 @@ export class ToDoListComponent implements OnInit, AfterViewInit {
     this.form = this.formBuilder.group({
       filter: ['']
     });
-
-    // Create 100 users
-    const surveys = [
-      {
-        id: 1,
-        name: "Survey 1",
-        date_delivery: new Date(),
-        status: "COMPLETED"
-      }
-    ]
-
-    // Assign the data to the data source for the table to render
-    this.dataSource = new MatTableDataSource(surveys);
   }
 
   // convenience getter for easy access to form fields
@@ -57,6 +38,10 @@ export class ToDoListComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.store.dispatch(SurveyActions.fetchSurveys());
+
+    this.store.select('survey').subscribe(state => {
+      this.dataSource = new MatTableDataSource(state.surveys);
+    })
   }
 
   ngAfterViewInit() {

@@ -1,9 +1,10 @@
 import { Action, createReducer, on } from "@ngrx/store";
+import { Survey } from "../../models";
 
 import * as SurveyActions from './survey.actions';
 
 export interface State {
-    surveys: []
+    surveys: Array<Survey>
 }
 
 export const initialState: State = {
