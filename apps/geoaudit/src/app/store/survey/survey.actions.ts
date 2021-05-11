@@ -7,7 +7,8 @@ export const FETCH_SURVEYS = '[To Do List - Surveys] Fetch surveys';
 export const SET_SURVEYS = '[To Do List - Surveys] Set surveys';
 
 export const countSurveys = createAction(
-    COUNT_SURVEYS
+    COUNT_SURVEYS,
+    props<Parameters>()
 );
 
 export const setCount = createAction(

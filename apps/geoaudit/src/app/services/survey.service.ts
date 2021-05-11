@@ -14,28 +14,14 @@ export class SurveyService {
         private authService: AuthService
     ) {}
 
-    count() {
-        return this.http.get<any>(`${environment.API_URL}/surveys/count`);
+    count(parameters: Parameters) {
+        const pagination = this.getDefaultQs(parameters);
+
+        return this.http.get<any>(`${environment.API_URL}/surveys/count?${pagination}`);
     }
 
     getSurveys(parameters: Parameters) {
-        /**
-         * Default query parameters
-         * 
-         * For pagination defining
-         * where the results should start from and to what limit i.e.
-         * how many results do we want to fetch.
-         * 
-         * For user defining what user we should fetch surveys for.
-         */
-        const pagination = qs.stringify({
-            _start: parameters.start,
-            _limit: parameters.limit,
-            _where: {
-                conducted_by: this.authService.authValue.user.id,
-                _or: [ { "status.name": statuses.NOT_STARTED }, { "status.name": statuses.ONGOING }]
-            }
-        });
+        const pagination = this.getDefaultQs(parameters);
 
         if (parameters.filter) {
             /**
@@ -50,5 +36,26 @@ export class SurveyService {
         } else {
             return this.http.get<any>(`${environment.API_URL}/surveys?${pagination}`);
         }
+    }
+
+    /**
+     * Default query parameters
+     * 
+     * For pagination defining
+     * where the results should start from and to what limit i.e.
+     * how many results do we want to fetch.
+     * 
+     * For user defining what user we should fetch surveys for.
+     */
+    getDefaultQs(parameters: Parameters): any {
+        return qs.stringify({
+            _start: parameters.start,
+            _limit: parameters.limit,
+            _sort: "date_delivery:asc",
+            _where: {
+                conducted_by: this.authService.authValue.user.id,
+                _or: [ { "status.name": statuses.NOT_STARTED }, { "status.name": statuses.ONGOING }]
+            }
+        });
     }
 }

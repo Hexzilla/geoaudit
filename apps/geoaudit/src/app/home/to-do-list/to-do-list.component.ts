@@ -49,7 +49,7 @@ export class ToDoListComponent implements OnInit, AfterViewInit {
   get f() { return this.form.controls; }
 
   ngOnInit(): void {
-    this.store.dispatch(SurveyActions.countSurveys());
+    this.store.dispatch(SurveyActions.countSurveys({ start: 0, limit: this.pageSize }));
     this.store.dispatch(SurveyActions.fetchSurveys({ start: 0, limit: this.pageSize } ));
 
     this.store.select('survey').subscribe(state => {
