@@ -9,6 +9,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 // Material
 import { MatButtonModule } from '@angular/material/button';
 import {MatCardModule} from '@angular/material/card';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatIconModule} from '@angular/material/icon'; 
 import {MatInputModule} from '@angular/material/input'; 
 import {MatFormFieldModule} from '@angular/material/form-field'; 
@@ -76,6 +77,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     // Material
     MatButtonModule,
     MatCardModule,
+    MatCheckboxModule,
     MatIconModule,
     MatFormFieldModule,
     MatInputModule,
