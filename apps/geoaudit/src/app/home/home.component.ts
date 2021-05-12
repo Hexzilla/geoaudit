@@ -188,6 +188,10 @@ export class HomeComponent implements AfterViewInit {
     this.router.navigate(['/home/approvals']);
   }
 
+  home(): void {
+    this.router.navigate(['/home']);
+  }
+
   search(): void {
     this.router.navigate(['/home/search']);
   }

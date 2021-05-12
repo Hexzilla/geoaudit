@@ -2,12 +2,14 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { ElementRef } from '@angular/core';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import {MatPaginator, PageEvent} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 import { Store } from '@ngrx/store';
 import { fromEvent } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
+import { DeleteModalComponent } from '../../modals/delete-modal/delete-modal.component';
 import { Survey } from '../../models';
 
 import * as fromApp from '../../store';
@@ -40,7 +42,8 @@ export class ToDoListComponent implements OnInit, AfterViewInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private store: Store<fromApp.State>
+    private store: Store<fromApp.State>,
+    public dialog: MatDialog
   ) {
     this.form = this.formBuilder.group({
       filter: ['']
@@ -88,6 +91,21 @@ export class ToDoListComponent implements OnInit, AfterViewInit {
 
   calendar(): void {
     
+  }
+
+  delete(): void {
+    const dialogRef = this.dialog.open(DeleteModalComponent, {
+      data: {
+        length: this.selection.selected.length
+      },
+      autoFocus: true
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // Do delete of this.selection.selected
+      }
+    });
   }
 
   onPageEvent(event?: PageEvent) {

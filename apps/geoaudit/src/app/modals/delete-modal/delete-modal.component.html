@@ -1,0 +1,6 @@
+<h1 mat-dialog-title>{{ 'MODALS.delete_modal.title' | translate }}</h1>
+<div mat-dialog-content>{{ 'MODALS.delete_modal.delete_surveys' | translate: { length: data.length } }}</div>
+<div mat-dialog-actions fxLayoutAlign="space-between">
+  <button mat-flat-button color="warn" (click)="onYesClick()">{{ 'MODALS.delete_modal.delete' | translate }}</button>
+  <button mat-flat-button color="accent" mat-dialog-close>{{ 'MODALS.close' | translate }}</button>
+</div>
