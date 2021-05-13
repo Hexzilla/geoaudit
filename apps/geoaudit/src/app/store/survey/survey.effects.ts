@@ -31,4 +31,12 @@ export class SurveyEffects {
                 catchError(() => EMPTY)
             ))
     ));
+
+    deleteSurvey$ = createEffect(() => this.actions$.pipe(
+        ofType(SurveyActions.DELETE_SURVEY),
+        mergeMap(({ survey }) => this.surveyService.delete(survey)
+            .pipe(
+                map(data => ({ type: SurveyActions.DELETE_SURVEY_SUCCESS, data}))
+            ))
+    ))
 }

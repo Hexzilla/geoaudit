@@ -31,7 +31,13 @@ const surveyReducer = createReducer(
             ...state,
             surveys: action.surveys
         }
-    })
+    }),
+    on(SurveyActions.deleteSurveySuccess, (state, action) => {
+        console.log('deleteSurveySuccess', action)
+        return {
+            ...state,
+        }
+    }),
 )
 
 export function reducer(state: State | undefined, action: Action) {
