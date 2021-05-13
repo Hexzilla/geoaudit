@@ -39,7 +39,6 @@ export class SurveyService {
     }
 
     delete(survey: Survey) {
-        console.log('delete', survey)
         return this.http.delete<any>(`${environment.API_URL}/surveys/${survey.id}`);
     }
 

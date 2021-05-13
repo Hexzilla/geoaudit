@@ -33,9 +33,9 @@ const surveyReducer = createReducer(
         }
     }),
     on(SurveyActions.deleteSurveySuccess, (state, action) => {
-        console.log('deleteSurveySuccess', action)
         return {
             ...state,
+            surveys: state.surveys.filter(survey => survey.id !== action.survey.id)
         }
     }),
 )

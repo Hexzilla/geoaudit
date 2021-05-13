@@ -102,10 +102,7 @@ export class ToDoListComponent implements OnInit, AfterViewInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        // Do delete of this.selection.selected
-        this.store.dispatch(SurveyActions.deleteSurvey({ survey: this.selection.selected[0] } ));
-      }
+      if (result) this.store.dispatch(SurveyActions.deleteSurveys({ surveys: this.selection.selected } ));
     });
   }
 
