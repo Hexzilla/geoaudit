@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import qs from 'qs';
 import { environment } from "../../environments/environment";
-import { Parameters } from "../models";
+import { Parameters, Survey } from "../models";
 import { statuses } from "../models/status";
 import { AuthService } from "./auth.service";
 
@@ -36,6 +36,10 @@ export class SurveyService {
         } else {
             return this.http.get<any>(`${environment.API_URL}/surveys?${pagination}`);
         }
+    }
+
+    delete(survey: Survey) {
+        return this.http.delete<any>(`${environment.API_URL}/surveys/${survey.id}`);
     }
 
     /**
