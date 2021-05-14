@@ -16,6 +16,8 @@ import {
 } from 'rxjs/operators';
 import * as moment from 'moment';
 
+import Papa from 'papaparse';
+
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
@@ -158,24 +160,38 @@ export class ToDoListComponent implements OnInit, AfterViewInit {
       ];
     });
 
-    // Or use javascript directly:
+    const fields = [
+      'ID Reference',
+      'Name',
+      'Date Assigned',
+      'Delivery Date',
+      'Status',
+      'Job',
+      'Prepared By',
+    ];
+
     autoTable(doc, {
       startY: 35,
       head: [
-        [
-          'ID Reference',
-          'Name',
-          'Date Assigned',
-          'Delivery Date',
-          'Status',
-          'Job',
-          'Prepared By',
-        ],
+        fields
       ],
       body,
     });
 
     doc.save(`${moment().toISOString(true)}-survey-download.pdf`);
+
+    const csv = Papa.unparse({
+      data: body,
+      fields
+    });
+    const blob = new Blob([csv]);
+
+    var a = window.document.createElement("a");
+    a.href = window.URL.createObjectURL(blob);
+    a.download = `${moment().toISOString(true)}-survey-download.csv`;
+    document.body.appendChild(a);
+    a.click();  // IE: "Access is denied"; see: https://connect.microsoft.com/IE/feedback/details/797361/ie-10-treats-blob-url-as-cross-origin-and-denies-access
+    document.body.removeChild(a);
   }
 
   onPageEvent(event?: PageEvent) {
