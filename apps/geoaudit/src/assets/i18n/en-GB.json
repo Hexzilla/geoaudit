@@ -36,5 +36,13 @@
 				"title": "To Do List"
 			}
 		}
+	},
+	"MODALS": {
+		"delete_modal": {
+			"title": "Delete",
+			"delete_surveys": "You're about to delete {{length}} survey(s). Do you wish to continue?",
+			"delete": "Confirm"
+		},
+		"close": "Close"
 	}
 }

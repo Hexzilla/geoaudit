@@ -6,6 +6,8 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 // Material
+import { MatButtonModule } from '@angular/material/button';
+import {MatDialogModule} from '@angular/material/dialog';
 import {MatSnackBarModule} from '@angular/material/snack-bar'; 
 
 // Components
@@ -28,6 +30,7 @@ import { environment } from '../environments/environment';
 import { EffectsModule } from '@ngrx/effects';
 import { reducers } from './store';
 import { SurveyEffects } from './store/survey/survey.effects';
+import { DeleteModalComponent } from './modals/delete-modal/delete-modal.component';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient) {
@@ -49,6 +52,7 @@ export const metaReducers: MetaReducer<any>[] = [debug];
   declarations: [
     AppComponent,
     AlertComponent,
+    DeleteModalComponent,
   ],
   imports: [
     BrowserModule,
@@ -66,6 +70,8 @@ export const metaReducers: MetaReducer<any>[] = [debug];
     }),
 
     // Material
+    MatButtonModule,
+    MatDialogModule,
     MatSnackBarModule,
 
     StoreModule.forRoot(reducers, { metaReducers }),

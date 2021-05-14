@@ -1,12 +1,15 @@
+import { SelectionModel } from '@angular/cdk/collections';
 import { ElementRef } from '@angular/core';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import {MatPaginator, PageEvent} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 import { Store } from '@ngrx/store';
 import { fromEvent } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
+import { DeleteModalComponent } from '../../modals/delete-modal/delete-modal.component';
 import { Survey } from '../../models';
 
 import * as fromApp from '../../store';
@@ -19,8 +22,9 @@ import * as SurveyActions from '../../store/survey/survey.actions';
 })
 export class ToDoListComponent implements OnInit, AfterViewInit {
 
-  displayedColumns: string[] = ['name', 'date_delivery', 'status'];
+  displayedColumns: string[] = ['select', 'name', 'date_delivery', 'status'];
   dataSource: MatTableDataSource<Survey>;
+  selection = new SelectionModel<Survey>(true, []);
 
   form: FormGroup;
 
@@ -38,7 +42,8 @@ export class ToDoListComponent implements OnInit, AfterViewInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private store: Store<fromApp.State>
+    private store: Store<fromApp.State>,
+    public dialog: MatDialog
   ) {
     this.form = this.formBuilder.group({
       filter: ['']
@@ -88,8 +93,43 @@ export class ToDoListComponent implements OnInit, AfterViewInit {
     
   }
 
+  delete(): void {
+    const dialogRef = this.dialog.open(DeleteModalComponent, {
+      data: {
+        length: this.selection.selected.length
+      },
+      autoFocus: true
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) this.store.dispatch(SurveyActions.deleteSurveys({ surveys: this.selection.selected } ));
+    });
+  }
+
   onPageEvent(event?: PageEvent) {
     this.store.dispatch(SurveyActions.fetchSurveys({ start: event.pageIndex * event.pageSize, limit: event.pageSize } ));
     return event;
+  }
+
+  /** Whether the number of selected elements matches the total number of rows. */
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
+    return numSelected === numRows;
+  }
+
+  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  masterToggle() {
+    this.isAllSelected() ?
+        this.selection.clear() :
+        this.dataSource.data.forEach(row => this.selection.select(row));
+  }
+
+  /** The label for the checkbox on the passed row */
+  checkboxLabel(row?: Survey): string {
+    if (!row) {
+      return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
+    }
+    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.id + 1}`;
   }
 }
