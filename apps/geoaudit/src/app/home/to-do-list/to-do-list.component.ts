@@ -9,6 +9,11 @@ import {MatTableDataSource} from '@angular/material/table';
 import { Store } from '@ngrx/store';
 import { fromEvent } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
+import * as moment from 'moment';
+
+import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable'
+
 import { DeleteModalComponent } from '../../modals/delete-modal/delete-modal.component';
 import { Survey } from '../../models';
 
@@ -104,6 +109,22 @@ export class ToDoListComponent implements OnInit, AfterViewInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) this.store.dispatch(SurveyActions.deleteSurveys({ surveys: this.selection.selected } ));
     });
+  }
+
+  download(): void {    
+    const doc = new jsPDF();
+    
+    const body = this.selection.selected.map(survey => {
+      return [survey.id, survey.name, moment(survey.date_delivery).format('L LT'), survey.status.name]
+    })
+
+    // Or use javascript directly:
+    autoTable(doc, {
+      head: [['ID', 'Name', 'Delivery Date', 'Status']],
+      body
+    })
+    
+    doc.save(`${moment().toISOString(true)}-survey-download.pdf`)
   }
 
   onPageEvent(event?: PageEvent) {
