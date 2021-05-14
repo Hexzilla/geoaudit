@@ -3,12 +3,24 @@ import { ElementRef } from '@angular/core';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import {MatPaginator, PageEvent} from '@angular/material/paginator';
-import {MatSort} from '@angular/material/sort';
-import {MatTableDataSource} from '@angular/material/table';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { Store } from '@ngrx/store';
 import { fromEvent } from 'rxjs';
-import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  filter,
+  map,
+} from 'rxjs/operators';
+import * as moment from 'moment';
+
+import Papa from 'papaparse';
+
+import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
+
 import { DeleteModalComponent } from '../../modals/delete-modal/delete-modal.component';
 import { Survey } from '../../models';
 
@@ -18,10 +30,9 @@ import * as SurveyActions from '../../store/survey/survey.actions';
 @Component({
   selector: 'geoaudit-to-do-list',
   templateUrl: './to-do-list.component.html',
-  styleUrls: ['./to-do-list.component.scss']
+  styleUrls: ['./to-do-list.component.scss'],
 })
 export class ToDoListComponent implements OnInit, AfterViewInit {
-
   displayedColumns: string[] = ['select', 'name', 'date_delivery', 'status'];
   dataSource: MatTableDataSource<Survey>;
   selection = new SelectionModel<Survey>(true, []);
@@ -46,21 +57,27 @@ export class ToDoListComponent implements OnInit, AfterViewInit {
     public dialog: MatDialog
   ) {
     this.form = this.formBuilder.group({
-      filter: ['']
+      filter: [''],
     });
   }
 
   // convenience getter for easy access to form fields
-  get f() { return this.form.controls; }
+  get f() {
+    return this.form.controls;
+  }
 
   ngOnInit(): void {
-    this.store.dispatch(SurveyActions.countSurveys({ start: 0, limit: this.pageSize }));
-    this.store.dispatch(SurveyActions.fetchSurveys({ start: 0, limit: this.pageSize } ));
+    this.store.dispatch(
+      SurveyActions.countSurveys({ start: 0, limit: this.pageSize })
+    );
+    this.store.dispatch(
+      SurveyActions.fetchSurveys({ start: 0, limit: this.pageSize })
+    );
 
-    this.store.select('survey').subscribe(state => {
+    this.store.select('survey').subscribe((state) => {
       this.length = state.count;
       this.dataSource = new MatTableDataSource(state.surveys);
-    })
+    });
   }
 
   ngAfterViewInit() {
@@ -70,44 +87,120 @@ export class ToDoListComponent implements OnInit, AfterViewInit {
     /**
      * Uses rxjs to delay and cancel requests made to the backend
      * when filtering on surveys.
-     * 
+     *
      * https://www.freakyjolly.com/angular-rxjs-debounce-time-optimize-search-for-server-response/
      */
-    fromEvent(this.input.nativeElement, 'keyup').pipe(
-      map((event: any) => {
-        return event.target.value
-      }),
-      filter(res => res.length >= 0),
-      debounceTime(1000),
-      distinctUntilChanged() 
-    ).subscribe((text: string) => {
-      if (this.dataSource.paginator) {
-        this.dataSource.paginator.firstPage();
-      }
+    fromEvent(this.input.nativeElement, 'keyup')
+      .pipe(
+        map((event: any) => {
+          return event.target.value;
+        }),
+        filter((res) => res.length >= 0),
+        debounceTime(1000),
+        distinctUntilChanged()
+      )
+      .subscribe((text: string) => {
+        if (this.dataSource.paginator) {
+          this.dataSource.paginator.firstPage();
+        }
 
-      this.store.dispatch(SurveyActions.fetchSurveys({ start: 0, limit: this.pageSize, filter: text } ));
-    })
+        this.store.dispatch(
+          SurveyActions.fetchSurveys({
+            start: 0,
+            limit: this.pageSize,
+            filter: text,
+          })
+        );
+      });
   }
 
-  calendar(): void {
-    
-  }
+  calendar(): void {}
 
   delete(): void {
     const dialogRef = this.dialog.open(DeleteModalComponent, {
       data: {
-        length: this.selection.selected.length
+        length: this.selection.selected.length,
       },
-      autoFocus: true
+      autoFocus: true,
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) this.store.dispatch(SurveyActions.deleteSurveys({ surveys: this.selection.selected } ));
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result)
+        this.store.dispatch(
+          SurveyActions.deleteSurveys({ surveys: this.selection.selected })
+        );
     });
   }
 
+  download(): void {
+    const doc = new jsPDF({
+      orientation: 'landscape',
+    });
+    // var finalY = doc.lastAutoTable.finalY || 10
+
+    doc.setFontSize(40);
+    doc.text(`Surveys`, 35, 25);
+
+    /**
+     *
+     */
+    const surveys = this.selection.isEmpty()
+      ? this.dataSource.data
+      : this.selection.selected;
+
+    const body = surveys.map((survey) => {
+      return [
+        survey.id_reference,
+        survey.name,
+        moment(survey.date_assigned).format('L LT'),
+        moment(survey.date_delivery).format('L LT'),
+        survey.status.name,
+        survey.job.job_reference,
+        survey.prepared_by.username,
+      ];
+    });
+
+    const fields = [
+      'ID Reference',
+      'Name',
+      'Date Assigned',
+      'Delivery Date',
+      'Status',
+      'Job',
+      'Prepared By',
+    ];
+
+    autoTable(doc, {
+      startY: 35,
+      head: [
+        fields
+      ],
+      body,
+    });
+
+    doc.save(`${moment().toISOString(true)}-survey-download.pdf`);
+
+    const csv = Papa.unparse({
+      data: body,
+      fields
+    });
+    const blob = new Blob([csv]);
+
+    var a = window.document.createElement("a");
+    a.href = window.URL.createObjectURL(blob);
+    a.download = `${moment().toISOString(true)}-survey-download.csv`;
+    document.body.appendChild(a);
+    a.click();  // IE: "Access is denied"; see: https://connect.microsoft.com/IE/feedback/details/797361/ie-10-treats-blob-url-as-cross-origin-and-denies-access
+    document.body.removeChild(a);
+  }
+
   onPageEvent(event?: PageEvent) {
-    this.store.dispatch(SurveyActions.fetchSurveys({ start: event.pageIndex * event.pageSize, limit: event.pageSize } ));
+    this.store.dispatch(
+      SurveyActions.fetchSurveys({
+        start: event.pageIndex * event.pageSize,
+        limit: event.pageSize,
+      })
+    );
     return event;
   }
 
@@ -120,9 +213,9 @@ export class ToDoListComponent implements OnInit, AfterViewInit {
 
   /** Selects all rows if they are not all selected; otherwise clear selection. */
   masterToggle() {
-    this.isAllSelected() ?
-        this.selection.clear() :
-        this.dataSource.data.forEach(row => this.selection.select(row));
+    this.isAllSelected()
+      ? this.selection.clear()
+      : this.dataSource.data.forEach((row) => this.selection.select(row));
   }
 
   /** The label for the checkbox on the passed row */
@@ -130,6 +223,8 @@ export class ToDoListComponent implements OnInit, AfterViewInit {
     if (!row) {
       return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
     }
-    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.id + 1}`;
+    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${
+      row.id + 1
+    }`;
   }
 }
