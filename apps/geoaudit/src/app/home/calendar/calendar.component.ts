@@ -12,4 +12,8 @@ export class CalendarComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  onCalendarEventClick(): void {
+    console.log('onCalendarEventClick')
+  }
+
 }

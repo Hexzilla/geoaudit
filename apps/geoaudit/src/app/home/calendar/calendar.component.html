@@ -1,1 +1,11 @@
-<p>calendar works!</p>
+<geoaudit-sidebar-header
+  title="CONTAINERS.home.calendar.title"
+></geoaudit-sidebar-header>
+
+<div fxLayout="row-reverse">
+    <button mat-flat-button color="primary" fxFlexFill>
+        <mat-icon>add</mat-icon>
+    </button>
+</div>
+
+<geoaudit-card-button title="15/05/2021 (12:30 - 16:40)" text="N Surveys" icon="category" (onClick)="onCalendarEventClick()"></geoaudit-card-button>

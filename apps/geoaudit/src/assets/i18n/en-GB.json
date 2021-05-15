@@ -34,6 +34,9 @@
 			"geoaudit": "Geoaudit",
 			"to_do_list": {
 				"title": "To Do List"
+			},
+			"calendar": {
+				"title": "Calendar"
 			}
 		}
 	},
