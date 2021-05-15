@@ -3,14 +3,27 @@
 ></geoaudit-sidebar-header>
 
 <mat-card-content>
-  <mat-form-field appearance="outline">
-    <input
-      matInput
-      [placeholder]="'CONTAINERS.home.calendar.event.form.title' | translate"
-      formControlName="username"
-      class="form-control"
-    />
-  </mat-form-field>
+  <form [formGroup]="form">
+    <mat-form-field appearance="outline">
+      <input
+        matInput
+        [placeholder]="'CONTAINERS.home.calendar.event.form.title' | translate"
+        formControlName="title"
+        class="form-control"
+      />
+    </mat-form-field>
+
+    <!-- <mat-form-field appearance="outline"> -->
+      <mat-slide-toggle
+          class="example-margin"
+          [color]="color"
+          [checked]="form.value.allDay"
+          [disabled]="false"
+      >
+        Slide me!
+      </mat-slide-toggle>
+    <!-- </mat-form-field> -->
+  </form>
 </mat-card-content>
 
 <!-- [ngClass]="{ 'is-invalid': submitted && f.username.errors }" -->

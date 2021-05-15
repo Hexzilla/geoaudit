@@ -11,8 +11,10 @@ const routes: Routes = [
         canActivate: [AuthGuard],
         children: [
             {
-                path: 'event', component: EventComponent
-
+                path: 'event', component: EventComponent,
+            },
+            {
+                path: 'event/:id', component: EventComponent,
             }
         ]
     },
