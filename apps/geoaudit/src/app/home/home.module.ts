@@ -6,7 +6,6 @@ import { HomeRoutingModule } from './home-routing.module';
 // Declarations
 import { HomeComponent } from './home.component';
 import { ToDoListComponent } from './to-do-list/to-do-list.component';
-import { CardButtonComponent } from '../components/card-button/card-button.component';
 import { SearchComponent } from './search/search.component';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { ProfileComponent } from './profile/profile.component';
@@ -21,7 +20,6 @@ import { SharedModule } from './shared.module';
   declarations: [
     HomeComponent,
     ToDoListComponent,
-    CardButtonComponent,
     SearchComponent,
     NotificationsComponent,
     ProfileComponent,

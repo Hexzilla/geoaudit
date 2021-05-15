@@ -18,7 +18,10 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTableModule } from '@angular/material/table';
 
+// Declarations
+import { CardButtonComponent } from '../components/card-button/card-button.component';
 import { SidebarHeaderComponent } from '../components/sidebar-header/sidebar-header.component';
+
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
@@ -57,7 +60,10 @@ export function HttpLoaderFactory(http: HttpClient) {
     MatTooltipModule,
     MatTableModule,
   ],
-  declarations: [SidebarHeaderComponent],
+  declarations: [
+    CardButtonComponent,
+    SidebarHeaderComponent
+  ],
   providers: [],
   exports: [
     CommonModule,
@@ -72,6 +78,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     FontAwesomeModule,
     
     // Declarations
+    CardButtonComponent,
     SidebarHeaderComponent,
 
     // Material
