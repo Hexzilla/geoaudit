@@ -38,7 +38,10 @@
 			"calendar": {
 				"title": "Calendar",
 				"event": {
-					"title": "Calendar Event"
+					"title": "Calendar Event",
+					"form": {
+						"title": "Event Title"
+					}
 				}
 			}
 		}

@@ -1,3 +1,16 @@
 <geoaudit-sidebar-header
   title="CONTAINERS.home.calendar.event.title"
 ></geoaudit-sidebar-header>
+
+<mat-card-content>
+  <mat-form-field appearance="outline">
+    <input
+      matInput
+      [placeholder]="'CONTAINERS.home.calendar.event.form.title' | translate"
+      formControlName="username"
+      class="form-control"
+    />
+  </mat-form-field>
+</mat-card-content>
+
+<!-- [ngClass]="{ 'is-invalid': submitted && f.username.errors }" -->
