@@ -26,6 +26,7 @@ import { Survey } from '../../models';
 
 import * as fromApp from '../../store';
 import * as SurveyActions from '../../store/survey/survey.actions';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'geoaudit-to-do-list',
@@ -54,7 +55,8 @@ export class ToDoListComponent implements OnInit, AfterViewInit {
   constructor(
     private formBuilder: FormBuilder,
     private store: Store<fromApp.State>,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private router: Router
   ) {
     this.form = this.formBuilder.group({
       filter: [''],
@@ -114,7 +116,9 @@ export class ToDoListComponent implements OnInit, AfterViewInit {
       });
   }
 
-  calendar(): void {}
+  calendar(): void {
+    this.router.navigate(['/home/calendar/event']);
+  }
 
   delete(): void {
     const dialogRef = this.dialog.open(DeleteModalComponent, {

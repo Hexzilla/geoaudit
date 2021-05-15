@@ -31,6 +31,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { reducers } from './store';
 import { SurveyEffects } from './store/survey/survey.effects';
 import { DeleteModalComponent } from './modals/delete-modal/delete-modal.component';
+// import { SidebarHeaderComponent } from './components/sidebar-header/sidebar-header.component';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient) {
@@ -53,6 +54,7 @@ export const metaReducers: MetaReducer<any>[] = [debug];
     AppComponent,
     AlertComponent,
     DeleteModalComponent,
+    // SidebarHeaderComponent
   ],
   imports: [
     BrowserModule,

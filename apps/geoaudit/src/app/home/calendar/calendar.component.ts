@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'geoaudit-calendar',
@@ -7,13 +8,23 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CalendarComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
+  }
+
+  addCalendarEvent(): void {
+    console.log('addCalendarEvent')
+    this.router.navigate(['/home/calendar/event']);
   }
 
   onCalendarEventClick(): void {
     console.log('onCalendarEventClick')
   }
 
+  get isRoot(): boolean {
+    return this.router.url === '/home/calendar';
+  }
 }

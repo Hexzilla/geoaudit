@@ -1,11 +1,12 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
+const calendarModule = () => import('./calendar/calendar.module').then(x => x.CalendarModule);
+
 import { HomeComponent } from './home.component';
 import { AuthGuard } from '../guards';
 import { ToDoListComponent } from './to-do-list/to-do-list.component';
 import { SearchComponent } from './search/search.component';
-import { CalendarComponent } from './calendar/calendar.component';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { ProfileComponent } from './profile/profile.component';
 import { JobsComponent } from './jobs/jobs.component';
@@ -21,7 +22,7 @@ const routes: Routes = [
                 path: 'search', component: SearchComponent,
             },
             {
-                path: 'calendar', component: CalendarComponent
+                path: 'calendar', loadChildren: calendarModule
             },
             {
                 path: 'notifications', component: NotificationsComponent

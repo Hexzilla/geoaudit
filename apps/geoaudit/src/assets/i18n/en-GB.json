@@ -36,7 +36,10 @@
 				"title": "To Do List"
 			},
 			"calendar": {
-				"title": "Calendar"
+				"title": "Calendar",
+				"event": {
+					"title": "Calendar Event"
+				}
 			}
 		}
 	},
