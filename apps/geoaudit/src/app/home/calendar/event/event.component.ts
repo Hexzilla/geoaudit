@@ -1,11 +1,16 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import * as moment from 'moment';
-import {ThemePalette} from '@angular/material/core';
+import { ThemePalette } from '@angular/material/core';
 
-import { SurveyService } from '../../../services';
+import { AlertService, SurveyService } from '../../../services';
 import * as fromApp from '../../../store';
 import * as CalendarEventActions from '../../../store/calendar-event/calendar-event.actions';
 
@@ -15,7 +20,6 @@ import * as CalendarEventActions from '../../../store/calendar-event/calendar-ev
   styleUrls: ['./event.component.scss'],
 })
 export class EventComponent implements OnInit {
-
   color: ThemePalette = 'primary';
 
   form: FormGroup;
@@ -24,7 +28,8 @@ export class EventComponent implements OnInit {
 
   submitted = false;
 
-  @ViewChild('picker') picker: any;
+  @ViewChild('startDateTimePicker') startDateTimePicker: any;
+  @ViewChild('endDateTimePicker') endDateTimePicker: any;
 
   public disabled = false;
   public showSpinners = true;
@@ -44,7 +49,8 @@ export class EventComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private surveyService: SurveyService,
-    private store: Store<fromApp.State>
+    private store: Store<fromApp.State>,
+    private alertService: AlertService
   ) {}
 
   ngOnInit(): void {
@@ -53,12 +59,12 @@ export class EventComponent implements OnInit {
       allDay: [false, Validators.required],
       start: [moment().toISOString(), Validators.required],
       end: [moment().toISOString(), Validators.required],
-      notes: ['', Validators.required],
+      notes: [''],
       surveys: [[], Validators.required],
 
       id: null,
       uuid: null,
-      uid: null
+      uid: null,
     });
 
     // Determine whether a calendar-event id has been provided
@@ -73,18 +79,24 @@ export class EventComponent implements OnInit {
 
       this.store.select('calendarEvent').subscribe((state) => {
         if (state.calendarEvent) {
-          const { title, allDay, start, end, notes, surveys } = state.calendarEvent;
+          const {
+            title,
+            allDay,
+            start,
+            end,
+            notes,
+            surveys,
+          } = state.calendarEvent;
           this.form.patchValue({
             title,
             allDay,
             start,
             end,
             notes,
-            surveys
-          })
+            surveys,
+          });
         }
       });
-
     } else {
       this.store.dispatch(
         CalendarEventActions.createCalendarEvent({
@@ -107,9 +119,14 @@ export class EventComponent implements OnInit {
     // If not then create a draft
   }
 
+  // convenience getter for easy access to form fields
+  get f() {
+    return this.form.controls;
+  }
+
   /**
    * All day toggle slider.
-   * 
+   *
    * If enabled then patch form values start and end to start and end of day respectively
    * otherwise to the current date time.
    */
@@ -117,17 +134,28 @@ export class EventComponent implements OnInit {
     if (this.form.value.allDay) {
       this.form.patchValue({
         start: moment().startOf('day').toISOString(),
-        end: moment().endOf('day').toISOString()
+        end: moment().endOf('day').toISOString(),
       });
     } else {
       this.form.patchValue({
         start: moment().toISOString(),
-        end: moment().toISOString()
+        end: moment().toISOString(),
       });
     }
   }
 
   submit(): void {
-    console.log('submit', this.form.value)
+    console.log('submit', this.form.value);
+
+    this.submitted = true;
+
+    // reset alerts on submit
+    this.alertService.clear();
+
+    if (!this.form.invalid) {
+      console.log('invalid')
+      this.alertService.error('Invalid');
+      return;
+    }
   }
 }
