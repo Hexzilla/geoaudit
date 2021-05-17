@@ -50,6 +50,11 @@
       </ngx-mat-datetime-picker>
    </mat-form-field>
 
+   <mat-form-field class="example-full-width">
+    <mat-label>{{ 'CONTAINERS.home.calendar.event.form.notes' | translate }}</mat-label>
+    <textarea matInput formControlName="notes"></textarea>
+  </mat-form-field>
+
    <div fxLayout="row-reverse">
     <button
       mat-flat-button
@@ -57,8 +62,8 @@
       (click)="submit()"
       fxFlexFill
     >
-      <mat-icon>add</mat-icon>
-    </button>
+    {{ 'CONTAINERS.home.calendar.event.form.submit' | translate }}
+  </button>
   </div>
   </form>
 </mat-card-content>

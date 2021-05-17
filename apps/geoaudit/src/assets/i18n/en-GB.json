@@ -43,7 +43,9 @@
 						"title": "Event Title",
 						"all_day": "All Day",
 						"start": "Start Date",
-						"end": "End Date"
+						"end": "End Date",
+						"notes": "Notes",
+						"submit": "Submit"
 					}
 				}
 			}
