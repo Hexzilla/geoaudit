@@ -55,6 +55,33 @@
     <textarea matInput formControlName="notes"></textarea>
   </mat-form-field>
 
+  <mat-form-field class="example-chip-list">
+    <mat-label>Surveys</mat-label>
+    <mat-chip-list #chipList aria-label="Survey selection">
+      <mat-chip
+        *ngFor="let survey of surveys"
+        [selectable]="selectable"
+        [removable]="removable"
+        (removed)="remove(survey)">
+        {{survey.name}}
+        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+      </mat-chip>
+      <input
+        placeholder="New survey..."
+        #surveyInput
+        [formControl]="surveyControl"
+        [matAutocomplete]="auto"
+        [matChipInputFor]="chipList"
+        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+        (matChipInputTokenEnd)="add($event)">
+    </mat-chip-list>
+    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+      <mat-option *ngFor="let survey of filteredSurveys" [value]="survey">
+        {{survey.name}}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>  
+
    <div fxLayout="row-reverse">
     <button
       mat-flat-button
