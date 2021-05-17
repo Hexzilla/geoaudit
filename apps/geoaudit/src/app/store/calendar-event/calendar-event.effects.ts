@@ -78,4 +78,13 @@ export class CalendarEventEffects {
                 catchError(() => EMPTY)
             ))
     ));
+
+    putCalendarEvent$ = createEffect(() => this.actions$.pipe(
+        ofType(CalendarActions.PUT_CALENDAR_EVENT),
+        mergeMap(({ calendarEvent }) => this.calendarEventService.putCalendarEvent(calendarEvent)
+            .pipe(
+                map(calendarEvent => ({ type: CalendarActions.PUT_CALENDAR_EVENT_SUCCESS, calendarEvent })),
+                catchError(() => EMPTY),
+            ))
+    ));
 }

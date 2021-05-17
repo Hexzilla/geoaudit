@@ -38,8 +38,8 @@ export class CalendarEventService {
         });
     }
 
-    patchCalendarEvent(calendarEvent: CalendarEvent) {        
-        return this.http.post<any>(`${environment.API_URL}/calendar-events`, {
+    putCalendarEvent(calendarEvent: CalendarEvent) {        
+        return this.http.put<any>(`${environment.API_URL}/calendar-events/${calendarEvent.id}`, {
             ...calendarEvent,
             users_permissions_users: [calendarEvent.users_permissions_users, this.authService.authValue.user.id]
         });

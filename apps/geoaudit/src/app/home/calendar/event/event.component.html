@@ -3,7 +3,7 @@
 ></geoaudit-sidebar-header>
 
 <mat-card-content>
-  <form [formGroup]="form">
+  <form [formGroup]="form" (ngSubmit)="submit()">
     <mat-form-field appearance="outline">
       <input
         matInput
@@ -61,6 +61,7 @@
       color="primary"
       (click)="submit()"
       fxFlexFill
+      type="submit"
     >
     {{ 'CONTAINERS.home.calendar.event.form.submit' | translate }}
   </button>

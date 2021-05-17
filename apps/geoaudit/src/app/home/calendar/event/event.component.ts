@@ -13,6 +13,7 @@ import { ThemePalette } from '@angular/material/core';
 import { AlertService, SurveyService } from '../../../services';
 import * as fromApp from '../../../store';
 import * as CalendarEventActions from '../../../store/calendar-event/calendar-event.actions';
+import { Result } from '../../../models';
 
 @Component({
   selector: 'geoaudit-event',
@@ -62,9 +63,7 @@ export class EventComponent implements OnInit {
       notes: [''],
       surveys: [[], Validators.required],
 
-      id: null,
-      uuid: null,
-      uid: null,
+      id: null
     });
 
     // Determine whether a calendar-event id has been provided
@@ -86,6 +85,8 @@ export class EventComponent implements OnInit {
             end,
             notes,
             surveys,
+
+            id
           } = state.calendarEvent;
           this.form.patchValue({
             title,
@@ -94,6 +95,8 @@ export class EventComponent implements OnInit {
             end,
             notes,
             surveys,
+
+            id
           });
         }
       });
@@ -157,5 +160,23 @@ export class EventComponent implements OnInit {
       this.alertService.error('Invalid');
       return;
     }
+
+    this.store.dispatch(
+      CalendarEventActions.putCalendarEvent({
+        calendarEvent: this.form.value,
+      })
+    );
+
+    this.store.select('calendarEvent').subscribe((state) => {
+      if (state.result === Result.SUCCESS) {
+        this.alertService.success('Calendar Event Successfully Updated');
+        this.store.dispatch(CalendarEventActions.clearResult());
+      }
+
+      if (state.result === Result.ERROR) {
+        this.alertService.success('An Error Occurred Whilst Trying To Update Your Calendar Event');
+        this.store.dispatch(CalendarEventActions.clearResult());
+      }
+    });
   }
 }

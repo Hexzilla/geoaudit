@@ -16,6 +16,11 @@ export const DELETE_CALENDAR_EVENT_FAILED = '[To Do List - Calendar - Events] De
 
 export const CREATE_CALENDAR_EVENT = '[To Do list - Calendar - Events] Create calendar event';
 
+export const PUT_CALENDAR_EVENT = '[To Do list - Calendar - Events] Put calendar event';
+export const PUT_CALENDAR_EVENT_SUCCESS = '[To Do list - Calendar - Events] Put calendar event success';
+
+export const CLEAR_RESULT = '[To Do list - Calendar - Events] Clear result';
+
 export const countCalendarEvents = createAction(
     COUNT_CALENDAR_EVENTS,
     props<Parameters>()
@@ -88,4 +93,25 @@ export const createCalendarEvent = createAction(
     props<{
         calendarEvent: CalendarEvent
     }>()
+);
+
+/**
+ * Put related
+ */
+export const putCalendarEvent = createAction(
+    PUT_CALENDAR_EVENT,
+    props<{
+        calendarEvent: CalendarEvent
+    }>()
+);
+
+export const putCalendarEventSuccess = createAction(
+    PUT_CALENDAR_EVENT_SUCCESS,
+    props<{
+        calendarEvent: CalendarEvent
+    }>()
+);
+
+export const clearResult = createAction(
+    CLEAR_RESULT
 );
