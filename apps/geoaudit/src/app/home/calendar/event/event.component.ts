@@ -39,9 +39,6 @@ export class EventComponent implements OnInit {
   public disableMinute = false;
   public hideTime = false;
 
-  public startDateControl = new FormControl(new Date());
-  public endDateControl = new FormControl(new Date());
-
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
@@ -108,6 +105,26 @@ export class EventComponent implements OnInit {
     // If a calendar-event has been provided then fetch it
 
     // If not then create a draft
+  }
+
+  /**
+   * All day toggle slider.
+   * 
+   * If enabled then patch form values start and end to start and end of day respectively
+   * otherwise to the current date time.
+   */
+  toggleAllDay(): void {
+    if (this.form.value.allDay) {
+      this.form.patchValue({
+        start: moment().startOf('day').toISOString(),
+        end: moment().endOf('day').toISOString()
+      });
+    } else {
+      this.form.patchValue({
+        start: moment().toISOString(),
+        end: moment().toISOString()
+      });
+    }
   }
 
   submit(): void {

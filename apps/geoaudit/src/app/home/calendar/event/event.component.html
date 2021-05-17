@@ -17,7 +17,9 @@
           class="example-margin"
           [color]="color"
           [checked]="form.value.allDay"
+          formControlName="allDay"
           [disabled]="false"
+          (change)="toggleAllDay()"
       >
         {{ 'CONTAINERS.home.calendar.event.form.all_day' | translate }}
       </mat-slide-toggle>
