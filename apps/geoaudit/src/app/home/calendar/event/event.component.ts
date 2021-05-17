@@ -84,6 +84,7 @@ export class EventComponent implements OnInit, AfterViewInit {
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
+    private router: Router,
     private store: Store<fromApp.State>,
     private alertService: AlertService
   ) {}
@@ -273,6 +274,7 @@ export class EventComponent implements OnInit, AfterViewInit {
       if (state.result === Result.SUCCESS) {
         this.alertService.success('Calendar Event Successfully Updated');
         this.store.dispatch(CalendarEventActions.clearResult());
+        this.router.navigate([`/home/calendar`]);
       }
 
       if (state.result === Result.ERROR) {
