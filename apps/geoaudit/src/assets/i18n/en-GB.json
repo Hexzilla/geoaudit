@@ -40,7 +40,10 @@
 				"event": {
 					"title": "Calendar Event",
 					"form": {
-						"title": "Event Title"
+						"title": "Event Title",
+						"all_day": "All Day",
+						"start": "Start Date",
+						"end": "End Date"
 					}
 				}
 			}

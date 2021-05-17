@@ -11,6 +11,8 @@ export interface CalendarEvent {
     surveys: Array<Survey>;
     users_permissions_users: Array<User>;
     published: boolean;
+    uuid: string;
+    uid: string;
     created_by: string;
     updated_by: string;
 }

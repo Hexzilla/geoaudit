@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import * as moment from 'moment';
@@ -24,6 +24,24 @@ export class EventComponent implements OnInit {
 
   submitted = false;
 
+  @ViewChild('picker') picker: any;
+
+  public disabled = false;
+  public showSpinners = true;
+  public showSeconds = false;
+  public touchUi = false;
+  public enableMeridian = false;
+  public minDate: Date;
+  public maxDate: Date;
+  public stepHour = 1;
+  public stepMinute = 1;
+  public stepSecond = 1;
+  public disableMinute = false;
+  public hideTime = false;
+
+  public startDateControl = new FormControl(new Date());
+  public endDateControl = new FormControl(new Date());
+
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
@@ -40,6 +58,10 @@ export class EventComponent implements OnInit {
       end: [moment().toISOString(), Validators.required],
       notes: ['', Validators.required],
       surveys: [[], Validators.required],
+
+      id: null,
+      uuid: null,
+      uid: null
     });
 
     // Determine whether a calendar-event id has been provided
@@ -86,5 +108,9 @@ export class EventComponent implements OnInit {
     // If a calendar-event has been provided then fetch it
 
     // If not then create a draft
+  }
+
+  submit(): void {
+    console.log('submit', this.form.value)
   }
 }

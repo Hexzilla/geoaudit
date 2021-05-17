@@ -10,6 +10,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import {MatDatepickerModule} from '@angular/material/datepicker';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -18,6 +19,10 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTableModule } from '@angular/material/table';
+
+// Custom
+import { NgxMatDatetimePickerModule, NgxMatTimepickerModule, NgxMatNativeDateModule, NgxMatDateFormats, NGX_MAT_DATE_FORMATS } from '@angular-material-components/datetime-picker';
+import { NgxMatMomentModule } from '@angular-material-components/moment-adapter';
 
 // Declarations
 import { CardButtonComponent } from '../components/card-button/card-button.component';
@@ -30,6 +35,19 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
 }
+
+// If using Moment
+const CUSTOM_MOMENT_FORMATS: NgxMatDateFormats = {
+  parse: {
+    dateInput: "l, LT"
+  },
+  display: {
+    dateInput: "ll, LT",
+    monthYearLabel: "MMM YYYY",
+    dateA11yLabel: "LL",
+    monthYearA11yLabel: "MMMM YYYY"
+  }
+};
 
 @NgModule({
   imports: [
@@ -53,6 +71,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     MatButtonModule,
     MatCardModule,
     MatCheckboxModule,
+    MatDatepickerModule,
     MatDialogModule,
     MatIconModule,
     MatFormFieldModule,
@@ -61,12 +80,19 @@ export function HttpLoaderFactory(http: HttpClient) {
     MatSlideToggleModule,
     MatTooltipModule,
     MatTableModule,
+
+    // Custom
+    NgxMatTimepickerModule,
+    NgxMatDatetimePickerModule,
+    NgxMatMomentModule,
   ],
   declarations: [
     CardButtonComponent,
     SidebarHeaderComponent
   ],
-  providers: [],
+  providers: [
+    { provide: NGX_MAT_DATE_FORMATS, useValue: CUSTOM_MOMENT_FORMATS }
+  ],
   exports: [
     CommonModule,
     FormsModule,
@@ -87,6 +113,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     MatButtonModule,
     MatCardModule,
     MatCheckboxModule,
+    MatDatepickerModule,
     MatDialogModule,
     MatIconModule,
     MatFormFieldModule,
@@ -95,6 +122,12 @@ export function HttpLoaderFactory(http: HttpClient) {
     MatSlideToggleModule,
     MatTooltipModule,
     MatTableModule,
+
+    // Custom
+    NgxMatTimepickerModule,
+    NgxMatDatetimePickerModule,
+    NgxMatMomentModule,
+
   ],
 })
 export class SharedModule {}
