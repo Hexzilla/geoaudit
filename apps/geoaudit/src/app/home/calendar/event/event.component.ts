@@ -90,6 +90,8 @@ export class EventComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit(): void {
+    console.log('route snp', this.route.snapshot.data.calendarEvent);
+
     this.store.dispatch(
       SurveyActions.countSurveys({ start: null, limit: null })
     );
