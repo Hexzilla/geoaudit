@@ -15,10 +15,11 @@
   </div>
 
   <geoaudit-card-button
-    title="15/05/2021 (12:30 - 16:40)"
-    text="N Surveys"
+    *ngFor="let calendarEvent of calendarEvents"
+    [title]="calendarEvent.start | date: 'short'"
+    [text]="calendarEvent.title"
     icon="category"
-    (onClick)="onCalendarEventClick()"
+    (onClick)="onCalendarEventClick(calendarEvent)"
   ></geoaudit-card-button>
 </ng-container>
 
