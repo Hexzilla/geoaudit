@@ -56,3 +56,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .leaflet-sidebar {
   z-index: 1000 !important;
 }
+
+.leaflet-sidebar-content {
+  overflow-y:hidden !important;
+}
