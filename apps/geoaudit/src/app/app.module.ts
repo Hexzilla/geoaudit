@@ -31,6 +31,8 @@ import { EffectsModule } from '@ngrx/effects';
 import { reducers } from './store';
 import { SurveyEffects } from './store/survey/survey.effects';
 import { DeleteModalComponent } from './modals/delete-modal/delete-modal.component';
+import { CalendarEventEffects } from './store/calendar-event/calendar-event.effects';
+// import { SidebarHeaderComponent } from './components/sidebar-header/sidebar-header.component';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient) {
@@ -39,8 +41,8 @@ export function HttpLoaderFactory(http: HttpClient) {
 
 export function debug(reducer: ActionReducer<any>): ActionReducer<any> {
   return function(state, action) {
-    console.log('state', state);
-    console.log('action', action);
+    // console.log('state', state);
+    // console.log('action', action);
  
     return reducer(state, action);
   };
@@ -53,6 +55,7 @@ export const metaReducers: MetaReducer<any>[] = [debug];
     AppComponent,
     AlertComponent,
     DeleteModalComponent,
+    // SidebarHeaderComponent
   ],
   imports: [
     BrowserModule,
@@ -78,7 +81,7 @@ export const metaReducers: MetaReducer<any>[] = [debug];
 
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
 
-    EffectsModule.forRoot([SurveyEffects])
+    EffectsModule.forRoot([CalendarEventEffects, SurveyEffects])
   ],
   providers: [
     MarkerService,

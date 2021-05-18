@@ -11,6 +11,8 @@ export const DELETE_SURVEYS = '[To Do List - Surveys] Delete surveys';
 export const DELETE_SURVEY_SUCCESS = '[To Do List - Surveys] Delete survey success';
 export const DELETE_SURVEY_FAILED = '[To Do List - Surveys] Delete survey failed';
 
+export const CLEAR_RESULT = '[To Do List - Surveys] Clear result';
+
 export const countSurveys = createAction(
     COUNT_SURVEYS,
     props<Parameters>()
@@ -62,4 +64,8 @@ export const deleteSurveySuccess = createAction(
     props<{
         survey: Survey
     }>()
+);
+
+export const clearResult = createAction(
+    CLEAR_RESULT
 );

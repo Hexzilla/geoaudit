@@ -34,6 +34,20 @@
 			"geoaudit": "Geoaudit",
 			"to_do_list": {
 				"title": "To Do List"
+			},
+			"calendar": {
+				"title": "Calendar",
+				"event": {
+					"title": "Calendar Event",
+					"form": {
+						"title": "Event Title",
+						"all_day": "All Day",
+						"start": "Start Date",
+						"end": "End Date",
+						"notes": "Notes",
+						"submit": "Submit"
+					}
+				}
 			}
 		}
 	},
