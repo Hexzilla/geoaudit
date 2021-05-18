@@ -77,14 +77,29 @@ export class NavigationComponent implements OnInit {
 
     let index = 0;
 
+    let destination = ''
+    let waypoints;
+
     surveys.map(survey => {
       if (surveys[index++]) {
         this.directions.addWaypoint(index, [Number(survey.geometry.lng), Number(survey.geometry.lat)]);
+
+        if (waypoints) {
+          waypoints = `${waypoints}|${Number(survey.geometry.lat)},${Number(survey.geometry.lng)}`
+        } else {
+          waypoints = `${Number(survey.geometry.lat)},${Number(survey.geometry.lng)}`
+        }
         index++;
       } else {
         this.directions.setDestination([Number(survey.geometry.lng), Number(survey.geometry.lat)])
+        destination = `${Number(survey.geometry.lat)},${Number(survey.geometry.lng)}`
       }
     });
+
+    console.log(destination, waypoints)
+
+    const url = `https://www.google.com/maps/dir/?api=1&destination=${destination}&travelmode=driving&waypoints=${waypoints}`;
+    console.log('url', url)
   }
 
   parseSurveyIds(): void {
