@@ -22,7 +22,6 @@ const surveyReducer = createReducer(
         return {
             ...state,
             count: action.count,
-            result: Result.SUCCESS
         }
     }),
     on(SurveyActions.fetchSurveys, (state, action) => {
@@ -33,7 +32,8 @@ const surveyReducer = createReducer(
     on(SurveyActions.setSurveys, (state, action) => {
         return {
             ...state,
-            surveys: action.surveys
+            surveys: action.surveys,
+            result: Result.SUCCESS
         }
     }),
     on(SurveyActions.deleteSurveySuccess, (state, action) => {

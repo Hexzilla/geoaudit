@@ -11,17 +11,6 @@ const routes: Routes = [
     { 
         path: '', component: CalendarComponent, 
         canActivate: [AuthGuard],
-        resolve: {
-            calendarEvents: CalendarEventsResolver
-        },
-        // children: [
-        //     {
-        //         path: 'event', component: EventComponent,
-        //     },
-            // {
-            //     path: 'event/:id', component: EventComponent,
-            // }
-        // ]
     },
 
     {
@@ -29,10 +18,7 @@ const routes: Routes = [
     },
 
     {
-        path: 'event/:id', component: EventComponent,
-        resolve: {
-            calendarEvent: CalendarEventResolver
-        }
+        path: 'event/:id', component: EventComponent
     },
 
     // otherwise redirect to home

@@ -24,16 +24,15 @@ import { MatChipInputEvent } from '@angular/material/chips';
 
 import * as SurveyActions from '../../../store/survey/survey.actions';
 
+import * as CalendarEventSelectors from '../../../store/calendar-event/calendar-event.selectors';
+import * as SurveySelectors from '../../../store/survey/survey.selectors';
+
 import { AlertService, SurveyService } from '../../../services';
 import * as fromApp from '../../../store';
 import * as CalendarEventActions from '../../../store/calendar-event/calendar-event.actions';
 import { Result, Survey } from '../../../models';
 import { fromEvent } from 'rxjs';
-import {
-  distinctUntilChanged,
-  filter,
-  map,
-} from 'rxjs/operators';
+import { distinctUntilChanged, filter, map, take } from 'rxjs/operators';
 
 @Component({
   selector: 'geoaudit-event',
@@ -90,29 +89,24 @@ export class EventComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit(): void {
-    console.log('route snp', this.route.snapshot.data.calendarEvent);
+    // console.log('route snp', this.route.snapshot.data.calendarEvent);
 
-    this.store.dispatch(
-      SurveyActions.countSurveys({ start: null, limit: null })
-    );
+    /**
+     * Fetch calendar event related data including surveys and
+     * a count of the surveys.
+     */
+    this.fetchData();
 
-    this.store.dispatch(SurveyActions.fetchSurveys({ start: 0, limit: 100 }));
+    /**
+     * Select from fetched data for event component data.
+     */
+    this.selectData();
 
-    this.store.select('survey').subscribe((state) => {
-      this.length = state.count;
-      this.allSurveys = state.surveys;
-    });
-
-    this.form = this.formBuilder.group({
-      title: ['Event Title', Validators.required],
-      allDay: [false, Validators.required],
-      start: [moment().toISOString(), Validators.required],
-      end: [moment().toISOString(), Validators.required],
-      notes: [''],
-      surveys: [[], Validators.required],
-
-      id: null,
-    });
+    /**
+     * Initialise the form with properties and
+     * validation constraints.
+     */
+    this.initialiseForm();
 
     // Determine whether a calendar-event id has been provided
     const id = this.route.snapshot.paramMap.get('id');
@@ -123,17 +117,76 @@ export class EventComponent implements OnInit, AfterViewInit {
      * and then patch the form with the values.
      */
     if (id) {
-      this.store.dispatch(
-        CalendarEventActions.fetchCalendarEvent({
-          id: Number(id),
-        })
-      );
+      this.editAndViewMode(id);
+    } else {
+      this.createMode();
+    }
+  }
 
-      /**
-       * Subscribe to store and patch form values.
-       */
-      this.store.select('calendarEvent').subscribe((state) => {
-        if (state.calendarEvent) {
+  /**
+   * Fetch data using ngrx dispatch action firstly for a count of the surveys
+   * and then the surveys. In selectData we subscribe to the store to use
+   * this data.
+   */
+  fetchData(): void {
+    this.store.dispatch(
+      SurveyActions.countSurveys({ start: null, limit: null })
+    );
+
+    this.store.dispatch(SurveyActions.fetchSurveys({ start: 0, limit: 100 }));
+  }
+
+  /**
+   * We select data from the store and we subscribe to it such that
+   * should the data change, we'll have the latest.
+   */
+  selectData(): void {
+    this.store.select(SurveySelectors.Surveys).subscribe((surveys) => {
+      this.allSurveys = surveys;
+    });
+
+    this.store.select(SurveySelectors.Count).subscribe((count) => {
+      this.length = count;
+    });
+  }
+
+  /**
+   * Initialisation of the form, properties, and validation.
+   */
+  initialiseForm(): void {
+    this.form = this.formBuilder.group({
+      title: ['Event Title', Validators.required],
+      allDay: [false, Validators.required],
+      start: [moment().toISOString(), Validators.required],
+      end: [moment().toISOString(), Validators.required],
+      notes: [''],
+      surveys: [[], Validators.required],
+
+      id: null,
+      published: false
+    });
+  }
+
+  /**
+   * In edit and view mode, we have a calendar-event id
+   * of which use to fetch the calendar-event from the backend.
+   * We then patch the form values with the values from calendar-event.
+   * @param id 
+   */
+  editAndViewMode(id: string): void {
+    this.store.dispatch(
+      CalendarEventActions.fetchCalendarEvent({
+        id: Number(id),
+      })
+    );
+
+    /**
+     * Subscribe to store and patch form values.
+     */
+    this.store
+      .select(CalendarEventSelectors.CalendarEvent)
+      .subscribe((calendarEvent) => {
+        if (calendarEvent) {
           const {
             title,
             allDay,
@@ -143,7 +196,7 @@ export class EventComponent implements OnInit, AfterViewInit {
             surveys,
 
             id,
-          } = state.calendarEvent;
+          } = calendarEvent;
           this.form.patchValue({
             title,
             allDay,
@@ -153,6 +206,7 @@ export class EventComponent implements OnInit, AfterViewInit {
             surveys,
 
             id,
+            published: true
           });
 
           /**
@@ -165,50 +219,70 @@ export class EventComponent implements OnInit, AfterViewInit {
           });
         }
       });
-    } else {
-      /**
-       * We only expect an array of surveys as query parameter
-       * before we create a Calendar Event.
-       */
-      this.store.select('survey').subscribe((state) => {
-        if (state.result === Result.SUCCESS) {
-          // Survey ids as query parameter.
-          const surveys = this.route.snapshot.queryParamMap.get('surveys');
+  }
 
-          // If the value is null, create a new array and store it
-          // Else parse the JSON string we sent into an array
-          if (surveys === null) {
-            this.surveys = new Array<Survey>();
-          } else {
-            const parsedSurveys = JSON.parse(surveys);
+  /**
+   * In create mode, we've navigated to this component route
+   * without an id. We may have navigated with some survey ids
+   * in the address bar of which having fetched survey data for
+   * we can associate the full survey object for the survey id.
+   *
+   * We then proceed to create the calendar-event with the default
+   * form values.
+   *
+   * We then subscribe to the store awaiting for the calendar-event
+   * and then we can set the id within the form as required
+   * for when we submit.
+   */
+  createMode(): void {
+    /**
+     * We only expect an array of surveys as query parameter
+     * before we create a Calendar Event.
+     */
+    this.store
+      .select(SurveySelectors.Surveys)
+      .pipe(take(1))
+      .subscribe((surveys) => {
+        // Survey ids as query parameter.
+        const surveyIds = this.route.snapshot.queryParamMap.get('surveys');
 
-            if (parsedSurveys) {
-              parsedSurveys.map((id) => {
-                const exists = state.surveys.find((survey) => survey.id === id);
-                if (exists) {
-                  if (!this.surveys.find((survey) => survey.id === id)) {
-                    this.surveys.push(exists);
-                  }
+        // If the value is null, create a new array and store it
+        // Else parse the JSON string we sent into an array
+        if (surveys === null) {
+          this.surveys = new Array<Survey>();
+        } else {
+          const parsedSurveys = JSON.parse(surveyIds);
+
+          if (parsedSurveys) {
+            parsedSurveys.map((id) => {
+              const exists = surveys.find((survey) => survey.id === id);
+              if (exists) {
+                if (!this.surveys.find((survey) => survey.id === id)) {
+                  this.surveys.push(exists);
                 }
-              });
-            }
+              }
+            });
           }
         }
       });
-      this.store.dispatch(
-        CalendarEventActions.createCalendarEvent({
-          calendarEvent: this.form.value,
-        })
-      );
 
-      this.store.select('calendarEvent').subscribe((state) => {
-        if (state.calendarEvent) {
-          this.form.patchValue({
-            id: state.calendarEvent.id,
-          });
-        }
+    this.store.dispatch(
+      CalendarEventActions.createCalendarEvent({
+        calendarEvent: this.form.value,
+      })
+    );
+
+    this.store
+      .select(CalendarEventSelectors.CalendarEvent)
+      .pipe(
+        filter((calendarEvent) => calendarEvent !== null),
+        take(1)
+      )
+      .subscribe((calendarEvent) => {
+        this.form.patchValue({
+          id: calendarEvent.id,
+        });
       });
-    }
   }
 
   ngAfterViewInit(): void {
@@ -251,9 +325,20 @@ export class EventComponent implements OnInit, AfterViewInit {
     }
   }
 
+  /**
+   * On submit of the calendar-event form we return array of survey ids,
+   * validate the form, and the make a PUT network request with the
+   * calendar-event data as already exists as created on entry to this
+   * component or we're in view or edit mode. Following that
+   * we subscribe and then check for the result such
+   * that we know what to do next i.e display an alert.
+   *
+   * @returns
+   */
   submit(): void {
     this.form.patchValue({
       surveys: this.surveys.map((survey) => survey.id),
+      published: true
     });
 
     this.submitted = true;
@@ -272,20 +357,26 @@ export class EventComponent implements OnInit, AfterViewInit {
       })
     );
 
-    this.store.select('calendarEvent').subscribe((state) => {
-      if (state.result === Result.SUCCESS) {
-        this.alertService.success('Calendar Event Successfully Updated');
-        this.store.dispatch(CalendarEventActions.clearResult());
-        this.router.navigate([`/home/calendar`]);
-      }
+    this.store
+      .select(CalendarEventSelectors.Result)
+      .pipe(
+        filter((result) => result !== Result.NONE),
+        take(1)
+      )
+      .subscribe((result) => {
+        if (result === Result.SUCCESS) {
+          this.alertService.success('Calendar Event Successfully Updated');
+          this.store.dispatch(CalendarEventActions.clearResult());
+          this.router.navigate([`/home/calendar`]);
+        }
 
-      if (state.result === Result.ERROR) {
-        this.alertService.success(
-          'An Error Occurred Whilst Trying To Update Your Calendar Event'
-        );
-        this.store.dispatch(CalendarEventActions.clearResult());
-      }
-    });
+        if (result === Result.ERROR) {
+          this.alertService.success(
+            'An Error Occurred Whilst Trying To Update Your Calendar Event'
+          );
+          this.store.dispatch(CalendarEventActions.clearResult());
+        }
+      });
   }
 
   add(event: MatChipInputEvent): void {

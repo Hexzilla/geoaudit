@@ -15,7 +15,7 @@ export interface State {
 export const initialState: State = {
     count: 0,
     calendarEvent: null,
-    calendarEvents: [],
+    calendarEvents: null,
     result: Result.NONE
 }
 
@@ -58,7 +58,7 @@ const calendarEventReducer = createReducer(
     on(CalendarEvents.putCalendarEventSuccess, (state, action) => {
         return {
             ...state,
-            calendarEvent: action.calendarEvent,
+            calendarEvent: null,
             result: Result.SUCCESS
         }
     }),
