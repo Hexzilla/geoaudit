@@ -91,6 +91,7 @@ export class NavigationComponent implements OnInit {
         }
         index++;
       } else {
+        console.log('just the one')
         this.directions.setDestination([Number(survey.geometry.lng), Number(survey.geometry.lat)])
         destination = `${Number(survey.geometry.lat)},${Number(survey.geometry.lng)}`
       }
@@ -100,6 +101,8 @@ export class NavigationComponent implements OnInit {
 
     const url = `https://www.google.com/maps/dir/?api=1&destination=${destination}&travelmode=driving&waypoints=${waypoints}`;
     console.log('url', url)
+
+    window.open(url);
   }
 
   parseSurveyIds(): void {
