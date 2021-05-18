@@ -32,6 +32,21 @@ export class SurveyEffects {
             ))
     ));
 
+    fetchSurveysSelected$ = createEffect(() => this.actions$.pipe(
+        ofType(SurveyActions.fetchSurveysSelected),
+        exhaustMap(({ surveys }) => 
+            merge(
+                ...surveys.map(survey =>
+                    this.surveyService.getSurvey(survey).pipe(
+                        map(() => ({ type: SurveyActions.SET_SURVEYS_SELECTED, survey })),
+                        catchError(err =>
+                            of(SurveyActions.fetchSurveysSelectedFailed({ survey, err: err.message })))
+                    )
+                )
+            )
+        )
+    ));
+
     deleteSurvey$ = createEffect(() => this.actions$.pipe(
         ofType(SurveyActions.DELETE_SURVEY),
         mergeMap(({ survey }) => this.surveyService.delete(survey)

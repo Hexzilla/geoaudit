@@ -48,6 +48,9 @@
 						"submit": "Submit"
 					}
 				}
+			},
+			"navigation": {
+				"title": "Navigation"
 			}
 		}
 	},

@@ -6,6 +6,7 @@ import * as SurveyActions from './survey.actions';
 export interface State {
     count: number,
     surveys: Array<Survey>,
+    selected: Array<Survey>,
 
     result: Result
 }
@@ -13,6 +14,7 @@ export interface State {
 export const initialState: State = {
     count: 0,
     surveys: [],
+    selected: [],
     result: Result.NONE
 }
 
@@ -33,6 +35,13 @@ const surveyReducer = createReducer(
         return {
             ...state,
             surveys: action.surveys,
+            result: Result.SUCCESS
+        }
+    }),
+    on(SurveyActions.setSurveysSelected, (state, action) => {
+        return {
+            ...state,
+            selected: [...state.selected, action.survey],
             result: Result.SUCCESS
         }
     }),

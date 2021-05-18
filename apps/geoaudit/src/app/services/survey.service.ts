@@ -20,6 +20,10 @@ export class SurveyService {
         return this.http.get<any>(`${environment.API_URL}/surveys/count?${pagination}`);
     }
 
+    getSurvey(id: number) {
+        return this.http.get<any>(`${environment.API_URL}/surveys/${id}`);
+    }
+
     getSurveys(parameters: Parameters) {
         const pagination = this.getDefaultQs(parameters);
 

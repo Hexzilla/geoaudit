@@ -4,7 +4,12 @@ import { Parameters, Survey } from '../../models';
 export const COUNT_SURVEYS = '[To Do List - Surveys] Count';
 export const SET_COUNT = '[To Do List - Surveys] Set count';
 export const FETCH_SURVEYS = '[To Do List - Surveys] Fetch surveys';
+
+export const FETCH_SURVEYS_SELECTED = '[To Do List - Surveys] Fetch surveys selected';
+export const FETCH_SURVEYS_SELECTED_FAILED = '[To Do List - Surveys] Fetch surveys selected failed';
+
 export const SET_SURVEYS = '[To Do List - Surveys] Set surveys';
+export const SET_SURVEYS_SELECTED = '[To Do List - Surveys] Set surveys selected';
 
 export const DELETE_SURVEY = '[To Do List - Surveys] Delete survey';
 export const DELETE_SURVEYS = '[To Do List - Surveys] Delete surveys';
@@ -30,10 +35,32 @@ export const fetchSurveys = createAction(
     props<Parameters>()
 );
 
+export const fetchSurveysSelected = createAction(
+    FETCH_SURVEYS_SELECTED,
+    props<{
+        surveys: Array<number>
+    }>()
+);
+
+export const fetchSurveysSelectedFailed = createAction(
+    FETCH_SURVEYS_SELECTED_FAILED,
+    props<{
+        survey: number,
+        err: any
+    }>()
+);
+
 export const setSurveys = createAction(
     SET_SURVEYS,
     props<{
         surveys: Array<Survey>
+    }>()
+);
+
+export const setSurveysSelected = createAction(
+    SET_SURVEYS_SELECTED,
+    props<{
+        survey: Survey
     }>()
 );
 

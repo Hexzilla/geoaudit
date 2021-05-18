@@ -15,3 +15,10 @@ export const Count = createSelector(
         return state.count;
     }
 )
+
+export const Selected = createSelector(
+    state => state['survey'],
+    (state: State) => {
+        return state.selected;
+    }
+)

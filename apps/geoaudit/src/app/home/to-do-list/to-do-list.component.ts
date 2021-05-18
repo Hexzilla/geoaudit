@@ -141,6 +141,31 @@ export class ToDoListComponent implements OnInit, AfterViewInit {
     this.router.navigate([`/home/calendar/event`], navigationExtras);
   }
 
+  drive(): void {
+    const surveys = this.selection.isEmpty()
+    ? this.dataSource.data
+    : this.selection.selected;
+
+    const surveyIds = surveys.map(survey => survey.id);    
+    console.log('surveyIds', surveyIds)
+
+    // Add the array of values to the query parameter as a JSON string
+    const queryParams = {
+      surveys: JSON.stringify(surveyIds)
+    }
+
+    console.log(queryParams)
+    
+    // Create our 'NaviationExtras' object which is expected by the Angular Router
+    const navigationExtras: NavigationExtras = {
+      queryParams
+    };
+
+    console.log(navigationExtras)
+
+    this.router.navigate([`/home/navigation`], navigationExtras);
+  }
+
   delete(): void {
     const dialogRef = this.dialog.open(DeleteModalComponent, {
       data: {

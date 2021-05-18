@@ -248,7 +248,7 @@ export class EventComponent implements OnInit, AfterViewInit {
 
         // If the value is null, create a new array and store it
         // Else parse the JSON string we sent into an array
-        if (surveys === null) {
+        if (surveyIds === null) {
           this.surveys = new Array<Survey>();
         } else {
           const parsedSurveys = JSON.parse(surveyIds);

@@ -15,6 +15,7 @@ import { ApprovalsComponent } from './approvals/approvals.component';
 import { SidebarActionsComponent } from '../components/sidebar-actions/sidebar-actions.component';
 
 import { SharedModule } from './shared.module';
+import { NavigationComponent } from './navigation/navigation.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { SharedModule } from './shared.module';
     SurveysComponent,
     ApprovalsComponent,
     SidebarActionsComponent,
+    NavigationComponent,
   ],
   imports: [
     HomeRoutingModule,
