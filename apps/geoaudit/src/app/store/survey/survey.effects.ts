@@ -38,7 +38,7 @@ export class SurveyEffects {
             merge(
                 ...surveys.map(survey =>
                     this.surveyService.getSurvey(survey).pipe(
-                        map(() => ({ type: SurveyActions.SET_SURVEYS_SELECTED, survey })),
+                        map((data) => ({ type: SurveyActions.SET_SURVEYS_SELECTED, survey: data })),
                         catchError(err =>
                             of(SurveyActions.fetchSurveysSelectedFailed({ survey, err: err.message })))
                     )

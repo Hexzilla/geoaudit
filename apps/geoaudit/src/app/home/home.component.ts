@@ -25,6 +25,7 @@ L.Marker.prototype.options.icon = iconDefault;
 
 import { Auth } from '../models';
 import { AuthService } from '../services/auth.service';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'geoaudit-home',
@@ -78,8 +79,8 @@ export class HomeComponent implements AfterViewInit {
 
   private initMap(): void {
     this.map = L.map('map', {
-      center: [39.8282, -98.5795],
-      zoom: 3,
+      center: [environment.coordinates.lat, environment.coordinates.lng],
+      zoom: 8,
     });
 
     const tiles = L.tileLayer(
