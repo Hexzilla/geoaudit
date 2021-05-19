@@ -16,3 +16,22 @@
 .radio-button {
   margin: 5px;
 }
+
+
+.form {
+  width: 100%;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.option-img {
+  vertical-align: middle;
+  margin-right: 8px;
+}
+
+[dir='rtl'] .option-img {
+  margin-right: 0;
+  margin-left: 8px;
+}

@@ -43,6 +43,23 @@
 
             <ng-container *ngSwitchCase="'survey'">
                 <p>{{ 'MODALS.navigation_modal.select_survey' | translate }}</p>
+
+                <form class="form">
+                    <mat-form-field class="full-width">
+                      <mat-label>Survey</mat-label>
+                      <input matInput
+                             aria-label="Survey"
+                             [matAutocomplete]="auto"
+                             [formControl]="surveyCtrl"
+                             #input>
+                      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+                        <mat-option *ngFor="let survey of filteredSurveys" [value]="survey">
+                          <span>{{survey.id_reference}}</span> |
+                          <small>ID: {{survey.id}}</small>
+                        </mat-option>
+                      </mat-autocomplete>
+                    </mat-form-field>
+                </form>
             </ng-container>
 
             <ng-container *ngSwitchCase="'home'">
@@ -86,7 +103,7 @@
     {{ 'MODALS.navigation_modal.confirm' | translate }}
   </button> -->
   <div></div>
-  <button mat-flat-button color="accent" mat-dialog-close>
+  <button mat-flat-button color="accent" (click)="onNoClick()">
     {{ 'MODALS.close' | translate }}
   </button>
 </div>

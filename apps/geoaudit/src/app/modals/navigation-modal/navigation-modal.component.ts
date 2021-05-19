@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import * as mapboxgl from 'mapbox-gl';
@@ -12,6 +12,10 @@ import { Store } from '@ngrx/store';
 
 import * as fromApp from '../../store';
 import { ThemePalette } from '@angular/material/core';
+import { FormControl } from '@angular/forms';
+import { fromEvent, Observable } from 'rxjs';
+import { map, filter, debounceTime, distinctUntilChanged, startWith, tap } from 'rxjs/operators';
+import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 export interface DialogData {
   surveys: Array<Survey>;
@@ -22,7 +26,7 @@ export interface DialogData {
   templateUrl: './navigation-modal.component.html',
   styleUrls: ['./navigation-modal.component.scss']
 })
-export class NavigationModalComponent implements OnInit {
+export class NavigationModalComponent implements OnInit, AfterViewInit {
 
   color: ThemePalette = 'primary';
 
@@ -46,7 +50,15 @@ export class NavigationModalComponent implements OnInit {
     'work',
     'other_address'
   ];
-  
+
+  surveyCtrl = new FormControl();
+  filteredSurveys: Array<Survey>;
+
+  selectedSurvey: Survey;
+
+  @ViewChild('input', { static: true }) input: ElementRef;
+  @ViewChild('auto') matAutocomplete: MatAutocomplete;
+
   constructor(
     public dialogRef: MatDialogRef<NavigationModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
@@ -60,6 +72,27 @@ export class NavigationModalComponent implements OnInit {
     console.log(this.data.surveys)
 
     this.initDirections(this.data.surveys)
+  }
+
+  ngAfterViewInit() {
+
+      // this.filteredSurveys = this.surveyCtrl.valueChanges
+      // .pipe(
+      //   startWith(''),
+        // map(state => state ? this._filterSurveys(state) : this.data.surveys.slice())
+      // );
+
+      this.surveyCtrl.valueChanges.subscribe(value => {
+        console.log('_filterSurveys', value)
+
+        if (value) {
+          this.filteredSurveys = this._filterSurveys(value);
+        } else {
+          this.filteredSurveys = this.data.surveys.slice();
+        }
+
+        // this.filteredSurveys = map(value => value ? this._filterSurveys(state) : this.data.surveys.slice())
+      })
   }
 
   initMap(): void {
@@ -113,6 +146,8 @@ export class NavigationModalComponent implements OnInit {
 
   onNoClick(): void {
     this.dialogRef.close();
+
+    console.log('selectedSurvey', this.selectedSurvey)
   }
 
   onYesClick(): void {
@@ -127,5 +162,23 @@ export class NavigationModalComponent implements OnInit {
 
   onDestinationTypeClick(destinationType: string): void {
     console.log('onDestinationTypeClick', destinationType)
+
+    // If home load home data
+
+    // If work load work data
+
+    // If other address prepare services for searching
+  }
+
+  selected(event: MatAutocompleteSelectedEvent): void {
+    this.surveyCtrl.setValue(event.option.value.id_reference);
+    this.selectedSurvey = event.option.value;
+  }
+
+  private _filterSurveys(value: string): Array<Survey> {
+    if (value && typeof value === "string") {
+      const filterValue = value.toLowerCase();  
+      return this.data.surveys.filter(survey => survey.name.toLowerCase().indexOf(filterValue) === 0);
+    }
   }
 }
