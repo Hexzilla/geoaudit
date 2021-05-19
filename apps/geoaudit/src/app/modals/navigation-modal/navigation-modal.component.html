@@ -1,23 +1,92 @@
 <h1 mat-dialog-title>{{ 'MODALS.navigation_modal.title' | translate }}</h1>
 <div mat-dialog-content>
-    <p>{{ 'MODALS.navigation_modal.navigation_surveys' | translate: { length: data.surveys.length } }}</p>
+  <p>
+    {{
+      'MODALS.navigation_modal.navigation_surveys'
+        | translate: { length: data.surveys.length }
+    }}
+  </p>
 
-    <!-- <div class="mapbox" id="mapbox" class="match-parent"></div> -->
+  <!-- <div class="mapbox" id="mapbox" class="match-parent"></div> -->
 
-    <div>
-        <label id="radio-group-label" class="radio-group-label">{{ 'MODALS.navigation_modal.what_destination' | translate }}</label>
+  <mat-horizontal-stepper>
+    <mat-step label="Step 1" state="phone" [completed]="selectedDestinationType" [optional]="false">
+      <div>
+        <label id="radio-group-label" class="radio-group-label">{{
+          'MODALS.navigation_modal.what_destination' | translate
+        }}</label>
         <mat-radio-group
           aria-labelledby="radio-group-label"
           class="radio-group"
           [(ngModel)]="selectedDestinationType"
-          [color]="color">
-          <mat-radio-button class="radio-button" *ngFor="let destinationType of destinationTypes" [value]="destinationType">
-            {{ 'MODALS.navigation_modal.destinations.'+destinationType | translate }}
+          [color]="color"
+        >
+          <mat-radio-button
+            class="radio-button"
+            *ngFor="let destinationType of destinationTypes"
+            [value]="destinationType"
+            (click)="onDestinationTypeClick(destinationType)"
+          >
+            {{
+              'MODALS.navigation_modal.destinations.' + destinationType | translate
+            }}
           </mat-radio-button>
         </mat-radio-group>
-    </div>
+      </div>
+
+      <div>
+        <button mat-button matStepperNext type="button" [disabled]="!selectedDestinationType">Next</button>
+      </div>
+    </mat-step>
+    <mat-step label="Step 2" state="chat" [editable]="false" [completed]="selectedDestinationType && false">
+        <ng-container [ngSwitch]="selectedDestinationType">
+
+            <ng-container *ngSwitchCase="'survey'">
+                <p>{{ 'MODALS.navigation_modal.select_survey' | translate }}</p>
+            </ng-container>
+
+            <ng-container *ngSwitchCase="'home'">
+                <p>{{ 'MODALS.navigation_modal.home_address' | translate }}</p>
+            </ng-container>
+
+            <ng-container *ngSwitchCase="'work'">
+                <p>{{ 'MODALS.navigation_modal.work_address' | translate }}</p>
+            </ng-container>
+            
+            <ng-container *ngSwitchCase="'other_address'">
+                <p>{{ 'MODALS.navigation_modal.other_address' | translate }}</p>
+            </ng-container>
+            
+        </ng-container>
+      <div>
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button matStepperNext>Next</button>
+      </div>
+    </mat-step>
+    <mat-step label="Step 3">
+      <p>You're welcome.</p>
+    </mat-step>
+
+    <!-- Icon overrides. -->
+    <ng-template matStepperIcon="phone">
+      <mat-icon>call_end</mat-icon>
+    </ng-template>
+    <ng-template matStepperIcon="chat">
+      <mat-icon>forum</mat-icon>
+    </ng-template>
+  </mat-horizontal-stepper>
 </div>
 <div mat-dialog-actions fxLayoutAlign="space-between">
-    <button mat-flat-button color="primary" (click)="onYesClick()" [disabled]="isSubmitDisabled()">{{ 'MODALS.navigation_modal.confirm' | translate }}</button>
-    <button mat-flat-button color="accent" mat-dialog-close>{{ 'MODALS.close' | translate }}</button>
+  <!-- <button
+    mat-flat-button
+    color="primary"
+    (click)="onYesClick()"
+    [disabled]="isSubmitDisabled()"
+  >
+    {{ 'MODALS.navigation_modal.confirm' | translate }}
+  </button> -->
+  <div></div>
+  <button mat-flat-button color="accent" mat-dialog-close>
+    {{ 'MODALS.close' | translate }}
+  </button>
 </div>

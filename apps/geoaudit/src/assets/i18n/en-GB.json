@@ -65,12 +65,16 @@
 			"navigation_surveys": "You're about to start navigation for {{length}} survey(s).",
 			"what_destination": "What is your destination?",
 			"destinations": {
-				"last_survey": "Last Survey",
 				"survey": "Survey",
 				"home": "Home",
 				"work": "Work",
 				"other_address": "Other Address"
 			},
+			"select_survey": "Select Survey",
+			"home_address": "Home Address",
+			"work_address": "Work Address",
+			"other_address": "Enter Address",
+			
 			"confirm": "Confirm"
 		},
 		"close": "Close"

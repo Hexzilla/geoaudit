@@ -124,4 +124,8 @@ export class NavigationModalComponent implements OnInit {
   isSubmitDisabled(): boolean {
     return !this.selectedDestinationType;
   }
+
+  onDestinationTypeClick(destinationType: string): void {
+    console.log('onDestinationTypeClick', destinationType)
+  }
 }
