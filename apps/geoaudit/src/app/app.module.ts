@@ -54,8 +54,7 @@ export const metaReducers: MetaReducer<any>[] = [debug];
   declarations: [
     AppComponent,
     AlertComponent,
-    DeleteModalComponent,
-    // SidebarHeaderComponent
+    DeleteModalComponent
   ],
   imports: [
     BrowserModule,

@@ -12,7 +12,6 @@ import { ProfileComponent } from './profile/profile.component';
 import { JobsComponent } from './jobs/jobs.component';
 import { SurveysComponent } from './surveys/surveys.component';
 import { ApprovalsComponent } from './approvals/approvals.component';
-import { NavigationComponent } from './navigation/navigation.component';
 
 const routes: Routes = [
     { 
@@ -36,9 +35,6 @@ const routes: Routes = [
             },
             {
                 path: 'jobs', component: JobsComponent
-            },
-            {
-                path: 'navigation', component: NavigationComponent
             },
             {
                 path: 'surveys', component: SurveysComponent

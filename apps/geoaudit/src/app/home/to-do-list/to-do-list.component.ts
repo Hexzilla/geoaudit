@@ -27,6 +27,7 @@ import { Survey } from '../../models';
 import * as fromApp from '../../store';
 import * as SurveyActions from '../../store/survey/survey.actions';
 import { NavigationExtras, Router } from '@angular/router';
+import { NavigationModalComponent } from '../../modals/navigation-modal/navigation-modal.component';
 
 @Component({
   selector: 'geoaudit-to-do-list',
@@ -146,24 +147,17 @@ export class ToDoListComponent implements OnInit, AfterViewInit {
     ? this.dataSource.data
     : this.selection.selected;
 
-    const surveyIds = surveys.map(survey => survey.id);    
-    console.log('surveyIds', surveyIds)
+    // Open modal
+    const dialogRef = this.dialog.open(NavigationModalComponent, {
+      data: {
+        surveys
+      },
+      autoFocus: true,
+    });
 
-    // Add the array of values to the query parameter as a JSON string
-    const queryParams = {
-      surveys: JSON.stringify(surveyIds)
-    }
-
-    console.log(queryParams)
-    
-    // Create our 'NaviationExtras' object which is expected by the Angular Router
-    const navigationExtras: NavigationExtras = {
-      queryParams
-    };
-
-    console.log(navigationExtras)
-
-    this.router.navigate([`/home/navigation`], navigationExtras);
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {}       
+    });
   }
 
   delete(): void {

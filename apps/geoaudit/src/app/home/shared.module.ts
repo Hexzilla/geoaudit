@@ -18,9 +18,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import {MatRadioModule} from '@angular/material/radio';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTableModule } from '@angular/material/table';
+
+// Modals
+import { NavigationModalComponent } from '../modals/navigation-modal/navigation-modal.component';
 
 // Custom
 import { NgxMatDatetimePickerModule, NgxMatTimepickerModule, NgxMatNativeDateModule, NgxMatDateFormats, NGX_MAT_DATE_FORMATS } from '@angular-material-components/datetime-picker';
@@ -81,6 +85,7 @@ const CUSTOM_MOMENT_FORMATS: NgxMatDateFormats = {
     MatFormFieldModule,
     MatInputModule,
     MatPaginatorModule,
+    MatRadioModule,
     MatSlideToggleModule,
     MatTooltipModule,
     MatTableModule,
@@ -92,7 +97,8 @@ const CUSTOM_MOMENT_FORMATS: NgxMatDateFormats = {
   ],
   declarations: [
     CardButtonComponent,
-    SidebarHeaderComponent
+    SidebarHeaderComponent,
+    NavigationModalComponent
   ],
   providers: [
     { provide: NGX_MAT_DATE_FORMATS, useValue: CUSTOM_MOMENT_FORMATS }
@@ -125,6 +131,7 @@ const CUSTOM_MOMENT_FORMATS: NgxMatDateFormats = {
     MatFormFieldModule,
     MatInputModule,
     MatPaginatorModule,
+    MatRadioModule,
     MatSlideToggleModule,
     MatTooltipModule,
     MatTableModule,

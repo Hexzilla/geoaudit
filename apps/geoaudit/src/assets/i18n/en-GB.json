@@ -60,6 +60,19 @@
 			"delete_surveys": "You're about to delete {{length}} survey(s). Do you wish to continue?",
 			"delete": "Confirm"
 		},
+		"navigation_modal": {
+			"title": "Navigation",
+			"navigation_surveys": "You're about to start navigation for {{length}} survey(s).",
+			"what_destination": "What is your destination?",
+			"destinations": {
+				"last_survey": "Last Survey",
+				"survey": "Survey",
+				"home": "Home",
+				"work": "Work",
+				"other_address": "Other Address"
+			},
+			"confirm": "Confirm"
+		},
 		"close": "Close"
 	}
 }
