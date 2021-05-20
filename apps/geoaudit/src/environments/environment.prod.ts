@@ -7,5 +7,10 @@ export const environment = {
   coordinates: {
     lat: 52.205338,
     lng: 0.121817
+  },
+  google: {
+    maps: {
+      url: 'https://www.google.com/maps/dir/?api=1&travelmode=driving&'
+    }
   }
 };

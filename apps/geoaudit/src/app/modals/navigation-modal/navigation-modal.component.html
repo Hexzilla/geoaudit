@@ -9,7 +9,7 @@
 
   <!-- <div class="mapbox" id="mapbox" class="match-parent"></div> -->
 
-  <mat-horizontal-stepper>
+  <mat-horizontal-stepper (selectionChange)="selectionChange($event)">
     <mat-step label="Step 1" state="phone" [completed]="selectedDestinationType" [optional]="false">
       <div>
         <label id="radio-group-label" class="radio-group-label">{{
@@ -38,7 +38,7 @@
         <button mat-button matStepperNext type="button" [disabled]="!selectedDestinationType">Next</button>
       </div>
     </mat-step>
-    <mat-step label="Step 2" state="chat" [editable]="false" [completed]="selectedDestinationType && false">
+    <mat-step label="Step 2" state="chat" [editable]="false" [completed]="isStep2Completed()">
         <ng-container [ngSwitch]="selectedDestinationType">
 
             <ng-container *ngSwitchCase="'survey'">
@@ -51,7 +51,7 @@
                              aria-label="Survey"
                              [matAutocomplete]="auto"
                              [formControl]="surveyCtrl"
-                             #input>
+                             #surveyInput>
                       <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
                         <mat-option *ngFor="let survey of filteredSurveys" [value]="survey">
                           <span>{{survey.id_reference}}</span> |
