@@ -7,10 +7,13 @@
     }}
   </p>
 
-  <!-- <div class="mapbox" id="mapbox" class="match-parent"></div> -->
-
   <mat-horizontal-stepper (selectionChange)="selectionChange($event)">
-    <mat-step label="Step 1" state="phone" [completed]="selectedDestinationType" [optional]="false">
+    <mat-step
+      label="Step 1"
+      state="phone"
+      [completed]="selectedDestinationType"
+      [optional]="false"
+    >
       <div>
         <label id="radio-group-label" class="radio-group-label">{{
           'MODALS.navigation_modal.what_destination' | translate
@@ -28,60 +31,79 @@
             (click)="onDestinationTypeClick(destinationType)"
           >
             {{
-              'MODALS.navigation_modal.destinations.' + destinationType | translate
+              'MODALS.navigation_modal.destinations.' + destinationType
+                | translate
             }}
           </mat-radio-button>
         </mat-radio-group>
       </div>
 
       <div>
-        <button mat-button matStepperNext type="button" [disabled]="!selectedDestinationType">Next</button>
+        <button
+          mat-button
+          matStepperNext
+          type="button"
+          [disabled]="!selectedDestinationType"
+        >
+          Next
+        </button>
       </div>
     </mat-step>
-    <mat-step label="Step 2" state="chat" [editable]="false" [completed]="isStep2Completed()">
-        <ng-container [ngSwitch]="selectedDestinationType">
+    <mat-step
+      label="Step 2"
+      state="chat"
+      [editable]="false"
+      [completed]="isStep2Completed()"
+    >
+      <ng-container [ngSwitch]="selectedDestinationType">
+        <ng-container *ngSwitchCase="'survey'">
+          <p>{{ 'MODALS.navigation_modal.select_survey' | translate }}</p>
 
-            <ng-container *ngSwitchCase="'survey'">
-                <p>{{ 'MODALS.navigation_modal.select_survey' | translate }}</p>
-
-                <form class="form">
-                    <mat-form-field class="full-width">
-                      <mat-label>Survey</mat-label>
-                      <input matInput
-                             aria-label="Survey"
-                             [matAutocomplete]="auto"
-                             [formControl]="surveyCtrl"
-                             #surveyInput>
-                      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-                        <mat-option *ngFor="let survey of filteredSurveys" [value]="survey">
-                          <span>{{survey.id_reference}}</span> |
-                          <small>ID: {{survey.id}}</small>
-                        </mat-option>
-                      </mat-autocomplete>
-                    </mat-form-field>
-                </form>
-            </ng-container>
-
-            <ng-container *ngSwitchCase="'home'">
-                <p>{{ 'MODALS.navigation_modal.home_address' | translate }}</p>
-            </ng-container>
-
-            <ng-container *ngSwitchCase="'work'">
-                <p>{{ 'MODALS.navigation_modal.work_address' | translate }}</p>
-            </ng-container>
-            
-            <ng-container *ngSwitchCase="'other_address'">
-                <p>{{ 'MODALS.navigation_modal.other_address' | translate }}</p>
-            </ng-container>
-            
+          <form class="form">
+            <mat-form-field class="full-width">
+              <mat-label>Survey</mat-label>
+              <input
+                matInput
+                aria-label="Survey"
+                [matAutocomplete]="auto"
+                [formControl]="surveyCtrl"
+                #surveyInput
+              />
+              <mat-autocomplete
+                #auto="matAutocomplete"
+                (optionSelected)="selected($event)"
+              >
+                <mat-option
+                  *ngFor="let survey of filteredSurveys"
+                  [value]="survey"
+                >
+                  <span>{{ survey.id_reference }}</span> |
+                  <small>ID: {{ survey.id }}</small>
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </form>
         </ng-container>
+
+        <ng-container *ngSwitchCase="'home'">
+          <p>{{ 'MODALS.navigation_modal.home_address' | translate }}</p>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="'work'">
+          <p>{{ 'MODALS.navigation_modal.work_address' | translate }}</p>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="'other_address'">
+          <p>{{ 'MODALS.navigation_modal.other_address' | translate }}</p>
+        </ng-container>
+      </ng-container>
       <div>
         <button mat-button matStepperPrevious>Back</button>
         <button mat-button matStepperNext>Next</button>
       </div>
     </mat-step>
     <mat-step label="Step 3">
-      <p>You're welcome.</p>
+      <div class="mapbox" id="mapbox" class="match-parent"></div>
     </mat-step>
 
     <!-- Icon overrides. -->
@@ -94,15 +116,17 @@
   </mat-horizontal-stepper>
 </div>
 <div mat-dialog-actions fxLayoutAlign="space-between">
-  <!-- <button
+  <div *ngIf="!url"></div>
+
+  <button
+    *ngIf="url"
     mat-flat-button
     color="primary"
     (click)="onYesClick()"
     [disabled]="isSubmitDisabled()"
   >
     {{ 'MODALS.navigation_modal.confirm' | translate }}
-  </button> -->
-  <div></div>
+  </button>
   <button mat-flat-button color="accent" (click)="onNoClick()">
     {{ 'MODALS.close' | translate }}
   </button>

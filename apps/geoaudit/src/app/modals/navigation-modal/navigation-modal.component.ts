@@ -20,19 +20,12 @@ import { Store } from '@ngrx/store';
 import * as fromApp from '../../store';
 import { ThemePalette } from '@angular/material/core';
 import { FormControl } from '@angular/forms';
-import { fromEvent, Observable } from 'rxjs';
-import {
-  map,
-  filter,
-  debounceTime,
-  distinctUntilChanged,
-  startWith,
-  tap,
-} from 'rxjs/operators';
 import {
   MatAutocomplete,
   MatAutocompleteSelectedEvent,
 } from '@angular/material/autocomplete';
+import qs from 'qs';
+
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
 
 export interface DialogData {
@@ -79,30 +72,22 @@ export class NavigationModalComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit(): void {
-    // this.initMap();
-
     console.log(this.data.surveys);
-
-    this.initDirections(this.data.surveys);
   }
 
   ngAfterViewInit() {
-    // this.filteredSurveys = this.surveyCtrl.valueChanges
-    // .pipe(
-    //   startWith(''),
-    // map(state => state ? this._filterSurveys(state) : this.data.surveys.slice())
-    // );
+    this.initMap();
 
+    /**
+     * For when survey is selected, we use this to catch the text input
+     * and then filter the surveys against the given input.
+     */
     this.surveyCtrl.valueChanges.subscribe((value) => {
-      console.log('_filterSurveys', value);
-
       if (value) {
         this.filteredSurveys = this._filterSurveys(value);
       } else {
         this.filteredSurveys = this.data.surveys.slice();
       }
-
-      // this.filteredSurveys = map(value => value ? this._filterSurveys(state) : this.data.surveys.slice())
     });
   }
 
@@ -121,62 +106,33 @@ export class NavigationModalComponent implements OnInit, AfterViewInit {
     this.map.addControl(this.directions, 'top-left');
   }
 
-  initDirections(surveys: Array<Survey>): void {
-    this.directions.setOrigin([0.02039, 52.130989]);
-
-    let index = 0;
-
-    let destination = '';
-    let waypoints;
-
-    surveys.map((survey) => {
-      if (surveys[index++]) {
-        // this.directions.addWaypoint(index, [Number(survey.geometry.lng), Number(survey.geometry.lat)]);
-
-        if (waypoints) {
-          waypoints = `${waypoints}|${Number(survey.geometry.lat)},${Number(
-            survey.geometry.lng
-          )}`;
-        } else {
-          waypoints = `${Number(survey.geometry.lat)},${Number(
-            survey.geometry.lng
-          )}`;
-        }
-        index++;
-      } else {
-        console.log('just the one');
-        // this.directions.setDestination([Number(survey.geometry.lng), Number(survey.geometry.lat)])
-        destination = `${Number(survey.geometry.lat)},${Number(
-          survey.geometry.lng
-        )}`;
-      }
-    });
-
-    console.log(destination, waypoints);
-
-    this.url = `https://www.google.com/maps/dir/?api=1&destination=${destination}&travelmode=driving&waypoints=${waypoints}`;
-    console.log('url', this.url);
-  }
-
   onNoClick(): void {
     this.dialogRef.close();
-
-    console.log('selectedSurvey', this.selectedSurvey);
   }
 
+  /**
+   * Open the url for which should be Google Maps with destination and waypoints.
+   */
   onYesClick(): void {
     window.open(this.url);
-
     this.dialogRef.close(true);
   }
 
+  /**
+   * Only on step 3.
+   * @returns 
+   */
   isSubmitDisabled(): boolean {
-    return !this.selectedDestinationType;
+    return !this.url;
   }
 
+  /**
+   * Handle on click of a destination type in step 1 i.e. survey, home, work, other address.
+   * If survey for example, if there is only survey then we set the step 2 input saving the user from
+   * having to input it ... and there isn't any other surveys.
+   * @param destinationType 
+   */
   onDestinationTypeClick(destinationType: string): void {
-    console.log('onDestinationTypeClick', destinationType);
-
     switch (destinationType) {
       case 'survey':
         /**
@@ -187,7 +143,7 @@ export class NavigationModalComponent implements OnInit, AfterViewInit {
          */
         if (this.data.surveys.length === 1) {
           this.surveyCtrl.setValue(this.data.surveys[0].id_reference);
-          this.selectedSurvey = this.data.surveys[0]
+          this.selectedSurvey = this.data.surveys[0];
         }
         break;
 
@@ -205,12 +161,22 @@ export class NavigationModalComponent implements OnInit, AfterViewInit {
     }
   }
 
+  /**
+   * On step option selected i.e. when a user
+   * inputs text to filter a survey and then selects one.
+   * 
+   * We set the input value and set as the selected survey.
+   * @param event 
+   */
   selected(event: MatAutocompleteSelectedEvent): void {
     this.surveyCtrl.setValue(event.option.value.id_reference);
     this.selectedSurvey = event.option.value;
-    console.log('selected');
   }
 
+  /**
+   * Sets whether step 2 is considered as completed.
+   * @returns 
+   */
   isStep2Completed(): boolean {
     switch (this.selectedDestinationType) {
       case 'survey':
@@ -221,30 +187,24 @@ export class NavigationModalComponent implements OnInit, AfterViewInit {
     }
   }
 
+  /**
+   * On step selection change i.e. user clicks on a given step.
+   * Catch the change and if it is for step three then prepare
+   * for navigation.
+   * @param event 
+   */
   selectionChange(event: StepperSelectionEvent) {
-    console.log(event.selectedStep.label);
-    let stepLabel = event.selectedStep.label;
-    if (stepLabel == 'Step 2') {
-      console.log('CLICKED STEP 2');
-    }
-
-    switch (stepLabel) {
+    switch (event.selectedStep.label) {
       case 'Step 1':
-        console.log('at step 1');
-
         // Nothing
-
         break;
 
       case 'Step 2':
-        console.log('at step 2');
-
         // Nothing
-
         break;
 
       case 'Step 3':
-        console.log('at step 3');
+        this.directions.setOrigin([0.02039, 52.130989]);
 
         // Compute navigation
         let destination;
@@ -295,7 +255,7 @@ export class NavigationModalComponent implements OnInit, AfterViewInit {
           case 'home':
             // pull the user home address
 
-            // First need to add as field on the user 
+            // First need to add as field on the user
             break;
 
           /**
@@ -305,7 +265,7 @@ export class NavigationModalComponent implements OnInit, AfterViewInit {
           case 'work':
             // pull the user work address
 
-            // First need to add as field on the user 
+            // First need to add as field on the user
             break;
 
           /**
@@ -317,13 +277,29 @@ export class NavigationModalComponent implements OnInit, AfterViewInit {
             break;
         }
 
-        console.log('destination', destination);
-        console.log('waypoints', waypoints);
+        this.directions.setDestination([
+          Number(this.selectedSurvey.geometry.lng),
+          Number(this.selectedSurvey.geometry.lat),
+        ]);
 
+        const queryString = qs.stringify({
+          waypoints,
+          destination,
+        });
+
+        // Construct the url
+        this.url = `${environment.google.maps.url}${queryString}`;
         break;
     }
   }
 
+  /**
+   * Generate waypoints based on surveys.
+   * Will take an array of surveys excluding the destination
+   * and map through them constructing the waypoints and then returning them.
+   * @param otherSurveys 
+   * @returns 
+   */
   generateWaypoints(otherSurveys: Array<Survey>): string {
     let waypoints;
     let index = 0;
@@ -331,9 +307,9 @@ export class NavigationModalComponent implements OnInit, AfterViewInit {
     otherSurveys.map((otherSurvey) => {
       if (otherSurveys.length >= 2) {
         if (waypoints) {
-          waypoints = `${waypoints}${Number(
-            otherSurvey.geometry.lat
-          )},${Number(otherSurvey.geometry.lng)}`;
+          waypoints = `${waypoints}${Number(otherSurvey.geometry.lat)},${Number(
+            otherSurvey.geometry.lng
+          )}`;
         } else {
           waypoints = `${Number(otherSurvey.geometry.lat)},${Number(
             otherSurvey.geometry.lng
@@ -349,16 +325,26 @@ export class NavigationModalComponent implements OnInit, AfterViewInit {
           otherSurvey.geometry.lng
         )}`;
       }
+
+      this.directions.addWaypoint(index, [
+        Number(otherSurvey.geometry.lng),
+        Number(otherSurvey.geometry.lat),
+      ]);
     });
 
     return waypoints;
   }
 
+  /**
+   * For filtering the surveys based on a string input value
+   * @param value 
+   * @returns 
+   */
   private _filterSurveys(value: string): Array<Survey> {
     if (value && typeof value === 'string') {
       const filterValue = value.toLowerCase();
       return this.data.surveys.filter(
-        (survey) => survey.name.toLowerCase().indexOf(filterValue) === 0
+        (survey) => survey.name.toLowerCase().indexOf(filterValue) === 0 || survey.id.toString().indexOf(filterValue) === 0
       );
     }
   }
