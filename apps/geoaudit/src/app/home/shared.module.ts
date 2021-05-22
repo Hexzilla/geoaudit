@@ -19,6 +19,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import {MatRadioModule} from '@angular/material/radio';
+import {MatSelectModule} from '@angular/material/select';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatStepperModule} from '@angular/material/stepper';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -87,6 +88,7 @@ const CUSTOM_MOMENT_FORMATS: NgxMatDateFormats = {
     MatInputModule,
     MatPaginatorModule,
     MatRadioModule,
+    MatSelectModule,
     MatSlideToggleModule,
     MatStepperModule,
     MatTooltipModule,
@@ -134,6 +136,7 @@ const CUSTOM_MOMENT_FORMATS: NgxMatDateFormats = {
     MatInputModule,
     MatPaginatorModule,
     MatRadioModule,
+    MatSelectModule,
     MatSlideToggleModule,
     MatStepperModule,
     MatTooltipModule,

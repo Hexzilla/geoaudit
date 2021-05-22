@@ -176,6 +176,12 @@ export class ToDoListComponent implements OnInit, AfterViewInit {
     });
   }
 
+  addSurvey(): void {
+    console.log('add survey')
+
+    this.router.navigate([`/home/survey`]);
+  }
+
   download(): void {
     const doc = new jsPDF({
       orientation: 'landscape',

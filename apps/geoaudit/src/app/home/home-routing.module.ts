@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 const calendarModule = () => import('./calendar/calendar.module').then(x => x.CalendarModule);
+const surveyModule = () => import('./survey/survey.module').then(x => x.SurveyModule);
 
 import { HomeComponent } from './home.component';
 import { AuthGuard } from '../guards';
@@ -10,7 +11,6 @@ import { SearchComponent } from './search/search.component';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { ProfileComponent } from './profile/profile.component';
 import { JobsComponent } from './jobs/jobs.component';
-import { SurveysComponent } from './surveys/surveys.component';
 import { ApprovalsComponent } from './approvals/approvals.component';
 
 const routes: Routes = [
@@ -37,7 +37,7 @@ const routes: Routes = [
                 path: 'jobs', component: JobsComponent
             },
             {
-                path: 'surveys', component: SurveysComponent
+                path: 'survey', loadChildren: surveyModule,
             },
             {
                 path: 'approvals', component: ApprovalsComponent

@@ -51,6 +51,11 @@
 			},
 			"navigation": {
 				"title": "Navigation"
+			},
+			"survey": {
+				"add_survey": {
+					"title": "Add Survey"
+				}
 			}
 		}
 	},

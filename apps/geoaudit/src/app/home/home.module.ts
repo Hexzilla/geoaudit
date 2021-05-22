@@ -10,7 +10,6 @@ import { SearchComponent } from './search/search.component';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { ProfileComponent } from './profile/profile.component';
 import { JobsComponent } from './jobs/jobs.component';
-import { SurveysComponent } from './surveys/surveys.component';
 import { ApprovalsComponent } from './approvals/approvals.component';
 import { SidebarActionsComponent } from '../components/sidebar-actions/sidebar-actions.component';
 
@@ -24,7 +23,6 @@ import { SharedModule } from './shared.module';
     NotificationsComponent,
     ProfileComponent,
     JobsComponent,
-    SurveysComponent,
     ApprovalsComponent,
     SidebarActionsComponent,
   ],
