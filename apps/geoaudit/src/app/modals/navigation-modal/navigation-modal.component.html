@@ -110,7 +110,12 @@
             {{ 'MODALS.navigation_modal.other_address' | translate }}
           </p>
 
-          <input type="text" class="form-control" (keydown.enter)="$event.preventDefault()" placeholder="Search Nearest Location" autocorrect="off" autocapitalize="off" spellcheck="off" type="text" [formControl]="searchCtrl" #searchInput>
+          <form class="form">
+            <mat-form-field class="full-width">
+              <mat-label>Address</mat-label>
+              <input matInput type="text" class="form-control" (keydown.enter)="$event.preventDefault()" placeholder="Search Nearest Location" autocorrect="off" autocapitalize="off" spellcheck="off" type="text" [formControl]="searchCtrl" #searchInput>
+            </mat-form-field>
+          </form>
         </ng-container>
       </ng-container>
       <div>
