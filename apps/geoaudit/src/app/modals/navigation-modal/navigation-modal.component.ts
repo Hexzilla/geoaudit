@@ -27,6 +27,7 @@ import {
 import qs from 'qs';
 
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
+import { Observable } from 'rxjs';
 
 export interface DialogData {
   surveys: Array<Survey>;
@@ -51,6 +52,8 @@ export class NavigationModalComponent implements OnInit, AfterViewInit {
     profile: 'mapbox/driving',
   });
 
+  position: GeolocationPosition;
+
   url: string;
 
   selectedDestinationType: string;
@@ -73,6 +76,11 @@ export class NavigationModalComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     console.log(this.data.surveys);
+
+    this.getPosition().subscribe(position => {
+      this.position = position;
+   });
+
   }
 
   ngAfterViewInit() {
@@ -204,7 +212,7 @@ export class NavigationModalComponent implements OnInit, AfterViewInit {
         break;
 
       case 'Step 3':
-        this.directions.setOrigin([0.02039, 52.130989]);
+        this.directions.setOrigin([this.position.coords.longitude, this.position.coords.latitude]);
 
         // Compute navigation
         let destination;
@@ -333,6 +341,16 @@ export class NavigationModalComponent implements OnInit, AfterViewInit {
     });
 
     return waypoints;
+  }
+
+  getPosition(): Observable<any> {
+    return Observable.create(observer => {
+      window.navigator.geolocation.getCurrentPosition(position => {
+        observer.next(position);
+        observer.complete();
+      },
+        error => observer.error(error));
+    });
   }
 
   /**
