@@ -29,6 +29,7 @@
   },
   "private": true,
   "dependencies": {
+    "@agm/core": "^3.0.0-beta.0",
     "@angular-material-components/datetime-picker": "^5.1.0",
     "@angular-material-components/moment-adapter": "^5.0.0",
     "@angular/animations": "^11.2.0",
@@ -83,6 +84,7 @@
     "@nrwl/nx-cloud": "latest",
     "@nrwl/tao": "12.1.1",
     "@nrwl/workspace": "12.1.1",
+    "@types/googlemaps": "^3.43.3",
     "@types/jest": "26.0.8",
     "@types/node": "14.14.33",
     "@typescript-eslint/eslint-plugin": "4.19.0",

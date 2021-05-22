@@ -4,6 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { AgmCoreModule } from '@agm/core';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
@@ -69,6 +70,11 @@ export const metaReducers: MetaReducer<any>[] = [debug];
         useFactory: HttpLoaderFactory,
         deps: [HttpClient]
       }
+    }),
+    
+    AgmCoreModule.forRoot({
+      apiKey: environment.google.apikey,
+      libraries: ['places']
     }),
 
     // Material

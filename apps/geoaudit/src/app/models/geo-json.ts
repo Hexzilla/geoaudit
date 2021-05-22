@@ -4,8 +4,8 @@ export interface GeoJson {
     city?: string,
     country?: string,
     iso2?: string,
-    lat: string,
-    lng: string,
+    lat: string | number,
+    lng: string | number,
     population?: string,
     population_proper?: string
 }

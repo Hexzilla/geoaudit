@@ -109,6 +109,8 @@
           <p class="radio-group-label">
             {{ 'MODALS.navigation_modal.other_address' | translate }}
           </p>
+
+          <input type="text" class="form-control" (keydown.enter)="$event.preventDefault()" placeholder="Search Nearest Location" autocorrect="off" autocapitalize="off" spellcheck="off" type="text" [formControl]="searchCtrl" #searchInput>
         </ng-container>
       </ng-container>
       <div>

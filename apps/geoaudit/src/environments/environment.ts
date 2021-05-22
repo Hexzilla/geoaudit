@@ -15,7 +15,8 @@ export const environment = {
   google: {
     maps: {
       url: 'https://www.google.com/maps/dir/?api=1&travelmode=driving&'
-    }
+    },
+    apikey: "AIzaSyC0v5AjZusQowqnyKMlIeZbtbqsEN0ig20"
   }
 };
 

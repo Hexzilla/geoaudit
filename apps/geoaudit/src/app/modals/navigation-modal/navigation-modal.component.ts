@@ -3,6 +3,7 @@ import {
   Component,
   ElementRef,
   Inject,
+  NgZone,
   OnInit,
   ViewChild,
 } from '@angular/core';
@@ -16,6 +17,7 @@ import { Survey } from '../../models';
 import { environment } from 'apps/geoaudit/src/environments/environment';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { MapsAPILoader } from '@agm/core';
 
 import * as fromApp from '../../store';
 import { ThemePalette } from '@angular/material/core';
@@ -56,6 +58,8 @@ export class NavigationModalComponent implements OnInit, AfterViewInit {
 
   home: GeoJson;
 
+  otherAddress: GeoJson;
+
   work: GeoJson;
 
   position: GeolocationPosition;
@@ -65,6 +69,8 @@ export class NavigationModalComponent implements OnInit, AfterViewInit {
   selectedDestinationType: string;
   destinationTypes: Array<string> = ['survey', 'home', 'work', 'other_address'];
 
+  searchCtrl = new FormControl();
+
   surveyCtrl = new FormControl();
   filteredSurveys: Array<Survey>;
 
@@ -72,13 +78,16 @@ export class NavigationModalComponent implements OnInit, AfterViewInit {
 
   @ViewChild('surveyInput', { static: true }) surveyInput: ElementRef;
   @ViewChild('auto') matAutocomplete: MatAutocomplete;
+  @ViewChild('searchInput') searchInput: ElementRef;
 
   constructor(
     public dialogRef: MatDialogRef<NavigationModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
     private route: ActivatedRoute,
     private store: Store<fromApp.State>,
-    private authService: AuthService
+    private authService: AuthService,
+    private mapsAPILoader: MapsAPILoader,
+    private ngZone: NgZone
   ) {}
 
   ngOnInit(): void {
@@ -102,6 +111,35 @@ export class NavigationModalComponent implements OnInit, AfterViewInit {
       } else {
         this.filteredSurveys = this.data.surveys.slice();
       }
+    });
+
+    this.searchCtrl.valueChanges.subscribe((value) => {
+      console.log('searcg', value)
+
+      this.mapsAPILoader.load().then(() => {
+        console.log('loaded');
+  
+        let autocomplete = new google.maps.places.Autocomplete(this.searchInput.nativeElement);
+        autocomplete.addListener("place_changed", () => {
+          this.ngZone.run(() => {
+            //get the place result
+            let place: google.maps.places.PlaceResult = autocomplete.getPlace();
+  
+            //verify result
+            if (place.geometry === undefined || place.geometry === null) {
+              return;
+            }
+
+            // console.log(place.geometry.location.lat())
+
+            this.otherAddress = {
+              lat: place.geometry.location.lat(),
+              lng: place.geometry.location.lng()
+            }
+          });
+        });
+      });
+
     });
   }
 
@@ -227,6 +265,7 @@ export class NavigationModalComponent implements OnInit, AfterViewInit {
 
       case 'Step 2':
         // Nothing
+        
         break;
 
       case 'Step 3':
@@ -324,6 +363,16 @@ export class NavigationModalComponent implements OnInit, AfterViewInit {
            */
           case 'other_address':
             // Do something esle
+            destination = `${Number(this.otherAddress.lat)},${Number(
+              this.otherAddress.lng
+            )}`;
+
+            waypoints = this.generateWaypoints(this.data.surveys);
+
+            this.directions.setDestination([
+              Number(this.otherAddress.lng),
+              Number(this.otherAddress.lat),
+            ]);
             break;
         }
 
