@@ -58,7 +58,7 @@ export class NavigationModalComponent implements OnInit, AfterViewInit {
 
   home: GeoJson;
 
-  otherAddress: GeoJson;
+  otherAddress: GeoJson = null;
 
   work: GeoJson;
 
@@ -83,19 +83,15 @@ export class NavigationModalComponent implements OnInit, AfterViewInit {
   constructor(
     public dialogRef: MatDialogRef<NavigationModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
-    private route: ActivatedRoute,
-    private store: Store<fromApp.State>,
     private authService: AuthService,
     private mapsAPILoader: MapsAPILoader,
     private ngZone: NgZone
   ) {}
 
   ngOnInit(): void {
-    console.log(this.data.surveys);
-
-    this.getPosition().subscribe(position => {
+    this.getPosition().subscribe((position) => {
       this.position = position;
-   });
+    });
   }
 
   ngAfterViewInit() {
@@ -114,35 +110,33 @@ export class NavigationModalComponent implements OnInit, AfterViewInit {
     });
 
     this.searchCtrl.valueChanges.subscribe((value) => {
-      console.log('searcg', value)
-
       this.mapsAPILoader.load().then(() => {
-        console.log('loaded');
-  
-        let autocomplete = new google.maps.places.Autocomplete(this.searchInput.nativeElement);
-        autocomplete.addListener("place_changed", () => {
+        let autocomplete = new google.maps.places.Autocomplete(
+          this.searchInput.nativeElement
+        );
+        autocomplete.addListener('place_changed', () => {
           this.ngZone.run(() => {
             //get the place result
             let place: google.maps.places.PlaceResult = autocomplete.getPlace();
-  
+
             //verify result
             if (place.geometry === undefined || place.geometry === null) {
               return;
             }
 
-            // console.log(place.geometry.location.lat())
-
             this.otherAddress = {
               lat: place.geometry.location.lat(),
-              lng: place.geometry.location.lng()
-            }
+              lng: place.geometry.location.lng(),
+            };
           });
         });
       });
-
     });
   }
 
+  /**
+   * Initialises the mapbox map
+   */
   initMap(): void {
     this.map = new mapboxgl.Map({
       accessToken: environment.mapbox.accessToken,
@@ -172,7 +166,7 @@ export class NavigationModalComponent implements OnInit, AfterViewInit {
 
   /**
    * Only on step 3.
-   * @returns 
+   * @returns
    */
   isSubmitDisabled(): boolean {
     return !this.url;
@@ -182,7 +176,7 @@ export class NavigationModalComponent implements OnInit, AfterViewInit {
    * Handle on click of a destination type in step 1 i.e. survey, home, work, other address.
    * If survey for example, if there is only survey then we set the step 2 input saving the user from
    * having to input it ... and there isn't any other surveys.
-   * @param destinationType 
+   * @param destinationType
    */
   onDestinationTypeClick(destinationType: string): void {
     switch (destinationType) {
@@ -200,27 +194,15 @@ export class NavigationModalComponent implements OnInit, AfterViewInit {
         break;
 
       case 'home':
-        // pull the user home address
+        // Set the users home address coordinates.
         const { home } = this.authService.authValue.user;
-
-        console.log('home', home, 'work')
-
         this.home = home;
-        
         break;
 
       case 'work':
-        // pull the user work address
+        // Set the users work address coordinates.
         const { work } = this.authService.authValue.user;
-
-        console.log('work', work, 'work')
-
         this.work = work;
-
-        break;
-
-      case 'other_address':
-        // Do something esle
         break;
     }
   }
@@ -228,9 +210,9 @@ export class NavigationModalComponent implements OnInit, AfterViewInit {
   /**
    * On step option selected i.e. when a user
    * inputs text to filter a survey and then selects one.
-   * 
+   *
    * We set the input value and set as the selected survey.
-   * @param event 
+   * @param event
    */
   selected(event: MatAutocompleteSelectedEvent): void {
     this.surveyCtrl.setValue(event.option.value.id_reference);
@@ -239,13 +221,14 @@ export class NavigationModalComponent implements OnInit, AfterViewInit {
 
   /**
    * Sets whether step 2 is considered as completed.
-   * @returns 
+   * @returns
    */
   isStep2Completed(): boolean {
     switch (this.selectedDestinationType) {
       case 'survey':
         return this.selectedSurvey !== null;
-        break;
+      case 'other_address':
+        return this.otherAddress !== null;
       default:
         return false;
     }
@@ -255,21 +238,15 @@ export class NavigationModalComponent implements OnInit, AfterViewInit {
    * On step selection change i.e. user clicks on a given step.
    * Catch the change and if it is for step three then prepare
    * for navigation.
-   * @param event 
+   * @param event
    */
   selectionChange(event: StepperSelectionEvent) {
     switch (event.selectedStep.label) {
-      case 'Step 1':
-        // Nothing
-        break;
-
-      case 'Step 2':
-        // Nothing
-        
-        break;
-
       case 'Step 3':
-        this.directions.setOrigin([this.position.coords.longitude, this.position.coords.latitude]);
+        this.directions.setOrigin([
+          this.position.coords.longitude,
+          this.position.coords.latitude,
+        ]);
 
         // Compute navigation
         let destination;
@@ -324,9 +301,7 @@ export class NavigationModalComponent implements OnInit, AfterViewInit {
            */
           case 'home':
             // pull the user home address
-            destination = `${Number(this.home.lat)},${Number(
-              this.home.lng
-            )}`;
+            destination = `${Number(this.home.lat)},${Number(this.home.lng)}`;
 
             waypoints = this.generateWaypoints(this.data.surveys);
 
@@ -343,9 +318,7 @@ export class NavigationModalComponent implements OnInit, AfterViewInit {
            */
           case 'work':
             // pull the user work address
-            destination = `${Number(this.work.lat)},${Number(
-              this.work.lng
-            )}`;
+            destination = `${Number(this.work.lat)},${Number(this.work.lng)}`;
 
             waypoints = this.generateWaypoints(this.data.surveys);
 
@@ -391,8 +364,8 @@ export class NavigationModalComponent implements OnInit, AfterViewInit {
    * Generate waypoints based on surveys.
    * Will take an array of surveys excluding the destination
    * and map through them constructing the waypoints and then returning them.
-   * @param otherSurveys 
-   * @returns 
+   * @param otherSurveys
+   * @returns
    */
   generateWaypoints(otherSurveys: Array<Survey>): string {
     let waypoints;
@@ -430,25 +403,29 @@ export class NavigationModalComponent implements OnInit, AfterViewInit {
   }
 
   getPosition(): Observable<any> {
-    return Observable.create(observer => {
-      window.navigator.geolocation.getCurrentPosition(position => {
-        observer.next(position);
-        observer.complete();
-      },
-        error => observer.error(error));
+    return Observable.create((observer) => {
+      window.navigator.geolocation.getCurrentPosition(
+        (position) => {
+          observer.next(position);
+          observer.complete();
+        },
+        (error) => observer.error(error)
+      );
     });
   }
 
   /**
    * For filtering the surveys based on a string input value
-   * @param value 
-   * @returns 
+   * @param value
+   * @returns
    */
   private _filterSurveys(value: string): Array<Survey> {
     if (value && typeof value === 'string') {
       const filterValue = value.toLowerCase();
       return this.data.surveys.filter(
-        (survey) => survey.name.toLowerCase().indexOf(filterValue) === 0 || survey.id.toString().indexOf(filterValue) === 0
+        (survey) =>
+          survey.name.toLowerCase().indexOf(filterValue) === 0 ||
+          survey.id.toString().indexOf(filterValue) === 0
       );
     }
   }
