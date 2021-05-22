@@ -57,7 +57,9 @@
     >
       <ng-container [ngSwitch]="selectedDestinationType">
         <ng-container *ngSwitchCase="'survey'">
-          <p>{{ 'MODALS.navigation_modal.select_survey' | translate }}</p>
+          <p class="radio-group-label">
+            {{ 'MODALS.navigation_modal.select_survey' | translate }}
+          </p>
 
           <form class="form">
             <mat-form-field class="full-width">
@@ -86,15 +88,27 @@
         </ng-container>
 
         <ng-container *ngSwitchCase="'home'">
-          <p>{{ 'MODALS.navigation_modal.home_address' | translate }}</p>
+          <p class="radio-group-label">
+            {{ 'MODALS.navigation_modal.home_address' | translate }}
+          </p>
+          <p>
+            {{ 'MODALS.navigation_modal.home.lat_lng' | translate: { lat: home.lat, lng: home.lng } }}
+          </p>
         </ng-container>
 
         <ng-container *ngSwitchCase="'work'">
-          <p>{{ 'MODALS.navigation_modal.work_address' | translate }}</p>
+          <p class="radio-group-label">
+            {{ 'MODALS.navigation_modal.work_address' | translate }}
+          </p>
+          <p>
+            {{ 'MODALS.navigation_modal.work.lat_lng' | translate: { lat: work.lat, lng: work.lng } }}
+          </p>
         </ng-container>
 
         <ng-container *ngSwitchCase="'other_address'">
-          <p>{{ 'MODALS.navigation_modal.other_address' | translate }}</p>
+          <p class="radio-group-label">
+            {{ 'MODALS.navigation_modal.other_address' | translate }}
+          </p>
         </ng-container>
       </ng-container>
       <div>

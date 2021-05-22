@@ -28,6 +28,8 @@ import qs from 'qs';
 
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { Observable } from 'rxjs';
+import { AuthService } from '../../services';
+import { GeoJson } from '../../models/geo-json';
 
 export interface DialogData {
   surveys: Array<Survey>;
@@ -52,6 +54,10 @@ export class NavigationModalComponent implements OnInit, AfterViewInit {
     profile: 'mapbox/driving',
   });
 
+  home: GeoJson;
+
+  work: GeoJson;
+
   position: GeolocationPosition;
 
   url: string;
@@ -71,7 +77,8 @@ export class NavigationModalComponent implements OnInit, AfterViewInit {
     public dialogRef: MatDialogRef<NavigationModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
     private route: ActivatedRoute,
-    private store: Store<fromApp.State>
+    private store: Store<fromApp.State>,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -80,7 +87,6 @@ export class NavigationModalComponent implements OnInit, AfterViewInit {
     this.getPosition().subscribe(position => {
       this.position = position;
    });
-
   }
 
   ngAfterViewInit() {
@@ -157,10 +163,22 @@ export class NavigationModalComponent implements OnInit, AfterViewInit {
 
       case 'home':
         // pull the user home address
+        const { home } = this.authService.authValue.user;
+
+        console.log('home', home, 'work')
+
+        this.home = home;
+        
         break;
 
       case 'work':
         // pull the user work address
+        const { work } = this.authService.authValue.user;
+
+        console.log('work', work, 'work')
+
+        this.work = work;
+
         break;
 
       case 'other_address':
@@ -254,6 +272,11 @@ export class NavigationModalComponent implements OnInit, AfterViewInit {
               waypoints = this.generateWaypoints(otherSurveys);
             }
 
+            this.directions.setDestination([
+              Number(this.selectedSurvey.geometry.lng),
+              Number(this.selectedSurvey.geometry.lat),
+            ]);
+
             break;
 
           /**
@@ -262,8 +285,17 @@ export class NavigationModalComponent implements OnInit, AfterViewInit {
            */
           case 'home':
             // pull the user home address
+            destination = `${Number(this.home.lat)},${Number(
+              this.home.lng
+            )}`;
 
-            // First need to add as field on the user
+            waypoints = this.generateWaypoints(this.data.surveys);
+
+            this.directions.setDestination([
+              Number(this.home.lng),
+              Number(this.home.lat),
+            ]);
+
             break;
 
           /**
@@ -272,6 +304,16 @@ export class NavigationModalComponent implements OnInit, AfterViewInit {
            */
           case 'work':
             // pull the user work address
+            destination = `${Number(this.work.lat)},${Number(
+              this.work.lng
+            )}`;
+
+            waypoints = this.generateWaypoints(this.data.surveys);
+
+            this.directions.setDestination([
+              Number(this.work.lng),
+              Number(this.work.lat),
+            ]);
 
             // First need to add as field on the user
             break;
@@ -284,11 +326,6 @@ export class NavigationModalComponent implements OnInit, AfterViewInit {
             // Do something esle
             break;
         }
-
-        this.directions.setDestination([
-          Number(this.selectedSurvey.geometry.lng),
-          Number(this.selectedSurvey.geometry.lat),
-        ]);
 
         const queryString = qs.stringify({
           waypoints,

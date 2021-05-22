@@ -75,7 +75,14 @@
 			"work_address": "Work Address",
 			"other_address": "Enter Address",
 			
-			"start": "Start"
+			"start": "Start",
+
+			"home": {
+				"lat_lng": "Latitude: {{lat}}, Longtitude: {{lng}}"
+			},
+			"work": {
+				"lat_lng": "Latitude: {{lat}}, Longtitude: {{lng}}"
+			}
 		},
 		"close": "Close"
 	}

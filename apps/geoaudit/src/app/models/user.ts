@@ -1,3 +1,5 @@
+import { GeoJson } from "./geo-json";
+
 export class User {
   blocked: boolean;
   confirmed: true;
@@ -13,4 +15,6 @@ export class User {
     name: string,
     type: string
   };
+  home: GeoJson;
+  work: GeoJson;
 }
