@@ -1,11 +1,9 @@
+import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { Component, OnInit } from '@angular/core';
 
-interface Food {
-  value: string;
-  viewValue: string;
-}
+import { statuses } from '../../models'
 
-interface Car {
+interface Food {
   value: string;
   viewValue: string;
 }
@@ -18,7 +16,6 @@ interface Car {
 export class SurveyComponent implements OnInit {
 
   selectedValue: string;
-  selectedCar: string;
 
   foods: Food[] = [
     {value: 'steak-0', viewValue: 'Steak'},
@@ -26,15 +23,69 @@ export class SurveyComponent implements OnInit {
     {value: 'tacos-2', viewValue: 'Tacos'}
   ];
 
-  cars: Car[] = [
-    {value: 'volvo', viewValue: 'Volvo'},
-    {value: 'saab', viewValue: 'Saab'},
-    {value: 'mercedes', viewValue: 'Mercedes'}
-  ];
+  statuses: Array<String>;
 
   constructor() { }
 
   ngOnInit(): void {
+    this.statuses = Object.keys(statuses);
   }
 
+  /**
+   * On selection change of the steps i.e.
+   * click on step 1 -> catch event -> do something.
+   * @param event 
+   */
+  selectionChange(event: StepperSelectionEvent) {
+    console.log('selectionChange', event.selectedIndex)
+    switch (event.selectedIndex) {
+      case 0:
+
+      break;
+
+      case 1:
+
+      break;
+
+      case 2:
+
+      break;
+
+      case 3:
+
+      break;
+
+      case 4:
+
+      break;
+
+      case 5:
+
+      break;
+    }
+  }
+  
+  isStep1Completed(): boolean {
+    return false;
+  }
+  
+  isStep2Completed(): boolean {
+    return false;
+  }
+
+  isStep3Completed(): boolean {
+    return false;
+  }
+
+  isStep4Completed(): boolean {
+    return false;
+  }
+
+  isStep5Completed(): boolean {
+    return false;
+  }
+
+  isStep6Completed(): boolean {
+    return false;
+  }
 }

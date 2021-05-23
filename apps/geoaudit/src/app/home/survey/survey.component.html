@@ -2,28 +2,56 @@
   title="CONTAINERS.home.survey.add_survey.title"
 ></geoaudit-sidebar-header>
 
-<mat-card-content>
-  <form>
-    <h4>mat-select</h4>
-    <mat-form-field appearance="fill">
-      <mat-label>Favorite food</mat-label>
-      <mat-select [(ngModel)]="selectedValue" name="food">
-        <mat-option *ngFor="let food of foods" [value]="food.value">
-          {{ food.viewValue }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-    <p>Selected food: {{ selectedValue }}</p>
-    <h4>native html select</h4>
-    <mat-form-field appearance="fill">
-      <mat-label>Favorite car</mat-label>
-      <select matNativeControl [(ngModel)]="selectedCar" name="car">
-        <option value="" selected></option>
-        <option *ngFor="let car of cars" [value]="car.value">
-          {{ car.viewValue }}
-        </option>
-      </select>
-    </mat-form-field>
-    <p>Selected car: {{ selectedCar }}</p>
-  </form>
-</mat-card-content>
+<mat-horizontal-stepper (selectionChange)="selectionChange($event)">
+    <mat-step
+      [completed]="isStep1Completed()"
+      [optional]="false"
+    >
+    <mat-card-content>
+        <form>
+          <h4>mat-select</h4>
+          <mat-form-field appearance="fill">
+            <mat-label>{{ 'CONTAINERS.home.survey.status' | translate }}</mat-label>
+            <mat-select [(ngModel)]="selectedValue" name="food">
+              <mat-option *ngFor="let status of statuses" [value]="status">
+                {{
+                    'STATUSES.' + status | translate
+                }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <p>Selected food: {{ selectedValue }}</p>
+        </form>
+      </mat-card-content>
+    </mat-step>
+
+    <mat-step
+      [editable]="false"
+      [completed]="isStep2Completed()"
+    >
+    </mat-step>
+
+    <mat-step
+      [editable]="false"
+      [completed]="isStep3Completed()"
+    >
+    </mat-step>
+
+    <mat-step
+      [editable]="false"
+      [completed]="isStep4Completed()"
+    >
+    </mat-step>
+
+    <mat-step
+      [editable]="false"
+      [completed]="isStep5Completed()"
+    >
+    </mat-step>
+
+    <mat-step
+      [editable]="false"
+      [completed]="isStep6Completed()"
+    >
+    </mat-step>
+</mat-horizontal-stepper>

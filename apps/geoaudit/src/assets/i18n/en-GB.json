@@ -55,7 +55,8 @@
 			"survey": {
 				"add_survey": {
 					"title": "Add Survey"
-				}
+				},
+				"status": "Status"
 			}
 		}
 	},
@@ -91,5 +92,11 @@
 			}
 		},
 		"close": "Close"
+	},
+	"STATUSES": {
+		"COMPLETED": "Completed",
+		"NOT_STARTED": "Not started",
+		"ONGOING": "Ongoing",
+		"REFUSED": "Refused"
 	}
 }
