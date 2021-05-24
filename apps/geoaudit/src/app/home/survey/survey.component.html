@@ -8,11 +8,31 @@
       [optional]="false"
     >
     <mat-card-content>
-        <form>
-          <h4>mat-select</h4>
-          <mat-form-field appearance="fill">
+        <form fxLayout="column" [formGroup]="form" (ngSubmit)="submit()">
+
+            <!-- <mat-slide-toggle
+            class="example-margin"
+            [color]="color"
+            [(ngModel)]="newJob"
+            [disabled]="false"
+        >
+          {{ 'CONTAINERS.home.survey.new_job' | translate }}
+        </mat-slide-toggle>
+
+        <br> -->
+
+        <!-- <mat-form-field appearance="outline" *ngIf="!newJob">
+            <mat-label>{{ 'CONTAINERS.home.survey.job' | translate }}</mat-label>
+            <mat-select formControlName="job" name="job">
+              <mat-option>
+                My Job
+              </mat-option>
+            </mat-select>
+          </mat-form-field> -->
+
+          <mat-form-field appearance="outline">
             <mat-label>{{ 'CONTAINERS.home.survey.status' | translate }}</mat-label>
-            <mat-select [(ngModel)]="selectedValue" name="food">
+            <mat-select formControlName="status" name="status">
               <mat-option *ngFor="let status of statuses" [value]="status">
                 {{
                     'STATUSES.' + status | translate
@@ -20,7 +40,7 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
-          <p>Selected food: {{ selectedValue }}</p>
+          <p>Selected status: {{ form.value.status }}</p>
         </form>
       </mat-card-content>
     </mat-step>

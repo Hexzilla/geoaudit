@@ -1,7 +1,14 @@
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ThemePalette } from '@angular/material/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import * as moment from 'moment';
 
+import * as fromApp from '../../store';
 import { statuses } from '../../models'
+import { AlertService } from '../../services';
 
 interface Food {
   value: string;
@@ -15,20 +22,60 @@ interface Food {
 })
 export class SurveyComponent implements OnInit {
 
-  selectedValue: string;
+  color: ThemePalette = 'primary';
 
-  foods: Food[] = [
-    {value: 'steak-0', viewValue: 'Steak'},
-    {value: 'pizza-1', viewValue: 'Pizza'},
-    {value: 'tacos-2', viewValue: 'Tacos'}
-  ];
+  newJob = false;
+
+  form: FormGroup;
+
+  selectedStatus: string;
 
   statuses: Array<String>;
 
-  constructor() { }
+  submitted = false;
+
+  constructor(
+    private formBuilder: FormBuilder,
+    private route: ActivatedRoute,
+    private router: Router,
+    private store: Store<fromApp.State>,
+    private alertService: AlertService
+  ) { }
 
   ngOnInit(): void {
     this.statuses = Object.keys(statuses);
+
+    /**
+     * Initialise the form with properties and
+     * validation constraints.
+     */
+     this.initialiseForm();
+  }
+
+  /**
+   * Initialisation of the form, properties, and validation.
+   */
+   initialiseForm(): void {
+    this.form = this.formBuilder.group({
+      status: [statuses.NOT_STARTED, Validators.required],
+      name: [null, Validators.required],
+      // assigned_to: 
+
+      title: ['Event Title', Validators.required],
+      allDay: [false, Validators.required],
+      date_assigned: [moment().toISOString(), Validators.required],
+      date_delivery: [moment().toISOString(), Validators.required],
+      notes: [''],
+      surveys: [[], Validators.required],
+
+      id: null,
+      id_reference: '',
+      published: false
+    });
+  }
+
+  submit(): void {
+
   }
 
   /**

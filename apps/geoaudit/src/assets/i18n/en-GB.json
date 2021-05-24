@@ -56,7 +56,9 @@
 				"add_survey": {
 					"title": "Add Survey"
 				},
-				"status": "Status"
+				"status": "Status",
+				"new_job": "New Job",
+				"job": "Job"
 			}
 		}
 	},
