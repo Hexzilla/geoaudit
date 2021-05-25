@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 const calendarModule = () => import('./calendar/calendar.module').then(x => x.CalendarModule);
 const surveyModule = () => import('./survey/survey.module').then(x => x.SurveyModule);
+const jobsModule = () => import('./jobs/jobs.module').then(x => x.JobsModule);
 
 import { HomeComponent } from './home.component';
 import { AuthGuard } from '../guards';
@@ -10,7 +11,6 @@ import { ToDoListComponent } from './to-do-list/to-do-list.component';
 import { SearchComponent } from './search/search.component';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { ProfileComponent } from './profile/profile.component';
-import { JobsComponent } from './jobs/jobs.component';
 import { ApprovalsComponent } from './approvals/approvals.component';
 
 const routes: Routes = [
@@ -34,7 +34,7 @@ const routes: Routes = [
                 path: 'todolist', component: ToDoListComponent
             },
             {
-                path: 'jobs', component: JobsComponent
+                path: 'jobs', loadChildren: jobsModule,
             },
             {
                 path: 'survey', loadChildren: surveyModule,

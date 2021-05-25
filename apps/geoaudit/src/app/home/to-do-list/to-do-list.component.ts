@@ -73,6 +73,7 @@ export class ToDoListComponent implements OnInit, AfterViewInit {
     this.store.dispatch(
       SurveyActions.countSurveys({ start: 0, limit: this.pageSize })
     );
+    
     this.store.dispatch(
       SurveyActions.fetchSurveys({ start: 0, limit: this.pageSize })
     );

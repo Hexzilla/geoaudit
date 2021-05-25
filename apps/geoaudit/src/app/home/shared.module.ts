@@ -35,6 +35,7 @@ import { NgxMatMomentModule } from '@angular-material-components/moment-adapter'
 // Declarations
 import { CardButtonComponent } from '../components/card-button/card-button.component';
 import { SidebarHeaderComponent } from '../components/sidebar-header/sidebar-header.component';
+import { SidebarActionsComponent } from '../components/sidebar-actions/sidebar-actions.component';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -102,6 +103,7 @@ const CUSTOM_MOMENT_FORMATS: NgxMatDateFormats = {
   declarations: [
     CardButtonComponent,
     SidebarHeaderComponent,
+    SidebarActionsComponent,
     NavigationModalComponent
   ],
   providers: [
@@ -122,6 +124,7 @@ const CUSTOM_MOMENT_FORMATS: NgxMatDateFormats = {
     // Declarations
     CardButtonComponent,
     SidebarHeaderComponent,
+    SidebarActionsComponent,
 
     // Material
     MatAutocompleteModule,

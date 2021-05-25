@@ -1,1 +1,128 @@
-<p>jobs works!</p>
+<ng-container *ngIf="isRoot">
+  <geoaudit-sidebar-header
+    title="CONTAINERS.home.jobs.title"
+  ></geoaudit-sidebar-header>
+
+  <geoaudit-sidebar-actions>
+    <button
+      mat-icon-button
+      color="accent"
+      aria-label="delete icon button"
+      (click)="delete()"
+      [disabled]="this.selection.selected.length === 0"
+    >
+      <mat-icon>delete</mat-icon>
+    </button>
+
+    <button
+      mat-icon-button
+      color="accent"
+      aria-label="add icon button"
+      (click)="addJob()"
+    >
+      <mat-icon>add_circle</mat-icon>
+    </button>
+
+    <button
+      mat-icon-button
+      color="accent"
+      aria-label="get icon button"
+      (click)="download()"
+    >
+      <mat-icon>get_app</mat-icon>
+    </button>
+  </geoaudit-sidebar-actions>
+
+  <form [formGroup]="form">
+    <mat-form-field>
+      <mat-label>Filter</mat-label>
+      <input matInput placeholder="Filter" [formControl]="filterCtrl" #input />
+    </mat-form-field>
+  </form>
+
+  <div>
+    <table mat-table [dataSource]="dataSource" matSort>
+      <!-- Checkbox Column -->
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef>
+          <mat-checkbox
+            (change)="$event ? masterToggle() : null"
+            [checked]="selection.hasValue() && isAllSelected()"
+            [indeterminate]="selection.hasValue() && !isAllSelected()"
+            [aria-label]="checkboxLabel()"
+            color="primary"
+          >
+          </mat-checkbox>
+        </th>
+        <td mat-cell *matCellDef="let row">
+          <mat-checkbox
+            (click)="$event.stopPropagation()"
+            (change)="$event ? selection.toggle(row) : null"
+            [checked]="selection.isSelected(row)"
+            [aria-label]="checkboxLabel(row)"
+            color="primary"
+          >
+          </mat-checkbox>
+        </td>
+      </ng-container>
+
+      <!-- Progress Column -->
+      <ng-container matColumnDef="job_reference">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Job Reference</th>
+        <td mat-cell *matCellDef="let row">{{ row.job_reference }}</td>
+      </ng-container>
+
+      <!-- Progress Column -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+        <td mat-cell *matCellDef="let row">{{ row.name }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+        <td mat-cell *matCellDef="let row">
+          <span [ngSwitch]="row.status.name">
+            <mat-icon *ngSwitchCase="'COMPLETED'">done</mat-icon>
+            <mat-icon *ngSwitchCase="'NOT_STARTED'">assignment</mat-icon>
+            <mat-icon *ngSwitchCase="'ONGOING'">autorenew</mat-icon>
+            <mat-icon *ngSwitchCase="'REFUSED'">block</mat-icon>
+          </span>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr
+        mat-row
+        *matRowDef="let row; columns: displayedColumns"
+        (click)="selection.toggle(row)"
+      ></tr>
+
+      <!-- Row shown when there is no matching data. -->
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="4">
+          No data matching the filter "{{ input.value }}"
+        </td>
+      </tr>
+    </table>
+
+    <mat-paginator
+      [length]="length"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="pageSizeOptions"
+      (page)="pageEvent = onPageEvent($event)"
+      [hidePageSize]="true"
+    ></mat-paginator>
+  </div>
+
+  <!-- <div class="calendar-card-container">
+    <geoaudit-card-button
+      *ngFor="let calendarEvent of calendarEvents | async"
+      [title]="calendarEvent.start | date: 'short'"
+      [text]="calendarEvent.title"
+      icon="category"
+      (onClick)="onCalendarEventClick(calendarEvent)"
+    ></geoaudit-card-button>
+  </div> -->
+</ng-container>
+
+<router-outlet></router-outlet>
