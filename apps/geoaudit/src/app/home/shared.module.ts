@@ -17,6 +17,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import {MatMenuModule} from '@angular/material/menu';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import {MatRadioModule} from '@angular/material/radio';
 import {MatSelectModule} from '@angular/material/select';
@@ -87,6 +88,7 @@ const CUSTOM_MOMENT_FORMATS: NgxMatDateFormats = {
     MatIconModule,
     MatFormFieldModule,
     MatInputModule,
+    MatMenuModule,
     MatPaginatorModule,
     MatRadioModule,
     MatSelectModule,
@@ -137,6 +139,7 @@ const CUSTOM_MOMENT_FORMATS: NgxMatDateFormats = {
     MatIconModule,
     MatFormFieldModule,
     MatInputModule,
+    MatMenuModule,
     MatPaginatorModule,
     MatRadioModule,
     MatSelectModule,

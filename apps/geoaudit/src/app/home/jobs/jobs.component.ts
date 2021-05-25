@@ -27,7 +27,7 @@ import * as JobActions from '../../store/job/job.actions';
 })
 export class JobsComponent implements OnInit, AfterViewInit {
 
-  displayedColumns: string[] = ['select', 'job_reference', 'name', 'status'];
+  displayedColumns: string[] = ['select', 'job_reference', 'name', 'status', 'actions'];
   dataSource: MatTableDataSource<Job>;
   selection = new SelectionModel<Job>(true, []);
 
