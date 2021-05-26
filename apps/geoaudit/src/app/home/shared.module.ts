@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
@@ -40,6 +40,10 @@ import { SidebarActionsComponent } from '../components/sidebar-actions/sidebar-a
 
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { EntityDataService, EntityDefinitionService, EntityMetadataMap } from '@ngrx/data';
+import { StatusEntityService } from '../entity-services/status-entity.service';
+import { StatusDataService } from '../data-services/status-data.service';
+import { JwtInterceptor, ErrorInterceptor } from '../helpers';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient) {
@@ -58,6 +62,10 @@ const CUSTOM_MOMENT_FORMATS: NgxMatDateFormats = {
     monthYearA11yLabel: "MMMM YYYY"
   }
 };
+
+const entityMetadataMap: EntityMetadataMap = {
+  Status: {}
+}
 
 @NgModule({
   imports: [
@@ -109,6 +117,12 @@ const CUSTOM_MOMENT_FORMATS: NgxMatDateFormats = {
     NavigationModalComponent
   ],
   providers: [
+    StatusEntityService,
+    StatusDataService,
+
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+    
     { provide: NGX_MAT_DATE_FORMATS, useValue: CUSTOM_MOMENT_FORMATS }
   ],
   exports: [
@@ -155,4 +169,15 @@ const CUSTOM_MOMENT_FORMATS: NgxMatDateFormats = {
 
   ],
 })
-export class SharedModule {}
+export class SharedModule {
+
+  constructor(
+    private entityDefinitionService: EntityDefinitionService,
+    private entityDataService: EntityDataService,
+    private statusDataService: StatusDataService
+  ) {
+    entityDefinitionService.registerMetadataMap(entityMetadataMap);
+
+    entityDataService.registerService('Status', statusDataService)
+  }
+}

@@ -50,7 +50,30 @@
 				}
 			},
 			"jobs": {
-				"title": "Jobs"
+				"title": "Jobs",
+				"filter": "Filter",
+				"actions": {
+					"delete": "Delete job(s)",
+					"add": "Add new job",
+					"download": "Download job(s) data"
+				},
+				"table": {
+					"job_reference": "Ref",
+					"name": "Name",
+					"status": "Status",
+					"actions": "Actions",
+					"details": "Details",
+					"surveys": "Surveys"
+				},
+				"no_data": "No data matching the filter \"{{ input.value }}\"",
+				"job": {
+					"title": "Job",
+					"status": "Status",
+					"form": {
+						"name": "Name",
+						"reference": "Reference"
+					}
+				}
 			},
 			"navigation": {
 				"title": "Navigation"

@@ -4,6 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from '../../guards';
 import { JobComponent } from './job/job.component';
 import { JobsComponent } from './jobs.component';
+import { SurveysComponent } from './job/surveys/surveys.component';
 
 const routes: Routes = [
     { 
@@ -17,6 +18,10 @@ const routes: Routes = [
 
     {
         path: 'job/:id', component: JobComponent
+    },
+
+    {
+        path: 'job/:id/surveys', component: SurveysComponent
     },
 
     // otherwise redirect to home

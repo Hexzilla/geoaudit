@@ -34,6 +34,8 @@ import { SurveyEffects } from './store/survey/survey.effects';
 import { DeleteModalComponent } from './modals/delete-modal/delete-modal.component';
 import { CalendarEventEffects } from './store/calendar-event/calendar-event.effects';
 import { JobEffects } from './store/job/job.effects';
+import { DefaultDataServiceConfig, EntityDataModule } from '@ngrx/data';
+import { entityConfig } from './entity-metadata';
 // import { SidebarHeaderComponent } from './components/sidebar-header/sidebar-header.component';
 
 // required for AOT compilation
@@ -51,6 +53,10 @@ export function debug(reducer: ActionReducer<any>): ActionReducer<any> {
 }
  
 export const metaReducers: MetaReducer<any>[] = [debug];
+
+const defaultDataServiceConfig: DefaultDataServiceConfig = {
+  root: environment.API_URL
+}
 
 @NgModule({
   declarations: [
@@ -87,7 +93,11 @@ export const metaReducers: MetaReducer<any>[] = [debug];
 
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
 
-    EffectsModule.forRoot([CalendarEventEffects, JobEffects, SurveyEffects])
+    EffectsModule.forRoot([CalendarEventEffects, JobEffects, SurveyEffects]),
+
+    EntityDataModule.forRoot(entityConfig),
+
+    
   ],
   providers: [
     MarkerService,
@@ -96,6 +106,8 @@ export const metaReducers: MetaReducer<any>[] = [debug];
   
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+
+    { provide: DefaultDataServiceConfig, useValue: defaultDataServiceConfig }
   ],
   bootstrap: [AppComponent],
 })

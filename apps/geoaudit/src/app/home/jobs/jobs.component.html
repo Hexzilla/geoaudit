@@ -6,6 +6,7 @@
   <geoaudit-sidebar-actions>
     <button
       mat-icon-button
+      [matTooltip]="'CONTAINERS.home.jobs.actions.delete' | translate"
       color="accent"
       aria-label="delete icon button"
       (click)="delete()"
@@ -16,6 +17,7 @@
 
     <button
       mat-icon-button
+      [matTooltip]="'CONTAINERS.home.jobs.actions.add' | translate"
       color="accent"
       aria-label="add icon button"
       (click)="addJob()"
@@ -25,6 +27,7 @@
 
     <button
       mat-icon-button
+      [matTooltip]="'CONTAINERS.home.jobs.actions.download' | translate"
       color="accent"
       aria-label="get icon button"
       (click)="download()"
@@ -35,8 +38,8 @@
 
   <form [formGroup]="form">
     <mat-form-field>
-      <mat-label>Filter</mat-label>
-      <input matInput placeholder="Filter" [formControl]="filterCtrl" #input />
+      <mat-label>{{ 'CONTAINERS.home.jobs.filter' | translate }}</mat-label>
+      <input matInput placeholder="'CONTAINERS.home.jobs.filter' | translate" [formControl]="filterCtrl" #input />
     </mat-form-field>
   </form>
 
@@ -68,42 +71,42 @@
 
       <!-- Progress Column -->
       <ng-container matColumnDef="job_reference">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Job Reference</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'CONTAINERS.home.jobs.table.job_reference' | translate }}</th>
         <td mat-cell *matCellDef="let row">{{ row.job_reference }}</td>
       </ng-container>
 
       <!-- Progress Column -->
       <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'CONTAINERS.home.jobs.table.name' | translate }}</th>
         <td mat-cell *matCellDef="let row">{{ row.name }}</td>
       </ng-container>
 
       <ng-container matColumnDef="status">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'CONTAINERS.home.jobs.table.status' | translate }}</th>
         <td mat-cell *matCellDef="let row">
           <span [ngSwitch]="row.status.name">
-            <mat-icon *ngSwitchCase="'COMPLETED'">done</mat-icon>
-            <mat-icon *ngSwitchCase="'NOT_STARTED'">assignment</mat-icon>
-            <mat-icon *ngSwitchCase="'ONGOING'">autorenew</mat-icon>
-            <mat-icon *ngSwitchCase="'REFUSED'">block</mat-icon>
+            <mat-icon *ngSwitchCase="'COMPLETED'" [matTooltip]="'STATUSES.COMPLETED' | translate">done</mat-icon>
+            <mat-icon *ngSwitchCase="'NOT_STARTED'" [matTooltip]="'STATUSES.NOT_STARTED' | translate">assignment</mat-icon>
+            <mat-icon *ngSwitchCase="'ONGOING'" [matTooltip]="'STATUSES.ONGOING' | translate">autorenew</mat-icon>
+            <mat-icon *ngSwitchCase="'REFUSED'" [matTooltip]="'STATUSES.REFUSED' | translate">block</mat-icon>
           </span>
         </td>
       </ng-container>
 
       <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Actions</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'CONTAINERS.home.jobs.table.actions' | translate }}</th>
         <td mat-cell *matCellDef="let row">
           <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
             <mat-icon>more_vert</mat-icon>
           </button>
           <mat-menu #menu="matMenu">
-            <button mat-menu-item>
+            <button mat-menu-item (click)="details(row.id)">
               <mat-icon>details</mat-icon>
-              <span>Details</span>
+              <span>{{ 'CONTAINERS.home.jobs.table.details' | translate }}</span>
             </button>
-            <button mat-menu-item>
+            <button mat-menu-item (click)="surveys(row.id)">
               <mat-icon>backpack</mat-icon>
-              <span>Surveys</span>
+              <span>{{ 'CONTAINERS.home.jobs.table.surveys' | translate }}</span>
             </button>
             <!-- <button mat-menu-item disabled>
               <mat-icon>notifications_off</mat-icon>
@@ -123,7 +126,7 @@
       <!-- Row shown when there is no matching data. -->
       <tr class="mat-row" *matNoDataRow>
         <td class="mat-cell" colspan="4">
-          No data matching the filter "{{ input.value }}"
+          {{ 'CONTAINERS.home.jobs.table.no_data' | translate: { placeholder: input.value } }}
         </td>
       </tr>
     </table>

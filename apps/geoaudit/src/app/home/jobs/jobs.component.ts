@@ -96,6 +96,7 @@ export class JobsComponent implements OnInit, AfterViewInit {
        distinctUntilChanged()
      )
      .subscribe((text: string) => {
+       console.log('text', text)
        if (this.dataSource.paginator) {
          this.dataSource.paginator.firstPage();
        }
@@ -111,7 +112,7 @@ export class JobsComponent implements OnInit, AfterViewInit {
   }
 
   addJob(): void {
-
+    this.router.navigate([`/home/jobs/job`]);
   }
 
   delete(): void {
@@ -184,6 +185,14 @@ export class JobsComponent implements OnInit, AfterViewInit {
     document.body.appendChild(a);
     a.click();  // IE: "Access is denied"; see: https://connect.microsoft.com/IE/feedback/details/797361/ie-10-treats-blob-url-as-cross-origin-and-denies-access
     document.body.removeChild(a);
+  }
+
+  details(id) {
+    this.router.navigate([`/home/jobs/job/${id}`]);
+  }
+
+  surveys(id) {
+    this.router.navigate([`/home/jobs/job/${id}/surveys`]);
   }
 
   // convenience getter for easy access to form fields
