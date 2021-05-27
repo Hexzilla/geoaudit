@@ -46,7 +46,7 @@
       </mat-select>
     </mat-form-field>
 
-    <mat-form-field class="example-chip-list">
+    <mat-form-field class="example-chip-list" appearance="outline">
       <mat-label>
         {{ 'CONTAINERS.home.jobs.job.form.assignees' | translate }}
       </mat-label>
@@ -74,5 +74,18 @@
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>  
+
+    <div fxLayout="row-reverse">
+      <button
+        mat-flat-button
+        color="primary"
+        (click)="submit()"
+        fxFlexFill
+        type="submit"
+      >
+      {{ 'CONTAINERS.home.jobs.job.form.save' | translate }}
+    </button>
+    </div>
+
   </form>
 </mat-card-content>

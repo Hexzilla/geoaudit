@@ -74,7 +74,8 @@
 						"reference": "Reference",
 						"job_type": "Job Type",
 						"assignees": "Assignees",
-						"new_assignee": "New assignee"
+						"new_assignee": "New assignee",
+						"save": "Save"
 					}
 				}
 			},
