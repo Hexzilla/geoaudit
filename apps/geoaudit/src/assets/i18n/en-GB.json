@@ -77,6 +77,17 @@
 						"assignees": "Assignees",
 						"new_assignee": "New assignee",
 						"save": "Save"
+					},
+					"cards": {
+						"details": "Details",
+						"assets": "Assets",
+						"surveys": "Surveys"
+					},
+					"overview": {
+						"title": "Job"
+					},
+					"details": {
+						"title": "Job Details"
 					}
 				}
 			},

@@ -188,7 +188,7 @@ export class JobsComponent implements OnInit, AfterViewInit {
   }
 
   details(id) {
-    this.router.navigate([`/home/jobs/job/${id}`]);
+    this.router.navigate([`/home/jobs/job/${id}/details`]);
   }
 
   assets(id) {

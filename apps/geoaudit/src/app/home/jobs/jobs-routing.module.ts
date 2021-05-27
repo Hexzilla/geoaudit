@@ -2,9 +2,10 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { AuthGuard } from '../../guards';
-import { JobComponent } from './job/job.component';
-import { JobsComponent } from './jobs.component';
+import { JobsComponent } from './jobs.component'
+import { DetailsComponent } from './job/details/details.component';;
 import { SurveysComponent } from './job/surveys/surveys.component';
+import { JobComponent } from './job/job.component';
 
 const routes: Routes = [
     { 
@@ -13,11 +14,15 @@ const routes: Routes = [
     },
 
     {
-        path: 'job', component: JobComponent
+        path: 'job', component: DetailsComponent
     },
 
     {
         path: 'job/:id', component: JobComponent
+    },
+
+    {
+        path: 'job/:id/details', component: DetailsComponent
     },
 
     {
