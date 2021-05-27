@@ -5,7 +5,7 @@ export interface Job {
     created_at: string;
     footer: any;
     id: number;
-    job_reference: string;
+    reference: string;
     job_type: JobType;
     name: string;
     status: Status;

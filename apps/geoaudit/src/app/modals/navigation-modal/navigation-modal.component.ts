@@ -188,7 +188,7 @@ export class NavigationModalComponent implements OnInit, AfterViewInit {
          * their destination.
          */
         if (this.data.surveys.length === 1) {
-          this.surveyCtrl.setValue(this.data.surveys[0].id_reference);
+          this.surveyCtrl.setValue(this.data.surveys[0].reference);
           this.selectedSurvey = this.data.surveys[0];
         }
         break;
@@ -215,7 +215,7 @@ export class NavigationModalComponent implements OnInit, AfterViewInit {
    * @param event
    */
   selected(event: MatAutocompleteSelectedEvent): void {
-    this.surveyCtrl.setValue(event.option.value.id_reference);
+    this.surveyCtrl.setValue(event.option.value.reference);
     this.selectedSurvey = event.option.value;
   }
 

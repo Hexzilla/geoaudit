@@ -9,7 +9,7 @@ export interface Survey {
     footer: any;
     geometry: any;
     id: number;
-    id_reference: string;
+    reference: string;
     job: Job
     name: string;
     prepared_by: User;

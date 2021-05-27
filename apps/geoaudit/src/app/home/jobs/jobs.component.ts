@@ -27,7 +27,7 @@ import * as JobActions from '../../store/job/job.actions';
 })
 export class JobsComponent implements OnInit, AfterViewInit {
 
-  displayedColumns: string[] = ['select', 'job_reference', 'name', 'status', 'actions'];
+  displayedColumns: string[] = ['select', 'reference', 'name', 'status', 'actions'];
   dataSource: MatTableDataSource<Job>;
   selection = new SelectionModel<Job>(true, []);
 
@@ -149,7 +149,7 @@ export class JobsComponent implements OnInit, AfterViewInit {
 
     const body = jobs.map((job: any) => {
       return [
-        job.job_reference,
+        job.reference,
         job.name,
         job.status.name,
         job.job_type.name,

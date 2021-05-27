@@ -201,12 +201,12 @@ export class ToDoListComponent implements OnInit, AfterViewInit {
 
     const body = surveys.map((survey) => {
       return [
-        survey.id_reference,
+        survey.reference,
         survey.name,
         moment(survey.date_assigned).format('L LT'),
         moment(survey.date_delivery).format('L LT'),
         survey.status.name,
-        survey.job.job_reference,
+        survey.job.reference,
         survey.prepared_by.username,
       ];
     });

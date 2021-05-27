@@ -1,9 +1,10 @@
 import { User } from "./user";
 
 export interface Footer {
-    image: any;
+    id: number;
+    image: Array<any>;
     attachment: any;
-    comment: any;
+    comment: Array<any>;
     approved: boolean;
     approved_by: User;
 }

@@ -58,7 +58,7 @@
 					"download": "Download job(s) data"
 				},
 				"table": {
-					"job_reference": "Ref",
+					"reference": "Ref",
 					"name": "Name",
 					"status": "Status",
 					"actions": "Actions",

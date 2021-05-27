@@ -69,7 +69,7 @@ export class SurveyComponent implements OnInit {
       surveys: [[], Validators.required],
 
       id: null,
-      id_reference: '',
+      reference: '',
       published: false
     });
   }

@@ -76,7 +76,7 @@ export class JobComponent implements OnInit {
 
         this.job = job;
 
-        const { status, name, job_reference } = job;
+        const { status, name, reference } = job;
 
         /**
          * Patch the form with values from the
@@ -85,7 +85,7 @@ export class JobComponent implements OnInit {
         this.form.patchValue({
           status: status.id,
           name,
-          reference: job_reference
+          reference
         })
       },
 
@@ -114,9 +114,8 @@ export class JobComponent implements OnInit {
       // notes: [''],
       // surveys: [[], Validators.required],
 
-      // id: null,
-      // id_reference: '',
-      // published: false
+      id: null,
+      published: false
     });
   }
 

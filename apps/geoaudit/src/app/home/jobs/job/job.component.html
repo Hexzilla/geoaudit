@@ -14,21 +14,27 @@
     </mat-form-field>
 
     <mat-form-field appearance="outline">
-        <input
-          matInput
-          [placeholder]="'CONTAINERS.home.jobs.job.form.name' | translate"
-          formControlName="name"
-          class="form-control"
-        />
-      </mat-form-field>
+      <mat-label>{{
+        'CONTAINERS.home.jobs.job.form.reference' | translate
+      }}</mat-label>
+      <input
+        matInput
+        [placeholder]="'CONTAINERS.home.jobs.job.form.reference' | translate"
+        formControlName="reference"
+        class="form-control"
+      />
+    </mat-form-field>
 
-      <mat-form-field appearance="outline">
-        <input
-          matInput
-          [placeholder]="'CONTAINERS.home.jobs.job.form.reference' | translate"
-          formControlName="reference"
-          class="form-control"
-        />
-      </mat-form-field>
-</form>
+    <mat-form-field appearance="outline">
+      <mat-label>{{
+        'CONTAINERS.home.jobs.job.form.name' | translate
+      }}</mat-label>
+      <input
+        matInput
+        [placeholder]="'CONTAINERS.home.jobs.job.form.name' | translate"
+        formControlName="name"
+        class="form-control"
+      />
+    </mat-form-field>
+  </form>
 </mat-card-content>
