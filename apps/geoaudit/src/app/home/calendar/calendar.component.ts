@@ -8,7 +8,7 @@ import * as CalendarEventActions from '../../store/calendar-event/calendar-event
 import * as CalendarEventSelectors from '../../store/calendar-event/calendar-event.selectors';
 
 // Models
-import { CalendarEvent } from '../../models/calendar-event';
+import { CalendarEvent } from '../../models';
 import { filter, take } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 

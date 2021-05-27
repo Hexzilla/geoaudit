@@ -7,7 +7,7 @@ import { Store } from '@ngrx/store';
 import * as moment from 'moment';
 
 import * as fromApp from '../../store';
-import { statuses } from '../../models'
+import { Statuses } from '../../models'
 import { AlertService } from '../../services';
 
 interface Food {
@@ -43,7 +43,7 @@ export class SurveyComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.statuses = Object.keys(statuses);
+    this.statuses = Object.keys(Statuses);
 
     /**
      * Initialise the form with properties and
@@ -57,7 +57,7 @@ export class SurveyComponent implements OnInit {
    */
    initialiseForm(): void {
     this.form = this.formBuilder.group({
-      status: [statuses.NOT_STARTED, Validators.required],
+      status: [Statuses.NOT_STARTED, Validators.required],
       name: [null, Validators.required],
       // assigned_to: 
 

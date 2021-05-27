@@ -13,7 +13,6 @@ import { AlertService } from '../../../services';
 // Store
 import * as fromApp from '../../../store';
 
-import { statuses } from '../../../models';
 import { StatusEntityService } from '../../../entity-services/status-entity.service';
 
 @Component({

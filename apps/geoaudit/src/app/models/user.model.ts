@@ -1,4 +1,4 @@
-import { GeoJson } from "./geo-json";
+import { GeoJson } from "./geo-json.model";
 
 export class User {
   blocked: boolean;

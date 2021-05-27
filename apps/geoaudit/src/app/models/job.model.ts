@@ -1,5 +1,5 @@
-import { JobType } from "./job-type";
-import { Status } from "./status";
+import { JobType } from "./job-type.model";
+import { Status } from "./status.model";
 
 export interface Job {
     created_at: string;

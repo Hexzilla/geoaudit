@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 import qs from 'qs';
 import { environment } from "../../environments/environment";
 import { Parameters, Survey } from "../models";
-import { statuses } from "../models/status";
+import { Statuses } from "../models";
 import { AuthService } from "./auth.service";
 
 @Injectable({ providedIn: 'root' })
@@ -62,7 +62,7 @@ export class SurveyService {
             _sort: "date_delivery:asc",
             _where: {
                 conducted_by: this.authService.authValue.user.id,
-                _or: [ { "status.name": statuses.NOT_STARTED }, { "status.name": statuses.ONGOING }]
+                _or: [ { "status.name": Statuses.NOT_STARTED }, { "status.name": Statuses.ONGOING }]
             }
         });
     }

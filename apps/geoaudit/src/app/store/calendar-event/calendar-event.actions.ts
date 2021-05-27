@@ -1,6 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 import { Parameters } from '../../models';
-import { CalendarEvent } from '../../models/calendar-event';
+import { CalendarEvent } from '../../models';
 
 export const COUNT_CALENDAR_EVENTS = '[To Do List - Calendar - Events] Count';
 export const SET_COUNT = '[To Do List - Calendar - Events] Set count';

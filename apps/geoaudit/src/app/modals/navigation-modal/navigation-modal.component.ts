@@ -31,7 +31,7 @@ import qs from 'qs';
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { Observable } from 'rxjs';
 import { AuthService } from '../../services';
-import { GeoJson } from '../../models/geo-json';
+import { GeoJson } from '../../models';
 
 export interface DialogData {
   surveys: Array<Survey>;

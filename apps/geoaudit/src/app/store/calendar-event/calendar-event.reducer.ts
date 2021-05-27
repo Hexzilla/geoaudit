@@ -1,6 +1,5 @@
 import { Action, createReducer, on } from "@ngrx/store";
-import { Result } from "../../models";
-import { CalendarEvent } from "../../models/calendar-event";
+import { CalendarEvent, Result } from "../../models";
 
 import * as CalendarEvents from './calendar-event.actions';
 

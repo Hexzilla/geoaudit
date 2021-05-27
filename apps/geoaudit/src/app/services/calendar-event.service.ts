@@ -2,9 +2,8 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import qs from 'qs';
 import { environment } from "../../environments/environment";
-import { Parameters, Survey } from "../models";
-import { CalendarEvent } from "../models/calendar-event";
-import { statuses } from "../models/status";
+import { Parameters } from "../models";
+import { CalendarEvent } from "../models";
 import { AuthService } from "./auth.service";
 
 @Injectable({ providedIn: 'root' })

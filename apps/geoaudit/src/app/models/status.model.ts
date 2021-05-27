@@ -1,4 +1,4 @@
-export const statuses = {
+export const Statuses = {
     COMPLETED: 'COMPLETED',
     NOT_STARTED: 'NOT_STARTED',
     ONGOING: 'ONGOING',
@@ -9,7 +9,7 @@ export interface Status {
     created_at: string;
     description: string;
     id: number;
-    name: typeof statuses;
+    name: typeof Statuses;
     published_at: string;
     updated_at: string;
 }

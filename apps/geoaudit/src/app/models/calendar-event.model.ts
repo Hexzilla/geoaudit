@@ -1,5 +1,5 @@
-import { Survey } from "./survey";
-import { User } from "./user";
+import { Survey } from "./survey.model";
+import { User } from "./user.model";
 
 export interface CalendarEvent {
     id: number;
