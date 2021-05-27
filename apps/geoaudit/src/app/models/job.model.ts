@@ -17,4 +17,5 @@ export interface Job {
     job_notes: Array<JobNote>;
     surveys: Array<Survey>;
     updated_at: any;
+    published: boolean;
 }

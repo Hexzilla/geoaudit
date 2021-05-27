@@ -63,6 +63,7 @@
 					"status": "Status",
 					"actions": "Actions",
 					"details": "Details",
+					"assets": "Assets",
 					"surveys": "Surveys"
 				},
 				"no_data": "No data matching the filter \"{{ input.value }}\"",

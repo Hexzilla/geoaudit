@@ -134,7 +134,7 @@ export class JobComponent implements OnInit {
 
         this.job = job;
 
-        const { status, name, reference, job_type, assignees } = job;
+        const { status, name, reference, job_type, assignees, id } = job;
 
         /**
          * Patch the form with values from the
@@ -145,7 +145,10 @@ export class JobComponent implements OnInit {
           name,
           reference,
           job_type: job_type.id,
-          users: assignees
+          assignees,
+
+          id,
+          published: true
         })
 
           /**
@@ -175,15 +178,7 @@ export class JobComponent implements OnInit {
       name: [null, Validators.required],
       reference: [null, Validators.required],
       job_type: [null, Validators.required],
-      users: [[], Validators.required],
-      // assigned_to:
-
-      // title: ['Event Title', Validators.required],
-      // allDay: [false, Validators.required],
-      // date_assigned: [moment().toISOString(), Validators.required],
-      // date_delivery: [moment().toISOString(), Validators.required],
-      // notes: [''],
-      // surveys: [[], Validators.required],
+      assignees: [[], Validators.required],
 
       id: null,
       published: false
@@ -191,7 +186,33 @@ export class JobComponent implements OnInit {
   }
 
   submit() {
-    
+    this.form.patchValue({
+      assignees: this.users.map((user) => user.id),
+      published: true
+    });
+
+    this.submitted = true;
+
+    // reset alerts on submit
+    this.alertService.clear();
+
+    if (this.form.invalid) {
+      this.alertService.error('Invalid');
+      return;
+    }
+
+    console.log(this.form.value)
+
+    this.jobEntityService.update(this.form.value).subscribe(
+      (update) => {
+        console.log('update', update)
+      },
+
+      (err) => {
+        console.log('err')
+      }
+    )
+
   }
 
   // convenience getter for easy access to form fields

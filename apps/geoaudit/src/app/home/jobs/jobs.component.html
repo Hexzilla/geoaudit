@@ -104,6 +104,10 @@
               <mat-icon>details</mat-icon>
               <span>{{ 'CONTAINERS.home.jobs.table.details' | translate }}</span>
             </button>
+            <button mat-menu-item (click)="assets(row.id)">
+              <mat-icon>web_asset</mat-icon>
+              <span>{{ 'CONTAINERS.home.jobs.table.assets' | translate }}</span>
+            </button>
             <button mat-menu-item (click)="surveys(row.id)">
               <mat-icon>backpack</mat-icon>
               <span>{{ 'CONTAINERS.home.jobs.table.surveys' | translate }}</span>

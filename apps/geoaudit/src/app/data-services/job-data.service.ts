@@ -1,6 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { DefaultDataService, HttpUrlGenerator } from "@ngrx/data";
+import { Update } from "@ngrx/entity";
 import { Observable } from "rxjs";
 import { environment } from "../../environments/environment";
 import { Job } from "../models";
@@ -17,5 +18,10 @@ export class JobDataService extends DefaultDataService<Job> {
     
     getById(id): Observable<Job> {
         return this.http.get<any>(`${environment.API_URL}/jobs/${id}`);
+    }
+
+    update(update: Update<Job>) {
+        console.log('update', update)
+        return this.http.put<any>(`${environment.API_URL}/jobs/${update.id}`, update.changes);
     }
 }
