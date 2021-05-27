@@ -15,12 +15,16 @@ export class JobDataService extends DefaultDataService<Job> {
     ) {
         super('Job', httpClient, httpUrlGenerator);
     }
+
+    add(job: Job): Observable<any> {
+        return this.http.post<any>(`${environment.API_URL}/jobs`, job);
+    }
     
     getById(id): Observable<Job> {
         return this.http.get<any>(`${environment.API_URL}/jobs/${id}`);
     }
 
-    update(update: Update<Job>) {
+    update(update: Update<Job>): Observable<any> {
         console.log('update', update)
         return this.http.put<any>(`${environment.API_URL}/jobs/${update.id}`, update.changes);
     }

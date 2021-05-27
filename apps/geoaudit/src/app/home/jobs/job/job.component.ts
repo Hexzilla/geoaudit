@@ -35,6 +35,8 @@ export class JobComponent implements OnInit {
 
   jobTypes: Array<JobType>;
 
+  mode: 'CREATE' | 'EDIT_VIEW'
+
   statuses: Array<Status>;
 
   submitted = false;
@@ -106,8 +108,10 @@ export class JobComponent implements OnInit {
     const id = this.route.snapshot.paramMap.get('id');
 
     if (id) {
+      this.mode = 'EDIT_VIEW';
       this.editAndViewMode(id);
     } else {
+      this.mode = 'CREATE';
       this.createMode();
     }
   }
@@ -167,7 +171,25 @@ export class JobComponent implements OnInit {
     );
   }
 
-  createMode() {}
+  createMode() {
+    this.jobEntityService.add(this.form.value).subscribe(
+      (job) => {
+        console.log('job added', job)
+
+        this.job = job;
+
+        this.form.patchValue({
+          id: job.id
+        })
+
+
+      },
+
+      (err) => {
+        console.log('err')
+      }
+    )
+  }
 
   /**
    * Initialisation of the form, properties, and validation.
@@ -179,6 +201,7 @@ export class JobComponent implements OnInit {
       reference: [null, Validators.required],
       job_type: [null, Validators.required],
       assignees: [[], Validators.required],
+      surveys: [[]],
 
       id: null,
       published: false
@@ -206,6 +229,8 @@ export class JobComponent implements OnInit {
     this.jobEntityService.update(this.form.value).subscribe(
       (update) => {
         console.log('update', update)
+
+        if (this.mode === 'CREATE') this.router.navigate([`/home/jobs/job/${this.job.id}`]);
       },
 
       (err) => {
