@@ -71,7 +71,8 @@
 					"status": "Status",
 					"form": {
 						"name": "Name",
-						"reference": "Reference"
+						"reference": "Reference",
+						"job_type": "Job Type"
 					}
 				}
 			},
@@ -126,5 +127,10 @@
 		"NOT_STARTED": "Not started",
 		"ONGOING": "Ongoing",
 		"REFUSED": "Refused"
+	},
+	"JOB_TYPES": {
+		"AAA": "AAA",
+		"CAT5": "CAT5",
+		"CIPS": "CIPS"
 	}
 }

@@ -14,6 +14,8 @@ import { AlertService } from '../../../services';
 import * as fromApp from '../../../store';
 
 import { StatusEntityService } from '../../../entity-services/status-entity.service';
+import { JobType } from '../../../models/job-type.model';
+import { JobTypeEntityService } from '../../../entity-services/job-type-entity.service';
 
 @Component({
   selector: 'geoaudit-job',
@@ -27,7 +29,7 @@ export class JobComponent implements OnInit {
 
   job: Job;
 
-  selectedStatus: string;
+  jobTypes: Array<JobType>;
 
   statuses: Array<Status>;
 
@@ -36,6 +38,7 @@ export class JobComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private jobEntityService: JobEntityService,
+    private jobTypeEntityervice: JobTypeEntityService,
     private statusEntityService: StatusEntityService,
     private route: ActivatedRoute,
     private router: Router,
@@ -57,6 +60,19 @@ export class JobComponent implements OnInit {
       }
     )
 
+    // Fetch job types
+    this.jobTypeEntityervice.getAll().subscribe(
+      (jobTypes) => {
+        this.jobTypes = jobTypes;
+      },
+
+      (err) => {
+        console.log('err')
+      }
+    )
+
+
+
     this.initialiseForm();
 
     const id = this.route.snapshot.paramMap.get('id');
@@ -75,7 +91,7 @@ export class JobComponent implements OnInit {
 
         this.job = job;
 
-        const { status, name, reference } = job;
+        const { status, name, reference, job_type } = job;
 
         /**
          * Patch the form with values from the
@@ -84,7 +100,8 @@ export class JobComponent implements OnInit {
         this.form.patchValue({
           status: status.id,
           name,
-          reference
+          reference,
+          job_type: job_type.id
         })
       },
 
@@ -104,6 +121,7 @@ export class JobComponent implements OnInit {
       status: [null, Validators.required],
       name: [null, Validators.required],
       reference: [null, Validators.required],
+      job_type: [null, Validators.required],
       // assigned_to:
 
       // title: ['Event Title', Validators.required],

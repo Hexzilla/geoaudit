@@ -44,6 +44,8 @@ import { EntityDataService, EntityDefinitionService, EntityMetadataMap } from '@
 import { StatusEntityService } from '../entity-services/status-entity.service';
 import { StatusDataService } from '../data-services/status-data.service';
 import { JwtInterceptor, ErrorInterceptor } from '../helpers';
+import { JobTypeDataService } from '../data-services/job-type-data.service';
+import { JobTypeEntityService } from '../entity-services/job-type-entity.service';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient) {
@@ -64,7 +66,8 @@ const CUSTOM_MOMENT_FORMATS: NgxMatDateFormats = {
 };
 
 const entityMetadataMap: EntityMetadataMap = {
-  Status: {}
+  Status: {},
+  JobType: {}
 }
 
 @NgModule({
@@ -117,6 +120,8 @@ const entityMetadataMap: EntityMetadataMap = {
     NavigationModalComponent
   ],
   providers: [
+    JobTypeEntityService,
+    JobTypeDataService,
     StatusEntityService,
     StatusDataService,
 
@@ -174,10 +179,16 @@ export class SharedModule {
   constructor(
     private entityDefinitionService: EntityDefinitionService,
     private entityDataService: EntityDataService,
+    private jobTypeDataService: JobTypeDataService,
     private statusDataService: StatusDataService
   ) {
     entityDefinitionService.registerMetadataMap(entityMetadataMap);
 
-    entityDataService.registerService('Status', statusDataService)
+    // entityDataService.registerService('Status', statusDataService);
+    entityDataService.registerServices(
+      { Status: statusDataService,
+        JobType: jobTypeDataService
+      }
+    )
   }
 }
