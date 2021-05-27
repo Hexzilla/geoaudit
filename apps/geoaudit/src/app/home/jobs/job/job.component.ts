@@ -4,9 +4,8 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { ThemePalette } from '@angular/material/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import * as moment from 'moment';
-import { fromEvent, Observable } from 'rxjs';
-import { distinctUntilChanged, filter, map, tap } from 'rxjs/operators';
+import { fromEvent } from 'rxjs';
+import { distinctUntilChanged, filter, map } from 'rxjs/operators';
 import { JobEntityService } from '../../../entity-services/job-entity.service';
 import { Job, Status, User } from '../../../models';
 import { AlertService } from '../../../services';
@@ -27,18 +26,42 @@ import { MatChipInputEvent } from '@angular/material/chips';
   styleUrls: ['./job.component.scss'],
 })
 export class JobComponent implements OnInit {
+
+  /**
+   * The primary colour to use on form elements.
+   */
   color: ThemePalette = 'primary';
 
+  /**
+   * The form consisting of the form fields.
+   */
   form: FormGroup;
 
+  /**
+   * The job object.
+   */
   job: Job;
 
+  /**
+   * Array of job types i.e. CIPS, CAT5, etc.
+   */
   jobTypes: Array<JobType>;
 
+  /**
+   * The current mode that we're in i.e.
+   * are we creating a new job or are we viewing or editing 
+   * an existing one.
+   */
   mode: 'CREATE' | 'EDIT_VIEW'
 
+  /**
+   * An array of status i.e. NOT_STARTED, ONGOING, etc.
+   */
   statuses: Array<Status>;
 
+  /**
+   * Whether the form has been submitted.
+   */
   submitted = false;
 
   // Chip and Autocomplete
@@ -51,7 +74,14 @@ export class JobComponent implements OnInit {
   users: Array<User> = [];
   allUsers: Array<User> = [];
 
+  /**
+   * The user input for the autocomplete.
+   */
   @ViewChild('userInput') userInput: ElementRef<HTMLInputElement>;
+
+  /**
+   * The mat autocomplete for the user input assignees.
+   */
   @ViewChild('auto') matAutocomplete: MatAutocomplete;
 
   constructor(
@@ -67,17 +97,13 @@ export class JobComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // this.statuses = Object.keys(statuses);
-
     // Fetch statuses
     this.statusEntityService.getAll().subscribe(
       (statuses) => {
         this.statuses = statuses;
       },
 
-      (err) => {
-        console.log('err');
-      }
+      (err) => {}
     )
 
     // Fetch job types
@@ -86,9 +112,7 @@ export class JobComponent implements OnInit {
         this.jobTypes = jobTypes;
       },
 
-      (err) => {
-        console.log('err')
-      }
+      (err) => {}
     )
 
     // Fetch users for assignees
@@ -97,14 +121,19 @@ export class JobComponent implements OnInit {
         this.allUsers = users;
       },
 
-      (err) => {
-        console.log('err')
-      }
+      (err) => {}
     )
 
-
+    /**
+     * Initialise the form with properties and validation
+     * constraints.
+     */
     this.initialiseForm();
 
+    /**
+     * Capture the param id if any to determine
+     * whether we should fetch a job or create a new one.
+     */
     const id = this.route.snapshot.paramMap.get('id');
 
     if (id) {
@@ -117,6 +146,10 @@ export class JobComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
+    /**
+     * Used for filtering users (assignees) on a given
+     * input text filter.
+     */
     fromEvent(this.userInput.nativeElement, 'keyup')
       .pipe(
         map((event: any) => {
@@ -132,10 +165,12 @@ export class JobComponent implements OnInit {
   }
 
   editAndViewMode(id) {
+    /**
+     * Get the job by the given id extracting the 
+     * values and then patching the form.
+     */
     this.jobEntityService.getByKey(id).subscribe(
       (job) => {
-        console.log('job', job);
-
         this.job = job;
 
         const { status, name, reference, job_type, assignees, id } = job;
@@ -165,28 +200,27 @@ export class JobComponent implements OnInit {
           });
       },
 
-      (err) => {
-        console.log('err');
-      }
+      (err) => {}
     );
   }
 
   createMode() {
+    /**
+     * Create a new job using the default form values
+     * and then extract the id ready for when we
+     * update the form.
+     */
     this.jobEntityService.add(this.form.value).subscribe(
       (job) => {
-        console.log('job added', job)
-
         this.job = job;
 
         this.form.patchValue({
           id: job.id
         })
-
-
       },
 
       (err) => {
-        console.log('err')
+        this.alertService.error('Something went wrong');
       }
     )
   }
@@ -224,17 +258,19 @@ export class JobComponent implements OnInit {
       return;
     }
 
-    console.log(this.form.value)
-
+    /**
+     * Invoke the backend with a PUT request to update
+     * the job with the form values.
+     * 
+     * If create then navigate to the job id.
+     */
     this.jobEntityService.update(this.form.value).subscribe(
       (update) => {
-        console.log('update', update)
-
         if (this.mode === 'CREATE') this.router.navigate([`/home/jobs/job/${this.job.id}`]);
       },
 
       (err) => {
-        console.log('err')
+        this.alertService.error('Something went wrong');
       }
     )
 
