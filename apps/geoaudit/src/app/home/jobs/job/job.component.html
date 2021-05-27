@@ -45,5 +45,34 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
+
+    <mat-form-field class="example-chip-list">
+      <mat-label>
+        {{ 'CONTAINERS.home.jobs.job.form.assignees' | translate }}
+      </mat-label>
+      <mat-chip-list #chipList aria-label="Assignee selection">
+        <mat-chip
+          *ngFor="let user of users"
+          [selectable]="selectable"
+          [removable]="removable"
+          (removed)="remove(user)">
+          {{user.username}}
+          <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+        </mat-chip>
+        <input
+          [placeholder]="'CONTAINERS.home.jobs.job.form.new_assignee' | translate"
+          #userInput
+          [formControl]="userControl"
+          [matAutocomplete]="auto"
+          [matChipInputFor]="chipList"
+          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+          (matChipInputTokenEnd)="add($event)">
+      </mat-chip-list>
+      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+        <mat-option *ngFor="let user of filteredUsers" [value]="user">
+          {{user.username}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>  
   </form>
 </mat-card-content>

@@ -72,7 +72,9 @@
 					"form": {
 						"name": "Name",
 						"reference": "Reference",
-						"job_type": "Job Type"
+						"job_type": "Job Type",
+						"assignees": "Assignees",
+						"new_assignee": "New assignee"
 					}
 				}
 			},
