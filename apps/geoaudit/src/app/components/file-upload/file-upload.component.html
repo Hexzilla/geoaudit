@@ -1,0 +1,9 @@
+<input
+  #input
+  type="file"
+  [accept]="getAcceptedInput()"
+  (change)="process(input)"
+  [multiple]="multiple"
+/>
+
+<!-- Display progress indication -->

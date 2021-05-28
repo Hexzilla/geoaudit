@@ -62,7 +62,7 @@ const defaultDataServiceConfig: DefaultDataServiceConfig = {
   declarations: [
     AppComponent,
     AlertComponent,
-    DeleteModalComponent
+    DeleteModalComponent,
   ],
   imports: [
     BrowserModule,

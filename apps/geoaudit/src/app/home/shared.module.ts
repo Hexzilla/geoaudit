@@ -35,6 +35,7 @@ import { NgxMatMomentModule } from '@angular-material-components/moment-adapter'
 
 // Declarations
 import { CardButtonComponent } from '../components/card-button/card-button.component';
+import { FileUploadComponent } from '../components/file-upload/file-upload.component';
 import { SidebarHeaderComponent } from '../components/sidebar-header/sidebar-header.component';
 import { SidebarActionsComponent } from '../components/sidebar-actions/sidebar-actions.component';
 
@@ -48,6 +49,7 @@ import { JobTypeDataService } from '../data-services/job-type-data.service';
 import { JobTypeEntityService } from '../entity-services/job-type-entity.service';
 import { UserEntityService } from '../entity-services/user-entity.service';
 import { UserDataService } from '../data-services/user-data.service';
+import { UploadService } from '../services';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient) {
@@ -118,6 +120,7 @@ const entityMetadataMap: EntityMetadataMap = {
   ],
   declarations: [
     CardButtonComponent,
+    FileUploadComponent,
     SidebarHeaderComponent,
     SidebarActionsComponent,
     NavigationModalComponent
@@ -128,6 +131,8 @@ const entityMetadataMap: EntityMetadataMap = {
 
     StatusEntityService,
     StatusDataService,
+
+    UploadService,
     
     UserEntityService,
     UserDataService,
@@ -151,6 +156,7 @@ const entityMetadataMap: EntityMetadataMap = {
     
     // Declarations
     CardButtonComponent,
+    FileUploadComponent,
     SidebarHeaderComponent,
     SidebarActionsComponent,
 
