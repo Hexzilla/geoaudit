@@ -15,6 +15,7 @@ import { JobEntityService } from '../../entity-services/job-entity.service';
 import { JobDataService } from '../../data-services/job-data.service';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { JobComponent } from './job/job.component';
+import { AttachmentsComponent } from './job/attachments/attachments.component';
 
 const entityMetadataMap: EntityMetadataMap = {
   Job: {
@@ -31,6 +32,7 @@ const entityMetadataMap: EntityMetadataMap = {
     DetailsComponent,
     SurveysComponent,
     JobComponent,
+    AttachmentsComponent,
   ],
   imports: [
     JobsRoutingModule,

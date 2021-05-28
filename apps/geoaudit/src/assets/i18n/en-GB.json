@@ -63,7 +63,7 @@
 					"status": "Status",
 					"actions": "Actions",
 					"details": "Details",
-					"assets": "Assets",
+					"attachments": "Attachments",
 					"surveys": "Surveys"
 				},
 				"no_data": "No data matching the filter \"{{ input.value }}\"",
@@ -80,7 +80,7 @@
 					},
 					"cards": {
 						"details": "Details",
-						"assets": "Assets",
+						"attachments": "Attachments",
 						"surveys": "Surveys"
 					},
 					"overview": {

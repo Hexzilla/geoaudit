@@ -23,8 +23,8 @@ export class JobComponent implements OnInit {
     this.router.navigate([`/home/jobs/job/${this.id}/details`]);
   }
 
-  assets() {
-    this.router.navigate([`/home/jobs/job/${this.id}/assets`]);
+  attachments() {
+    this.router.navigate([`/home/jobs/job/${this.id}/attachments`]);
   }
 
   surveys() {

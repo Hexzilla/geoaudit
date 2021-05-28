@@ -6,6 +6,7 @@ import { JobsComponent } from './jobs.component'
 import { DetailsComponent } from './job/details/details.component';;
 import { SurveysComponent } from './job/surveys/surveys.component';
 import { JobComponent } from './job/job.component';
+import { AttachmentsComponent } from './job/attachments/attachments.component';
 
 const routes: Routes = [
     { 
@@ -23,6 +24,10 @@ const routes: Routes = [
 
     {
         path: 'job/:id/details', component: DetailsComponent
+    },
+
+    {
+        path: 'job/:id/attachments', component: AttachmentsComponent
     },
 
     {
