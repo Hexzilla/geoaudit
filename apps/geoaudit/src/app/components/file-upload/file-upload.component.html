@@ -1,9 +1,12 @@
-<input
-  #input
-  type="file"
-  [accept]="getAcceptedInput()"
-  (change)="process(input)"
-  [multiple]="multiple"
-/>
+<div class="file-upload-container">
+  <h2>{{ label | translate }}</h2>
+  <input
+    #input
+    type="file"
+    [accept]="getAcceptedInput()"
+    (change)="process(input)"
+    [multiple]="multiple"
+  />
+</div>
 
 <!-- Display progress indication -->

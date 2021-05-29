@@ -14,6 +14,8 @@ export class FileUploadComponent implements OnInit {
 
   @Input() type: 'IMAGE' | 'DOCUMENT';
 
+  @Input() label?: string;
+
   @Input() multiple? = false;
 
   selectedFile: FileSnippet;

@@ -88,6 +88,11 @@
 					},
 					"details": {
 						"title": "Job Details"
+					},
+					"attachments": {
+						"title": "Attachments",
+						"images": "Images",
+						"documents": "Documents"
 					}
 				}
 			},

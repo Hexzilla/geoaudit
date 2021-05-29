@@ -1,3 +1,17 @@
-<p>attachments works!</p>
+<geoaudit-sidebar-header
+  title="CONTAINERS.home.jobs.job.attachments.title"
+></geoaudit-sidebar-header>
 
-<geoaudit-file-upload (upload)="onImageUpload($event)" type="IMAGE" [multiple]="true"></geoaudit-file-upload>
+<geoaudit-file-upload
+  label="CONTAINERS.home.jobs.job.attachments.images"
+  (upload)="onImageUpload($event)"
+  type="IMAGE"
+  [multiple]="true"
+></geoaudit-file-upload>
+
+<geoaudit-file-upload
+  label="CONTAINERS.home.jobs.job.attachments.documents"
+  (upload)="onImageUpload($event)"
+  type="DOCUMENT"
+  [multiple]="true"
+></geoaudit-file-upload>
