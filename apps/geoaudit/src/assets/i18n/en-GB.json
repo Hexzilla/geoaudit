@@ -93,6 +93,11 @@
 						"title": "Attachments",
 						"images": "Images",
 						"documents": "Documents"
+					},
+					"steps": {
+						"details": "Details",
+						"attachments": "Attachments",
+						"surveys": "Surveys"
 					}
 				}
 			},

@@ -8,14 +8,11 @@ import { ErrorInterceptor, JwtInterceptor } from '../../helpers';
 
 // Declarations
 import { SharedModule } from '../shared.module';
-import { DetailsComponent } from './job/details/details.component';
 import { JobsComponent } from './jobs.component';
-import { SurveysComponent } from './job/surveys/surveys.component';
 import { JobEntityService } from '../../entity-services/job-entity.service';
 import { JobDataService } from '../../data-services/job-data.service';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { JobComponent } from './job/job.component';
-import { AttachmentsComponent } from './job/attachments/attachments.component';
 
 const entityMetadataMap: EntityMetadataMap = {
   Job: {
@@ -29,10 +26,7 @@ const entityMetadataMap: EntityMetadataMap = {
 @NgModule({
   declarations: [
     JobsComponent,
-    DetailsComponent,
-    SurveysComponent,
     JobComponent,
-    AttachmentsComponent,
   ],
   imports: [
     JobsRoutingModule,

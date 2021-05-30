@@ -2,8 +2,140 @@
   title="CONTAINERS.home.jobs.job.overview.title"
 ></geoaudit-sidebar-header>
 
-<geoaudit-card-button title="CONTAINERS.home.jobs.job.cards.details" text="" icon="details" (onClick)="details()"></geoaudit-card-button>
+<mat-horizontal-stepper (selectionChange)="selectionChange($event)">
+  <!-- Details -->
+  <mat-step
+    [label]="'CONTAINERS.home.jobs.job.steps.details' | translate"
+    [completed]="isDetailsStepCompleted()"
+    [optional]="false"
+  >
+    <mat-card-content>
+      <form fxLayout="column" [formGroup]="form" (ngSubmit)="submit()">
+        <mat-form-field appearance="outline">
+          <mat-label>{{
+            'CONTAINERS.home.jobs.job.status' | translate
+          }}</mat-label>
+          <mat-select formControlName="status" name="status">
+            <mat-option *ngFor="let status of statuses" [value]="status.id">
+              {{ 'STATUSES.' + status.name | translate }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
 
-<geoaudit-card-button title="CONTAINERS.home.jobs.job.cards.attachments" text="" icon="web_asset" (onClick)="attachments()"></geoaudit-card-button>
+        <mat-form-field appearance="outline">
+          <mat-label>{{
+            'CONTAINERS.home.jobs.job.form.reference' | translate
+          }}</mat-label>
+          <input
+            matInput
+            [placeholder]="
+              'CONTAINERS.home.jobs.job.form.reference' | translate
+            "
+            formControlName="reference"
+            class="form-control"
+          />
+        </mat-form-field>
 
-<geoaudit-card-button title="CONTAINERS.home.jobs.job.cards.surveys" text="" icon="backpack" (onClick)="surveys()"></geoaudit-card-button>
+        <mat-form-field appearance="outline">
+          <mat-label>{{
+            'CONTAINERS.home.jobs.job.form.name' | translate
+          }}</mat-label>
+          <input
+            matInput
+            [placeholder]="'CONTAINERS.home.jobs.job.form.name' | translate"
+            formControlName="name"
+            class="form-control"
+          />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>{{
+            'CONTAINERS.home.jobs.job.form.job_type' | translate
+          }}</mat-label>
+          <mat-select formControlName="job_type" name="job_type">
+            <mat-option *ngFor="let jobType of jobTypes" [value]="jobType.id">
+              {{ 'JOB_TYPES.' + jobType.name | translate }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="example-chip-list" appearance="outline">
+          <mat-label>
+            {{ 'CONTAINERS.home.jobs.job.form.assignees' | translate }}
+          </mat-label>
+          <mat-chip-list #chipList aria-label="Assignee selection">
+            <mat-chip
+              *ngFor="let user of users"
+              [selectable]="selectable"
+              [removable]="removable"
+              (removed)="remove(user)"
+            >
+              {{ user.username }}
+              <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+            </mat-chip>
+            <input
+              [placeholder]="
+                'CONTAINERS.home.jobs.job.form.new_assignee' | translate
+              "
+              #userInput
+              [formControl]="userControl"
+              [matAutocomplete]="auto"
+              [matChipInputFor]="chipList"
+              [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+              (matChipInputTokenEnd)="add($event)"
+            />
+          </mat-chip-list>
+          <mat-autocomplete
+            #auto="matAutocomplete"
+            (optionSelected)="selected($event)"
+          >
+            <mat-option *ngFor="let user of filteredUsers" [value]="user">
+              {{ user.username }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+
+        <div fxLayout="row-reverse">
+          <button
+            mat-flat-button
+            color="primary"
+            (click)="submit()"
+            fxFlexFill
+            type="submit"
+          >
+            {{ 'CONTAINERS.home.jobs.job.form.save' | translate }}
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-step>
+
+  <!-- Attachments -->
+  <mat-step
+    [label]="'CONTAINERS.home.jobs.job.steps.attachments' | translate"
+    [completed]="isAttachmentStepCompleted()"
+    [optional]="false"
+  >
+  <geoaudit-file-upload
+  label="CONTAINERS.home.jobs.job.attachments.images"
+  (upload)="onImageUpload($event)"
+  type="IMAGE"
+  [multiple]="true"
+></geoaudit-file-upload>
+
+<geoaudit-file-upload
+  label="CONTAINERS.home.jobs.job.attachments.documents"
+  (upload)="onImageUpload($event)"
+  type="DOCUMENT"
+  [multiple]="true"
+></geoaudit-file-upload>
+  </mat-step>
+
+  <!-- Surveys -->
+  <mat-step
+    [label]="'CONTAINERS.home.jobs.job.steps.surveys' | translate"
+    [completed]="isSurveysStepCompleted()"
+    [optional]="false"
+  >
+  </mat-step>
+</mat-horizontal-stepper>
