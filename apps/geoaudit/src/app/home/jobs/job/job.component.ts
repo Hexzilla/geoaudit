@@ -1,4 +1,4 @@
-import { ENTER, COMMA } from '@angular/cdk/keycodes';
+import { ENTER, COMMA, P } from '@angular/cdk/keycodes';
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
@@ -165,15 +165,6 @@ export class JobComponent implements OnInit {
        .subscribe((text: string) => {
          this.filteredUsers = this._filter(text);
        });
-
-       this.form.valueChanges.pipe(
-        debounceTime(500),
-        tap(() => {
-         this.submit(false)
-        }),
-        distinctUntilChanged(),
-        takeUntil(this.unsubscribe),
-      ).subscribe();
    }
  
    editAndViewMode() {
@@ -201,6 +192,9 @@ export class JobComponent implements OnInit {
            id,
            published: true
          })
+
+        //  After patch value so isn't triggered before.
+         this.autoSave();
  
            /**
             * Do not push already existing surveys onto the array.
@@ -229,6 +223,8 @@ export class JobComponent implements OnInit {
          this.form.patchValue({
            id: job.id
          })
+
+         this.autoSave();
        },
  
        (err) => {
@@ -253,6 +249,17 @@ export class JobComponent implements OnInit {
        published: false
      });
    }
+
+   autoSave() {
+    this.form.valueChanges.pipe(
+      debounceTime(500),
+      tap(() => {
+       this.submit(false)
+      }),
+      distinctUntilChanged(),
+      takeUntil(this.unsubscribe),
+    ).subscribe();
+   }
  
    submit(navigate = true) {
      this.submitted = true;
@@ -273,11 +280,16 @@ export class JobComponent implements OnInit {
       */
      this.jobEntityService.update(this.form.value).subscribe(
        (update) => {
+          this.alertService.info('Saved Changes');
+
          if (navigate) this.router.navigate([`/home/jobs`]);
        },
  
        (err) => {
          this.alertService.error('Something went wrong');
+       },
+
+       () => {
        }
      )
  
