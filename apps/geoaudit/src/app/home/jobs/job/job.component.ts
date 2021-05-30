@@ -7,8 +7,8 @@ import { MatChipInputEvent } from '@angular/material/chips';
 import { ThemePalette } from '@angular/material/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { fromEvent } from 'rxjs';
-import { map, filter, distinctUntilChanged } from 'rxjs/operators';
+import { fromEvent, Subject } from 'rxjs';
+import { map, filter, distinctUntilChanged, switchMap, debounceTime, takeUntil, tap } from 'rxjs/operators';
 import { JobEntityService } from '../../../entity-services/job-entity.service';
 import { JobTypeEntityService } from '../../../entity-services/job-type-entity.service';
 import { StatusEntityService } from '../../../entity-services/status-entity.service';
@@ -64,6 +64,8 @@ export class JobComponent implements OnInit {
     * Whether the form has been submitted.
     */
    submitted = false;
+
+   private unsubscribe = new Subject<void>()
  
    // Chip and Autocomplete
    visible = true;
@@ -163,6 +165,15 @@ export class JobComponent implements OnInit {
        .subscribe((text: string) => {
          this.filteredUsers = this._filter(text);
        });
+
+       this.form.valueChanges.pipe(
+        debounceTime(500),
+        tap(() => {
+         this.submit(false)
+        }),
+        distinctUntilChanged(),
+        takeUntil(this.unsubscribe),
+      ).subscribe();
    }
  
    editAndViewMode() {
@@ -243,12 +254,7 @@ export class JobComponent implements OnInit {
      });
    }
  
-   submit() {
-     this.form.patchValue({
-       assignees: this.users.map((user) => user.id),
-       published: true
-     });
- 
+   submit(navigate = true) {
      this.submitted = true;
  
      // reset alerts on submit
@@ -267,7 +273,7 @@ export class JobComponent implements OnInit {
       */
      this.jobEntityService.update(this.form.value).subscribe(
        (update) => {
-         this.router.navigate([`/home/jobs/job`]);
+         if (navigate) this.router.navigate([`/home/jobs`]);
        },
  
        (err) => {
@@ -298,6 +304,8 @@ export class JobComponent implements OnInit {
      this.userInput.nativeElement.value = '';
  
      this.userControl.setValue(null);
+
+     this.assigneesChange();
    }
  
    remove(user: User): void {
@@ -305,6 +313,16 @@ export class JobComponent implements OnInit {
      if (exists) {
        this.users = this.users.filter((item) => item.id !== exists.id);
      }
+
+     this.assigneesChange();
+   }
+
+   assigneesChange(): void {
+     console.log('assigneesChange')
+    this.form.patchValue({
+      assignees: this.users.map((user) => user.id),
+      published: true
+    });
    }
  
    selected(event: MatAutocompleteSelectedEvent): void {

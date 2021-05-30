@@ -94,18 +94,6 @@
             </mat-option>
           </mat-autocomplete>
         </mat-form-field>
-
-        <div fxLayout="row-reverse">
-          <button
-            mat-flat-button
-            color="primary"
-            (click)="submit()"
-            fxFlexFill
-            type="submit"
-          >
-            {{ 'CONTAINERS.home.jobs.job.form.save' | translate }}
-          </button>
-        </div>
       </form>
     </mat-card-content>
   </mat-step>
@@ -139,3 +127,15 @@
   >
   </mat-step>
 </mat-horizontal-stepper>
+
+<div fxLayout="row-reverse">
+  <button
+    mat-flat-button
+    color="primary"
+    (click)="submit()"
+    fxFlexFill
+    type="submit"
+  >
+    {{ 'CONTAINERS.home.jobs.job.form.save' | translate }}
+  </button>
+</div>
