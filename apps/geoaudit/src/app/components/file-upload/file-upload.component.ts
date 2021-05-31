@@ -69,4 +69,8 @@ export class FileUploadComponent implements OnInit {
         return 'doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/pdf'
     }
   }
+
+  preview() {
+    console.log('preview')
+  }
 }

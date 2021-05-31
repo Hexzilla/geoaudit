@@ -34,6 +34,7 @@ import { NgxMatDatetimePickerModule, NgxMatTimepickerModule, NgxMatNativeDateMod
 import { NgxMatMomentModule } from '@angular-material-components/moment-adapter';
 
 // Declarations
+import { AttachmentCardComponent } from '../components/attachment-card/attachment-card.component';
 import { CardButtonComponent } from '../components/card-button/card-button.component';
 import { FileUploadComponent } from '../components/file-upload/file-upload.component';
 import { SidebarHeaderComponent } from '../components/sidebar-header/sidebar-header.component';
@@ -119,6 +120,7 @@ const entityMetadataMap: EntityMetadataMap = {
     NgxMatMomentModule,
   ],
   declarations: [
+    AttachmentCardComponent,
     CardButtonComponent,
     FileUploadComponent,
     SidebarHeaderComponent,
@@ -155,6 +157,7 @@ const entityMetadataMap: EntityMetadataMap = {
     FontAwesomeModule,
     
     // Declarations
+    AttachmentCardComponent,
     CardButtonComponent,
     FileUploadComponent,
     SidebarHeaderComponent,

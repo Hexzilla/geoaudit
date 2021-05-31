@@ -104,7 +104,16 @@
     [completed]="isAttachmentStepCompleted()"
     [optional]="false"
   >
-  <geoaudit-file-upload
+<!-- 
+  <geoaudit-attachment-card title="CONTAINERS.home.jobs.job.attachments.images" icon="add_a_photo" type="IMAGE" [multiple]="true">
+
+  </geoaudit-attachment-card>
+  
+  <geoaudit-attachment-card title="CONTAINERS.home.jobs.job.attachments.documents" icon="upload_file" type="DOCUMENT" [multiple]="true">
+
+  </geoaudit-attachment-card> -->
+
+<geoaudit-file-upload
   label="CONTAINERS.home.jobs.job.attachments.images"
   (upload)="onImageUpload($event)"
   type="IMAGE"

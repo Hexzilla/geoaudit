@@ -1,11 +1,65 @@
-<div class="file-upload-container">
-  <h2>{{ label | translate }}</h2>
+<mat-card style="cursor: pointer; margin-top: 20px">
+  <div fxLayout="row" class="file-upload-container">
+
+    <div fxLayout="column" style="width: 75%" (click)="preview()">
+      <span class="title">{{ label | translate }}</span>
+      <!-- <p>Preview</p> -->
+    </div>
+
+    <!-- <div fxLayout="row" style="width: 62.5%;" fxLayoutAlign="space-between"> -->
+      <div fxLayout="column">
+        <span [ngSwitch]="type">
+          <mat-icon *ngSwitchCase="'IMAGE'" class="icon" (click)="fileInput.click()">add_a_photo</mat-icon>
+          <mat-icon *ngSwitchCase="'DOCUMENT'" class="icon" (click)="fileInput.click()"
+            >upload_file</mat-icon
+          >
+        </span>
+      </div>
+
+      <!-- <div fxLayout="column" (click)="test()">
+        <span [ngSwitch]="type">
+          <mat-icon *ngSwitchCase="'IMAGE'" class="icon"
+            >view_carousel</mat-icon
+          >
+          <mat-icon *ngSwitchCase="'DOCUMENT'" class="icon">storage</mat-icon>
+        </span>
+      </div> -->
+    <!-- </div> -->
+
+    <!-- <div fxLayout="column">
+      <span class="title">{{ label | translate }}</span>
+    </div>
+
+    <div fxLayout="row" style="width: 62.5%;" fxLayoutAlign="space-between">
+      <div fxLayout="column">
+        <span [ngSwitch]="type">
+          <mat-icon *ngSwitchCase="'IMAGE'" class="icon" (click)="fileInput.click()">add_a_photo</mat-icon>
+          <mat-icon *ngSwitchCase="'DOCUMENT'" class="icon" (click)="fileInput.click()"
+            >upload_file</mat-icon
+          >
+        </span>
+      </div>
+
+      <div fxLayout="column" (click)="test()">
+        <span [ngSwitch]="type">
+          <mat-icon *ngSwitchCase="'IMAGE'" class="icon"
+            >view_carousel</mat-icon
+          >
+          <mat-icon *ngSwitchCase="'DOCUMENT'" class="icon">storage</mat-icon>
+        </span>
+      </div>
+    </div> -->
+  </div>
+</mat-card>
+
+<div>
   <input
-    #input
+    #fileInput
     type="file"
     [accept]="getAcceptedInput()"
-    (change)="process(input)"
+    (change)="process(fileInput)"
     [multiple]="multiple"
+    style="display: none"
   />
 </div>
 
