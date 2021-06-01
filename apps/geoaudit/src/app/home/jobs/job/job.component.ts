@@ -5,14 +5,17 @@ import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms'
 import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { ThemePalette } from '@angular/material/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { fromEvent, Subject } from 'rxjs';
 import { map, filter, distinctUntilChanged, switchMap, debounceTime, takeUntil, tap } from 'rxjs/operators';
+import { FileTypes } from '../../../components/file-upload/file-upload.component';
 import { JobEntityService } from '../../../entity-services/job-entity.service';
 import { JobTypeEntityService } from '../../../entity-services/job-type-entity.service';
 import { StatusEntityService } from '../../../entity-services/status-entity.service';
 import { UserEntityService } from '../../../entity-services/user-entity.service';
+import { AttachmentModalComponent } from '../../../modals/attachment-modal/attachment-modal.component';
 import { Job, Status, User } from '../../../models';
 import { JobType } from '../../../models/job-type.model';
 import { AlertService } from '../../../services';
@@ -96,7 +99,8 @@ export class JobComponent implements OnInit {
      private route: ActivatedRoute,
      private router: Router,
      private store: Store<fromApp.State>,
-     private alertService: AlertService
+     private alertService: AlertService,
+     private dialog: MatDialog
    ) {}
  
    ngOnInit(): void {
@@ -176,7 +180,7 @@ export class JobComponent implements OnInit {
        (job) => {
          this.job = job;
  
-         const { status, name, reference, job_type, assignees, id } = job;
+         const { status, name, reference, job_type, assignees, id, footer } = job;
  
          /**
           * Patch the form with values from the
@@ -188,6 +192,7 @@ export class JobComponent implements OnInit {
            reference,
            job_type: job_type.id,
            assignees,
+           footer,
  
            id,
            published: true
@@ -244,6 +249,11 @@ export class JobComponent implements OnInit {
        job_type: [null, Validators.required],
        assignees: [[], Validators.required],
        surveys: [[]],
+
+       footer: [{
+         images: [[]],
+         documents: [[]],
+       }],
  
        id: null,
        published: false
@@ -392,6 +402,8 @@ export class JobComponent implements OnInit {
   onImageUpload(event): void {
     console.log('on image upload', event)
 
+    
+
     // this.images.push(event)
 
     // May be multiple so just preserving the previous object on the array of images
@@ -401,5 +413,21 @@ export class JobComponent implements OnInit {
     // });
 
     // console.log('images', this.images)
+  }
+
+  onPreview(fileType: FileTypes): void {
+    console.log('onPreview', fileType, this.form.value.footer)
+
+    const { images, documents } = this.form.value.footer;
+
+    const dialogRef = this.dialog.open(AttachmentModalComponent, {
+      data: {
+        fileType,
+        images,
+        documents
+      }
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {})
   }
 }

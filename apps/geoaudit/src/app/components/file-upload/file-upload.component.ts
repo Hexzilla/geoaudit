@@ -5,6 +5,11 @@ class FileSnippet {
   constructor(public src: string, public file: File) {}
 }
 
+export enum FileTypes {
+  IMAGE = "IMAGE",
+  DOCUMENT = "DOCUMENT"
+}
+
 @Component({
   selector: 'geoaudit-file-upload',
   templateUrl: './file-upload.component.html',
@@ -12,7 +17,7 @@ class FileSnippet {
 })
 export class FileUploadComponent implements OnInit {
 
-  @Input() type: 'IMAGE' | 'DOCUMENT';
+  @Input() fileType: FileTypes;
 
   @Input() label?: string;
 
@@ -21,6 +26,8 @@ export class FileUploadComponent implements OnInit {
   selectedFile: FileSnippet;
 
   @Output() upload: EventEmitter<any> = new EventEmitter();
+
+  @Output() preview: EventEmitter<any> = new EventEmitter();
 
   constructor(private uploadService: UploadService) {}
 
@@ -62,15 +69,15 @@ export class FileUploadComponent implements OnInit {
   }
 
   getAcceptedInput(): string {
-    switch (this.type) {
-      case 'IMAGE':
+    switch (this.fileType) {
+      case FileTypes.IMAGE:
         return 'image/*';
-      case 'DOCUMENT':
+      case FileTypes.DOCUMENT:
         return 'doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/pdf'
     }
   }
 
-  preview() {
-    console.log('preview')
+  handleOnPreview() {
+    this.preview.emit();
   }
 }

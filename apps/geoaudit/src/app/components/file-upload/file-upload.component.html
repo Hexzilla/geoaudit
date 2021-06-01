@@ -1,14 +1,14 @@
 <mat-card style="cursor: pointer; margin-top: 20px">
   <div fxLayout="row" class="file-upload-container">
 
-    <div fxLayout="column" style="width: 75%" (click)="preview()">
+    <div fxLayout="column" style="width: 75%" (click)="preview.emit(fileType)">
       <span class="title">{{ label | translate }}</span>
       <!-- <p>Preview</p> -->
     </div>
 
     <!-- <div fxLayout="row" style="width: 62.5%;" fxLayoutAlign="space-between"> -->
       <div fxLayout="column">
-        <span [ngSwitch]="type">
+        <span [ngSwitch]="fileType">
           <mat-icon *ngSwitchCase="'IMAGE'" class="icon" (click)="fileInput.click()">add_a_photo</mat-icon>
           <mat-icon *ngSwitchCase="'DOCUMENT'" class="icon" (click)="fileInput.click()"
             >upload_file</mat-icon

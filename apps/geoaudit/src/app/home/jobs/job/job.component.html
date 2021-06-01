@@ -115,15 +115,17 @@
 
 <geoaudit-file-upload
   label="CONTAINERS.home.jobs.job.attachments.images"
+  (preview)="onPreview($event)"
   (upload)="onImageUpload($event)"
-  type="IMAGE"
+  fileType="IMAGE"
   [multiple]="true"
 ></geoaudit-file-upload>
 
 <geoaudit-file-upload
   label="CONTAINERS.home.jobs.job.attachments.documents"
+  (preview)="onPreview($event)"
   (upload)="onImageUpload($event)"
-  type="DOCUMENT"
+  fileType="DOCUMENT"
   [multiple]="true"
 ></geoaudit-file-upload>
   </mat-step>

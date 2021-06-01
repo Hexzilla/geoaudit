@@ -27,6 +27,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTableModule } from '@angular/material/table';
 
 // Modals
+import { AttachmentModalComponent } from '../modals/attachment-modal/attachment-modal.component';
 import { NavigationModalComponent } from '../modals/navigation-modal/navigation-modal.component';
 
 // Custom
@@ -123,7 +124,8 @@ const entityMetadataMap: EntityMetadataMap = {
     FileUploadComponent,
     SidebarHeaderComponent,
     SidebarActionsComponent,
-    NavigationModalComponent
+    AttachmentModalComponent,
+    NavigationModalComponent,
   ],
   providers: [
     JobTypeEntityService,
@@ -159,6 +161,7 @@ const entityMetadataMap: EntityMetadataMap = {
     FileUploadComponent,
     SidebarHeaderComponent,
     SidebarActionsComponent,
+    AttachmentModalComponent,
 
     // Material
     MatAutocompleteModule,

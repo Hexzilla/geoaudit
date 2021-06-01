@@ -115,6 +115,9 @@
 		}
 	},
 	"MODALS": {
+		"attachment_modal": {
+			"title": "Attachments"
+		},
 		"delete_modal": {
 			"title": "Delete",
 			"delete_surveys": "You're about to delete {{length}} survey(s). Do you wish to continue?",
