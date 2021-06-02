@@ -410,17 +410,41 @@ export class JobComponent implements OnInit {
   onImageUpload(event): void {
     console.log('on image upload', event)
 
-    
+    const { images } = this.form.value.footer;
+
+    console.log('images', [...images, event])
 
     // this.images.push(event)
 
     // May be multiple so just preserving the previous object on the array of images
 
-    // this.form.patchValue({
-    //   image: event
-    // });
+    this.form.patchValue({
+      footer: {
+        ...this.form.value.footer,
+        images: [...images, event]
+      }
+    });
+
+    this.submit(false);
 
     // console.log('images', this.images)
+  }
+
+  onDocumentUpload(event): void {
+    console.log('onDocumentUpload', event)
+
+    const { documents } = this.form.value.footer;
+
+    console.log('documents', [...documents, event])
+
+    this.form.patchValue({
+      footer: {
+        ...this.form.value.footer,
+        documents: [...documents, event]
+      }
+    });
+
+    this.submit(false);
   }
 
   onPreview(fileType: FileTypes): void {
