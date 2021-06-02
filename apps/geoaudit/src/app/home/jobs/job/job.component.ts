@@ -8,6 +8,8 @@ import { ThemePalette } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { environment } from 'apps/geoaudit/src/environments/environment';
+import { Lightbox, IAlbum } from 'ngx-lightbox';
 import { fromEvent, Subject } from 'rxjs';
 import { map, filter, distinctUntilChanged, switchMap, debounceTime, takeUntil, tap } from 'rxjs/operators';
 import { FileTypes } from '../../../components/file-upload/file-upload.component';
@@ -17,6 +19,7 @@ import { StatusEntityService } from '../../../entity-services/status-entity.serv
 import { UserEntityService } from '../../../entity-services/user-entity.service';
 import { AttachmentModalComponent } from '../../../modals/attachment-modal/attachment-modal.component';
 import { Job, Status, User } from '../../../models';
+import { Image } from '../../../models/image.model';
 import { JobType } from '../../../models/job-type.model';
 import { AlertService } from '../../../services';
 
@@ -28,6 +31,8 @@ import * as fromApp from '../../../store';
   styleUrls: ['./job.component.scss']
 })
 export class JobComponent implements OnInit {
+
+  API_URL: string;
 
   id: string;
 
@@ -100,10 +105,13 @@ export class JobComponent implements OnInit {
      private router: Router,
      private store: Store<fromApp.State>,
      private alertService: AlertService,
-     private dialog: MatDialog
+     private dialog: MatDialog,
+     private _lightbox: Lightbox
    ) {}
  
    ngOnInit(): void {
+     this.API_URL = environment.API_URL;
+
      // Fetch statuses
      this.statusEntityService.getAll().subscribe(
        (statuses) => {
@@ -420,14 +428,37 @@ export class JobComponent implements OnInit {
 
     const { images, documents } = this.form.value.footer;
 
-    const dialogRef = this.dialog.open(AttachmentModalComponent, {
-      data: {
-        fileType,
-        images,
-        documents
-      }
-    });
+    switch (fileType) {
+      case FileTypes.IMAGE: 
 
-    dialogRef.afterClosed().subscribe((result) => {})
+        let _album: Array<IAlbum> = [];
+
+        images.map((image: Image) => {
+          const album = {
+            src: `${this.API_URL}${image.url}`,
+            caption: image.name,
+            thumb: `${this.API_URL}${image.formats.thumbnail.url}`
+          }
+
+          _album.push(album);
+        })
+
+        this._lightbox.open(_album, 0);
+      break;
+
+      case FileTypes.DOCUMENT:
+        const dialogRef = this.dialog.open(AttachmentModalComponent, {
+          data: {
+            fileType,
+            images,
+            documents
+          }
+        });
+    
+        dialogRef.afterClosed().subscribe((result) => {})
+      break;
+    }
+
+
   }
 }

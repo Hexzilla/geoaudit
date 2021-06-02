@@ -64,6 +64,7 @@
     "leaflet-sidebar-v2": "^3.2.3",
     "mapbox-gl": "^2.2.0",
     "moment": "^2.29.1",
+    "ngx-lightbox": "^2.3.0",
     "papaparse": "^5.3.0",
     "qs": "^6.10.1",
     "rxjs": "~6.6.3",

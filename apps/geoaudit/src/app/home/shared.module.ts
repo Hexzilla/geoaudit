@@ -33,6 +33,7 @@ import { NavigationModalComponent } from '../modals/navigation-modal/navigation-
 // Custom
 import { NgxMatDatetimePickerModule, NgxMatTimepickerModule, NgxMatNativeDateModule, NgxMatDateFormats, NGX_MAT_DATE_FORMATS } from '@angular-material-components/datetime-picker';
 import { NgxMatMomentModule } from '@angular-material-components/moment-adapter';
+import { LightboxModule } from 'ngx-lightbox';
 
 // Declarations
 import { CardButtonComponent } from '../components/card-button/card-button.component';
@@ -118,6 +119,7 @@ const entityMetadataMap: EntityMetadataMap = {
     NgxMatTimepickerModule,
     NgxMatDatetimePickerModule,
     NgxMatMomentModule,
+    LightboxModule
   ],
   declarations: [
     CardButtonComponent,
@@ -187,6 +189,7 @@ const entityMetadataMap: EntityMetadataMap = {
     NgxMatTimepickerModule,
     NgxMatDatetimePickerModule,
     NgxMatMomentModule,
+    LightboxModule
 
   ],
 })

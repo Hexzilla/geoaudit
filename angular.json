@@ -59,7 +59,8 @@
             "styles": [
               "./node_modules/leaflet/dist/leaflet.css",
               "apps/geoaudit/src/styles.scss",
-              "./node_modules/leaflet-sidebar-v2/css/leaflet-sidebar.css"
+              "./node_modules/leaflet-sidebar-v2/css/leaflet-sidebar.css",
+              "./node_modules/ngx-lightbox/lightbox.css"
             ],
             "scripts": []
           },
