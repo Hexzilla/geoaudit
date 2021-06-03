@@ -474,7 +474,6 @@ export class JobComponent implements OnInit {
         const dialogRef = this.dialog.open(AttachmentModalComponent, {
           data: {
             fileType,
-            images,
             documents
           }
         });
