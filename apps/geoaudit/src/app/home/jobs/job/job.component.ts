@@ -1,11 +1,14 @@
+import { SelectionModel } from '@angular/cdk/collections';
 import { ENTER, COMMA, P } from '@angular/cdk/keycodes';
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { ThemePalette } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { environment } from 'apps/geoaudit/src/environments/environment';
@@ -18,7 +21,7 @@ import { JobTypeEntityService } from '../../../entity-services/job-type-entity.s
 import { StatusEntityService } from '../../../entity-services/status-entity.service';
 import { UserEntityService } from '../../../entity-services/user-entity.service';
 import { AttachmentModalComponent } from '../../../modals/attachment-modal/attachment-modal.component';
-import { Job, Status, User } from '../../../models';
+import { Job, Status, Survey, User } from '../../../models';
 import { Image } from '../../../models/image.model';
 import { JobType } from '../../../models/job-type.model';
 import { AlertService } from '../../../services';
@@ -30,7 +33,17 @@ import * as fromApp from '../../../store';
   templateUrl: './job.component.html',
   styleUrls: ['./job.component.scss']
 })
-export class JobComponent implements OnInit {
+export class JobComponent implements OnInit, AfterViewInit {
+
+  // displayedColumns: string[] = ['select', 'name', 'date_delivery', 'status'];
+  // dataSource: MatTableDataSource<Survey>;
+  // selection = new SelectionModel<Survey>(true, []);
+
+  // @ViewChild(MatPaginator) paginator: MatPaginator;
+
+  // MatPaginator Inputs
+  // length = 100;
+  // pageSize = 10;
 
   API_URL: string;
 
@@ -72,6 +85,8 @@ export class JobComponent implements OnInit {
     * Whether the form has been submitted.
     */
    submitted = false;
+
+   surveys: Array<Survey> = [];
 
    private unsubscribe = new Subject<void>()
  
@@ -161,6 +176,8 @@ export class JobComponent implements OnInit {
    }
  
    ngAfterViewInit(): void {
+    // this.dataSource.paginator = this.paginator;
+
      /**
       * Used for filtering users (assignees) on a given
       * input text filter.
@@ -188,7 +205,7 @@ export class JobComponent implements OnInit {
        (job) => {
          this.job = job;
  
-         const { status, name, reference, job_type, assignees, id, footer } = job;
+         const { status, name, reference, job_type, assignees, id, footer, surveys } = job;
  
          /**
           * Patch the form with values from the
@@ -201,6 +218,7 @@ export class JobComponent implements OnInit {
            job_type: job_type.id,
            assignees,
            footer,
+           surveys,
  
            id,
            published: true
@@ -217,6 +235,14 @@ export class JobComponent implements OnInit {
                this.users.push(assignee);
              }
            });
+
+           surveys.map((survey) => {
+             if (!this.surveys.find((item) => item.id === survey.id)) {
+               this.surveys.push(survey);
+             }
+           })
+
+           console.log('surveys', this.surveys)
        },
  
        (err) => {}
@@ -373,17 +399,17 @@ export class JobComponent implements OnInit {
      });
    }
 
-  details() {
-    this.router.navigate([`/home/jobs/job/${this.id}/details`]);
-  }
+  // details() {
+  //   this.router.navigate([`/home/jobs/job/${this.id}/details`]);
+  // }
 
-  attachments() {
-    this.router.navigate([`/home/jobs/job/${this.id}/attachments`]);
-  }
+  // attachments() {
+  //   this.router.navigate([`/home/jobs/job/${this.id}/attachments`]);
+  // }
 
-  surveys() {
-    this.router.navigate([`/home/jobs/job/${this.id}/surveys`]);
-  }
+  // surveys() {
+  //   this.router.navigate([`/home/jobs/job/${this.id}/surveys`]);
+  // }
 
   selectionChange(event: StepperSelectionEvent) {
 
