@@ -40,6 +40,7 @@ import { CardButtonComponent } from '../components/card-button/card-button.compo
 import { FileUploadComponent } from '../components/file-upload/file-upload.component';
 import { SidebarHeaderComponent } from '../components/sidebar-header/sidebar-header.component';
 import { SidebarActionsComponent } from '../components/sidebar-actions/sidebar-actions.component';
+import { SurveyTableComponent } from '../components/survey-table/survey-table.component';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -128,6 +129,7 @@ const entityMetadataMap: EntityMetadataMap = {
     SidebarActionsComponent,
     AttachmentModalComponent,
     NavigationModalComponent,
+    SurveyTableComponent
   ],
   providers: [
     JobTypeEntityService,
@@ -164,7 +166,8 @@ const entityMetadataMap: EntityMetadataMap = {
     SidebarHeaderComponent,
     SidebarActionsComponent,
     AttachmentModalComponent,
-
+    SurveyTableComponent,
+    
     // Material
     MatAutocompleteModule,
     MatButtonModule,

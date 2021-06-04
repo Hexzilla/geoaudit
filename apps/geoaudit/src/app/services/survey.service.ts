@@ -35,7 +35,7 @@ export class SurveyService {
              * 
              * Please see https://strapi.io/documentation/developer-docs/latest/developer-resources/content-api/content-api.html#filters
              */
-            const query = qs.stringify({ _where: { _or: [ { reference_contains: parameters.filter }, { "status.name_contains": parameters.filter } ] } });
+            const query = qs.stringify({ _where: { _or: [ { reference_contains: parameters.filter }, { name_contains: parameters.filter}, { "status.name_contains": parameters.filter } ] } });
             return this.http.get<any>(`${environment.API_URL}/surveys?${pagination}&${query}`);
         } else {
             return this.http.get<any>(`${environment.API_URL}/surveys?${pagination}`);

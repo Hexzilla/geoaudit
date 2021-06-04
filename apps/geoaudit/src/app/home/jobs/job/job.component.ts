@@ -36,14 +36,15 @@ import * as fromApp from '../../../store';
 export class JobComponent implements OnInit, AfterViewInit {
 
   // displayedColumns: string[] = ['select', 'name', 'date_delivery', 'status'];
-  // dataSource: MatTableDataSource<Survey>;
+  dataSource: MatTableDataSource<Survey>;
   // selection = new SelectionModel<Survey>(true, []);
 
   // @ViewChild(MatPaginator) paginator: MatPaginator;
 
   // MatPaginator Inputs
-  // length = 100;
-  // pageSize = 10;
+  length = 0;
+  pageSize = 3;
+  pageSizeOptions: number[] = [];
 
   API_URL: string;
 
@@ -241,6 +242,8 @@ export class JobComponent implements OnInit, AfterViewInit {
                this.surveys.push(survey);
              }
            })
+
+           this.dataSource = new MatTableDataSource(surveys);
 
            console.log('surveys', this.surveys)
        },
