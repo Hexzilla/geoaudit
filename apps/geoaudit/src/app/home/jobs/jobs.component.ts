@@ -188,15 +188,7 @@ export class JobsComponent implements OnInit, AfterViewInit {
   }
 
   details(id) {
-    this.router.navigate([`/home/jobs/job/${id}/details`]);
-  }
-
-  attachments(id) {
-    this.router.navigate([`/home/jobs/job/${id}/attachments`]);
-  }  
-
-  surveys(id) {
-    this.router.navigate([`/home/jobs/job/${id}/surveys`]);
+    this.router.navigate([`/home/jobs/job/${id}`]);
   }
 
   // convenience getter for easy access to form fields
