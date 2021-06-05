@@ -37,6 +37,7 @@ export class SurveyTableComponent implements OnInit, AfterViewInit {
 
   selection = new SelectionModel<Survey>(true, []);
 
+  data: Array<Survey>;
 
   @Input() dataSource: MatTableDataSource<Survey>;
 
@@ -68,6 +69,7 @@ export class SurveyTableComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
+    this.data = this.dataSource.data;
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
 
@@ -92,8 +94,6 @@ export class SurveyTableComponent implements OnInit, AfterViewInit {
        }
 
        if (this.filterMode === 'NETWORK') {
-        console.log('filter', this.pageSize, text)
-
         this.store.dispatch(
           SurveyActions.fetchSurveys({
             start: 0,
@@ -103,14 +103,12 @@ export class SurveyTableComponent implements OnInit, AfterViewInit {
         );
        }
 
-       console.log(this.filterMode, text)
-
        if (this.filterMode === 'LOCAL') {
-        this.dataSource.data = this.dataSource.data.filter((survey) => {
+        this.dataSource.data = this.data.filter((survey) => {
           return (
-            survey.name.toLowerCase().indexOf(text) === 0 ||
-            survey.reference.toLowerCase().indexOf(text) === 0 ||
-            survey.id.toString() === text
+            (typeof survey.name === "string" && survey.name.toLowerCase().indexOf(text) === 0) ||
+            (typeof survey.reference === "string" && survey.reference.toLowerCase().indexOf(text) === 0) ||
+            (typeof survey.id === "number" && survey.id.toString() === text)
           );
         });
        }
@@ -205,13 +203,13 @@ export class SurveyTableComponent implements OnInit, AfterViewInit {
 
     const body = surveys.map((survey) => {
       return [
-        survey.reference,
-        survey.name,
-        moment(survey.date_assigned).format('L LT'),
-        moment(survey.date_delivery).format('L LT'),
-        survey.status.name,
-        survey.job.reference,
-        survey.prepared_by.username,
+        (survey.reference ? survey.reference : ''),
+        (survey.name ? survey.name : ''),
+        (survey.date_assigned ? moment(survey.date_assigned).format('L LT') : ''),
+        (survey.date_delivery ? moment(survey.date_delivery).format('L LT') : ''),
+        (survey.status.name ? survey.status.name : ''),
+        (survey.job.reference ? survey.job.reference : ''),
+        (survey.prepared_by && survey.prepared_by.username ? survey.prepared_by.username : ''),
       ];
     });
 

@@ -241,7 +241,6 @@ export class EventComponent implements OnInit, AfterViewInit {
      */
     this.store
       .select(SurveySelectors.Surveys)
-      .pipe(take(1))
       .subscribe((surveys) => {
         // Survey ids as query parameter.
         const surveyIds = this.route.snapshot.queryParamMap.get('surveys');
