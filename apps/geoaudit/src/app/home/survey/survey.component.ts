@@ -7,21 +7,16 @@ import { Store } from '@ngrx/store';
 import * as moment from 'moment';
 
 import * as fromApp from '../../store';
-import { Statuses } from '../../models'
+import { Status, Statuses } from '../../models';
 import { AlertService } from '../../services';
-
-interface Food {
-  value: string;
-  viewValue: string;
-}
+import { StatusEntityService } from '../../entity-services/status-entity.service';
 
 @Component({
   selector: 'geoaudit-survey',
   templateUrl: './survey.component.html',
-  styleUrls: ['./survey.component.scss']
+  styleUrls: ['./survey.component.scss'],
 })
 export class SurveyComponent implements OnInit {
-
   color: ThemePalette = 'primary';
 
   id: string;
@@ -32,9 +27,14 @@ export class SurveyComponent implements OnInit {
 
   form: FormGroup;
 
+  mode: 'CREATE' | 'EDIT_VIEW';
+
   selectedStatus: string;
 
-  statuses: Array<String>;
+  /**
+   * An array of status i.e. NOT_STARTED, ONGOING, etc.
+   */
+  statuses: Array<Status>;
 
   submitted = false;
 
@@ -43,44 +43,55 @@ export class SurveyComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private store: Store<fromApp.State>,
+    private statusEntityService: StatusEntityService,
     private alertService: AlertService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
-    this.statuses = Object.keys(Statuses);
+    // Fetch statuses
+    this.statusEntityService.getAll().subscribe(
+      (statuses) => {
+        this.statuses = statuses;
+      },
+
+      (err) => {}
+    );
 
     /**
      * Initialise the form with properties and
      * validation constraints.
      */
-     this.initialiseForm();
+    this.initialiseForm();
 
-     this.id = this.route.snapshot.paramMap.get('id');
+    this.id = this.route.snapshot.paramMap.get('id');
 
-     if (this.id) {
-      console.log('get survey', this.id)
-     } else {
-      console.log('no survey')
-     }
-     
-     this.jobId = this.route.snapshot.queryParamMap.get('job');
+    if (this.id) {
+      this.mode = 'EDIT_VIEW';
 
-     if (this.jobId) {
-       console.log('get job', this.jobId)
-     } else {
-       console.log('no job')
-     }
+      console.log('get survey', this.id);
+    } else {
+      this.mode = 'CREATE';
 
+      console.log('no survey');
+    }
+
+    this.jobId = this.route.snapshot.queryParamMap.get('job');
+
+    if (this.jobId) {
+      console.log('get job', this.jobId);
+    } else {
+      console.log('no job');
+    }
   }
 
   /**
    * Initialisation of the form, properties, and validation.
    */
-   initialiseForm(): void {
+  initialiseForm(): void {
     this.form = this.formBuilder.group({
       status: [Statuses.NOT_STARTED, Validators.required],
       name: [null, Validators.required],
-      // assigned_to: 
+      // assigned_to:
 
       title: ['Event Title', Validators.required],
       allDay: [false, Validators.required],
@@ -91,52 +102,44 @@ export class SurveyComponent implements OnInit {
 
       id: null,
       reference: '',
-      published: false
+      published: false,
     });
   }
 
-  submit(): void {
-
-  }
+  submit(): void {}
 
   /**
    * On selection change of the steps i.e.
    * click on step 1 -> catch event -> do something.
-   * @param event 
+   * @param event
    */
   selectionChange(event: StepperSelectionEvent) {
-    console.log('selectionChange', event.selectedIndex)
+    console.log('selectionChange', event.selectedIndex);
     switch (event.selectedIndex) {
       case 0:
-
-      break;
+        break;
 
       case 1:
-
-      break;
+        break;
 
       case 2:
-
-      break;
+        break;
 
       case 3:
-
-      break;
+        break;
 
       case 4:
-
-      break;
+        break;
 
       case 5:
-
-      break;
+        break;
     }
   }
-  
+
   isStep1Completed(): boolean {
     return false;
   }
-  
+
   isStep2Completed(): boolean {
     return false;
   }
