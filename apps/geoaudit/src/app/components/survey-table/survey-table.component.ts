@@ -276,7 +276,20 @@ export class SurveyTableComponent implements OnInit, AfterViewInit {
   }
 
   details(id): void {
-    this.router.navigate([`/home/survey/${id}`]);
+    if (this.job) {
+      const queryParams = {
+        job: this.job.id
+      }
+      
+      // Create our 'NaviationExtras' object which is expected by the Angular Router
+      const navigationExtras: NavigationExtras = {
+        queryParams
+      };
+    
+      this.router.navigate([`/home/survey/${id}`], navigationExtras);
+    } else {
+      this.router.navigate([`home/survey/${id}`]);
+    }
   }
 
   /** Whether the number of selected elements matches the total number of rows. */

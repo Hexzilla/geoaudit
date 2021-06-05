@@ -24,6 +24,10 @@ export class SurveyComponent implements OnInit {
 
   color: ThemePalette = 'primary';
 
+  id: string;
+
+  jobId: string;
+
   newJob = false;
 
   form: FormGroup;
@@ -50,6 +54,23 @@ export class SurveyComponent implements OnInit {
      * validation constraints.
      */
      this.initialiseForm();
+
+     this.id = this.route.snapshot.paramMap.get('id');
+
+     if (this.id) {
+      console.log('get survey', this.id)
+     } else {
+      console.log('no survey')
+     }
+     
+     this.jobId = this.route.snapshot.queryParamMap.get('job');
+
+     if (this.jobId) {
+       console.log('get job', this.jobId)
+     } else {
+       console.log('no job')
+     }
+
   }
 
   /**
