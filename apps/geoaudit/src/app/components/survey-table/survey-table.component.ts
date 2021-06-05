@@ -1,5 +1,5 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, EventEmitter, Component, ElementRef, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
@@ -54,6 +54,8 @@ export class SurveyTableComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   @ViewChild(MatSort) sort: MatSort;
+
+  @Output() onDelete: EventEmitter<Array<Survey>> = new EventEmitter();
 
   constructor(
     private formBuilder: FormBuilder,
@@ -173,9 +175,8 @@ export class SurveyTableComponent implements OnInit, AfterViewInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result)
-        this.store.dispatch(
-          SurveyActions.deleteSurveys({ surveys: this.selection.selected })
-        );
+        this.onDelete.emit(this.selection.selected);
+        this.selection.clear();
     });
   }
 

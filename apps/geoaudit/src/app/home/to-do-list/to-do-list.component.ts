@@ -65,4 +65,10 @@ export class ToDoListComponent implements OnInit {
       console.log('subscribe', state.surveys)
     });
   }
+
+  delete(surveys: Array<Survey>): void {
+    this.store.dispatch(
+      SurveyActions.deleteSurveys({ surveys })
+    );
+  }
 }

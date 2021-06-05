@@ -510,7 +510,23 @@ export class JobComponent implements OnInit, AfterViewInit {
         dialogRef.afterClosed().subscribe((result) => {})
       break;
     }
+  }
 
+  delete(surveys: Array<Survey>): void {
+    let newSurveys = this.form.value.surveys;
 
+    surveys.map(survey => {
+      newSurveys = newSurveys.filter(x => x.id !== survey.id);
+    })
+
+    this.surveys = newSurveys;
+
+    this.dataSource.data = newSurveys;
+
+    const ids = newSurveys.map(survey => survey.id);
+
+    this.form.patchValue({
+      surveys: ids
+    })
   }
 }
