@@ -16,7 +16,7 @@ import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators'
 
 import { DeleteModalComponent } from '../../modals/delete-modal/delete-modal.component';
 import { NavigationModalComponent } from '../../modals/navigation-modal/navigation-modal.component';
-import { Survey } from '../../models';
+import { Job, Survey } from '../../models';
 
 import * as fromApp from '../../store';
 import * as SurveyActions from '../../store/survey/survey.actions';
@@ -28,7 +28,7 @@ import * as SurveyActions from '../../store/survey/survey.actions';
 })
 export class SurveyTableComponent implements OnInit, AfterViewInit {
 
-  displayedColumns: string[] = ['select', 'name', 'date_delivery', 'status'];
+  displayedColumns: string[] = ['select', 'name', 'date_delivery', 'status', 'actions'];
 
   form: FormGroup;
 
@@ -40,6 +40,8 @@ export class SurveyTableComponent implements OnInit, AfterViewInit {
   data: Array<Survey>;
 
   @Input() dataSource: MatTableDataSource<Survey>;
+
+  @Input() job?: Job;
 
   @Input() length: number;
 
@@ -183,7 +185,22 @@ export class SurveyTableComponent implements OnInit, AfterViewInit {
   addSurvey(): void {
     console.log('add survey')
 
-    this.router.navigate([`/home/survey`]);
+    if (this.job) {
+      const queryParams = {
+        job: this.job.id
+      }
+      
+      // Create our 'NaviationExtras' object which is expected by the Angular Router
+      const navigationExtras: NavigationExtras = {
+        queryParams
+      };
+  
+      console.log(navigationExtras)
+  
+      this.router.navigate([`/home/survey`], navigationExtras);
+    } else {
+      this.router.navigate(['home/survey']);
+    }
   }
 
   download(): void {
@@ -256,6 +273,10 @@ export class SurveyTableComponent implements OnInit, AfterViewInit {
       })
     );
     return event;
+  }
+
+  details(id): void {
+    this.router.navigate([`/home/survey/${id}`]);
   }
 
   /** Whether the number of selected elements matches the total number of rows. */
