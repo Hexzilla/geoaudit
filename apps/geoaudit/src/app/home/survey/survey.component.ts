@@ -66,6 +66,10 @@ export class SurveyComponent implements OnInit, AfterViewInit {
 
   // @ViewChild('auto') matAutocomplete: MatAutocomplete;
 
+  latCtrl = new FormControl();
+
+  lngCtrl = new FormControl();
+
   public disabled = false;
   public showSpinners = true;
   public showSeconds = false;
@@ -140,6 +144,14 @@ export class SurveyComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.preparedByCtrl.valueChanges.subscribe((value) => {
+      if (value) {
+        this.filteredUsers = this._filterUsers(value);
+      } else {
+        this.filteredUsers = this.allUsers.slice();
+      }
+    })
+
+    this.conductedByCtrl.valueChanges.subscribe((value) => {
       if (value) {
         this.filteredUsers = this._filterUsers(value);
       } else {

@@ -77,7 +77,8 @@
     >
     <mat-card-content>
       <form fxLayout="column" [formGroup]="form" (ngSubmit)="submit()">
-        <mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'CONTAINERS.survey.form.date_assigned' | translate }}</mat-label>
           <input matInput [ngxMatDatetimePicker]="dateAssignedDateTimePicker" [placeholder]="'CONTAINERS.survey.form.date_assigned' | translate" formControlName="date_assigned"
              [min]="minDate" [max]="maxDate" [disabled]="disabled">
   
@@ -90,7 +91,8 @@
           </ngx-mat-datetime-picker>
        </mat-form-field>
 
-       <mat-form-field>
+       <mat-form-field appearance="outline">
+        <mat-label>{{ 'CONTAINERS.survey.form.date_delivery' | translate }}</mat-label>
         <input matInput [ngxMatDatetimePicker]="dateDeliveryDateTimePicker" [placeholder]="'CONTAINERS.survey.form.date_delivery' | translate" formControlName="date_delivery"
            [min]="minDate" [max]="maxDate" [disabled]="disabled">
 
@@ -112,7 +114,7 @@
     >
     <mat-card-content>
       <form fxLayout="column" [formGroup]="form" (ngSubmit)="submit()">
-        <mat-form-field class="full-width">
+        <mat-form-field class="full-width" appearance="outline">
           <mat-label>Prepared By</mat-label>
           <input
             matInput
@@ -135,7 +137,7 @@
           </mat-autocomplete>
         </mat-form-field>
 
-        <mat-form-field class="full-width">
+        <mat-form-field class="full-width" appearance="outline">
           <mat-label>Conducted By</mat-label>
           <input
             matInput
@@ -165,6 +167,27 @@
       [editable]="false"
       [completed]="isStep4Completed()"
     >
+    <mat-form-field class="full-width" appearance="outline">
+    <mat-label>Lat</mat-label>
+    <input
+      matInput
+      aria-label="Latitude"
+      [formControl]="latCtrl"
+      #latCtrlInput
+    />
+    </mat-form-field>
+
+    <mat-form-field class="full-width" appearance="outline">
+    <mat-label>Lng</mat-label>
+    <input
+      matInput
+      aria-label="Longtitude"
+      [formControl]="lngCtrl"
+      #lngCtrlInput
+    />
+    </mat-form-field>
+
+    get location lat lng
     </mat-step>
 
     <mat-step
