@@ -1,5 +1,5 @@
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ThemePalette } from '@angular/material/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -44,6 +44,21 @@ export class SurveyComponent implements OnInit {
   survey: Survey;
 
   private unsubscribe = new Subject<void>()
+
+  @ViewChild('dateAssignedDateTimePicker') dateAssignedDateTimePicker: any;
+
+  public disabled = false;
+  public showSpinners = true;
+  public showSeconds = false;
+  public touchUi = false;
+  public enableMeridian = false;
+  public minDate: Date;
+  public maxDate: Date;
+  public stepHour = 1;
+  public stepMinute = 1;
+  public stepSecond = 1;
+  public disableMinute = false;
+  public hideTime = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -136,7 +151,7 @@ export class SurveyComponent implements OnInit {
       status: [Statuses.NOT_STARTED, Validators.required],
       name: [null, Validators.required],
 
-      // date_assigned: [moment().toISOString(), Validators.required],
+      date_assigned: [moment().toISOString(), Validators.required],
       // date_delivery: [moment().toISOString(), Validators.required],
 
       // footer: [{

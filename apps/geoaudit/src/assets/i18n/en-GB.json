@@ -112,6 +112,11 @@
 				"new_job": "New Job",
 				"job": "Job"
 			}
+		},
+		"survey": {
+			"form": {
+				"date_assigned": "Date Assigned"
+			}
 		}
 	},
 	"MODALS": {

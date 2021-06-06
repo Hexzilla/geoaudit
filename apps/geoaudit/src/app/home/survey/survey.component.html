@@ -75,6 +75,22 @@
       [editable]="false"
       [completed]="isStep2Completed()"
     >
+    <mat-card-content>
+      <form fxLayout="column" [formGroup]="form" (ngSubmit)="submit()">
+        <mat-form-field>
+          <input matInput [ngxMatDatetimePicker]="dateAssignedDateTimePicker" [placeholder]="'CONTAINERS.survey.form.date_assigned' | translate" formControlName="date_assigned"
+             [min]="minDate" [max]="maxDate" [disabled]="disabled">
+  
+          <mat-datepicker-toggle matSuffix [for]="dateAssignedDateTimePicker"></mat-datepicker-toggle>
+          
+          <ngx-mat-datetime-picker #dateAssignedDateTimePicker [showSpinners]="showSpinners" [showSeconds]="showSeconds"
+             [stepHour]="stepHour" [stepMinute]="stepMinute" [stepSecond]="stepSecond"
+             [touchUi]="touchUi" [color]="color" [enableMeridian]="enableMeridian" 
+             [disableMinute]="disableMinute" [hideTime]="hideTime">
+          </ngx-mat-datetime-picker>
+       </mat-form-field>
+      </form>
+    </mat-card-content>
     </mat-step>
 
     <mat-step
