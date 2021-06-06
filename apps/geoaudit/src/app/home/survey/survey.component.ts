@@ -46,6 +46,7 @@ export class SurveyComponent implements OnInit {
   private unsubscribe = new Subject<void>()
 
   @ViewChild('dateAssignedDateTimePicker') dateAssignedDateTimePicker: any;
+  @ViewChild('dateDeliveryDateTimePicker') dateDeliveryDateTimePicker: any;
 
   public disabled = false;
   public showSpinners = true;
@@ -152,7 +153,7 @@ export class SurveyComponent implements OnInit {
       name: [null, Validators.required],
 
       date_assigned: [moment().toISOString(), Validators.required],
-      // date_delivery: [moment().toISOString(), Validators.required],
+      date_delivery: [moment().toISOString(), Validators.required],
 
       // footer: [{
       //   images: [[]],

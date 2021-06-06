@@ -115,7 +115,8 @@
 		},
 		"survey": {
 			"form": {
-				"date_assigned": "Date Assigned"
+				"date_assigned": "Date Assigned",
+				"date_delivery": "Date Delivery"
 			}
 		}
 	},

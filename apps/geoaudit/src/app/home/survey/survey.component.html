@@ -89,6 +89,19 @@
              [disableMinute]="disableMinute" [hideTime]="hideTime">
           </ngx-mat-datetime-picker>
        </mat-form-field>
+
+       <mat-form-field>
+        <input matInput [ngxMatDatetimePicker]="dateDeliveryDateTimePicker" [placeholder]="'CONTAINERS.survey.form.date_delivery' | translate" formControlName="date_delivery"
+           [min]="minDate" [max]="maxDate" [disabled]="disabled">
+
+        <mat-datepicker-toggle matSuffix [for]="dateDeliveryDateTimePicker"></mat-datepicker-toggle>
+        
+        <ngx-mat-datetime-picker #dateDeliveryDateTimePicker [showSpinners]="showSpinners" [showSeconds]="showSeconds"
+           [stepHour]="stepHour" [stepMinute]="stepMinute" [stepSecond]="stepSecond"
+           [touchUi]="touchUi" [color]="color" [enableMeridian]="enableMeridian" 
+           [disableMinute]="disableMinute" [hideTime]="hideTime">
+        </ngx-mat-datetime-picker>
+     </mat-form-field>
       </form>
     </mat-card-content>
     </mat-step>
