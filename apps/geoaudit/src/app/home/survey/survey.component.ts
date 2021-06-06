@@ -1,5 +1,5 @@
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ThemePalette } from '@angular/material/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -14,13 +14,14 @@ import { SurveyEntityService } from '../../entity-services/survey-entity.service
 import { debounceTime, tap, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { UserEntityService } from '../../entity-services/user-entity.service';
 
 @Component({
   selector: 'geoaudit-survey',
   templateUrl: './survey.component.html',
   styleUrls: ['./survey.component.scss'],
 })
-export class SurveyComponent implements OnInit {
+export class SurveyComponent implements OnInit, AfterViewInit {
   color: ThemePalette = 'primary';
 
   id: string;
@@ -61,6 +62,10 @@ export class SurveyComponent implements OnInit {
 
   users: Array<User>;
 
+  allUsers: Array<User> = [];
+
+  // @ViewChild('auto') matAutocomplete: MatAutocomplete;
+
   public disabled = false;
   public showSpinners = true;
   public showSeconds = false;
@@ -81,6 +86,7 @@ export class SurveyComponent implements OnInit {
     private store: Store<fromApp.State>,
     private statusEntityService: StatusEntityService,
     private surveyEntityService: SurveyEntityService,
+    private userEntityService: UserEntityService,
     private alertService: AlertService
   ) {}
 
@@ -93,6 +99,16 @@ export class SurveyComponent implements OnInit {
 
       (err) => {}
     );
+
+     // Fetch users for assignees
+     this.userEntityService.getAll().subscribe(
+      (users) => {
+        this.allUsers = users;
+        console.log('users', users)
+      },
+
+      (err) => {}
+    )
 
     /**
      * Initialise the form with properties and
@@ -122,19 +138,38 @@ export class SurveyComponent implements OnInit {
     }
   }
 
+  ngAfterViewInit() {
+    this.preparedByCtrl.valueChanges.subscribe((value) => {
+      if (value) {
+        this.filteredUsers = this._filterUsers(value);
+      } else {
+        this.filteredUsers = this.allUsers.slice();
+      }
+    })
+  }
+
   editAndViewMode() {
     this.surveyEntityService.getByKey(this.id).subscribe(
       (survey) => {
         this.survey = survey;
 
-        const { status, name, id } = survey;
+        const { status, name, id, prepared_by, conducted_by } = survey;
 
         this.form.patchValue({
           status: status.id,
           name,
 
+          prepared_by: prepared_by.id,
+          conducted_by: conducted_by.id,
+
           id
         })
+
+        this.preparedByCtrl.setValue(prepared_by?.username);
+        this.selectedPreparedBy = prepared_by;
+
+        this.conductedByCtrl.setValue(conducted_by?.username);
+        this.selectedConductedBy = conducted_by;
 
         this.autoSave();
       },
@@ -147,14 +182,21 @@ export class SurveyComponent implements OnInit {
   }
 
   onPreparedBySelect(event: MatAutocompleteSelectedEvent): void {
-    console.log('onPreparedBySelect', event)
-    this.preparedByCtrl.setValue(event.option.value.reference);
+    this.preparedByCtrl.setValue(event.option.value.username);
     this.selectedPreparedBy = event.option.value;
+
+    this.form.patchValue({
+      prepared_by: event.option.value.id
+    })
   }
 
   onConductedBySelect(event: MatAutocompleteSelectedEvent): void {
-    this.conductedByCtrl.setValue(event.option.value.reference);
+    this.conductedByCtrl.setValue(event.option.value.username);
     this.selectedConductedBy = event.option.value;
+
+    this.form.patchValue({
+      conducted_by: event.option.value.id
+    })
   }
 
   autoSave() {
@@ -193,8 +235,8 @@ export class SurveyComponent implements OnInit {
 
       // resistivities: [],
 
-      // prepared_by: null,
-      // conducted_by: null,
+      prepared_by: null,
+      conducted_by: null,
 
       // site: null,
 
@@ -293,5 +335,22 @@ export class SurveyComponent implements OnInit {
 
   isStep6Completed(): boolean {
     return false;
+  }
+
+  /**
+   * For filtering the users based on a string input value
+   * @param value
+   * @returns
+   */
+   private _filterUsers(value: string): Array<User> {
+    if (value && typeof value === 'string') {
+      const filterValue = value.toLowerCase();
+      return this.allUsers.filter(
+        (user) =>
+          user.username.toLowerCase().indexOf(filterValue) === 0 ||
+          user.email.toLowerCase().indexOf(filterValue) === 0 ||
+          user.id.toString().indexOf(filterValue) === 0
+      );
+    }
   }
 }
