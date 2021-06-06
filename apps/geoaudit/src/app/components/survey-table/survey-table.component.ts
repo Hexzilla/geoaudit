@@ -187,7 +187,7 @@ export class SurveyTableComponent implements OnInit, AfterViewInit {
 
     if (this.job) {
       const queryParams = {
-        job: this.job.id
+        job: this.job.id  
       }
       
       // Create our 'NaviationExtras' object which is expected by the Angular Router

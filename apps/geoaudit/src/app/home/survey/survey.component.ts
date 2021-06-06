@@ -7,9 +7,12 @@ import { Store } from '@ngrx/store';
 import * as moment from 'moment';
 
 import * as fromApp from '../../store';
-import { Status, Statuses } from '../../models';
+import { Status, Statuses, Survey } from '../../models';
 import { AlertService } from '../../services';
 import { StatusEntityService } from '../../entity-services/status-entity.service';
+import { SurveyEntityService } from '../../entity-services/survey-entity.service';
+import { debounceTime, tap, distinctUntilChanged, takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'geoaudit-survey',
@@ -38,12 +41,17 @@ export class SurveyComponent implements OnInit {
 
   submitted = false;
 
+  survey: Survey;
+
+  private unsubscribe = new Subject<void>()
+
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
     private store: Store<fromApp.State>,
     private statusEntityService: StatusEntityService,
+    private surveyEntityService: SurveyEntityService,
     private alertService: AlertService
   ) {}
 
@@ -67,6 +75,7 @@ export class SurveyComponent implements OnInit {
 
     if (this.id) {
       this.mode = 'EDIT_VIEW';
+      this.editAndViewMode();
 
       console.log('get survey', this.id);
     } else {
@@ -84,6 +93,41 @@ export class SurveyComponent implements OnInit {
     }
   }
 
+  editAndViewMode() {
+    this.surveyEntityService.getByKey(this.id).subscribe(
+      (survey) => {
+        this.survey = survey;
+
+        const { status, name, id } = survey;
+
+        this.form.patchValue({
+          status: status.id,
+          name,
+
+          id
+        })
+
+        this.autoSave();
+      },
+
+      (err) => {
+
+      }
+
+    )
+  }
+
+  autoSave() {
+    this.form.valueChanges.pipe(
+      debounceTime(500),
+      tap(() => {
+       this.submit(false)
+      }),
+      distinctUntilChanged(),
+      takeUntil(this.unsubscribe),
+    ).subscribe();
+   }
+
   /**
    * Initialisation of the form, properties, and validation.
    */
@@ -91,22 +135,73 @@ export class SurveyComponent implements OnInit {
     this.form = this.formBuilder.group({
       status: [Statuses.NOT_STARTED, Validators.required],
       name: [null, Validators.required],
-      // assigned_to:
 
-      title: ['Event Title', Validators.required],
-      allDay: [false, Validators.required],
-      date_assigned: [moment().toISOString(), Validators.required],
-      date_delivery: [moment().toISOString(), Validators.required],
-      notes: [''],
-      surveys: [[], Validators.required],
+      // date_assigned: [moment().toISOString(), Validators.required],
+      // date_delivery: [moment().toISOString(), Validators.required],
+
+      // footer: [{
+      //   images: [[]],
+      //   documents: [[]],
+      // }],
+
+      // geometry: null,
+
+      // tp_actions: [],
+      // tr_actions: [],
+
+      // job: null,
+
+      // resistivities: [],
+
+      // prepared_by: null,
+      // conducted_by: null,
+
+      // site: null,
+
+      // abrioxes: null,
+
+      // survey_notes: [],
+
+      // calendar_events: [],
 
       id: null,
       reference: '',
-      published: false,
+      // published: false,
     });
   }
 
-  submit(): void {}
+  submit(navigate = true): void {
+    this.submitted = true;
+ 
+    // reset alerts on submit
+    this.alertService.clear();
+
+    if (this.form.invalid) {
+      this.alertService.error('Invalid');
+      return;
+    }
+
+    /**
+     * Invoke the backend with a PUT request to update
+     * the job with the form values.
+     * 
+     * If create then navigate to the job id.
+     */
+    this.surveyEntityService.update(this.form.value).subscribe(
+      (update) => {
+         this.alertService.info('Saved Changes');
+
+        if (navigate) this.router.navigate([`/home`]);
+      },
+
+      (err) => {
+        this.alertService.error('Something went wrong');
+      },
+
+      () => {
+      }
+    )
+  }
 
   /**
    * On selection change of the steps i.e.

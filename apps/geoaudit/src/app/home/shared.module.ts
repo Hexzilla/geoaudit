@@ -53,6 +53,8 @@ import { JobTypeEntityService } from '../entity-services/job-type-entity.service
 import { UserEntityService } from '../entity-services/user-entity.service';
 import { UserDataService } from '../data-services/user-data.service';
 import { UploadService } from '../services';
+import { SurveyDataService } from '../data-services/survey-data.service';
+import { SurveyEntityService } from '../entity-services/survey-entity.service';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient) {
@@ -74,6 +76,7 @@ const CUSTOM_MOMENT_FORMATS: NgxMatDateFormats = {
 
 const entityMetadataMap: EntityMetadataMap = {
   Status: {},
+  Survey: {},
   JobType: {},
   User: {}
 }
@@ -137,6 +140,9 @@ const entityMetadataMap: EntityMetadataMap = {
 
     StatusEntityService,
     StatusDataService,
+
+    SurveyEntityService,
+    SurveyDataService,
 
     UploadService,
     
@@ -203,6 +209,7 @@ export class SharedModule {
     private entityDataService: EntityDataService,
     private jobTypeDataService: JobTypeDataService,
     private statusDataService: StatusDataService,
+    private surveyDateService: SurveyDataService,
     private userDataService: UserDataService
   ) {
     entityDefinitionService.registerMetadataMap(entityMetadataMap);
@@ -210,6 +217,7 @@ export class SharedModule {
     // entityDataService.registerService('Status', statusDataService);
     entityDataService.registerServices(
       { Status: statusDataService,
+        Survey: surveyDateService,
         JobType: jobTypeDataService,
         User: userDataService
       }
