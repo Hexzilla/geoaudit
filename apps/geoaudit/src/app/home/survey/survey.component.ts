@@ -1,18 +1,19 @@
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ThemePalette } from '@angular/material/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import * as moment from 'moment';
 
 import * as fromApp from '../../store';
-import { Status, Statuses, Survey } from '../../models';
+import { Status, Statuses, Survey, User } from '../../models';
 import { AlertService } from '../../services';
 import { StatusEntityService } from '../../entity-services/status-entity.service';
 import { SurveyEntityService } from '../../entity-services/survey-entity.service';
 import { debounceTime, tap, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 @Component({
   selector: 'geoaudit-survey',
@@ -47,6 +48,18 @@ export class SurveyComponent implements OnInit {
 
   @ViewChild('dateAssignedDateTimePicker') dateAssignedDateTimePicker: any;
   @ViewChild('dateDeliveryDateTimePicker') dateDeliveryDateTimePicker: any;
+
+  preparedByCtrl = new FormControl();
+  @ViewChild('autoPreparedBy') matAutocompletePreparedBy: MatAutocomplete;
+  selectedPreparedBy: User = null;
+
+  conductedByCtrl = new FormControl();
+  @ViewChild('autoConductedBy') autoConductedBy: MatAutocomplete;
+  selectedConductedBy: User = null;
+
+  filteredUsers: Array<User>;
+
+  users: Array<User>;
 
   public disabled = false;
   public showSpinners = true;
@@ -131,6 +144,17 @@ export class SurveyComponent implements OnInit {
       }
 
     )
+  }
+
+  onPreparedBySelect(event: MatAutocompleteSelectedEvent): void {
+    console.log('onPreparedBySelect', event)
+    this.preparedByCtrl.setValue(event.option.value.reference);
+    this.selectedPreparedBy = event.option.value;
+  }
+
+  onConductedBySelect(event: MatAutocompleteSelectedEvent): void {
+    this.conductedByCtrl.setValue(event.option.value.reference);
+    this.selectedConductedBy = event.option.value;
   }
 
   autoSave() {

@@ -110,6 +110,55 @@
       [editable]="false"
       [completed]="isStep3Completed()"
     >
+    <mat-card-content>
+      <form fxLayout="column" [formGroup]="form" (ngSubmit)="submit()">
+        <mat-form-field class="full-width">
+          <mat-label>Prepared By</mat-label>
+          <input
+            matInput
+            aria-label="Prepared By"
+            [matAutocomplete]="autoPreparedBy"
+            [formControl]="preparedByCtrl"
+            #surveyInput
+          />
+          <mat-autocomplete
+            #autoPreparedBy="matAutocomplete"
+            (optionSelected)="onPreparedBySelect($event)"
+          >
+            <mat-option
+              *ngFor="let user of filteredUsers"
+              [value]="user"
+            >
+              <span>{{ user.username }}</span> |
+              <small>ID: {{ user.id }}</small>
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+
+        <mat-form-field class="full-width">
+          <mat-label>Conducted By</mat-label>
+          <input
+            matInput
+            aria-label="Conducted By"
+            [matAutocomplete]="autoConductedBy"
+            [formControl]="conductedByCtrl"
+            #surveyInput
+          />
+          <mat-autocomplete
+            #autoConductedBy="matAutocomplete"
+            (optionSelected)="onConductedBySelect($event)"
+          >
+            <mat-option
+              *ngFor="let user of filteredUsers"
+              [value]="user"
+            >
+              <span>{{ user.username }}</span> |
+              <small>ID: {{ user.id }}</small>
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </form>
+    </mat-card-content>
     </mat-step>
 
     <mat-step
