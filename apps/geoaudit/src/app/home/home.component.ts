@@ -26,6 +26,10 @@ L.Marker.prototype.options.icon = iconDefault;
 import { Auth } from '../models';
 import { AuthService } from '../services/auth.service';
 import { environment } from '../../environments/environment';
+import { Store } from '@ngrx/store';
+
+import * as fromApp from '../store';
+import * as MapActions from '../store/map/map.actions';
 
 @Component({
   selector: 'geoaudit-home',
@@ -56,11 +60,14 @@ export class HomeComponent implements AfterViewInit {
   private map;
   private states;
 
+  clickMarker;
+
   constructor(
     private authService: AuthService,
     private markerService: MarkerService,
     private shapeService: ShapeService,
-    private router: Router
+    private router: Router,
+    private store: Store<fromApp.State>,
   ) {
     this.auth = this.authService.authValue;
   }
@@ -94,6 +101,19 @@ export class HomeComponent implements AfterViewInit {
     );
 
     tiles.addTo(this.map);
+
+    this.map.on('click', (e) => {
+      console.log('click', e.latlng)
+
+      if (this.clickMarker) {
+        this.map.removeLayer(this.clickMarker);
+      }
+
+      this.clickMarker = new L.marker(e.latlng).addTo(this.map);
+
+      this.store.dispatch(MapActions.addClickMarker({ clickMarker: e.latlng }));
+
+    })
   }
 
   private initialiseControls(): void {

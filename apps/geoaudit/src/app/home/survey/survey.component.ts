@@ -1,5 +1,5 @@
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ThemePalette } from '@angular/material/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -66,6 +66,9 @@ export class SurveyComponent implements OnInit, AfterViewInit {
 
   // @ViewChild('auto') matAutocomplete: MatAutocomplete;
 
+  @ViewChild('latCtrlInput') latCtrlInput: ElementRef;
+  @ViewChild('lngCtrlInput') lngCtrlInput: ElementRef;
+
   latCtrl = new FormControl();
 
   lngCtrl = new FormControl();
@@ -114,6 +117,13 @@ export class SurveyComponent implements OnInit, AfterViewInit {
       (err) => {}
     )
 
+    this.store.select('map').subscribe(map => {
+      if (map.clickMarker) {
+        this.latCtrl.setValue(map.clickMarker.lat);
+        this.lngCtrl.setValue(map.clickMarker.lng);
+      }
+    })
+
     /**
      * Initialise the form with properties and
      * validation constraints.
@@ -158,6 +168,28 @@ export class SurveyComponent implements OnInit, AfterViewInit {
         this.filteredUsers = this.allUsers.slice();
       }
     })
+
+    this.latCtrl.valueChanges.subscribe((value) => {
+      if (value) {
+        this.form.patchValue({
+          geometry: {
+            ...this.form.value.geo,
+            lat: value
+          }
+        })
+      }
+    })
+
+    this.lngCtrl.valueChanges.subscribe((value) => {
+      if (value) {
+        this.form.patchValue({
+          geometry: {
+            ...this.form.value.geo,
+            lng: value
+          }
+        })
+      }
+    })
   }
 
   editAndViewMode() {
@@ -165,7 +197,7 @@ export class SurveyComponent implements OnInit, AfterViewInit {
       (survey) => {
         this.survey = survey;
 
-        const { status, name, id, prepared_by, conducted_by } = survey;
+        const { status, name, id, prepared_by, conducted_by, geometry } = survey;
 
         this.form.patchValue({
           status: status.id,
@@ -173,6 +205,8 @@ export class SurveyComponent implements OnInit, AfterViewInit {
 
           prepared_by: prepared_by.id,
           conducted_by: conducted_by.id,
+
+          geometry,
 
           id
         })
@@ -182,6 +216,9 @@ export class SurveyComponent implements OnInit, AfterViewInit {
 
         this.conductedByCtrl.setValue(conducted_by?.username);
         this.selectedConductedBy = conducted_by;
+
+        this.latCtrl.setValue(geometry?.lat);
+        this.lngCtrl.setValue(geometry?.lng);
 
         this.autoSave();
       },
@@ -238,7 +275,7 @@ export class SurveyComponent implements OnInit, AfterViewInit {
       //   documents: [[]],
       // }],
 
-      // geometry: null,
+      geometry: null,
 
       // tp_actions: [],
       // tr_actions: [],
