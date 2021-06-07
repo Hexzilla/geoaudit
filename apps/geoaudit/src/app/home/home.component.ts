@@ -62,6 +62,10 @@ export class HomeComponent implements AfterViewInit {
 
   clickMarker;
 
+  url: string;
+
+  sidebar;
+
   constructor(
     private authService: AuthService,
     private markerService: MarkerService,
@@ -82,6 +86,10 @@ export class HomeComponent implements AfterViewInit {
       this.states = states;
       this.initStatesLayer();
     });
+
+    this.store.select('map').subscribe(map => {
+      this.url = map.url;
+    })
   }
 
   private initMap(): void {
@@ -103,16 +111,23 @@ export class HomeComponent implements AfterViewInit {
     tiles.addTo(this.map);
 
     this.map.on('click', (e) => {
-      console.log('click', e.latlng)
-
       if (this.clickMarker) {
         this.map.removeLayer(this.clickMarker);
       }
 
+      if (this.url) {
+
+
       this.clickMarker = new L.marker(e.latlng).addTo(this.map);
+      
+      this.router.navigate([this.url]);
 
       this.store.dispatch(MapActions.addClickMarker({ clickMarker: e.latlng }));
 
+
+      this.sidebar.open('home');
+
+    }
     })
   }
 
@@ -121,20 +136,20 @@ export class HomeComponent implements AfterViewInit {
   }
 
   private initializeSidebarControl(): void {
-    const sidebar = L.control.sidebar({
+    this.sidebar = L.control.sidebar({
       autopan: false, // whether to maintain the centered map point when opening the sidebar
       closeButton: true, // whether t add a close button to the panes
       container: 'sidebar', // the DOM container or #ID of a predefined sidebar container that should be used
       position: 'right', // left or right,
     });
 
-    sidebar.addTo(this.map);
+    this.sidebar.addTo(this.map);
 
-    sidebar.on('opening', function(e) {
+    this.sidebar.on('opening', function(e) {
       // e.id contains the id of the opened panel
     })
 
-    sidebar.on('closing', (e) => {
+    this.sidebar.on('closing', (e) => {
       // e.id contains the id of the opened panel
       console.log('closing')
       
@@ -142,11 +157,19 @@ export class HomeComponent implements AfterViewInit {
       this.router.navigate(['/home']);
     })
 
-    sidebar.on('content', function(e) {
+    this.sidebar.on('content', function(e) {
       // e.id contains the id of the opened panel
     })
     
-    sidebar.open('home');
+    this.sidebar.open('home');
+
+    this.store.select('map').subscribe(map => {
+      if (map.open) {
+        this.sidebar.open('home')
+      } else {
+        this.sidebar.close('home');
+      }
+    })
   }
 
   private initStatesLayer() {

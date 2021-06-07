@@ -169,25 +169,37 @@
     >
     <form fxLayout="column" [formGroup]="form" (ngSubmit)="submit()">
 
-    <mat-form-field class="full-width" appearance="outline">
-    <mat-label>Lat</mat-label>
-    <input
-      matInput
-      aria-label="Latitude"
-      [formControl]="latCtrl"
-      #latCtrlInput
-    />
-    </mat-form-field>
+      <div fxLayout="row">
+        <div>
+          <mat-form-field class="full-width" appearance="outline">
+            <mat-label>Lat</mat-label>
+            <input
+              matInput
+              aria-label="Latitude"
+              [formControl]="latCtrl"
+              #latCtrlInput
+            />
+            </mat-form-field>
+        
+            <mat-form-field class="full-width" appearance="outline">
+            <mat-label>Lng</mat-label>
+            <input
+              matInput
+              aria-label="Longtitude"
+              [formControl]="lngCtrl"
+              #lngCtrlInput
+            />
+            </mat-form-field>
+        </div>
 
-    <mat-form-field class="full-width" appearance="outline">
-    <mat-label>Lng</mat-label>
-    <input
-      matInput
-      aria-label="Longtitude"
-      [formControl]="lngCtrl"
-      #lngCtrlInput
-    />
-    </mat-form-field>
+        <div fxLayoutAlign="space-between center">
+          <button mat-icon-button color="accent" type="button" aria-label="Example icon button with a plus one icon" (click)="clickMarker()">
+            <mat-icon>location_on</mat-icon>
+        </button>
+        </div>
+      </div>
+
+
 
     </form>
 

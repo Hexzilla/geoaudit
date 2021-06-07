@@ -16,6 +16,8 @@ import { Subject } from 'rxjs';
 import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { UserEntityService } from '../../entity-services/user-entity.service';
 
+import * as MapActions from '../../store/map/map.actions';
+
 @Component({
   selector: 'geoaudit-survey',
   templateUrl: './survey.component.html',
@@ -173,7 +175,7 @@ export class SurveyComponent implements OnInit, AfterViewInit {
       if (value) {
         this.form.patchValue({
           geometry: {
-            ...this.form.value.geo,
+            ...this.form.value.geometry,
             lat: value
           }
         })
@@ -184,7 +186,7 @@ export class SurveyComponent implements OnInit, AfterViewInit {
       if (value) {
         this.form.patchValue({
           geometry: {
-            ...this.form.value.geo,
+            ...this.form.value.geometry,
             lng: value
           }
         })
@@ -216,7 +218,7 @@ export class SurveyComponent implements OnInit, AfterViewInit {
 
         this.conductedByCtrl.setValue(conducted_by?.username);
         this.selectedConductedBy = conducted_by;
-
+        
         this.latCtrl.setValue(geometry?.lat);
         this.lngCtrl.setValue(geometry?.lng);
 
@@ -332,6 +334,12 @@ export class SurveyComponent implements OnInit, AfterViewInit {
       () => {
       }
     )
+  }
+
+  clickMarker(): void {
+    this.store.dispatch(MapActions.toggleSidebar({
+      url: this.router.url
+    }));
   }
 
   /**
