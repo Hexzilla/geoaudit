@@ -7,7 +7,7 @@ import { Store } from '@ngrx/store';
 import * as moment from 'moment';
 
 import * as fromApp from '../../store';
-import { Status, Statuses, Survey, User } from '../../models';
+import { Status, Statuses, Survey, User, Image } from '../../models';
 import { AlertService } from '../../services';
 import { StatusEntityService } from '../../entity-services/status-entity.service';
 import { SurveyEntityService } from '../../entity-services/survey-entity.service';
@@ -17,6 +17,11 @@ import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material
 import { UserEntityService } from '../../entity-services/user-entity.service';
 
 import * as MapActions from '../../store/map/map.actions';
+import { FileTypes } from '../../components/file-upload/file-upload.component';
+import { IAlbum, Lightbox } from 'ngx-lightbox';
+import { environment } from 'apps/geoaudit/src/environments/environment';
+import { MatDialog } from '@angular/material/dialog';
+import { AttachmentModalComponent } from '../../modals/attachment-modal/attachment-modal.component';
 
 @Component({
   selector: 'geoaudit-survey',
@@ -24,6 +29,9 @@ import * as MapActions from '../../store/map/map.actions';
   styleUrls: ['./survey.component.scss'],
 })
 export class SurveyComponent implements OnInit, AfterViewInit {
+
+  API_URL: string;
+
   color: ThemePalette = 'primary';
 
   id: string;
@@ -96,10 +104,14 @@ export class SurveyComponent implements OnInit, AfterViewInit {
     private statusEntityService: StatusEntityService,
     private surveyEntityService: SurveyEntityService,
     private userEntityService: UserEntityService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private _lightbox: Lightbox,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
+    this.API_URL = environment.API_URL;
+
     // Fetch statuses
     this.statusEntityService.getAll().subscribe(
       (statuses) => {
@@ -141,6 +153,7 @@ export class SurveyComponent implements OnInit, AfterViewInit {
       console.log('get survey', this.id);
     } else {
       this.mode = 'CREATE';
+      this.createMode();
 
       console.log('no survey');
     }
@@ -199,7 +212,7 @@ export class SurveyComponent implements OnInit, AfterViewInit {
       (survey) => {
         this.survey = survey;
 
-        const { status, name, id, prepared_by, conducted_by, geometry } = survey;
+        const { status, name, id, prepared_by, conducted_by, geometry, footer } = survey;
 
         this.form.patchValue({
           status: status.id,
@@ -209,6 +222,11 @@ export class SurveyComponent implements OnInit, AfterViewInit {
           conducted_by: conducted_by.id,
 
           geometry,
+
+          footer: footer ? footer : {
+            images: [],
+            documents: [],
+          },
 
           id
         })
@@ -229,6 +247,29 @@ export class SurveyComponent implements OnInit, AfterViewInit {
 
       }
 
+    )
+  }
+
+  createMode() {
+    /**
+     * Create a new job using the default form values
+     * and then extract the id ready for when we
+     * update the form.
+     */
+    this.surveyEntityService.add(this.form.value).subscribe(
+      (survey) => {
+        this.survey = survey;
+
+        this.form.patchValue({
+          id: survey.id
+        })
+
+        this.autoSave();
+      },
+
+      (err) => {
+        this.alertService.error('Something went wrong');
+      }
     )
   }
 
@@ -296,6 +337,11 @@ export class SurveyComponent implements OnInit, AfterViewInit {
       // survey_notes: [],
 
       // calendar_events: [],
+
+      footer: [{
+        images: [[]],
+        documents: [[]],
+      }],
 
       id: null,
       reference: '',
@@ -390,8 +436,84 @@ export class SurveyComponent implements OnInit, AfterViewInit {
     return false;
   }
 
-  isStep6Completed(): boolean {
-    return false;
+  onImageUpload(event): void {
+    console.log('on image upload', event)
+
+    const { images } = this.form.value.footer;
+
+    console.log('images', [...images, event])
+
+    // this.images.push(event)
+
+    // May be multiple so just preserving the previous object on the array of images
+
+    this.form.patchValue({
+      footer: {
+        ...this.form.value.footer,
+        images: [...images, event]
+      }
+    });
+
+    console.log('patched', this.form.value)
+
+    this.submit(false);
+
+    // console.log('images', this.images)
+  }
+
+  onDocumentUpload(event): void {
+    console.log('onDocumentUpload', event)
+
+    const { documents } = this.form.value.footer;
+
+    console.log('documents', [...documents, event])
+
+    this.form.patchValue({
+      footer: {
+        ...this.form.value.footer,
+        documents: [...documents, event]
+      }
+    });
+
+    console.log('patched', this.form.value)
+
+    this.submit(false);
+  }
+
+  onPreview(fileType: FileTypes): void {
+    console.log('onPreview', fileType, this.form.value.footer)
+
+    const { images, documents } = this.form.value.footer;
+
+    switch (fileType) {
+      case FileTypes.IMAGE: 
+
+        let _album: Array<IAlbum> = [];
+
+        images.map((image: Image) => {
+          const album = {
+            src: `${this.API_URL}${image.url}`,
+            caption: image.name,
+            thumb: `${this.API_URL}${image.formats.thumbnail.url}`
+          }
+
+          _album.push(album);
+        })
+
+        if (_album.length >= 1) this._lightbox.open(_album, 0);
+      break;
+
+      case FileTypes.DOCUMENT:
+        const dialogRef = this.dialog.open(AttachmentModalComponent, {
+          data: {
+            fileType,
+            documents
+          }
+        });
+    
+        dialogRef.afterClosed().subscribe((result) => {})
+      break;
+    }
   }
 
   /**

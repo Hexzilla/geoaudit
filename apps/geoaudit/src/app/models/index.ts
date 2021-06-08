@@ -4,6 +4,7 @@ export * from './auth.model';
 export * from './calendar-event.model';
 export * from './common.model';
 export * from './geo-json.model';
+export * from './image.model';
 export * from './job.model';
 export * from './job-note.model';
 export * from './status.model';
