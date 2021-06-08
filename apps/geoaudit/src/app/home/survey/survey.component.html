@@ -222,3 +222,16 @@
   ></geoaudit-file-upload>
     </mat-step>
 </mat-horizontal-stepper>
+
+
+<div fxLayout="row-reverse">
+  <button
+    mat-flat-button
+    color="primary"
+    (click)="submit()"
+    fxFlexFill
+    type="submit"
+  >
+    {{ 'CONTAINERS.home.jobs.job.form.save' | translate }}
+  </button>
+</div>
