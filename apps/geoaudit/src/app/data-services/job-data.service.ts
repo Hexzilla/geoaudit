@@ -19,6 +19,10 @@ export class JobDataService extends DefaultDataService<Job> {
     add(job: Job): Observable<any> {
         return this.http.post<any>(`${environment.API_URL}/jobs`, job);
     }
+
+    getAll(): Observable<Array<Job>> {
+        return this.http.get<any>(`${environment.API_URL}/jobs`);
+    }
     
     getById(id): Observable<Job> {
         return this.http.get<any>(`${environment.API_URL}/jobs/${id}`);

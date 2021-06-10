@@ -7,7 +7,7 @@ import { Store } from '@ngrx/store';
 import * as moment from 'moment';
 
 import * as fromApp from '../../store';
-import { Status, Statuses, Survey, User, Image } from '../../models';
+import { Status, Statuses, Survey, User, Image, Job } from '../../models';
 import { AlertService } from '../../services';
 import { StatusEntityService } from '../../entity-services/status-entity.service';
 import { SurveyEntityService } from '../../entity-services/survey-entity.service';
@@ -22,6 +22,7 @@ import { IAlbum, Lightbox } from 'ngx-lightbox';
 import { environment } from 'apps/geoaudit/src/environments/environment';
 import { MatDialog } from '@angular/material/dialog';
 import { AttachmentModalComponent } from '../../modals/attachment-modal/attachment-modal.component';
+import { JobEntityService } from '../../entity-services/job-entity.service';
 
 @Component({
   selector: 'geoaudit-survey',
@@ -74,6 +75,14 @@ export class SurveyComponent implements OnInit, AfterViewInit {
 
   allUsers: Array<User> = [];
 
+  allJobs: Array<Job> = [];
+
+  jobCtrl = new FormControl();
+  @ViewChild('autoJob') autoJob: MatAutocomplete;
+  selectedJob: Job = null;
+
+  filteredJobs: Array<Job>;
+
   // @ViewChild('auto') matAutocomplete: MatAutocomplete;
 
   @ViewChild('latCtrlInput') latCtrlInput: ElementRef;
@@ -101,6 +110,7 @@ export class SurveyComponent implements OnInit, AfterViewInit {
     private route: ActivatedRoute,
     private router: Router,
     private store: Store<fromApp.State>,
+    private jobEntityService: JobEntityService,
     private statusEntityService: StatusEntityService,
     private surveyEntityService: SurveyEntityService,
     private userEntityService: UserEntityService,
@@ -112,6 +122,14 @@ export class SurveyComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.API_URL = environment.API_URL;
 
+    this.jobEntityService.getAll().subscribe(
+      (jobs) => {
+        this.allJobs = jobs;
+      },
+
+      (err) => {}
+    );
+    
     // Fetch statuses
     this.statusEntityService.getAll().subscribe(
       (statuses) => {
@@ -168,6 +186,14 @@ export class SurveyComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
+    this.jobCtrl.valueChanges.subscribe((value) => {
+      if (value) {
+        this.filteredJobs = this._filterJobs(value);
+      } else {
+        this.filteredJobs = this.allJobs.slice();
+      }
+    })
+
     this.preparedByCtrl.valueChanges.subscribe((value) => {
       if (value) {
         this.filteredUsers = this._filterUsers(value);
@@ -212,11 +238,13 @@ export class SurveyComponent implements OnInit, AfterViewInit {
       (survey) => {
         this.survey = survey;
 
-        const { status, name, id, prepared_by, conducted_by, geometry, footer } = survey;
+        const { status, name, job, id, prepared_by, conducted_by, geometry, footer } = survey;
 
         this.form.patchValue({
           status: status.id,
           name,
+
+          job,
 
           prepared_by: prepared_by.id,
           conducted_by: conducted_by.id,
@@ -230,6 +258,11 @@ export class SurveyComponent implements OnInit, AfterViewInit {
 
           id
         })
+
+        console.log('job', job)
+
+        this.jobCtrl.setValue(job?.reference);
+        this.selectedJob = job;
 
         this.preparedByCtrl.setValue(prepared_by?.username);
         this.selectedPreparedBy = prepared_by;
@@ -271,6 +304,15 @@ export class SurveyComponent implements OnInit, AfterViewInit {
         this.alertService.error('Something went wrong');
       }
     )
+  }
+
+  onJobSelect(event: MatAutocompleteSelectedEvent): void {
+    this.jobCtrl.setValue(event.option.value.reference);
+    this.selectedJob = event.option.value;
+
+    this.form.patchValue({
+      job: event.option.value.id
+    })
   }
 
   onPreparedBySelect(event: MatAutocompleteSelectedEvent): void {
@@ -323,7 +365,7 @@ export class SurveyComponent implements OnInit, AfterViewInit {
       // tp_actions: [],
       // tr_actions: [],
 
-      // job: null,
+      job: null,
 
       // resistivities: [],
 
@@ -529,6 +571,23 @@ export class SurveyComponent implements OnInit, AfterViewInit {
           user.username.toLowerCase().indexOf(filterValue) === 0 ||
           user.email.toLowerCase().indexOf(filterValue) === 0 ||
           user.id.toString().indexOf(filterValue) === 0
+      );
+    }
+  }
+
+  /**
+   * For filtering the jobs based on a string input value
+   * @param value
+   * @returns
+   */
+   private _filterJobs(value: string): Array<Job> {
+    if (value && typeof value === 'string') {
+      const filterValue = value.toLowerCase();
+      return this.allJobs.filter(
+        (job) =>
+          job.reference && job.reference.toLowerCase().indexOf(filterValue) === 0 ||
+          job.name && job.name.toLowerCase().indexOf(filterValue) === 0 ||
+          job.id.toString().indexOf(filterValue) === 0
       );
     }
   }

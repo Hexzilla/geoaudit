@@ -42,6 +42,29 @@
           </mat-form-field>
 
           <mat-form-field appearance="outline">
+            <mat-label>Job</mat-label>
+            <input
+              matInput
+              aria-label="Job"
+              [matAutocomplete]="autoJob"
+              [formControl]="jobCtrl"
+              #jobInput
+            />
+            <mat-autocomplete
+              #autoJob="matAutocomplete"
+              (optionSelected)="onJobSelect($event)"
+            >
+              <mat-option
+                *ngFor="let job of filteredJobs"
+                [value]="job"
+              >
+                <span>{{ job.reference }}</span> |
+                <small>ID: {{ job.id }}</small>
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
             <mat-label>{{
               'CONTAINERS.home.jobs.job.form.reference' | translate
             }}</mat-label>
