@@ -144,6 +144,29 @@
       <!-- Progress -->
     </div>
 
+    <mat-form-field appearance="outline">
+      <mat-label>Survey</mat-label>
+      <input
+        matInput
+        aria-label="Survey"
+        [matAutocomplete]="autoSurvey"
+        [formControl]="surveyCtrl"
+        #surveyInput
+      />
+      <mat-autocomplete
+        #autoSurvey="matAutocomplete"
+        (optionSelected)="onSurveySelect($event)"
+      >
+        <mat-option
+          *ngFor="let survey of filteredSurveys"
+          [value]="survey"
+        >
+          <span>{{ survey.reference }}</span> |
+          <small>ID: {{ survey.id }}</small>
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+
     <!-- Reusable survey table component -->
     <geoaudit-survey-table
     *ngIf="dataSource"

@@ -19,6 +19,10 @@ export class SurveyDataService extends DefaultDataService<Survey> {
     add(survey: Survey): Observable<any> {
         return this.http.post<any>(`${environment.API_URL}/surveys`, survey);
     }
+
+    getAll(): Observable<Array<Survey>> {
+        return this.http.get<any>(`${environment.API_URL}/surveys`);
+    }
     
     getById(id): Observable<Survey> {
         return this.http.get<any>(`${environment.API_URL}/surveys/${id}`);

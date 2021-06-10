@@ -221,7 +221,7 @@ export class SharedModule {
     private jobDataService: JobDataService,
     private jobTypeDataService: JobTypeDataService,
     private statusDataService: StatusDataService,
-    private surveyDateService: SurveyDataService,
+    private surveyDataService: SurveyDataService,
     private userDataService: UserDataService
   ) {
     entityDefinitionService.registerMetadataMap(entityMetadataMap);
@@ -229,7 +229,7 @@ export class SharedModule {
     // entityDataService.registerService('Status', statusDataService);
     entityDataService.registerServices(
       { Status: statusDataService,
-        Survey: surveyDateService,
+        Survey: surveyDataService,
         Job: jobDataService,
         JobType: jobTypeDataService,
         User: userDataService

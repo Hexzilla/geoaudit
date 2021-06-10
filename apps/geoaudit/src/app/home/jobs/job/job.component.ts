@@ -19,6 +19,7 @@ import { FileTypes } from '../../../components/file-upload/file-upload.component
 import { JobEntityService } from '../../../entity-services/job-entity.service';
 import { JobTypeEntityService } from '../../../entity-services/job-type-entity.service';
 import { StatusEntityService } from '../../../entity-services/status-entity.service';
+import { SurveyEntityService } from '../../../entity-services/survey-entity.service';
 import { UserEntityService } from '../../../entity-services/user-entity.service';
 import { AttachmentModalComponent } from '../../../modals/attachment-modal/attachment-modal.component';
 import { Job, Status, Survey, User } from '../../../models';
@@ -111,11 +112,21 @@ export class JobComponent implements OnInit, AfterViewInit {
     */
    @ViewChild('auto') matAutocomplete: MatAutocomplete;
  
+
+   allSurveys: Array<Survey> = [];
+
+   surveyCtrl = new FormControl();
+   @ViewChild('autoSurvey') autoSurvey: MatAutocomplete;
+   selectedSurvey: Survey = null;
+ 
+   filteredSurveys: Array<Survey>;
+
    constructor(
      private formBuilder: FormBuilder,
      private jobEntityService: JobEntityService,
      private jobTypeEntityervice: JobTypeEntityService,
      private statusEntityService: StatusEntityService,
+     private surveyEntityService: SurveyEntityService,
      private userEntityService: UserEntityService,
      private route: ActivatedRoute,
      private router: Router,
@@ -155,6 +166,14 @@ export class JobComponent implements OnInit, AfterViewInit {
        (err) => {}
      )
  
+     this.surveyEntityService.getAll().subscribe(
+      (surveys) => {
+        this.allSurveys = surveys;
+      },
+
+      (err) => {}
+    )
+
      /**
       * Initialise the form with properties and validation
       * constraints.
@@ -195,6 +214,14 @@ export class JobComponent implements OnInit, AfterViewInit {
        .subscribe((text: string) => {
          this.filteredUsers = this._filter(text);
        });
+
+       this.surveyCtrl.valueChanges.subscribe((value) => {
+        if (value) {
+          this.filteredSurveys = this._filterSurveys(value);
+        } else {
+          this.filteredSurveys = this.allSurveys.slice();
+        }
+      })
    }
  
    editAndViewMode() {
@@ -329,6 +356,8 @@ export class JobComponent implements OnInit, AfterViewInit {
        (update) => {
           this.alertService.info('Saved Changes');
 
+          this.dataSource = new MatTableDataSource(update.surveys);
+
          if (navigate) this.router.navigate([`/home/jobs`]);
        },
  
@@ -341,6 +370,15 @@ export class JobComponent implements OnInit, AfterViewInit {
      )
  
    }
+
+   onSurveySelect(event: MatAutocompleteSelectedEvent): void {
+    this.surveyCtrl.setValue(event.option.value.reference);
+    this.selectedSurvey = event.option.value;
+
+    this.form.patchValue({
+      surveys: [...this.form.value.surveys, event.option.value.id]
+    })
+  }
  
    // convenience getter for easy access to form fields
    get f() {
@@ -401,6 +439,18 @@ export class JobComponent implements OnInit, AfterViewInit {
        );
      });
    }
+
+   private _filterSurveys(value: string): Array<Survey> {
+    const filterValue = value.toLowerCase();
+
+    return this.allSurveys.filter((survey) => {
+      return (
+        survey.name && survey.name.toLowerCase().indexOf(filterValue) === 0 ||
+        survey.reference && survey.reference.toLowerCase().indexOf(filterValue) === 0 ||
+        survey.id.toString() === filterValue
+      );
+    });
+  }
 
   // details() {
   //   this.router.navigate([`/home/jobs/job/${this.id}/details`]);
