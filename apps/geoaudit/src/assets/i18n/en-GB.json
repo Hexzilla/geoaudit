@@ -126,7 +126,7 @@
 		},
 		"delete_modal": {
 			"title": "Delete",
-			"delete_surveys": "You're about to delete {{length}} survey(s). Do you wish to continue?",
+			"delete_surveys": "You're about to delete {{length}} record(s). Do you wish to continue?",
 			"delete": "Confirm"
 		},
 		"navigation_modal": {
