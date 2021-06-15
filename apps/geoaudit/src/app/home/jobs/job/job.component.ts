@@ -307,17 +307,17 @@ export class JobComponent implements OnInit, AfterViewInit {
     */
    initialiseForm(): void {
      this.form = this.formBuilder.group({
-       status: [null, Validators.required],
-       name: [null, Validators.required],
-       reference: [null, Validators.required],
-       job_type: [null, Validators.required],
-       assignees: [[], Validators.required],
+       status: null,
+       name: null,
+       reference: null,
+       job_type: null,
+       assignees: null,
        surveys: [[]],
 
-       footer: [{
-         images: [[]],
-         documents: [[]],
-       }],
+       footer: {
+        images: [],
+        documents: []
+      },
  
        id: null,
        published: false
