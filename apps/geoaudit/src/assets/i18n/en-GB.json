@@ -133,7 +133,7 @@
 			"title": "Navigation",
 			"navigation_surveys": "You're about to start navigation for {{length}} survey(s).",
 			"what_destination": "What is your destination?",
-			"destinations": {
+			"destinations": {	
 				"survey": "Survey",
 				"home": "Home",
 				"work": "Work",
