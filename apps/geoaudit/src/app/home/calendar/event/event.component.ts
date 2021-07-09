@@ -130,7 +130,7 @@ export class EventComponent implements OnInit, AfterViewInit {
    */
   fetchData(): void {
     this.store.dispatch(
-      SurveyActions.countSurveys({ start: null, limit: null })
+      SurveyActions.countSurveys()
     );
 
     this.store.dispatch(SurveyActions.fetchSurveys({ start: 0, limit: 100 }));

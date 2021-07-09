@@ -51,7 +51,7 @@ export class ToDoListComponent implements OnInit {
 
   ngOnInit(): void {
     this.store.dispatch(
-      SurveyActions.countSurveys({ start: 0, limit: this.pageSize })
+      SurveyActions.countSurveys()
     );
     
     this.store.dispatch(

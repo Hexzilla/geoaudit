@@ -100,7 +100,7 @@
             <router-outlet></router-outlet>
 
             <ng-container *ngIf="isRoot">
-              <geoaudit-card-button title="CONTAINERS.home.buttons.to_do_list.title" text="CONTAINERS.home.buttons.to_do_list.text" icon="list" (onClick)="toDoList()"></geoaudit-card-button>
+              <geoaudit-card-button title="CONTAINERS.home.buttons.to_do_list.title" text="CONTAINERS.home.buttons.to_do_list.text" [placeholder]="surveyCount$ | async" icon="list" (onClick)="toDoList()"></geoaudit-card-button>
 
               <geoaudit-card-button title="CONTAINERS.home.buttons.jobs.title" text="CONTAINERS.home.buttons.to_do_list.text" icon="work" (onClick)="jobs()"></geoaudit-card-button>
   

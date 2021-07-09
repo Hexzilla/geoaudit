@@ -17,6 +17,8 @@ export class CardButtonComponent implements OnInit {
 
   @Input() icon;
 
+  @Input() placeholder?;
+
   @Output() onClick: EventEmitter<any> = new EventEmitter();
 
   constructor() { }

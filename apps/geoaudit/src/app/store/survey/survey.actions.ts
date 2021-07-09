@@ -19,8 +19,7 @@ export const DELETE_SURVEY_FAILED = '[To Do List - Surveys] Delete survey failed
 export const CLEAR_RESULT = '[To Do List - Surveys] Clear result';
 
 export const countSurveys = createAction(
-    COUNT_SURVEYS,
-    props<Parameters>()
+    COUNT_SURVEYS
 );
 
 export const setCount = createAction(

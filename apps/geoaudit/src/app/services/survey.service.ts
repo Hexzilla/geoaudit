@@ -10,11 +10,20 @@ import { AuthService } from './auth.service';
 export class SurveyService {
   constructor(private http: HttpClient, private authService: AuthService) {}
 
-  count(parameters: Parameters) {
-    const pagination = this.getDefaultQs(parameters);
+  count() {
+    const parameters = qs.stringify({
+      _where: {
+        conducted_by: this.authService.authValue.user.id,
+        'job.assignees': this.authService.authValue.user.id,
+        _or: [
+          { 'status.name': Statuses.NOT_STARTED },
+          { 'status.name': Statuses.ONGOING },
+        ],
+      },
+    });
 
     return this.http.get<any>(
-      `${environment.API_URL}/surveys/count?${pagination}`
+      `${environment.API_URL}/surveys/count?${parameters}`
     );
   }
 
@@ -38,11 +47,11 @@ export class SurveyService {
           _or: [
             { reference_contains: parameters.filter },
             { name_contains: parameters.filter },
-            { 'status.name_contains': parameters.filter }
-          ]
+            { 'status.name_contains': parameters.filter },
+          ],
         },
       });
-      
+
       return this.http.get<any>(
         `${environment.API_URL}/surveys?${pagination}&${query}`
       );
@@ -74,7 +83,7 @@ export class SurveyService {
         'job.assignees': this.authService.authValue.user.id,
         _or: [
           { 'status.name': Statuses.NOT_STARTED },
-          { 'status.name': Statuses.ONGOING }
+          { 'status.name': Statuses.ONGOING },
         ],
       },
     });

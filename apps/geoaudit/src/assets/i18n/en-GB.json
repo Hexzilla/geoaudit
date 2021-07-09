@@ -27,7 +27,7 @@
 					"title": "Recent Surveys"
 				},
 				"to_do_list": {
-					"text": "N surveys to complete",
+					"text": "{{placeholder}} surveys to complete",
 					"title": "To Do List"
 				}
 			},

@@ -9,7 +9,7 @@
             
             <div fxLayout="column">
                 <span class="title">{{ title | translate }}</span>
-                <span>{{ text | translate }}</span>
+                <span *ngIf="placeholder">{{ text | translate: { placeholder: placeholder } }}</span>
             </div>
         </div>
 

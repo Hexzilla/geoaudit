@@ -30,7 +30,9 @@ import { Store } from '@ngrx/store';
 
 import * as fromApp from '../store';
 import * as MapActions from '../store/map/map.actions';
+import * as SurveyActions from '../store/survey/survey.actions';
 
+import * as SurveySelector from '../store/survey/survey.selectors';
 @Component({
   selector: 'geoaudit-home',
   templateUrl: './home.component.html',
@@ -66,6 +68,8 @@ export class HomeComponent implements AfterViewInit {
 
   sidebar;
 
+  surveyCount$ = this.store.select(SurveySelector.Count);
+
   constructor(
     private authService: AuthService,
     private markerService: MarkerService,
@@ -90,6 +94,10 @@ export class HomeComponent implements AfterViewInit {
     this.store.select('map').subscribe(map => {
       this.url = map.url;
     })
+
+    this.store.dispatch(
+      SurveyActions.countSurveys()
+    );
   }
 
   private initMap(): void {

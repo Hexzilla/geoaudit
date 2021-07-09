@@ -16,7 +16,7 @@ export class SurveyEffects {
 
     countSurveys$ = createEffect(() => this.actions$.pipe(
         ofType(SurveyActions.COUNT_SURVEYS),
-        mergeMap((payload) => this.surveyService.count(payload)
+        mergeMap(() => this.surveyService.count()
             .pipe(
                 map(count => ({ type: SurveyActions.SET_COUNT, count}))
             ))
