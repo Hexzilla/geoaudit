@@ -71,9 +71,10 @@ export class SurveyService {
       _sort: 'date_delivery:asc',
       _where: {
         conducted_by: this.authService.authValue.user.id,
+        'job.assignees': this.authService.authValue.user.id,
         _or: [
           { 'status.name': Statuses.NOT_STARTED },
-          { 'status.name': Statuses.ONGOING },
+          { 'status.name': Statuses.ONGOING }
         ],
       },
     });

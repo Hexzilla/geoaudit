@@ -47,6 +47,8 @@ export class SurveyTableComponent implements OnInit, AfterViewInit {
 
   @Input() filterMode: 'LOCAL' | 'NETWORK';
 
+  @Input() role: 'MANAGER';
+
   @Input() pageSize: number;
 
   @Input() pageSizeOptions: number[];

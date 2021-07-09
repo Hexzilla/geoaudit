@@ -246,8 +246,8 @@ export class SurveyComponent implements OnInit, AfterViewInit {
 
           job,
 
-          prepared_by: prepared_by.id,
-          conducted_by: conducted_by.id,
+          prepared_by: prepared_by?.id,
+          conducted_by: conducted_by?.id,
 
           geometry,
 

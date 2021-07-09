@@ -5,7 +5,7 @@
     aria-label="assignement icon button"
     (click)="calendar()"
   >
-    <mat-icon>assignment_turned_in</mat-icon>
+    <mat-icon>event_available</mat-icon>
   </button>
 
   <button
@@ -23,6 +23,7 @@
     aria-label="delete icon button"
     (click)="delete()"
     [disabled]="this.selection.selected.length === 0"
+    *ngIf="role === 'MANAGER'"
   >
     <mat-icon>delete</mat-icon>
   </button>
@@ -32,6 +33,7 @@
     color="accent"
     aria-label="add icon button"
     (click)="addSurvey()"
+    *ngIf="role === 'MANAGER'"
   >
     <mat-icon>add_circle</mat-icon>
   </button>
