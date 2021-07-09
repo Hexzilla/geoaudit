@@ -61,8 +61,6 @@ export class ToDoListComponent implements OnInit {
     this.store.select('survey').subscribe((state) => {
       this.length = state.count;
       this.dataSource = new MatTableDataSource(state.surveys);
-
-      console.log('subscribe', state.surveys)
     });
   }
 
