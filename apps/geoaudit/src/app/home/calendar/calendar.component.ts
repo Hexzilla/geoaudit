@@ -14,6 +14,7 @@ import {
 } from 'date-fns';
 import { Subject } from 'rxjs';
 import {
+  CalendarDateFormatter,
   CalendarEvent as AngularCalendarEvent,
   CalendarEventAction,
   CalendarEventTimesChangedEvent,
@@ -45,11 +46,19 @@ import { CalendarEvent } from '../../models';
 import { filter, take, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
+import { CustomDateFormatter } from './custom-date-formatter.provider';
+
 @Component({
   selector: 'geoaudit-calendar',
   templateUrl: './calendar.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  styleUrls: ['./calendar.component.scss']
+  // changeDetection: ChangeDetectionStrategy.OnPush,
+  styleUrls: ['./calendar.component.scss'],
+  providers: [
+    {
+      provide: CalendarDateFormatter,
+      useClass: CustomDateFormatter,
+    },
+  ]
 })
 export class CalendarComponent implements OnInit {
 
@@ -88,46 +97,47 @@ export class CalendarComponent implements OnInit {
 
   refresh: Subject<any> = new Subject();
 
-  events: AngularCalendarEvent[] = [
-    {
-      start: subDays(startOfDay(new Date()), 1),
-      end: addDays(new Date(), 1),
-      title: 'A 3 day event',
-      color: colors.red,
-      actions: this.actions,
-      allDay: true,
-      resizable: {
-        beforeStart: true,
-        afterEnd: true,
-      },
-      draggable: true,
-    },
-    {
-      start: startOfDay(new Date()),
-      title: 'An event with no end date',
-      color: colors.yellow,
-      actions: this.actions,
-    },
-    {
-      start: subDays(endOfMonth(new Date()), 3),
-      end: addDays(endOfMonth(new Date()), 3),
-      title: 'A long event that spans 2 months',
-      color: colors.blue,
-      allDay: true,
-    },
-    {
-      start: addHours(startOfDay(new Date()), 2),
-      end: addHours(new Date(), 2),
-      title: 'A draggable and resizable event',
-      color: colors.yellow,
-      actions: this.actions,
-      resizable: {
-        beforeStart: true,
-        afterEnd: true,
-      },
-      draggable: true,
-    },
-  ];
+  events: AngularCalendarEvent[] = [];
+  // [
+  //   {
+  //     start: subDays(startOfDay(new Date()), 1),
+  //     end: addDays(new Date(), 1),
+  //     title: 'A 3 day event',
+  //     color: colors.red,
+  //     actions: this.actions,
+  //     allDay: true,
+  //     resizable: {
+  //       beforeStart: true,
+  //       afterEnd: true,
+  //     },
+  //     draggable: true,
+  //   },
+  //   {
+  //     start: startOfDay(new Date()),
+  //     title: 'An event with no end date',
+  //     color: colors.yellow,
+  //     actions: this.actions,
+  //   },
+  //   {
+  //     start: subDays(endOfMonth(new Date()), 3),
+  //     end: addDays(endOfMonth(new Date()), 3),
+  //     title: 'A long event that spans 2 months',
+  //     color: colors.blue,
+  //     allDay: true,
+  //   },
+  //   {
+  //     start: addHours(startOfDay(new Date()), 2),
+  //     end: addHours(new Date(), 2),
+  //     title: 'A draggable and resizable event',
+  //     color: colors.yellow,
+  //     actions: this.actions,
+  //     resizable: {
+  //       beforeStart: true,
+  //       afterEnd: true,
+  //     },
+  //     draggable: true,
+  //   },
+  // ];
 
   activeDayIsOpen: boolean = true;
 
@@ -143,87 +153,92 @@ export class CalendarComponent implements OnInit {
      */
     this.store.dispatch(CalendarEventActions.fetchCalendarEvents({ start: 0, limit: 100 }));
 
+    // let 
+
     /**
      * Using the selector, select the calendar events from the store 
      * return when not null and the first.
      */
-    // this.store.select(CalendarEventSelectors.CalendarEvents)
-    // .pipe(
-    //   filter(calendarEvents => calendarEvents !== null),
-    // ).subscribe(calendarEvents => {      
-    //   calendarEvents.map(event => {
-    //     console.log('event', event)
+    this.store.select(CalendarEventSelectors.CalendarEvents)
+    .pipe(
+      filter(calendarEvents => calendarEvents !== null)
+    ).subscribe(calendarEvents => {      
+      const events = [];
 
-    //     // const { start, end } = event;
+      calendarEvents.map(event => {
 
-    //     // allDay: false
-    //     // created_at: "2021-07-09T16:50:42.994Z"
-    //     // end: "2021-07-09T16:50:42.846Z"
-    //     // id: 9
-    //     // notes: ""
-    //     // published: false
-    //     // start: "2021-07-09T16:50:42.846Z"
-    //     // surveys: []
-    //     // title: "Event Title"
-    //     // updated_at: "2021-07-09T16:50:42.994Z"
-    //     // users_permissions_users: [{…}]
+        // const { start, end } = event;
 
-    //     this.events.push({
-    //       start: new Date(event.start),
-    //       title: event.title,
-    //       color: colors.red
-    //     })
-    //   });
-    // })
+        // allDay: false
+        // created_at: "2021-07-09T16:50:42.994Z"
+        // end: "2021-07-09T16:50:42.846Z"
+        // id: 9
+        // notes: ""
+        // published: false
+        // start: "2021-07-09T16:50:42.846Z"
+        // surveys: []
+        // title: "Event Title"
+        // updated_at: "2021-07-09T16:50:42.994Z"
+        // users_permissions_users: [{…}]
+        events.push({
+          id: event.id,
+          start: new Date(event.start),
+          title: event.title,
+          color: colors.blue
+        })
 
-    // this.events = [
-    //   {
-    //     start: subDays(startOfDay(new Date()), 1),
-    //     end: addDays(new Date(), 1),
-    //     title: 'A 3 day event',
-    //     color: colors.red,
-    //     actions: this.actions,
-    //     allDay: true,
-    //     resizable: {
-    //       beforeStart: true,
-    //       afterEnd: true,
-    //     },
-    //     draggable: true,
-    //   },
-    //   {
-    //     start: startOfDay(new Date()),
-    //     title: 'An event with no end date',
-    //     color: colors.yellow,
-    //     actions: this.actions,
-    //   },
-    //   {
-    //     start: subDays(endOfMonth(new Date()), 3),
-    //     end: addDays(endOfMonth(new Date()), 3),
-    //     title: 'A long event that spans 2 months',
-    //     color: colors.blue,
-    //     allDay: true,
-    //   },
-    //   {
-    //     start: addHours(startOfDay(new Date()), 2),
-    //     end: addHours(new Date(), 2),
-    //     title: 'A draggable and resizable event',
-    //     color: colors.yellow,
-    //     actions: this.actions,
-    //     resizable: {
-    //       beforeStart: true,
-    //       afterEnd: true,
-    //     },
-    //     draggable: true,
-    //   },
-    // ];
+        // this.events = [
+        //   {
+        //     start: subDays(startOfDay(new Date()), 1),
+        //     end: addDays(new Date(), 1),
+        //     title: 'A 3 day event',
+        //     color: colors.red,
+        //     actions: this.actions,
+        //     allDay: true,
+        //     resizable: {
+        //       beforeStart: true,
+        //       afterEnd: true,
+        //     },
+        //     draggable: true,
+        //   },
+        //   {
+        //     start: startOfDay(new Date()),
+        //     title: 'An event with no end date',
+        //     color: colors.yellow,
+        //     actions: this.actions,
+        //   },
+        //   {
+        //     start: subDays(endOfMonth(new Date()), 3),
+        //     end: addDays(endOfMonth(new Date()), 3),
+        //     title: 'A long event that spans 2 months',
+        //     color: colors.blue,
+        //     allDay: true,
+        //   },
+        //   {
+        //     start: addHours(startOfDay(new Date()), 2),
+        //     end: addHours(new Date(), 2),
+        //     title: 'A draggable and resizable event',
+        //     color: colors.yellow,
+        //     actions: this.actions,
+        //     resizable: {
+        //       beforeStart: true,
+        //       afterEnd: true,
+        //     },
+        //     draggable: true,
+        //   },
+        // ];
+      });
+
+      this.events = events;      
+    })
   }
 
   addCalendarEvent(): void {
     this.router.navigate(['/home/calendar/event']);
   }
 
-  onCalendarEventClick(calendarEvent: CalendarEvent): void {
-    this.router.navigate([`/home/calendar/event/${calendarEvent.id}`]);
+  onCalendarEventClick(event: AngularCalendarEvent): void {
+    this.router.navigate([`/home/calendar/event/${event.id}`]);
   }
 
   dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {

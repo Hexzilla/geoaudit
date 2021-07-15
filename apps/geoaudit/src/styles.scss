@@ -60,4 +60,5 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 .leaflet-sidebar-content {
   overflow-y:hidden !important;
+  // width: 100%; // Remove toggle for sidebar nav which is no good on a mobile until we have a way to toggle the sidebar.
 }
