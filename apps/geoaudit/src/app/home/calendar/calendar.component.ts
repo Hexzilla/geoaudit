@@ -1,6 +1,13 @@
-import { Component, OnInit, ChangeDetectionStrategy, ViewChild, TemplateRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  ViewChild,
+  TemplateRef,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
+import * as moment from 'moment';
 
 import {
   startOfDay,
@@ -58,10 +65,9 @@ import { CustomDateFormatter } from './custom-date-formatter.provider';
       provide: CalendarDateFormatter,
       useClass: CustomDateFormatter,
     },
-  ]
+  ],
 })
 export class CalendarComponent implements OnInit {
-
   @ViewChild('modalContent', { static: true }) modalContent: TemplateRef<any>;
 
   actions: CalendarEventAction[] = [
@@ -87,7 +93,7 @@ export class CalendarComponent implements OnInit {
     event: AngularCalendarEvent;
   };
 
-  calendarEvents: Observable<Array<CalendarEvent>>;
+  calendarEvents: Array<CalendarEvent>;
 
   view: CalendarView = CalendarView.Month;
 
@@ -145,92 +151,110 @@ export class CalendarComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private store: Store<fromApp.State>
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     /**
      * Fetch the calendar events from the backend.
      */
-    this.store.dispatch(CalendarEventActions.fetchCalendarEvents({ start: 0, limit: 100 }));
+    this.store.dispatch(
+      CalendarEventActions.fetchCalendarEvents({ start: 0, limit: 100 })
+    );
 
-    // let 
+    // let
 
     /**
-     * Using the selector, select the calendar events from the store 
+     * Using the selector, select the calendar events from the store
      * return when not null and the first.
      */
-    this.store.select(CalendarEventSelectors.CalendarEvents)
-    .pipe(
-      filter(calendarEvents => calendarEvents !== null)
-    ).subscribe(calendarEvents => {      
-      const events = [];
+    this.store
+      .select(CalendarEventSelectors.CalendarEvents)
+      .pipe(filter((calendarEvents) => calendarEvents !== null))
+      .subscribe((calendarEvents) => {
+        const events = [];
 
-      calendarEvents.map(event => {
+        this.calendarEvents = calendarEvents;
 
-        // const { start, end } = event;
+        calendarEvents.map((event) => {
+          // const { start, end } = event;
 
-        // allDay: false
-        // created_at: "2021-07-09T16:50:42.994Z"
-        // end: "2021-07-09T16:50:42.846Z"
-        // id: 9
-        // notes: ""
-        // published: false
-        // start: "2021-07-09T16:50:42.846Z"
-        // surveys: []
-        // title: "Event Title"
-        // updated_at: "2021-07-09T16:50:42.994Z"
-        // users_permissions_users: [{…}]
-        events.push({
-          id: event.id,
-          start: new Date(event.start),
-          title: event.title,
-          color: colors.blue
-        })
+          // allDay: false
+          // created_at: "2021-07-09T16:50:42.994Z"
+          // end: "2021-07-09T16:50:42.846Z"
+          // id: 9
+          // notes: ""
+          // published: false
+          // start: "2021-07-09T16:50:42.846Z"
+          // surveys: []
+          // title: "Event Title"
+          // updated_at: "2021-07-09T16:50:42.994Z"
+          // users_permissions_users: [{…}]
 
-        // this.events = [
-        //   {
-        //     start: subDays(startOfDay(new Date()), 1),
-        //     end: addDays(new Date(), 1),
-        //     title: 'A 3 day event',
-        //     color: colors.red,
-        //     actions: this.actions,
-        //     allDay: true,
-        //     resizable: {
-        //       beforeStart: true,
-        //       afterEnd: true,
-        //     },
-        //     draggable: true,
-        //   },
-        //   {
-        //     start: startOfDay(new Date()),
-        //     title: 'An event with no end date',
-        //     color: colors.yellow,
-        //     actions: this.actions,
-        //   },
-        //   {
-        //     start: subDays(endOfMonth(new Date()), 3),
-        //     end: addDays(endOfMonth(new Date()), 3),
-        //     title: 'A long event that spans 2 months',
-        //     color: colors.blue,
-        //     allDay: true,
-        //   },
-        //   {
-        //     start: addHours(startOfDay(new Date()), 2),
-        //     end: addHours(new Date(), 2),
-        //     title: 'A draggable and resizable event',
-        //     color: colors.yellow,
-        //     actions: this.actions,
-        //     resizable: {
-        //       beforeStart: true,
-        //       afterEnd: true,
-        //     },
-        //     draggable: true,
-        //   },
-        // ];
+          /**
+           * Push angular calendar event objects onto the
+           * array. Note here, that we're using ...event which means
+           * that we're taking all of the properties on our calendar event object
+           * from the database and applying them here such.
+           *
+           * We have to override the dates as otherwise they do not work.
+           */
+          events.push({
+            ...event,
+            start: new Date(event.start),
+            end: new Date(event.end),
+            // Additional properties
+            // actions: this.actions,
+            // resizable: {
+            // beforeStart: true,
+            // afterEnd: true,
+            // },
+            draggable: true,
+          });
+
+          // this.events = [
+          //   {
+          //     start: subDays(startOfDay(new Date()), 1),
+          //     end: addDays(new Date(), 1),
+          //     title: 'A 3 day event',
+          //     color: colors.red,
+          //     actions: this.actions,
+          //     allDay: true,
+          //     resizable: {
+          //       beforeStart: true,
+          //       afterEnd: true,
+          //     },
+          //     draggable: true,
+          //   },
+          //   {
+          //     start: startOfDay(new Date()),
+          //     title: 'An event with no end date',
+          //     color: colors.yellow,
+          //     actions: this.actions,
+          //   },
+          //   {
+          //     start: subDays(endOfMonth(new Date()), 3),
+          //     end: addDays(endOfMonth(new Date()), 3),
+          //     title: 'A long event that spans 2 months',
+          //     color: colors.blue,
+          //     allDay: true,
+          //   },
+          //   {
+          //     start: addHours(startOfDay(new Date()), 2),
+          //     end: addHours(new Date(), 2),
+          //     title: 'A draggable and resizable event',
+          //     color: colors.yellow,
+          //     actions: this.actions,
+          //     resizable: {
+          //       beforeStart: true,
+          //       afterEnd: true,
+          //     },
+          //     draggable: true,
+          //   },
+          // ];
+        });
+
+        this.events = events;
       });
-
-      this.events = events;      
-    })
   }
 
   addCalendarEvent(): void {
@@ -270,6 +294,18 @@ export class CalendarComponent implements OnInit {
       }
       return iEvent;
     });
+
+    // Dispatch changes to calendar event
+    this.store.dispatch(
+      CalendarEventActions.putCalendarEvent({
+        calendarEvent: {
+          id: Number(event.id),
+          start: moment(newStart).toISOString(),
+          end: moment(newEnd).toISOString(),
+        },
+      })
+    );
+
     this.handleEvent('Dropped or resized', event);
   }
 
