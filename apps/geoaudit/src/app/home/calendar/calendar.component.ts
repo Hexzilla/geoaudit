@@ -72,14 +72,14 @@ export class CalendarComponent implements OnInit {
 
   actions: CalendarEventAction[] = [
     {
-      label: '<i class="fas fa-fw fa-pencil-alt"></i>',
+      label: '<i class="fas fa-fw fa-pencil-alt fa-lg"></i>',
       a11yLabel: 'Edit',
       onClick: ({ event }: { event: AngularCalendarEvent }): void => {
-        this.handleEvent('Edited', event);
+        this.onCalendarEventClick(event);
       },
     },
     {
-      label: '<i class="fas fa-fw fa-trash-alt"></i>',
+      label: '<i class="fas fa-fw fa-trash-alt fa-lg"></i>',
       a11yLabel: 'Delete',
       onClick: ({ event }: { event: AngularCalendarEvent }): void => {
         this.events = this.events.filter((iEvent) => iEvent !== event);
@@ -203,7 +203,7 @@ export class CalendarComponent implements OnInit {
             start: new Date(event.start),
             end: new Date(event.end),
             // Additional properties
-            actions: this.actions,
+            // actions: this.actions,
             // resizable: {
             // beforeStart: true,
             // afterEnd: true,
