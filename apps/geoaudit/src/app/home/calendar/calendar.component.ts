@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ViewChild, TemplateRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 
@@ -42,15 +42,18 @@ import * as CalendarEventSelectors from '../../store/calendar-event/calendar-eve
 
 // Models
 import { CalendarEvent } from '../../models';
-import { filter, take } from 'rxjs/operators';
+import { filter, take, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
 @Component({
   selector: 'geoaudit-calendar',
   templateUrl: './calendar.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./calendar.component.scss']
 })
 export class CalendarComponent implements OnInit {
+
+  @ViewChild('modalContent', { static: true }) modalContent: TemplateRef<any>;
 
   actions: CalendarEventAction[] = [
     {
@@ -69,6 +72,11 @@ export class CalendarComponent implements OnInit {
       },
     },
   ];
+
+  modalData: {
+    action: string;
+    event: AngularCalendarEvent;
+  };
 
   calendarEvents: Observable<Array<CalendarEvent>>;
 
@@ -139,10 +147,75 @@ export class CalendarComponent implements OnInit {
      * Using the selector, select the calendar events from the store 
      * return when not null and the first.
      */
-    this.calendarEvents = this.store.select(CalendarEventSelectors.CalendarEvents)
-    .pipe(
-      filter(calendarEvents => calendarEvents !== null),
-    );
+    // this.store.select(CalendarEventSelectors.CalendarEvents)
+    // .pipe(
+    //   filter(calendarEvents => calendarEvents !== null),
+    // ).subscribe(calendarEvents => {      
+    //   calendarEvents.map(event => {
+    //     console.log('event', event)
+
+    //     // const { start, end } = event;
+
+    //     // allDay: false
+    //     // created_at: "2021-07-09T16:50:42.994Z"
+    //     // end: "2021-07-09T16:50:42.846Z"
+    //     // id: 9
+    //     // notes: ""
+    //     // published: false
+    //     // start: "2021-07-09T16:50:42.846Z"
+    //     // surveys: []
+    //     // title: "Event Title"
+    //     // updated_at: "2021-07-09T16:50:42.994Z"
+    //     // users_permissions_users: [{…}]
+
+    //     this.events.push({
+    //       start: new Date(event.start),
+    //       title: event.title,
+    //       color: colors.red
+    //     })
+    //   });
+    // })
+
+    // this.events = [
+    //   {
+    //     start: subDays(startOfDay(new Date()), 1),
+    //     end: addDays(new Date(), 1),
+    //     title: 'A 3 day event',
+    //     color: colors.red,
+    //     actions: this.actions,
+    //     allDay: true,
+    //     resizable: {
+    //       beforeStart: true,
+    //       afterEnd: true,
+    //     },
+    //     draggable: true,
+    //   },
+    //   {
+    //     start: startOfDay(new Date()),
+    //     title: 'An event with no end date',
+    //     color: colors.yellow,
+    //     actions: this.actions,
+    //   },
+    //   {
+    //     start: subDays(endOfMonth(new Date()), 3),
+    //     end: addDays(endOfMonth(new Date()), 3),
+    //     title: 'A long event that spans 2 months',
+    //     color: colors.blue,
+    //     allDay: true,
+    //   },
+    //   {
+    //     start: addHours(startOfDay(new Date()), 2),
+    //     end: addHours(new Date(), 2),
+    //     title: 'A draggable and resizable event',
+    //     color: colors.yellow,
+    //     actions: this.actions,
+    //     resizable: {
+    //       beforeStart: true,
+    //       afterEnd: true,
+    //     },
+    //     draggable: true,
+    //   },
+    // ];
   }
 
   addCalendarEvent(): void {
