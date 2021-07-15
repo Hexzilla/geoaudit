@@ -203,7 +203,7 @@ export class CalendarComponent implements OnInit {
             start: new Date(event.start),
             end: new Date(event.end),
             // Additional properties
-            // actions: this.actions,
+            actions: this.actions,
             // resizable: {
             // beforeStart: true,
             // afterEnd: true,
