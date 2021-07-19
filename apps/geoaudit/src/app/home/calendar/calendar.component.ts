@@ -84,8 +84,7 @@ export class CalendarComponent implements OnInit {
       label: '<i class="fas fa-fw fa-trash-alt fa-lg"></i>',
       a11yLabel: 'Delete',
       onClick: ({ event }: { event: AngularCalendarEvent }): void => {
-        this.events = this.events.filter((iEvent) => iEvent !== event);
-        this.handleEvent('Deleted', event);
+        this.deleteEvent(event);
       },
     },
   ];
@@ -205,7 +204,7 @@ export class CalendarComponent implements OnInit {
             start: new Date(event.start),
             end: new Date(event.end),
             // Additional properties
-            // actions: this.actions,
+            actions: this.actions,
             // resizable: {
             // beforeStart: true,
             // afterEnd: true,
@@ -337,6 +336,12 @@ export class CalendarComponent implements OnInit {
 
   deleteEvent(eventToDelete: AngularCalendarEvent) {
     this.events = this.events.filter((event) => event !== eventToDelete);
+
+    this.store.dispatch(CalendarEventActions.deleteCalendarEvent({
+      calendarEvent: {
+        id: Number(eventToDelete.id)
+      }
+    }))
   }
 
   setView(view: CalendarView) {
