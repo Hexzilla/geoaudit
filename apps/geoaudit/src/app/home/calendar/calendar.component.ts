@@ -55,6 +55,8 @@ import { filter, take, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
 import { CustomDateFormatter } from './custom-date-formatter.provider';
+import { MatDialog } from '@angular/material/dialog';
+import { DeleteModalComponent } from '../../modals/delete-modal/delete-modal.component';
 
 @Component({
   selector: 'geoaudit-calendar',
@@ -149,6 +151,7 @@ export class CalendarComponent implements OnInit {
   activeDayIsOpen: boolean = true;
 
   constructor(
+    public dialog: MatDialog,
     private route: ActivatedRoute,
     private router: Router,
     private store: Store<fromApp.State>
@@ -211,7 +214,7 @@ export class CalendarComponent implements OnInit {
             // },
             draggable: true,
 
-            cssClass: 'calendar-event-item'
+            cssClass: 'calendar-event-item',
           });
 
           // this.events = [
@@ -337,11 +340,24 @@ export class CalendarComponent implements OnInit {
   deleteEvent(eventToDelete: AngularCalendarEvent) {
     this.events = this.events.filter((event) => event !== eventToDelete);
 
-    this.store.dispatch(CalendarEventActions.deleteCalendarEvent({
-      calendarEvent: {
-        id: Number(eventToDelete.id)
+    const dialogRef = this.dialog.open(DeleteModalComponent, {
+      data: {
+        length: 1,
+      },
+      autoFocus: true,
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.store.dispatch(
+          CalendarEventActions.deleteCalendarEvent({
+            calendarEvent: {
+              id: Number(eventToDelete.id),
+            },
+          })
+        );
       }
-    }))
+    });
   }
 
   setView(view: CalendarView) {
