@@ -3,10 +3,15 @@
     title="CONTAINERS.home.calendar.title"
   ></geoaudit-sidebar-header>
 
-  <div class="row text-center">
-    <div class="col-md-4">
-      <div class="btn-group">
-        <div
+  <h3 fxLayout="row" fxLayoutAlign="space-between">
+    {{ viewDate | calendarDate: view + 'ViewTitle':'en' }}
+  </h3>
+
+  <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="space-between">
+    <div>
+      <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
+        <mat-button-toggle
+          value="previous"
           class="btn btn-primary"
           mwlCalendarPreviousView
           [view]="view"
@@ -14,15 +19,17 @@
           (viewDateChange)="closeOpenMonthViewDay()"
         >
           Previous
-        </div>
-        <div
+        </mat-button-toggle>
+        <mat-button-toggle
+          value="today"
           class="btn btn-outline-secondary"
           mwlCalendarToday
           [(viewDate)]="viewDate"
         >
           Today
-        </div>
-        <div
+        </mat-button-toggle>
+        <mat-button-toggle
+          value="next"
           class="btn btn-primary"
           mwlCalendarNextView
           [view]="view"
@@ -30,39 +37,42 @@
           (viewDateChange)="closeOpenMonthViewDay()"
         >
           Next
-        </div>
-      </div>
+        </mat-button-toggle>
+      </mat-button-toggle-group>
     </div>
-    <div class="col-md-4">
-      <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
-    </div>
-    <div class="col-md-4">
-      <div class="btn-group">
-        <div
+
+    <div>
+      <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
+        <mat-button-toggle
+          value="month"
           class="btn btn-primary"
           (click)="setView(CalendarView.Month)"
           [class.active]="view === CalendarView.Month"
         >
           Month
-        </div>
-        <div
+        </mat-button-toggle>
+        <mat-button-toggle
+          value="week"
           class="btn btn-primary"
           (click)="setView(CalendarView.Week)"
           [class.active]="view === CalendarView.Week"
         >
           Week
-        </div>
-        <div
+        </mat-button-toggle>
+        <mat-button-toggle
+          value="day"
           class="btn btn-primary"
           (click)="setView(CalendarView.Day)"
           [class.active]="view === CalendarView.Day"
         >
           Day
-        </div>
-      </div>
+        </mat-button-toggle>
+      </mat-button-toggle-group>
     </div>
   </div>
+
   <br />
+
   <div [ngSwitch]="view">
     <mwl-calendar-month-view
       *ngSwitchCase="CalendarView.Month"
@@ -95,15 +105,13 @@
     </mwl-calendar-day-view>
   </div>
 
-  <!-- <div class="calendar-card-container">
-    <geoaudit-card-button
-      *ngFor="let calendarEvent of calendarEvents | async"
-      [title]="calendarEvent.start | date: 'short'"
-      [text]="calendarEvent.title"
-      icon="category"
-      (onClick)="onCalendarEventClick(calendarEvent)"
-    ></geoaudit-card-button>
-  </div> -->
+  <br />
+
+  <div fxLayout="row-reverse">
+    <button mat-flat-button fxFlexFill color="primary" (click)="addCalendarEvent()">
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
 </ng-container>
 
 <router-outlet></router-outlet>

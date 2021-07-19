@@ -8,6 +8,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 // Material
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -25,6 +26,7 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatStepperModule} from '@angular/material/stepper';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTableModule } from '@angular/material/table';
+
 
 // Modals
 import { AttachmentModalComponent } from '../modals/attachment-modal/attachment-modal.component';
@@ -109,6 +111,7 @@ const entityMetadataMap: EntityMetadataMap = {
 
     // Material
     MatAutocompleteModule,
+    MatButtonToggleModule,
     MatButtonModule,
     MatCardModule,
     MatCheckboxModule,
@@ -187,6 +190,7 @@ const entityMetadataMap: EntityMetadataMap = {
     
     // Material
     MatAutocompleteModule,
+    MatButtonToggleModule,
     MatButtonModule,
     MatCardModule,
     MatCheckboxModule,

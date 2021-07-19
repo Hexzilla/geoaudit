@@ -4,6 +4,7 @@ import {
   ChangeDetectionStrategy,
   ViewChild,
   TemplateRef,
+  ViewEncapsulation,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -58,6 +59,7 @@ import { CustomDateFormatter } from './custom-date-formatter.provider';
 @Component({
   selector: 'geoaudit-calendar',
   templateUrl: './calendar.component.html',
+  encapsulation: ViewEncapsulation.None,
   // changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./calendar.component.scss'],
   providers: [
@@ -72,7 +74,7 @@ export class CalendarComponent implements OnInit {
 
   actions: CalendarEventAction[] = [
     {
-      label: '<i class="fas fa-fw fa-pencil-alt fa-lg"></i>',
+      label: '<i class="fas fa-fw fa-pencil-alt fa-lg"></i>', // See https://angular-calendar.com/#/custom-event-class https://angular-calendar.com/#/show-dates-on-titles
       a11yLabel: 'Edit',
       onClick: ({ event }: { event: AngularCalendarEvent }): void => {
         this.onCalendarEventClick(event);
@@ -209,6 +211,8 @@ export class CalendarComponent implements OnInit {
             // afterEnd: true,
             // },
             draggable: true,
+
+            cssClass: 'calendar-event-item'
           });
 
           // this.events = [
