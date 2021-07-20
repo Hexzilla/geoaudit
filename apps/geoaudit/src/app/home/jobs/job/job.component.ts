@@ -250,6 +250,10 @@ export class JobComponent implements OnInit, AfterViewInit {
         //     return val + "K";
         //   }
         // }
+        x: {
+          show: false
+        }
+        
       },
       fill: {
         opacity: 1
@@ -266,15 +270,6 @@ export class JobComponent implements OnInit, AfterViewInit {
  
    ngOnInit(): void {
      this.API_URL = environment.API_URL;
-
-     // Fetch statuses
-     this.statusEntityService.getAll().subscribe(
-       (statuses) => {
-         this.statuses = statuses;
-       },
- 
-       (err) => {}
-     )
  
      // Fetch job types
      this.jobTypeEntityervice.getAll().subscribe(
@@ -293,14 +288,59 @@ export class JobComponent implements OnInit, AfterViewInit {
  
        (err) => {}
      )
- 
-     this.surveyEntityService.getAll().subscribe(
-      (surveys) => {
-        this.allSurveys = surveys;
-      },
 
-      (err) => {}
-    )
+      // Fetch statuses
+      this.statusEntityService.getAll().subscribe(
+        (statuses) => {
+          console.log('statuses', statuses)
+          this.statuses = statuses;
+        },
+  
+        (err) => {}
+      )
+
+      this.surveyEntityService.getAll().subscribe(
+        (surveys) => {
+          this.allSurveys = surveys;
+  
+          let notStartedSurveys = [];
+          let onGoingSurveys = [];
+          let completedSurveys = [];
+          let refusedSurveys = [];
+          
+          surveys.map(survey => {
+            if (survey.status.name === Statuses.NOT_STARTED) notStartedSurveys.push(survey);
+            if (survey.status.name === Statuses.ONGOING) onGoingSurveys.push(survey);
+            if (survey.status.name === Statuses.COMPLETED) completedSurveys.push(survey);
+            if (survey.status.name === Statuses.REFUSED) refusedSurveys.push(survey);
+          });
+
+          this.chartOptions.series = [
+            {
+              name: Statuses.NOT_STARTED,
+              data: [notStartedSurveys.length],
+              color: '#FF0000'
+            },
+            {
+              name: Statuses.ONGOING,
+              data: [onGoingSurveys.length],
+              color: "#FFA500"
+            },
+            {
+              name: Statuses.COMPLETED,
+              data: [completedSurveys.length],
+              color: "#90EE90"
+            },
+            {
+              name: Statuses.REFUSED,
+              data: [refusedSurveys.length],
+              color: "#000000"
+            }
+          ]
+        },
+  
+        (err) => {}
+      )
 
      /**
       * Initialise the form with properties and validation
