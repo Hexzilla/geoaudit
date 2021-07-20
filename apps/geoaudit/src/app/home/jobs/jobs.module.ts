@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 
+import { NgApexchartsModule } from "ng-apexcharts";
+
 // Routing
 import { JobsRoutingModule } from './jobs-routing.module';
 
@@ -18,6 +20,8 @@ import { JobComponent } from './job/job.component';
   ],
   imports: [
     JobsRoutingModule,
+
+    NgApexchartsModule,
 
     SharedModule,
   ],

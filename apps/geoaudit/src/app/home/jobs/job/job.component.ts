@@ -11,6 +11,23 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
+
+import {
+  ApexAxisChartSeries,
+  ApexChart,
+  ChartComponent,
+  ApexDataLabels,
+  ApexXAxis,
+  ApexPlotOptions,
+  ApexStroke,
+  ApexTitleSubtitle,
+  ApexTooltip,
+  ApexFill,
+  ApexLegend,
+  ApexYAxis,
+  ApexGrid
+} from "ng-apexcharts";
+
 import { environment } from 'apps/geoaudit/src/environments/environment';
 import { Lightbox, IAlbum } from 'ngx-lightbox';
 import { fromEvent, Subject } from 'rxjs';
@@ -22,12 +39,27 @@ import { StatusEntityService } from '../../../entity-services/status-entity.serv
 import { SurveyEntityService } from '../../../entity-services/survey-entity.service';
 import { UserEntityService } from '../../../entity-services/user-entity.service';
 import { AttachmentModalComponent } from '../../../modals/attachment-modal/attachment-modal.component';
-import { Job, Status, Survey, User } from '../../../models';
+import { Job, Status, Statuses, Survey, User } from '../../../models';
 import { Image } from '../../../models/image.model';
 import { JobType } from '../../../models/job-type.model';
 import { AlertService } from '../../../services';
 
 import * as fromApp from '../../../store';
+
+export type ChartOptions = {
+  series: ApexAxisChartSeries;
+  chart: ApexChart;
+  dataLabels: ApexDataLabels;
+  plotOptions: ApexPlotOptions;
+  xaxis: ApexXAxis;
+  yaxis: ApexYAxis;
+  stroke: ApexStroke;
+  title: ApexTitleSubtitle;
+  tooltip: ApexTooltip;
+  fill: ApexFill;
+  legend: ApexLegend;
+  grid: ApexGrid;
+};
 
 @Component({
   selector: 'geoaudit-job',
@@ -121,6 +153,10 @@ export class JobComponent implements OnInit, AfterViewInit {
  
    filteredSurveys: Array<Survey>;
 
+   @ViewChild("chart") chart: ChartComponent;
+
+   public chartOptions: Partial<ChartOptions>;
+
    constructor(
      private formBuilder: FormBuilder,
      private jobEntityService: JobEntityService,
@@ -134,7 +170,99 @@ export class JobComponent implements OnInit, AfterViewInit {
      private alertService: AlertService,
      private dialog: MatDialog,
      private _lightbox: Lightbox
-   ) {}
+   ) {
+
+    this.chartOptions = {
+      series: [
+        {
+          name: Statuses.NOT_STARTED,
+          data: [44],
+          color: '#FF0000'
+        },
+        {
+          name: Statuses.ONGOING,
+          data: [53],
+          color: "#FFA500"
+        },
+        {
+          name: Statuses.COMPLETED,
+          data: [12],
+          color: "#90EE90"
+        },
+        {
+          name: Statuses.REFUSED,
+          data: [9],
+          color: "#000000"
+        }
+      ],
+      chart: {
+        type: "bar",
+        height: 100,
+        stacked: true,
+        stackType: "100%",
+
+        dropShadow: {
+          enabled: false
+        },
+
+        toolbar: {
+          show: false
+        }
+      },
+      plotOptions: {
+        bar: {
+          horizontal: true,
+          // borderRadius: 15
+        }
+      },
+      stroke: {
+        width: 0,
+        colors: ["#fff"]
+      },
+      title: {
+        // text: "100% Stacked Bar"
+        text: ""
+      },
+      xaxis: {
+        // categories: [2008, 2009, 2010, 2011, 2012, 2013, 2014]
+        categories: [],
+        labels: {
+          show: false
+        },
+        axisBorder: {
+          show: false
+        },
+        axisTicks: {
+          show: false
+        }
+      },
+      yaxis: {
+        labels: {
+          show: false
+        },
+        axisBorder: {
+          show: false
+        }
+      },
+      tooltip: {
+        // y: {
+        //   formatter: function(val) {
+        //     return val + "K";
+        //   }
+        // }
+      },
+      fill: {
+        opacity: 1
+      },
+      legend: {
+        show: false,
+        position: "bottom",
+        horizontalAlign: "left",
+        offsetX: 40
+      }
+    };
+  
+   }
  
    ngOnInit(): void {
      this.API_URL = environment.API_URL;
