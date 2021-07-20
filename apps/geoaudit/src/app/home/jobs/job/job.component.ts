@@ -234,6 +234,8 @@ export class JobComponent implements OnInit, AfterViewInit {
          this.job = job;
  
          const { status, name, reference, job_type, assignees, id, footer, surveys } = job;
+
+         console.log('assignees', assignees)
  
          /**
           * Patch the form with values from the
@@ -426,6 +428,8 @@ export class JobComponent implements OnInit, AfterViewInit {
      this.users.push(event.option.value);
      this.userInput.nativeElement.value = '';
      this.userControl.setValue(null);
+
+     this.assigneesChange()
    }
  
    private _filter(value: string): Array<User> {
