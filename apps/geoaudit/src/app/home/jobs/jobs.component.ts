@@ -14,11 +14,42 @@ import autoTable from 'jspdf-autotable';
 import * as moment from 'moment';
 import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
 import { DeleteModalComponent } from '../../modals/delete-modal/delete-modal.component';
-import { Job } from '../../models';
+import { Job, Statuses } from '../../models';
+
+import {
+  ApexAxisChartSeries,
+  ApexChart,
+  ChartComponent,
+  ApexDataLabels,
+  ApexXAxis,
+  ApexPlotOptions,
+  ApexStroke,
+  ApexTitleSubtitle,
+  ApexTooltip,
+  ApexFill,
+  ApexLegend,
+  ApexYAxis,
+  ApexGrid
+} from "ng-apexcharts";
 
 // Store
 import * as fromApp from '../../store';
 import * as JobActions from '../../store/job/job.actions';
+
+export type ChartOptions = {
+  series: ApexAxisChartSeries;
+  chart: ApexChart;
+  dataLabels: ApexDataLabels;
+  plotOptions: ApexPlotOptions;
+  xaxis: ApexXAxis;
+  yaxis: ApexYAxis;
+  stroke: ApexStroke;
+  title: ApexTitleSubtitle;
+  tooltip: ApexTooltip;
+  fill: ApexFill;
+  legend: ApexLegend;
+  grid: ApexGrid;
+};
 
 @Component({
   selector: 'geoaudit-jobs',
@@ -47,6 +78,10 @@ export class JobsComponent implements OnInit, AfterViewInit {
   // MatPaginator Output
   pageEvent: PageEvent;
 
+  @ViewChild("chart") chart: ChartComponent;
+
+  public chartOptions: Partial<ChartOptions>;
+
   constructor(
     public dialog: MatDialog,
     private formBuilder: FormBuilder,
@@ -57,6 +92,104 @@ export class JobsComponent implements OnInit, AfterViewInit {
     this.form = this.formBuilder.group({
       filter: [''],
     });
+
+    this.chartOptions = {
+      series: [
+        {
+          name: Statuses.NOT_STARTED,
+          data: [44],
+          color: '#FF0000'
+        },
+        {
+          name: Statuses.ONGOING,
+          data: [53],
+          color: "#FFA500"
+        },
+        {
+          name: Statuses.COMPLETED,
+          data: [12],
+          color: "#90EE90"
+        },
+        {
+          name: Statuses.REFUSED,
+          data: [9],
+          color: "#000000"
+        }
+      ],
+      chart: {
+        type: "bar",
+        height: 100,
+        stacked: true,
+        stackType: "100%",
+
+        dropShadow: {
+          enabled: false
+        },
+
+        toolbar: {
+          show: false
+        },
+
+        sparkline: {
+          // enabled: true
+        }
+      },
+      plotOptions: {
+        bar: {
+          horizontal: true,
+          // borderRadius: 15
+        }
+      },
+      stroke: {
+        width: 0,
+        colors: ["#fff"]
+      },
+      title: {
+        // text: "100% Stacked Bar"
+        text: ""
+      },
+      xaxis: {
+        // categories: [2008, 2009, 2010, 2011, 2012, 2013, 2014]
+        categories: [],
+        labels: {
+          show: false
+        },
+        axisBorder: {
+          show: false
+        },
+        axisTicks: {
+          show: false
+        }
+      },
+      yaxis: {
+        labels: {
+          show: false
+        },
+        axisBorder: {
+          show: false
+        }
+      },
+      tooltip: {
+        // y: {
+        //   formatter: function(val) {
+        //     return val + "K";
+        //   }
+        // }
+        x: {
+          show: false
+        }
+        
+      },
+      fill: {
+        opacity: 1
+      },
+      legend: {
+        show: false,
+        position: "bottom",
+        horizontalAlign: "left",
+        offsetX: 40
+      }
+    };
   }
 
   ngOnInit(): void {
@@ -71,6 +204,41 @@ export class JobsComponent implements OnInit, AfterViewInit {
     this.store.select('job').subscribe((state) => {
       this.length = state.count;
       this.dataSource = new MatTableDataSource(state.jobs);
+
+      let notStartedJobs = [];
+      let onGoingJobs = [];
+      let completedJobs = [];
+      let refusedJobs = [];
+
+      state.jobs.map(job => {
+        if (job.status.name === Statuses.NOT_STARTED) notStartedJobs.push(job);
+        if (job.status.name === Statuses.ONGOING) onGoingJobs.push(job);
+        if (job.status.name === Statuses.COMPLETED) completedJobs.push(job);
+        if (job.status.name === Statuses.REFUSED) refusedJobs.push(job);
+      });
+
+      this.chartOptions.series = [
+        {
+          name: Statuses.NOT_STARTED,
+          data: [notStartedJobs.length],
+          color: '#FF0000'
+        },
+        {
+          name: Statuses.ONGOING,
+          data: [onGoingJobs.length],
+          color: "#FFA500"
+        },
+        {
+          name: Statuses.COMPLETED,
+          data: [completedJobs.length],
+          color: "#90EE90"
+        },
+        {
+          name: Statuses.REFUSED,
+          data: [refusedJobs.length],
+          color: "#000000"
+        }
+      ]
     });
   }
 
@@ -149,10 +317,10 @@ export class JobsComponent implements OnInit, AfterViewInit {
 
     const body = jobs.map((job: any) => {
       return [
-        job.reference,
-        job.name,
-        job.status.name,
-        job.job_type.name,
+        job?.reference,
+        job?.name,
+        job?.status?.name,
+        job?.job_type?.name,
       ];
     });
 

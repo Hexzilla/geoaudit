@@ -20,7 +20,7 @@
 				},
 				"jobs": {
 					"text": "N surveys to complete",
-					"title": "Jobs"
+					"title": "My Jobs"
 				},
 				"surveys": {
 					"text": "N surveys previously completed",
@@ -50,7 +50,7 @@
 				}
 			},
 			"jobs": {
-				"title": "Jobs",
+				"title": "My Jobs",
 				"filter": "Filter",
 				"actions": {
 					"delete": "Delete job(s)",
@@ -66,7 +66,8 @@
 					"attachments": "Attachments",
 					"surveys": "Surveys"
 				},
-				"no_data": "No data matching the filter \"{{ input.value }}\"",
+				"no_data": "No data",
+				"no_data_matching_filter": "No data matching the filter \"{{ input.value }}\"",
 				"job": {
 					"title": "Job",
 					"status": "Status",

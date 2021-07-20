@@ -207,6 +207,10 @@ export class JobComponent implements OnInit, AfterViewInit {
 
         toolbar: {
           show: false
+        },
+
+        sparkline: {
+          // enabled: true
         }
       },
       plotOptions: {
