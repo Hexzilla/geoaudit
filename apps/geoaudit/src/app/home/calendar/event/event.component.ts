@@ -160,7 +160,7 @@ export class EventComponent implements OnInit, AfterViewInit {
       start: [moment().toISOString(), Validators.required],
       end: [moment().toISOString(), Validators.required],
       notes: [''],
-      surveys: [[], Validators.required],
+      surveys: [[]],
 
       id: null,
       published: false
