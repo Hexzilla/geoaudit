@@ -108,6 +108,13 @@
         </td>
       </ng-container>
 
+      <ng-container matColumnDef="job_type">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Job Type</th>
+        <td mat-cell *matCellDef="let row">
+          {{ row?.job_type?.name }}
+        </td>
+      </ng-container>
+
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
           <!-- {{ 'CONTAINERS.home.jobs.table.actions' | translate }} -->

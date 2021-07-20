@@ -58,7 +58,7 @@ export type ChartOptions = {
 })
 export class JobsComponent implements OnInit, AfterViewInit {
 
-  displayedColumns: string[] = ['select', 'reference', 'name', 'status', 'actions'];
+  displayedColumns: string[] = ['select', 'reference', 'name', 'status', 'job_type', 'actions'];
   dataSource: MatTableDataSource<Job>;
   selection = new SelectionModel<Job>(true, []);
 
@@ -209,6 +209,8 @@ export class JobsComponent implements OnInit, AfterViewInit {
       let onGoingJobs = [];
       let completedJobs = [];
       let refusedJobs = [];
+
+      console.log('jobs', state.jobs)
 
       state.jobs.map(job => {
         if (job.status.name === Statuses.NOT_STARTED) notStartedJobs.push(job);
