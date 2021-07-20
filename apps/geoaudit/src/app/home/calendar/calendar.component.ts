@@ -75,13 +75,13 @@ export class CalendarComponent implements OnInit {
   @ViewChild('modalContent', { static: true }) modalContent: TemplateRef<any>;
 
   actions: CalendarEventAction[] = [
-    {
-      label: '<i class="fas fa-fw fa-pencil-alt fa-lg"></i>', // See https://angular-calendar.com/#/custom-event-class https://angular-calendar.com/#/show-dates-on-titles
-      a11yLabel: 'Edit',
-      onClick: ({ event }: { event: AngularCalendarEvent }): void => {
-        this.onCalendarEventClick(event);
-      },
-    },
+    // {
+    //   label: '<i class="fas fa-fw fa-pencil-alt fa-lg"></i>', // See https://angular-calendar.com/#/custom-event-class https://angular-calendar.com/#/show-dates-on-titles
+    //   a11yLabel: 'Edit',
+    //   onClick: ({ event }: { event: AngularCalendarEvent }): void => {
+    //     this.onCalendarEventClick(event);
+    //   },
+    // },
     {
       label: '<i class="fas fa-fw fa-trash-alt fa-lg"></i>',
       a11yLabel: 'Delete',
