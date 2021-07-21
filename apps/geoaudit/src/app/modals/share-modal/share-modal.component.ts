@@ -6,8 +6,10 @@ import { MatChipInputEvent } from '@angular/material/chips';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { fromEvent } from 'rxjs';
 import { map, filter, distinctUntilChanged } from 'rxjs/operators';
+import { JobEntityService } from '../../entity-services/job-entity.service';
 import { UserEntityService } from '../../entity-services/user-entity.service';
 import { Job, User } from '../../models';
+import { AlertService } from '../../services';
 
 export interface DialogData {
   job: Job
@@ -46,7 +48,9 @@ export class ShareModalComponent implements OnInit, AfterViewInit {
     public dialogRef: MatDialogRef<ShareModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
     private userEntityService: UserEntityService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private jobEntityService: JobEntityService,
+    private alertService: AlertService
   ) { }
 
   ngOnInit(): void {
@@ -143,5 +147,32 @@ export class ShareModalComponent implements OnInit, AfterViewInit {
 
   submit() {
     console.log('submit', this.form.value)
+
+    /**
+     * Update assignees of the job such that the users
+     * selected here are added to the job.
+     * 
+     * We should preserve assignees who are already part of the job.
+     */
+
+    console.log(this.data.job)
+
+    const assignees = [
+      ...this.data.job.assignees.map(assignee => assignee.id),
+      ...this.form.value.assignees
+    ]
+
+    this.jobEntityService.update({
+      ...this.data.job,
+      assignees
+    }).subscribe(
+      (update) => {
+        this.alertService.info('Saved Changes');
+      },
+
+      (err) => {
+        this.alertService.error('Something went wrong');
+      }
+    )
   }
 }

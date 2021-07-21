@@ -309,6 +309,8 @@ export class JobsComponent implements OnInit, AfterViewInit {
 
   share(): void {
 
+    console.log('share', this.selection.selected)
+
     // this.selection.selected
 
     // Capture selected job
@@ -317,7 +319,7 @@ export class JobsComponent implements OnInit, AfterViewInit {
   
     const dialogRef = this.dialog.open(ShareModalComponent, {
       data: {
-        job: this.selection.selected 
+        job: this.selection.selected[0] 
       },
       width: '50%',
     })
