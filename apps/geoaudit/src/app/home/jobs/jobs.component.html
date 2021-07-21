@@ -20,6 +20,15 @@
 
   <geoaudit-sidebar-actions>
     <button
+    mat-icon-button
+    color="accent"
+    aria-label="assignement icon button"
+    (click)="calendar()"
+  >
+    <mat-icon>event_available</mat-icon>
+  </button>
+  
+    <button
       mat-icon-button
       [matTooltip]="'CONTAINERS.home.jobs.actions.delete' | translate"
       color="accent"

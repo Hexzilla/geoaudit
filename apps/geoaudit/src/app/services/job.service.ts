@@ -14,10 +14,18 @@ export class JobService {
         private authService: AuthService
     ) {}
 
-    count(parameters: Parameters) {
-        const pagination = this.getDefaultQs(parameters);
+    count() {
+        const parameters = qs.stringify({
+            _where: {
+              'assignees': this.authService.authValue.user.id,
+              _or: [
+                { 'status.name': Statuses.NOT_STARTED },
+                { 'status.name': Statuses.ONGOING },
+              ],
+            },
+        });
 
-        return this.http.get<any>(`${environment.API_URL}/jobs/count?${pagination}`);
+        return this.http.get<any>(`${environment.API_URL}/jobs/count?${parameters}`);
     }
 
     getJob(id: number) {

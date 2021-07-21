@@ -5,7 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { fromEvent } from 'rxjs';
 import Papa from 'papaparse';
@@ -194,7 +194,7 @@ export class JobsComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.store.dispatch(
-      JobActions.countJobs({ start: 0, limit: this.pageSize })
+      JobActions.countJobs()
     );
     
     this.store.dispatch(
@@ -279,6 +279,31 @@ export class JobsComponent implements OnInit, AfterViewInit {
          })
        );
      });
+  }
+
+  calendar(): void {
+    const jobs = this.selection.isEmpty()
+    ? this.dataSource.data
+    : this.selection.selected;
+
+    const jobIds = jobs.map(survey => survey.id);    
+    console.log('jobIds', jobIds)
+
+    // Add the array of values to the query parameter as a JSON string
+    const queryParams = {
+      jobs: JSON.stringify(jobIds)
+    }
+
+    console.log(queryParams)
+    
+    // Create our 'NaviationExtras' object which is expected by the Angular Router
+    const navigationExtras: NavigationExtras = {
+      queryParams
+    };
+
+    console.log(navigationExtras)
+
+    this.router.navigate([`/home/calendar/event`], navigationExtras);
   }
 
   addJob(): void {

@@ -1,3 +1,4 @@
+import { Job } from "./job.model";
 import { Survey } from "./survey.model";
 import { User } from "./user.model";
 
@@ -9,6 +10,7 @@ export interface CalendarEvent {
     allDay?: boolean;
     notes?: string;
     surveys?: Array<Survey>;
+    jobs?: Array<Job>;
     users_permissions_users?: Array<User>;
     published?: boolean;
     uuid?: string;
