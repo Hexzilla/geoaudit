@@ -35,6 +35,7 @@ import {
 // Store
 import * as fromApp from '../../store';
 import * as JobActions from '../../store/job/job.actions';
+import { ShareModalComponent } from '../../modals/share-modal/share-modal.component';
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
@@ -308,9 +309,20 @@ export class JobsComponent implements OnInit, AfterViewInit {
 
   share(): void {
 
+    // this.selection.selected
+
     // Capture selected job
 
     // Open share modal with data and do the rest there.
+  
+    const dialogRef = this.dialog.open(ShareModalComponent, {
+      data: {
+        job: this.selection.selected 
+      },
+      width: '50%',
+    })
+
+    dialogRef.afterClosed().subscribe((result) => {})
   }
 
   addJob(): void {

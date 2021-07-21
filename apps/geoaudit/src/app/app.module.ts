@@ -36,7 +36,6 @@ import { CalendarEventEffects } from './store/calendar-event/calendar-event.effe
 import { JobEffects } from './store/job/job.effects';
 import { DefaultDataServiceConfig, EntityDataModule } from '@ngrx/data';
 import { entityConfig } from './entity-metadata';
-import { ShareModalComponent } from './modals/share-modal/share-modal.component';
 // import { SidebarHeaderComponent } from './components/sidebar-header/sidebar-header.component';
 
 // required for AOT compilation
@@ -64,7 +63,6 @@ const defaultDataServiceConfig: DefaultDataServiceConfig = {
     AppComponent,
     AlertComponent,
     DeleteModalComponent,
-    ShareModalComponent,
   ],
   imports: [
     BrowserModule,

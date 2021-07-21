@@ -1,1 +1,53 @@
-<p>share-modal works!</p>
+<h1 mat-dialog-title>
+  <span *ngIf="data.job">
+    {{ 'MODALS.share_modal.title' | translate }}
+  </span>
+</h1>
+<div mat-dialog-content>
+  <form fxLayout="column" [formGroup]="form" (ngSubmit)="submit()">
+    <mat-form-field class="example-chip-list" appearance="outline">
+      <mat-label>
+        {{ 'CONTAINERS.home.jobs.job.form.assignees' | translate }}
+      </mat-label>
+      <mat-chip-list #chipList aria-label="Assignee selection">
+        <mat-chip
+          *ngFor="let user of users"
+          [selectable]="selectable"
+          [removable]="removable"
+          (removed)="remove(user)"
+        >
+          {{ user.username }}
+          <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+        </mat-chip>
+        <input
+          [placeholder]="
+            'CONTAINERS.home.jobs.job.form.new_assignee' | translate
+          "
+          #userInput
+          [formControl]="userControl"
+          [matAutocomplete]="auto"
+          [matChipInputFor]="chipList"
+          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+          (matChipInputTokenEnd)="add($event)"
+        />
+      </mat-chip-list>
+      <mat-autocomplete
+        #auto="matAutocomplete"
+        (optionSelected)="selected($event)"
+      >
+        <mat-option *ngFor="let user of filteredUsers" [value]="user">
+          {{ user.username }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width" appearance="outline">
+        <mat-label>{{ 'MODALS.share_modal.message' | translate }}</mat-label>
+        <textarea matInput formControlName="message"></textarea>
+      </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions fxLayoutAlign="space-between">
+  <button mat-flat-button color="primary" fxFlexFill (click)="submit()">{{ 'MODALS.share_modal.send' | translate }}</button>
+  <!-- <button mat-flat-button color="accent" mat-dialog-close>{{ 'MODALS.close' | translate }}</button> -->
+</div>

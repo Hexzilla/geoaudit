@@ -131,6 +131,11 @@
 			"delete_surveys": "You're about to delete {{length}} record(s). Do you wish to continue?",
 			"delete": "Confirm"
 		},
+		"share_modal": {
+			"title": "Share this Job with",
+			"message": "Message",
+			"send": "Send"
+		},
 		"navigation_modal": {
 			"title": "Navigation",
 			"navigation_surveys": "You're about to start navigation for {{length}} survey(s).",
