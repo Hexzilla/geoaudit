@@ -53,6 +53,7 @@
 				"title": "My Jobs",
 				"filter": "Filter",
 				"actions": {
+					"share": "Share job",
 					"delete": "Delete job(s)",
 					"add": "Add new job",
 					"download": "Download job(s) data"

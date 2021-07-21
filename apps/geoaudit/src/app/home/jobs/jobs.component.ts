@@ -306,6 +306,13 @@ export class JobsComponent implements OnInit, AfterViewInit {
     this.router.navigate([`/home/calendar/event`], navigationExtras);
   }
 
+  share(): void {
+
+    // Capture selected job
+
+    // Open share modal with data and do the rest there.
+  }
+
   addJob(): void {
     this.router.navigate([`/home/jobs/job`]);
   }
