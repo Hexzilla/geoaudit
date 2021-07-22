@@ -2,8 +2,9 @@ import { Component, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import L from 'leaflet';
 import 'leaflet-sidebar-v2';
+import 'leaflet-easyprint';
 
-import { faBars, faBell, faBriefcase, faCalendar, faCaretLeft, faChartPie, faCoffee, faColumns, faEnvelope, faCog, faHistory, faHome, faListOl, faUser, faThumbsUp } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faBell, faBriefcase, faCalendar, faCaretLeft, faChartPie, faCoffee, faColumns, faEnvelope, faCog, faHistory, faHome, faListOl, faUser, faThumbsUp, faSearch, faLayerGroup, faPrint, faUpload, faMapPin, faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
 
 import { MarkerService } from '../services/marker.service';
 import { ShapeService } from '../services/shape.service';
@@ -56,6 +57,12 @@ export class HomeComponent implements AfterViewInit {
   faListOl = faListOl;
   faThumbsUp = faThumbsUp;
   faUser = faUser;
+  faSearch = faSearch;
+  faPrint = faPrint;
+  faLayerGroup = faLayerGroup;
+  faUpload = faUpload;
+  faMapPin = faMapPin;
+  faMapMarkerAlt = faMapMarkerAlt;
 
   auth: Auth;
 
@@ -104,6 +111,7 @@ export class HomeComponent implements AfterViewInit {
     this.map = L.map('map', {
       center: [environment.coordinates.lat, environment.coordinates.lng],
       zoom: 8,
+      zoomControl : false // remove +/- Zoom Control.
     });
 
     const tiles = L.tileLayer(
@@ -111,12 +119,41 @@ export class HomeComponent implements AfterViewInit {
       {
         maxZoom: 18,
         minZoom: 3,
+        id: 'satellite-v9',
         attribution:
           '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
       }
     );
 
     tiles.addTo(this.map);
+
+    //print map. andrey
+
+    var a3_landscape = {
+      width: 2339,
+      height: 3308,
+      className: 'a3CssClass_landscape',
+      name: 'A3 Landscape'
+    }
+
+    var a3_vertical = {
+      width: 2339,
+      height: 3308,
+      className: 'a3CssClass_portrait',
+      name: 'A3 Portrait'
+    }
+
+    L.easyPrint({
+      title: 'Print',
+      position: 'topleft',
+      sizeModes: ['A4Landscape', 'A4Portrait', a3_landscape, a3_vertical]
+    }).addTo(this.map);
+    ////
+
+    // scale map. andrey
+    L.control.scale().addTo(this.map);
+    ////
+
 
     this.map.on('click', (e) => {
       if (this.clickMarker) {
@@ -246,6 +283,8 @@ export class HomeComponent implements AfterViewInit {
 
   search(): void {
     this.router.navigate(['/home/search']);
+    //open sidebar when click search btn. andrey
+    this.sidebar.open('home');
   }
 
   calendar(): void {
