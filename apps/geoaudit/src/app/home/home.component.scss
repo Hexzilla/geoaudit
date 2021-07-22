@@ -32,3 +32,45 @@
 .leaflet-sidebar-router-outlet {
   padding: 0px 20px;
 }
+
+// Map Buttons' Style
+// Programmed By Andrey
+
+.map-button-container button{
+  position:absolute;
+  background-color: white;
+  border:1px solid #333;
+  color:black;
+  z-index: 10000;
+  left:15px;
+}
+
+.map-button-container button:hover{
+  box-shadow:0px 0px 8px 3px grey;
+}
+
+.map-button-container button fa-icon{
+  font-size:20px;
+}
+
+.search_button{
+  top:15px;
+}
+.layer_button{
+  top:80px;
+}
+.print_button{
+  top:145px;
+}
+.upload_button{
+  top:210px;
+}
+
+.marker_button{
+  bottom:115px;
+}
+
+.mylocation_button{
+  bottom:50px;
+}
+

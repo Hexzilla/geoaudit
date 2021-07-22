@@ -1,5 +1,28 @@
 <div class="map-container">
   <div class="map-frame">
+    <div class="map-button-container">
+      <button mat-fab class="search_button" (click)="search()">
+        <fa-icon [icon]="faSearch"></fa-icon>
+      </button>
+      <button mat-fab class="layer_button">
+        <fa-icon [icon]="faLayerGroup"></fa-icon>
+      </button>
+      <!-- <button mat-fab class="print_button">
+        <fa-icon [icon]="faPrint"></fa-icon>
+      </button> -->
+      <button mat-fab class="upload_button">
+        <fa-icon [icon]="faUpload"></fa-icon>
+      </button>
+
+      
+      <button mat-fab class="marker_button">
+        <fa-icon [icon]="faMapPin"></fa-icon>
+      </button>
+      <button mat-fab class="mylocation_button">
+        <fa-icon [icon]="faMapMarkerAlt"></fa-icon>
+      </button>
+
+    </div>
     <div id="map"></div>
 
     <div id="sidebar" class="leaflet-sidebar collapsed">
