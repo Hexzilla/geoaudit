@@ -59,6 +59,8 @@ import { SurveyDataService } from '../data-services/survey-data.service';
 import { SurveyEntityService } from '../entity-services/survey-entity.service';
 import { JobDataService } from '../data-services/job-data.service';
 import { JobEntityService } from '../entity-services/job-entity.service';
+import { NotificationEntityService } from '../entity-services/notification-entity.service';
+import { NotificationDataService } from '../data-services/notification-data.service';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient) {
@@ -88,6 +90,7 @@ const entityMetadataMap: EntityMetadataMap = {
     },
   },
   JobType: {},
+  Notification: {},
   User: {}
 }
 
@@ -151,6 +154,9 @@ const entityMetadataMap: EntityMetadataMap = {
 
     JobTypeEntityService,
     JobTypeDataService,
+
+    NotificationEntityService,
+    NotificationDataService,
 
     StatusEntityService,
     StatusDataService,
@@ -224,6 +230,7 @@ export class SharedModule {
     private entityDataService: EntityDataService,
     private jobDataService: JobDataService,
     private jobTypeDataService: JobTypeDataService,
+    private notificationDataService: NotificationDataService,
     private statusDataService: StatusDataService,
     private surveyDataService: SurveyDataService,
     private userDataService: UserDataService
@@ -236,6 +243,7 @@ export class SharedModule {
         Survey: surveyDataService,
         Job: jobDataService,
         JobType: jobTypeDataService,
+        Notification: notificationDataService,
         User: userDataService
       }
     )
