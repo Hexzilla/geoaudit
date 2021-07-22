@@ -68,6 +68,7 @@
     "leaflet": "^1.7.1",
     "leaflet-easyprint": "^2.1.9",
     "leaflet-sidebar-v2": "^3.2.3",
+    "leaflet.locatecontrol": "^0.74.0",
     "mapbox-gl": "^2.2.0",
     "moment": "^2.29.1",
     "ng-apexcharts": "^1.5.12",

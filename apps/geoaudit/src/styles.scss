@@ -93,7 +93,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   z-index: 10000;
 }
 
-.leaflet-control-easyPrint.leaflet-bar.leaflet-control a:hover{
+.leaflet-control-easyPrint.leaflet-bar.leaflet-control a:hover,.leaflet-control-locate.leaflet-bar.leaflet-control a:hover{
   box-shadow:0px 0px 8px 3px grey;
 }
 
@@ -113,4 +113,24 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .easyPrintHolder li
 {
   margin-left:8px!important;
+}
+
+.leaflet-control-locate.leaflet-bar.leaflet-control
+{
+  border: none;
+  margin-left: 13px;
+}
+
+.leaflet-control-locate.leaflet-bar.leaflet-control a
+{
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  border: 1px solid black;
+}
+
+.leaflet-control-locate.leaflet-bar.leaflet-control a span
+{
+  font-size: 20px;
+  margin-top:18px;
 }
