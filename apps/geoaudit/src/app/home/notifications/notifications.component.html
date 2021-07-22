@@ -1,1 +1,11 @@
-<p>notifications works!</p>
+<geoaudit-sidebar-header
+title="CONTAINERS.home.notifications.title"
+></geoaudit-sidebar-header>
+
+<mat-card *ngFor="let notification of notifications$ | async">
+    <div fxLayout="row">
+        <div fxLayout="column">
+            {{ notification.source.username }}
+        </div>
+    </div>
+</mat-card>

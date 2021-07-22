@@ -24,7 +24,7 @@ const iconDefault = L.icon({
 });
 L.Marker.prototype.options.icon = iconDefault;
 
-import { Auth } from '../models';
+import { Auth, Notification } from '../models';
 import { AuthService } from '../services/auth.service';
 import { environment } from '../../environments/environment';
 import { Store } from '@ngrx/store';
@@ -34,6 +34,8 @@ import * as MapActions from '../store/map/map.actions';
 import * as SurveyActions from '../store/survey/survey.actions';
 
 import * as SurveySelector from '../store/survey/survey.selectors';
+import { NotificationEntityService } from '../entity-services/notification-entity.service';
+import { Observable } from 'rxjs';
 @Component({
   selector: 'geoaudit-home',
   templateUrl: './home.component.html',
@@ -77,12 +79,15 @@ export class HomeComponent implements AfterViewInit {
 
   surveyCount$ = this.store.select(SurveySelector.Count);
 
+  notifications$: Observable<Array<Notification>> = this.notificationEntityService.getAll();
+
   constructor(
     private authService: AuthService,
     private markerService: MarkerService,
     private shapeService: ShapeService,
     private router: Router,
     private store: Store<fromApp.State>,
+    private notificationEntityService: NotificationEntityService
   ) {
     this.auth = this.authService.authValue;
   }

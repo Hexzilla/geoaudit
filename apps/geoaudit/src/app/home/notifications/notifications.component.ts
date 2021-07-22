@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
 import { NotificationEntityService } from '../../entity-services/notification-entity.service';
+import { Notification } from '../../models';
 
 @Component({
   selector: 'geoaudit-notifications',
@@ -8,19 +10,13 @@ import { NotificationEntityService } from '../../entity-services/notification-en
 })
 export class NotificationsComponent implements OnInit {
 
+  notifications$: Observable<Array<Notification>> = this.notificationEntityService.getAll();
+
   constructor(
     private notificationEntityService: NotificationEntityService
   ) { }
 
   ngOnInit(): void {
-
-    this.notificationEntityService.getAll().subscribe(
-      (notifications) => {
-        console.log('notifications', notifications)
-      },
-
-      (err) => {}
-    )
   }
 
 }

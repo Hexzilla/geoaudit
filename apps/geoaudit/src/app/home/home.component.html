@@ -108,7 +108,7 @@
                   <mat-icon>date_range</mat-icon>
                 </button>
                 <button mat-icon-button color="accent" aria-label="search icon button" (click)="notifications()">
-                  <mat-icon>notifications</mat-icon>
+                  <mat-icon>notifications</mat-icon> ({{ (notifications$ | async)?.length }})
                 </button>
                 <button mat-icon-button color="accent" aria-label="search icon button" (click)="profile()">
                   <mat-icon>person</mat-icon>

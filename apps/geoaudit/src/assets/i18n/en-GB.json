@@ -106,6 +106,9 @@
 			"navigation": {
 				"title": "Navigation"
 			},
+			"notifications": {
+				"title": "Notifications"
+			},
 			"survey": {
 				"add_survey": {
 					"title": "Add Survey"
