@@ -3,7 +3,11 @@ import { Router } from '@angular/router';
 import L from 'leaflet';
 import 'leaflet-sidebar-v2';
 import 'leaflet-easyprint';
-import 'leaflet.locatecontrol'
+import 'leaflet.locatecontrol';
+import * as ToGeojson from 'togeojson';
+import * as FileLayer from 'leaflet-filelayer';
+
+FileLayer(null, L, ToGeojson);
 
 import { faBars, faBell, faBriefcase, faCalendar, faCaretLeft, faChartPie, faCoffee, faColumns, faEnvelope, faCog, faHistory, faHome, faListOl, faUser, faThumbsUp, faSearch, faLayerGroup, faUpload, faMapPin } from '@fortawesome/free-solid-svg-icons';
 
@@ -163,6 +167,33 @@ export class HomeComponent implements AfterViewInit {
           enableHighAccuracy: true
         }
     }).addTo(this.map);
+    ////
+
+    // upload files. andrey
+
+    L.Control.FileLayerLoad.LABEL = '<span class="fa fa-upload" aria-hidden="true"></span>';
+    var uploadControl = L.Control.fileLayerLoad({
+        // Allows you to use a customized version of L.geoJson.
+        layer: L.geoJson,
+        // See http://leafletjs.com/reference.html#geojson-options
+        layerOptions: {style: {color:'red'}},
+        // Add to map after loading (default: true) ?
+        addToMap: true,
+        // File size limit in kb (default: 1024) ?
+        fileSizeLimit: 1024,
+    }).addTo(this.map);
+
+    uploadControl.loader.on('data:loaded', function (event) {
+        // event.layer gives you access to the layers you just uploaded!
+        console.log(event);
+        // Add to map layer switcher
+        // layerswitcher.addOverlay(event.layer, event.filename);
+    });
+
+    uploadControl.loader.on('data:error', function (error) {
+        // Do something usefull with the error!
+        console.error(error);
+    });
     ////
 
 

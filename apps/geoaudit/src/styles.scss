@@ -66,12 +66,13 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 //leaflet control css. andrey.
 
+// SideBar Toggle Button on Top Right
 .leaflet-sidebar.collapsed
 {
   height:40px!important;
-  // border-radius: 50%;
 }
 
+// Print Button's style
 .easyPrintHolder .a3CssClass_landscape {
   background-image: url(data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTguMS4xLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4PSIwcHgiIHk9IjBweCIgdmlld0JveD0iMCAwIDQ0NC44MzMgNDQ0LjgzMyIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgNDQ0LjgzMyA0NDQuODMzOyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSIgd2lkdGg9IjUxMnB4IiBoZWlnaHQ9IjUxMnB4Ij4KPGc+Cgk8Zz4KCQk8cGF0aCBkPSJNNTUuMjUsNDQ0LjgzM2gzMzQuMzMzYzkuMzUsMCwxNy03LjY1LDE3LTE3VjEzOS4xMTdjMC00LjgxNy0xLjk4My05LjM1LTUuMzgzLTEyLjQ2N0wyNjkuNzMzLDQuNTMzICAgIEMyNjYuNjE3LDEuNywyNjIuMzY3LDAsMjU4LjExNywwSDU1LjI1Yy05LjM1LDAtMTcsNy42NS0xNywxN3Y0MTAuODMzQzM4LjI1LDQzNy4xODMsNDUuOSw0NDQuODMzLDU1LjI1LDQ0NC44MzN6ICAgICBNMzcyLjU4MywxNDYuNDgzdjAuODVIMjU2LjQxN3YtMTA4LjhMMzcyLjU4MywxNDYuNDgzeiBNNzIuMjUsMzRoMTUwLjE2N3YxMzAuMzMzYzAsOS4zNSw3LjY1LDE3LDE3LDE3aDEzMy4xNjd2MjI5LjVINzIuMjVWMzR6ICAgICIgZmlsbD0iIzAwMDAwMCIvPgoJPC9nPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+Cjwvc3ZnPgo=);
   transform: rotate(-90deg);
@@ -93,8 +94,9 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   z-index: 10000;
 }
 
-.leaflet-control-easyPrint.leaflet-bar.leaflet-control a:hover,.leaflet-control-locate.leaflet-bar.leaflet-control a:hover{
-  box-shadow:0px 0px 8px 3px grey;
+.leaflet-control-easyPrint.leaflet-bar.leaflet-control a:hover,.leaflet-control-locate.leaflet-bar.leaflet-control a:hover, .leaflet-control-filelayer.leaflet-control-zoom a:hover{
+  // box-shadow:0px 0px 8px 3px grey;
+  background-color: #eee;
 }
 
 .leaflet-control-easyPrint.leaflet-bar.leaflet-control
@@ -115,6 +117,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   margin-left:8px!important;
 }
 
+//My Location Button's style
 .leaflet-control-locate.leaflet-bar.leaflet-control
 {
   border: none;
@@ -133,4 +136,25 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 {
   font-size: 20px;
   margin-top:18px;
+}
+
+//Upload Button's style
+.leaflet-control-filelayer.leaflet-control-zoom
+{
+  border: none;
+  margin-left: 13px;
+  top:210px;
+  position: absolute;
+}
+
+.leaflet-control-filelayer.leaflet-control-zoom a
+{
+  width: 54px;
+  height: 54px;
+  border-radius: 50%!important;
+  border: 1px solid black;
+}
+
+.leaflet-control-filelayer.leaflet-control-zoom a span{
+  margin-top:15px;
 }
