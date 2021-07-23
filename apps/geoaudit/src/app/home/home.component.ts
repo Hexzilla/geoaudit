@@ -73,7 +73,7 @@ export class HomeComponent implements AfterViewInit {
   private states;
 
   clickMarker;
-
+  addMarker; // for add marker to map. status variable.
   url: string;
 
   sidebar;
@@ -158,7 +158,7 @@ export class HomeComponent implements AfterViewInit {
     ////
 
     // mylocation. andrey
-    var lc = L.control.locate({
+    L.control.locate({
         position: 'bottomleft',
         strings: {
             title: "Show me where I am, Geoaudit!"
@@ -198,6 +198,15 @@ export class HomeComponent implements AfterViewInit {
 
 
     this.map.on('click', (e) => {
+      // when addMarker == true, add new marker to map
+      console.log(e);
+      if(this.addMarker)
+      {
+        var marker = L.marker(e.latlng).addTo(this.map);
+        var popup = marker.bindPopup('<b>Hello world!</b><br />I am a popup.');
+        this.addMarker = false;
+      }
+      ////
       if (this.clickMarker) {
         this.map.removeLayer(this.clickMarker);
       }
@@ -301,6 +310,11 @@ export class HomeComponent implements AfterViewInit {
       fillOpacity: 0.8,
       fillColor: '#6DB65B',
     });
+  }
+
+  //OnClick "Add Marker" Button
+  onMarker(): void{
+    this.addMarker = true;
   }
 
   toDoList(): void {
