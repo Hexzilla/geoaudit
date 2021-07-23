@@ -180,7 +180,7 @@ export class HomeComponent implements AfterViewInit {
         // Add to map after loading (default: true) ?
         addToMap: true,
         // File size limit in kb (default: 1024) ?
-        fileSizeLimit: 1024,
+        fileSizeLimit: 10240
     }).addTo(this.map);
 
     uploadControl.loader.on('data:loaded', function (event) {
@@ -192,6 +192,7 @@ export class HomeComponent implements AfterViewInit {
 
     uploadControl.loader.on('data:error', function (error) {
         // Do something usefull with the error!
+        alert("File extension should be '.geojson' or '.gpx' or '.kml'");
         console.error(error);
     });
     ////
