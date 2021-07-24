@@ -97,7 +97,12 @@
                   <mat-icon>date_range</mat-icon>
                 </button>
                 <button mat-icon-button color="accent" aria-label="search icon button" (click)="notifications()">
-                  <mat-icon>notifications</mat-icon> ({{ (notifications$ | async)?.length }})
+                  <!-- <mat-icon>notifications</mat-icon> ({{ (notifications$ | async)?.length }}) -->
+                  <mat-icon [matBadge]="(notifications$ | async)?.length" matBadgeColor="warn">notifications</mat-icon>
+                  <!-- Include text description of the icon's meaning for screen-readers -->
+                  <span class="cdk-visually-hidden">
+                    Notification icon with overlaid badge showing the number of notifications
+                  </span>
                 </button>
                 <button mat-icon-button color="accent" aria-label="search icon button" (click)="profile()">
                   <mat-icon>person</mat-icon>

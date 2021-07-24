@@ -8,6 +8,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 // Material
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {MatBadgeModule} from '@angular/material/badge';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -114,6 +115,7 @@ const entityMetadataMap: EntityMetadataMap = {
 
     // Material
     MatAutocompleteModule,
+    MatBadgeModule,
     MatButtonToggleModule,
     MatButtonModule,
     MatCardModule,
@@ -196,6 +198,7 @@ const entityMetadataMap: EntityMetadataMap = {
     
     // Material
     MatAutocompleteModule,
+    MatBadgeModule,
     MatButtonToggleModule,
     MatButtonModule,
     MatCardModule,
