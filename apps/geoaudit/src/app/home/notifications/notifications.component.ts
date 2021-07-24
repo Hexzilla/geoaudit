@@ -6,17 +6,22 @@ import { Notification } from '../../models';
 @Component({
   selector: 'geoaudit-notifications',
   templateUrl: './notifications.component.html',
-  styleUrls: ['./notifications.component.scss']
+  styleUrls: ['./notifications.component.scss'],
 })
 export class NotificationsComponent implements OnInit {
+  notifications$: Observable<Array<Notification>> = this
+    .notificationEntityService.entities$;
 
-  notifications$: Observable<Array<Notification>> = this.notificationEntityService.getAll();
-
-  constructor(
-    private notificationEntityService: NotificationEntityService
-  ) { }
+  constructor(private notificationEntityService: NotificationEntityService) {}
 
   ngOnInit(): void {
+    this.notificationEntityService.getAll();
   }
 
+  dismiss(notification: Notification) {
+    this.notificationEntityService.update({
+      ...notification,
+      seen: true,
+    });
+  }
 }
