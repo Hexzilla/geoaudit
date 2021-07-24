@@ -1,4 +1,4 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import L from 'leaflet';
 import 'leaflet-sidebar-v2';
@@ -46,7 +46,7 @@ import { Observable } from 'rxjs';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements AfterViewInit {
+export class HomeComponent implements OnInit, AfterViewInit {
 
   // Icons
   faBars = faBars;
@@ -82,7 +82,7 @@ export class HomeComponent implements AfterViewInit {
 
   surveyCount$ = this.store.select(SurveySelector.Count);
 
-  notifications$: Observable<Array<Notification>> = this.notificationEntityService.getAll();
+  notifications$: Observable<Array<Notification>> = this.notificationEntityService.entities$;
 
   constructor(
     private authService: AuthService,
@@ -93,6 +93,10 @@ export class HomeComponent implements AfterViewInit {
     private notificationEntityService: NotificationEntityService
   ) {
     this.auth = this.authService.authValue;
+  }
+
+  ngOnInit(): void {
+    this.notificationEntityService.getAll();
   }
 
   ngAfterViewInit(): void {

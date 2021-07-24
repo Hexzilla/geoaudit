@@ -22,6 +22,8 @@ export class NotificationsComponent implements OnInit {
     this.notificationEntityService.update({
       ...notification,
       seen: true,
+    }).subscribe(() => {
+      this.notificationEntityService.removeOneFromCache(notification);
     });
   }
 }

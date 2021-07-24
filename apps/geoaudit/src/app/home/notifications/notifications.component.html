@@ -2,12 +2,13 @@
   title="CONTAINERS.home.notifications.title"
 ></geoaudit-sidebar-header>
 
-<div *ngFor="let notification of notifications$ | async">
-  <mat-card (click)="dismiss(notification)" *ngIf="!notification.seen">
-    <div fxLayout="row">
-      <div fxLayout="column">
-        {{ notification.source.username }}
-      </div>
+<mat-card
+  *ngFor="let notification of notifications$ | async"
+  (click)="dismiss(notification)"
+>
+  <div fxLayout="row">
+    <div fxLayout="column">
+      {{ notification.source.username }}
     </div>
-  </mat-card>
-</div>
+  </div>
+</mat-card>
