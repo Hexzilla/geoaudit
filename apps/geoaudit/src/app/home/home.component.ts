@@ -3,8 +3,13 @@ import { Router } from '@angular/router';
 import L from 'leaflet';
 import 'leaflet-sidebar-v2';
 import 'leaflet-easyprint';
+import 'leaflet.locatecontrol';
+import * as ToGeojson from 'togeojson';
+import * as FileLayer from 'leaflet-filelayer';
 
-import { faBars, faBell, faBriefcase, faCalendar, faCaretLeft, faChartPie, faCoffee, faColumns, faEnvelope, faCog, faHistory, faHome, faListOl, faUser, faThumbsUp, faSearch, faLayerGroup, faPrint, faUpload, faMapPin, faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
+FileLayer(null, L, ToGeojson);
+
+import { faBars, faBell, faBriefcase, faCalendar, faCaretLeft, faChartPie, faCoffee, faColumns, faEnvelope, faCog, faHistory, faHome, faListOl, faUser, faThumbsUp, faSearch, faLayerGroup, faUpload, faMapPin } from '@fortawesome/free-solid-svg-icons';
 
 import { MarkerService } from '../services/marker.service';
 import { ShapeService } from '../services/shape.service';
@@ -60,11 +65,9 @@ export class HomeComponent implements AfterViewInit {
   faThumbsUp = faThumbsUp;
   faUser = faUser;
   faSearch = faSearch;
-  faPrint = faPrint;
   faLayerGroup = faLayerGroup;
   faUpload = faUpload;
   faMapPin = faMapPin;
-  faMapMarkerAlt = faMapMarkerAlt;
 
   auth: Auth;
 
@@ -157,6 +160,46 @@ export class HomeComponent implements AfterViewInit {
 
     // scale map. andrey
     L.control.scale().addTo(this.map);
+    ////
+
+    // mylocation. andrey
+    var lc = L.control.locate({
+        position: 'bottomleft',
+        strings: {
+            title: "Show me where I am, Geoaudit!"
+        },
+        locateOptions: {
+          enableHighAccuracy: true
+        }
+    }).addTo(this.map);
+    ////
+
+    // upload files. andrey
+
+    L.Control.FileLayerLoad.LABEL = '<span class="fa fa-upload" aria-hidden="true"></span>';
+    var uploadControl = L.Control.fileLayerLoad({
+        // Allows you to use a customized version of L.geoJson.
+        layer: L.geoJson,
+        // See http://leafletjs.com/reference.html#geojson-options
+        layerOptions: {style: {color:'red'}},
+        // Add to map after loading (default: true) ?
+        addToMap: true,
+        // File size limit in kb (default: 1024) ?
+        fileSizeLimit: 10240
+    }).addTo(this.map);
+
+    uploadControl.loader.on('data:loaded', function (event) {
+        // event.layer gives you access to the layers you just uploaded!
+        console.log(event);
+        // Add to map layer switcher
+        // layerswitcher.addOverlay(event.layer, event.filename);
+    });
+
+    uploadControl.loader.on('data:error', function (error) {
+        // Do something usefull with the error!
+        alert("File extension should be '.geojson' or '.gpx' or '.kml'");
+        console.error(error);
+    });
     ////
 
 
