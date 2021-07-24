@@ -54,6 +54,7 @@ import { JobTypeDataService } from '../data-services/job-type-data.service';
 import { JobTypeEntityService } from '../entity-services/job-type-entity.service';
 import { UserEntityService } from '../entity-services/user-entity.service';
 import { UserDataService } from '../data-services/user-data.service';
+import { AbrioxDataService } from '../data-services/abriox-data.service';
 import { UploadService } from '../services';
 import { SurveyDataService } from '../data-services/survey-data.service';
 import { SurveyEntityService } from '../entity-services/survey-entity.service';
@@ -88,7 +89,8 @@ const entityMetadataMap: EntityMetadataMap = {
     },
   },
   JobType: {},
-  User: {}
+  User: {},
+  Abriox:{}
 }
 
 @NgModule({
@@ -162,6 +164,7 @@ const entityMetadataMap: EntityMetadataMap = {
     
     UserEntityService,
     UserDataService,
+    AbrioxDataService,
 
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
@@ -226,7 +229,8 @@ export class SharedModule {
     private jobTypeDataService: JobTypeDataService,
     private statusDataService: StatusDataService,
     private surveyDataService: SurveyDataService,
-    private userDataService: UserDataService
+    private userDataService: UserDataService,
+    private abrioxDataService: AbrioxDataService
   ) {
     entityDefinitionService.registerMetadataMap(entityMetadataMap);
 
@@ -236,7 +240,8 @@ export class SharedModule {
         Survey: surveyDataService,
         Job: jobDataService,
         JobType: jobTypeDataService,
-        User: userDataService
+        User: userDataService,
+        Abriox: abrioxDataService
       }
     )
   }

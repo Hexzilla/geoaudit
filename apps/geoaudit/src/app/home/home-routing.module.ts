@@ -42,6 +42,21 @@ const routes: Routes = [
             {
                 path: 'approvals', component: ApprovalsComponent
             },
+            {
+                path: 'abriox/:id', component: SearchComponent
+            },
+            {
+                path: 'testpost/:id', component: SearchComponent
+            },
+            {
+                path: 'tr/:id', component: SearchComponent
+            },
+            // {
+            //     path: 'survey/:id', component: SearchComponent
+            // },
+            {
+                path: 'resistivity/:id', component: SearchComponent
+            }
         ]
     },
 

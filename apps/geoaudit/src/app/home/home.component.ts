@@ -2,10 +2,12 @@ import { Component, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import L from 'leaflet';
 import 'leaflet-sidebar-v2';
-import 'leaflet-easyprint';
 import 'leaflet.locatecontrol';
 import * as ToGeojson from 'togeojson';
 import * as FileLayer from 'leaflet-filelayer';
+import '../../../../../node_modules/leaflet.browser.print/dist/leaflet.browser.print.min.js';
+import '../../../../../node_modules/leaflet-groupedlayercontrol/dist/leaflet.groupedlayercontrol.min.js';
+import $ from 'jquery'
 
 FileLayer(null, L, ToGeojson);
 
@@ -30,9 +32,14 @@ const iconDefault = L.icon({
 L.Marker.prototype.options.icon = iconDefault;
 
 import { Auth } from '../models';
+import { Abriox } from '../models';
+import { Survey } from '../models';
 import { AuthService } from '../services/auth.service';
 import { environment } from '../../environments/environment';
 import { Store } from '@ngrx/store';
+
+import { AbrioxEntityService } from '../entity-services/abriox-entity.service';
+import { SurveyEntityService } from '../entity-services/survey-entity.service';
 
 import * as fromApp from '../store';
 import * as MapActions from '../store/map/map.actions';
@@ -42,7 +49,8 @@ import * as SurveySelector from '../store/survey/survey.selectors';
 @Component({
   selector: 'geoaudit-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  styleUrls: ['./home.component.scss'],
+  providers:[AbrioxEntityService]
 })
 export class HomeComponent implements AfterViewInit {
 
@@ -68,6 +76,9 @@ export class HomeComponent implements AfterViewInit {
   faMapPin = faMapPin;
 
   auth: Auth;
+  abrioxes: Array<Abriox>;
+  surveys: Array<Survey>;
+  abriox:Abriox;
 
   private map;
   private states;
@@ -84,6 +95,8 @@ export class HomeComponent implements AfterViewInit {
     private authService: AuthService,
     private markerService: MarkerService,
     private shapeService: ShapeService,
+    private abrioxEntityService: AbrioxEntityService,
+    private surveyEntityService: SurveyEntityService,
     private router: Router,
     private store: Store<fromApp.State>,
   ) {
@@ -111,46 +124,42 @@ export class HomeComponent implements AfterViewInit {
   }
 
   private initMap(): void {
+    
+    var Basemaps = {
+      tiles : L.tileLayer(
+        'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+        {
+          maxZoom: 18,
+          minZoom: 3,
+          id: 'satellite-v9',
+          attribution:
+            '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        }
+      ),
+      googleSat : L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',{
+          maxZoom: 20,
+          subdomains:['mt0','mt1','mt2','mt3']
+      }),
+      GoogleMap : L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+        maxZoom: 20,
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+        })
+    };
     this.map = L.map('map', {
       center: [environment.coordinates.lat, environment.coordinates.lng],
+      layers: [Basemaps.tiles,Basemaps.googleSat,Basemaps.GoogleMap],
       zoom: 8,
       zoomControl : false // remove +/- Zoom Control.
     });
 
-    const tiles = L.tileLayer(
-      'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-      {
-        maxZoom: 18,
-        minZoom: 3,
-        id: 'satellite-v9',
-        attribution:
-          '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-      }
-    );
+    // Use the custom grouped layer control, not "L.control.layers"
+    var layerControl = L.control.groupedLayers(Basemaps);
+    this.map.addControl(layerControl);
 
-    tiles.addTo(this.map);
+    // tiles.addTo(this.map);
 
     //print map. andrey
-
-    var a3_landscape = {
-      width: 2339,
-      height: 3308,
-      className: 'a3CssClass_landscape',
-      name: 'A3 Landscape'
-    }
-
-    var a3_vertical = {
-      width: 2339,
-      height: 3308,
-      className: 'a3CssClass_portrait',
-      name: 'A3 Portrait'
-    }
-
-    L.easyPrint({
-      title: 'Print',
-      position: 'topleft',
-      sizeModes: ['A4Landscape', 'A4Portrait', a3_landscape, a3_vertical]
-    }).addTo(this.map);
+    L.control.browserPrint().addTo(this.map)
     ////
 
     // scale map. andrey
@@ -182,20 +191,42 @@ export class HomeComponent implements AfterViewInit {
         // File size limit in kb (default: 1024) ?
         fileSizeLimit: 10240
     }).addTo(this.map);
-
+    
     uploadControl.loader.on('data:loaded', function (event) {
         // event.layer gives you access to the layers you just uploaded!
         console.log(event);
         // Add to map layer switcher
-        // layerswitcher.addOverlay(event.layer, event.filename);
+        var layerswitcher = L.control.layers().addTo(this.map);
+        layerswitcher.addOverlay(event.layer, event.filename);
     });
 
     uploadControl.loader.on('data:error', function (error) {
         // Do something usefull with the error!
-        alert("File extension should be '.geojson' or '.gpx' or '.kml'");
+        alert(error.error);
         console.error(error);
     });
     ////
+
+    // Fetch Markers
+    this.abrioxEntityService.getAll().subscribe(
+      (marker_data) => {
+        this.abrioxes = marker_data;
+        console.log(marker_data);
+      },
+
+      (err) => {}
+    )
+
+    this.surveyEntityService.getAll().subscribe(
+      (marker_data) => {
+        this.surveys = marker_data;
+        console.log(marker_data);
+      },
+
+      (err) => {}
+    )
+    ////
+
 
 
     this.map.on('click', (e) => {
@@ -203,9 +234,60 @@ export class HomeComponent implements AfterViewInit {
       console.log(e);
       if(this.addMarker)
       {
-        var marker = L.marker(e.latlng).addTo(this.map);
-        var popup = marker.bindPopup('<b>Hello world!</b><br />I am a popup.');
+        var new_marker = L.marker(e.latlng).addTo(this.map);
+        this.map.setView(e.latlng, 13);
         this.addMarker = false;
+
+        var select_popup = '<select class="popup_select"><option value="testpost">Testpost</option><option value="tr">Tr</option><option value="abriox">Abriox</option><option value="survey">Survey</option><option value="resistivity">Resistivity</option></select>';
+        select_popup += '<button class="popup_detail_btn">Details<span class="detail_button_icon">></span></button>'
+        // new_marker.bindPopup(select_popup , select_popup_css);
+        var popup = L.popup({className: 'add_marker_popup' , 'closeButton' : false})
+             .setContent(select_popup);
+        new_marker.bindPopup(popup);
+        new_marker.openPopup();
+        
+        $(".popup_detail_btn").on('click',e=>{
+          var now_op_val = $(".popup_select").val();
+          var insert_id = -1;
+          switch (now_op_val) {
+            case "abriox":
+              insert_id = this.abrioxes.length + 1;
+              // this.abriox.id =
+              this.abrioxEntityService.add({
+                name:'',
+                telephone: 0,
+                serial_number: "",
+                date_installation: "",
+                footer: {
+                  id:0,
+                  images: [],
+                  documents: [],
+                  comment: [],
+                  approved: false,
+                  approved_by: this.authService.authValue.user
+                },
+                tr:null,
+                testpost:null,
+                surveys: [],
+                abriox_notes: [],
+                status: null,
+                condition: null
+              }).subscribe((notification) => {
+                console.log(notification);
+                // Do something with notificaiton i.e. display success message
+              });
+              break;
+            case "survey":
+              
+              break;
+              
+            default:
+              break;
+          }
+          
+                   
+          this.router.navigate(['/home/'+now_op_val+'/'+insert_id]);
+        });
       }
       ////
       if (this.clickMarker) {
