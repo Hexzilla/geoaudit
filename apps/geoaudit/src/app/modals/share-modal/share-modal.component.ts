@@ -7,9 +7,10 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { fromEvent } from 'rxjs';
 import { map, filter, distinctUntilChanged } from 'rxjs/operators';
 import { JobEntityService } from '../../entity-services/job-entity.service';
+import { NotificationEntityService } from '../../entity-services/notification-entity.service';
 import { UserEntityService } from '../../entity-services/user-entity.service';
-import { Job, User } from '../../models';
-import { AlertService } from '../../services';
+import { Job, NOTIFICATION_DATA, User } from '../../models';
+import { AlertService, AuthService } from '../../services';
 
 export interface DialogData {
   job: Job
@@ -50,7 +51,9 @@ export class ShareModalComponent implements OnInit, AfterViewInit {
     private userEntityService: UserEntityService,
     private formBuilder: FormBuilder,
     private jobEntityService: JobEntityService,
-    private alertService: AlertService
+    private notificationEntityService: NotificationEntityService,
+    private alertService: AlertService,
+    private authService: AuthService
   ) { }
 
   ngOnInit(): void {
@@ -155,9 +158,7 @@ export class ShareModalComponent implements OnInit, AfterViewInit {
      * We should preserve assignees who are already part of the job.
      */
 
-    console.log(this.data.job)
-
-    const assignees = [
+    const assignees: Array<User> = [
       ...this.data.job.assignees.map(assignee => assignee.id),
       ...this.form.value.assignees
     ]
@@ -174,5 +175,19 @@ export class ShareModalComponent implements OnInit, AfterViewInit {
         this.alertService.error('Something went wrong');
       }
     )
+
+    const data: NOTIFICATION_DATA = {
+      type: "SHARE_JOB",
+      subject: this.data.job,
+      message: this.form.value.message
+    }
+
+    this.form.value.assignees.map(assignee => {
+      this.notificationEntityService.add({
+        source: this.authService.authValue.user,
+        recipient: assignee,
+        data
+      }).subscribe()
+    })
   }
 }

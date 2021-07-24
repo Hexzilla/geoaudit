@@ -27,6 +27,7 @@ export class NotificationDataService extends DefaultDataService<Notification> {
         const parameters = qs.stringify({
             _where: {
                 recipient: this.authService.authValue.user.id,
+                seen: false
             }
         })
 
