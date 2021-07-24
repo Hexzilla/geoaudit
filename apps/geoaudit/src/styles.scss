@@ -66,10 +66,10 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 //leaflet control css. andrey.
 
+// SideBar Toggle Button on Top Right
 .leaflet-sidebar.collapsed
 {
   height:40px!important;
-  // border-radius: 50%;
 }
 
 .leaflet-control-browser-print.leaflet-control a
@@ -83,8 +83,9 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   z-index: 10000;
 }
 
-.leaflet-control-browser-print.leaflet-control a:hover{
+.leaflet-control-browser-print.leaflet-control a:hover, .leaflet-control-locate.leaflet-bar.leaflet-control a:hover ,.leaflet-control-filelayer.leaflet-control-zoom a:hover{
   box-shadow:0px 0px 8px 3px grey;
+  cursor: pointer;
 }
 
 .leaflet-control-browser-print.leaflet-control
@@ -92,4 +93,86 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   top: 133px;
   left: 4px;
   border:none;
+}
+
+//My Location Button's style
+.leaflet-control-locate.leaflet-bar.leaflet-control
+{
+  border: none;
+  margin-left: 13px;
+}
+
+.leaflet-control-locate.leaflet-bar.leaflet-control a
+{
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  border: 1px solid black;
+}
+
+.leaflet-control-locate.leaflet-bar.leaflet-control a span
+{
+  font-size: 20px;
+  margin-top:18px;
+}
+
+//Upload Button's style
+.leaflet-control-filelayer.leaflet-control-zoom
+{
+  border: none;
+  margin-left: 13px;
+  top:210px;
+  position: absolute;
+}
+
+.leaflet-control-filelayer.leaflet-control-zoom a
+{
+  width: 54px;
+  height: 54px;
+  border-radius: 50%!important;
+  border: 1px solid black;
+}
+
+.leaflet-control-filelayer.leaflet-control-zoom a span{
+  margin-top:15px;
+}
+
+//Layer Button style
+// .leaflet-control-layers.leaflet-control
+// {
+//   border: none;
+//   left: 13px!important;
+//   top:80px!important;
+//   right:0px!important;
+//   position: absolute;
+// }
+
+
+// Popup Style after Add Marker
+.add_marker_popup{
+  width:220px;
+}
+
+.popup_select{
+  width: 180px;
+  height: 40px;
+  font-size: 20px;
+  padding-left: 10px;
+}
+
+.detail_button_icon{
+  float:right;
+}
+
+.popup_detail_btn{
+  background-color: #270082;
+  color: white;
+  width: 180px;
+  height: 40px;
+  font-size: 20px;
+  margin-top: 10px;
+}
+
+.popup_detail_btn:hover{
+  cursor:pointer;
 }

@@ -68,8 +68,10 @@
     "jspdf-autotable": "^3.5.14",
     "leaflet": "^1.7.1",
     "leaflet-easyprint": "^2.1.9",
+    "leaflet-filelayer": "^1.2.0",
     "leaflet-sidebar-v2": "^3.2.3",
     "leaflet.browser.print": "^1.0.6",
+    "leaflet.locatecontrol": "^0.74.0",
     "mapbox-gl": "^2.2.0",
     "moment": "^2.29.1",
     "ng-apexcharts": "^1.5.12",
@@ -79,6 +81,7 @@
     "papaparse": "^5.3.0",
     "qs": "^6.10.1",
     "rxjs": "~6.6.3",
+    "togeojson": "^0.16.0",
     "tslib": "^2.0.0",
     "zone.js": "^0.10.2"
   },
