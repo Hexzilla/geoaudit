@@ -7,6 +7,7 @@ import * as ToGeojson from 'togeojson';
 import * as FileLayer from 'leaflet-filelayer';
 import '../../../../../node_modules/leaflet.browser.print/dist/leaflet.browser.print.min.js';
 import '../../../../../node_modules/leaflet-groupedlayercontrol/dist/leaflet.groupedlayercontrol.min.js';
+import 'leaflet.markercluster'
 import $ from 'jquery'
 
 FileLayer(null, L, ToGeojson);
@@ -208,23 +209,48 @@ export class HomeComponent implements AfterViewInit {
     ////
 
     // Fetch Markers
+
+    var marke_cluster = L.markerClusterGroup();
+
     this.abrioxEntityService.getAll().subscribe(
       (marker_data) => {
         this.abrioxes = marker_data;
-        console.log(marker_data);
+        console.log(marker_data)
+        for( var i=0 ;i < this.abrioxes.length ;i ++)
+        {
+          var a = this.abrioxes[i].testpost.geometry;
+          if(!a) continue;
+        //   var greenIcon = L.icon({
+        //     iconUrl: 'leaf-green.png',
+        //     shadowUrl: 'leaf-shadow.png',
+        
+        //     iconSize:     [38, 95], // size of the icon
+        //     shadowSize:   [50, 64], // size of the shadow
+        //     iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
+        //     shadowAnchor: [4, 62],  // the same for the shadow
+        //     popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+        // });
+          var marker_i = L.marker(new L.LatLng(a['lat'], a['lng']), {title: this.abrioxes[i].name });
+          // marker_i.bindPopup(title);
+          marke_cluster.addLayer(marker_i);
+        }
+
+        // this.map.addLayer(marke_cluster);
+        var layerswitcher = L.control.layers().addTo(this.map);
+        layerswitcher.addOverlay(marke_cluster, "markers");
       },
 
       (err) => {}
     )
 
-    this.surveyEntityService.getAll().subscribe(
-      (marker_data) => {
-        this.surveys = marker_data;
-        console.log(marker_data);
-      },
+    // this.surveyEntityService.getAll().subscribe(
+    //   (marker_data) => {
+    //     this.surveys = marker_data;
+    //     console.log(marker_data);
+    //   },
 
-      (err) => {}
-    )
+    //   (err) => {}
+    // )
     ////
 
 
@@ -257,15 +283,8 @@ export class HomeComponent implements AfterViewInit {
                 name:'',
                 telephone: 0,
                 serial_number: "",
-                date_installation: "",
-                footer: {
-                  id:0,
-                  images: [],
-                  documents: [],
-                  comment: [],
-                  approved: false,
-                  approved_by: this.authService.authValue.user
-                },
+                date_installation: null,
+                footer: null,
                 tr:null,
                 testpost:null,
                 surveys: [],
