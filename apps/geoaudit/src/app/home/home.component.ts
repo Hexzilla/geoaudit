@@ -210,7 +210,19 @@ export class HomeComponent implements AfterViewInit {
 
     // Fetch Markers
 
-    var marke_cluster = L.markerClusterGroup();
+    var marke_cluster = L.markerClusterGroup({
+			maxClusterRadius: 120,
+			iconCreateFunction: function (cluster) {
+				var markers = cluster.getAllChildMarkers();
+				var n = 0;
+				for (var i = 0; i < markers.length; i++) {
+					n += markers[i].number;
+				}
+				return L.divIcon({ html: n, className: 'mycluster', iconSize: L.point(40, 40) });
+			},
+			//Disable all of the defaults:
+			spiderfyOnMaxZoom: false, showCoverageOnHover: false, zoomToBoundsOnClick: false
+		});
 
     this.abrioxEntityService.getAll().subscribe(
       (marker_data) => {
@@ -231,6 +243,7 @@ export class HomeComponent implements AfterViewInit {
         //     popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
         // });
           var marker_i = L.marker(new L.LatLng(a['lat'], a['lng']), {title: this.abrioxes[i].name });
+          marker_i.number = i+1;
           // marker_i.bindPopup(title);
           marke_cluster.addLayer(marker_i);
         }
