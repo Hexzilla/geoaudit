@@ -765,37 +765,12 @@ export class HomeComponent implements AfterViewInit {
           switch (now_op_val) {
             case "abriox":
               this.abrioxEntityService.add({
-                name:'',
-                telephone: 0,
-                serial_number: "",
-                date_installation: null,
-                footer: null,
-                tr:null,
-                id:null,
                 testpost:{
-                  id:null,
-                  tp_actions: [],
-                  abriox: null,
-                  reference: null,
-                  name: '',
-                  date_installation: null,
-                  manufacture: '',
-                  model: '',
-                  serial_number: '',
                   geometry: {
-                    lat:popup_geometry.lat,
-                    lng:popup_geometry.lng
-                  },
-                  footer: [],
-                  tp_notes: [],
-                  status: null,
-                  condition: null,
-                  tp_type: null
-                },
-                surveys: [],
-                abriox_notes: [],
-                status: null,
-                condition: null
+                    lat: popup_geometry.lat,
+                    lng: popup_geometry.lng
+                  }
+                }
               }).subscribe((notification) => {
                 insert_id = notification['id'];
                 console.log(insert_id);
