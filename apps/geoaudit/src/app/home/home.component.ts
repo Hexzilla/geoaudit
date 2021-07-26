@@ -749,7 +749,7 @@ export class HomeComponent implements AfterViewInit {
         var new_marker = L.marker(e.latlng).addTo(this.map);
         this.map.setView(e.latlng, 13);
         this.addMarker = false;
-        var select_popup = '<select class="popup_select"><option value="testpost">Testpost</option><option value="tr">Tr</option><option value="abriox">Abriox</option><option value="survey">Survey</option><option value="resistivity">Resistivity</option></select>';
+        var select_popup = '<select class="popup_select"><option value="testpost">Testpost</option><option value="tr">Tr</option><option value="survey">Survey</option><option value="resistivity">Resistivity</option></select>';
         select_popup += '<button class="popup_detail_btn">Details<span class="detail_button_icon">></span></button>'
         // new_marker.bindPopup(select_popup , select_popup_css);
         var popup = L.popup({className: 'add_marker_popup' , 'closeButton' : false})
@@ -780,7 +780,6 @@ export class HomeComponent implements AfterViewInit {
             case "testpost":
               this.testpostEntityService.add({
                 tp_actions: null,
-                id:null,
                 abriox: null,
                 reference: null,
                 name: '',
@@ -807,7 +806,6 @@ export class HomeComponent implements AfterViewInit {
               this.trEntityService.add({
                 name: '',
                 abriox: null,
-                id:null,
                 footer: null,
                 fault_detail: [],
                 serial_number: '',
@@ -828,7 +826,6 @@ export class HomeComponent implements AfterViewInit {
               break;
             case "resistivity":
                 this.resistivityEntityService.add({
-                  id:null,
                   reference: '',
                   date: '2021-04-19T17:54:51.758Z',
                   geometry: {

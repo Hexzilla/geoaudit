@@ -6,7 +6,7 @@ import { Status } from "./status.model";
 import { TrNote } from "./tr-note.model";
 
 export interface Tr {
-    id:number;
+    id?:number;
     name: string;
     abriox: Abriox;
     footer: Footer;

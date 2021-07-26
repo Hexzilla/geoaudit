@@ -5,7 +5,7 @@ import { Status } from "./status.model";
 import { Survey } from "./survey.model";
 
 export interface Resistivity {
-    id:number;
+    id?:number;
     reference: string;
     date: string;
     geometry: object;
