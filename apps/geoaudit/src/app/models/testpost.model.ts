@@ -7,6 +7,7 @@ import { TpNote } from "./tp-note.model";
 import { TpType } from "./tp-type.model";
 
 export interface Testpost {
+    id:number;
     tp_actions: Array<TpAction>;
     abriox: Abriox;
     reference: string;

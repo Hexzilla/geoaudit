@@ -6,6 +6,7 @@ import { Survey } from "./survey.model";
 import { Testpost } from "./testpost.model";
 
 export interface Abriox {
+    id:number;
     name: string;
     telephone: number;
     serial_number: string;
