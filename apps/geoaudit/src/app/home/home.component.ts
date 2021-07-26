@@ -491,7 +491,6 @@ export class HomeComponent implements AfterViewInit {
               var marker_i = L.marker(new L.LatLng(a.geometry['lat'], a.geometry['lng']), {icon:busIcon , title: "this.resistivities[i].name" });
               var select_popup = '<h2> resistivity ' + this.resistivities[i].reference + "</h2><hr>";
               select_popup += '<button data-btn="detail" data-type="resistivity" data-id="'+this.resistivities[i].id+'" class="sp_button">Details<span class="detail_button_icon">></span></button></a>';
-              select_popup += '<button data-btn="history" data-type="resistivity" data-id="'+this.resistivities[i].id+'" class="sp_button">Historical data<span class="detail_button_icon">></span></button>';
               select_popup += '<button data-btn="notes" data-type="resistivity" data-id="'+this.resistivities[i].id+'" class="sp_button">Notes<span class="detail_button_icon">></span></button>';
               select_popup += '<button data-btn="drive" data-type="resistivity" data-id="'+this.resistivities[i].id+'" class="sp_button">DriveTo<span class="detail_button_icon">></span></button>';
 
@@ -545,7 +544,6 @@ export class HomeComponent implements AfterViewInit {
                   var marker_i = L.marker(new L.LatLng(a.geometry['lat'], a.geometry['lng']), {icon:busIcon , title: this.surveys[i].name });
                   var select_popup = '<h2> survey ' + this.surveys[i].name + "</h2><hr>";
                   select_popup += '<button data-btn="detail" data-type="survey" data-id="'+this.surveys[i].id+'" class="sp_button">Details<span class="detail_button_icon">></span></button></a>';
-                  select_popup += '<button data-btn="history" data-type="survey" data-id="'+this.surveys[i].id+'" class="sp_button">Historical data<span class="detail_button_icon">></span></button>';
                   select_popup += '<button data-btn="notes" data-type="survey" data-id="'+this.surveys[i].id+'" class="sp_button">Notes<span class="detail_button_icon">></span></button>';
                   select_popup += '<button data-btn="drive" data-type="survey" data-id="'+this.surveys[i].id+'" class="sp_button">DriveTo<span class="detail_button_icon">></span></button>';
   
@@ -567,7 +565,6 @@ export class HomeComponent implements AfterViewInit {
                   var marker_i = L.marker(new L.LatLng(a.geometry['lat'], a.geometry['lng']), {icon:busIcon , title: this.surveys[i].name });
                   var select_popup = '<h2> survey ' + this.surveys[i].name + "</h2><hr>";
                   select_popup += '<button data-btn="detail" data-type="survey" data-id="'+this.surveys[i].id+'" class="sp_button">Details<span class="detail_button_icon">></span></button></a>';
-                  select_popup += '<button data-btn="history" data-type="survey" data-id="'+this.surveys[i].id+'" class="sp_button">Historical data<span class="detail_button_icon">></span></button>';
                   select_popup += '<button data-btn="notes" data-type="survey" data-id="'+this.surveys[i].id+'" class="sp_button">Notes<span class="detail_button_icon">></span></button>';
                   select_popup += '<button data-btn="drive" data-type="survey" data-id="'+this.surveys[i].id+'" class="sp_button">DriveTo<span class="detail_button_icon">></span></button>';
   
@@ -589,7 +586,6 @@ export class HomeComponent implements AfterViewInit {
                   var marker_i = L.marker(new L.LatLng(a.geometry['lat'], a.geometry['lng']), {icon:busIcon , title: this.surveys[i].name });
                   var select_popup = '<h2> survey ' + this.surveys[i].name + "</h2><hr>";
                   select_popup += '<button data-btn="detail" data-type="survey" data-id="'+this.surveys[i].id+'" class="sp_button">Details<span class="detail_button_icon">></span></button></a>';
-                  select_popup += '<button data-btn="history" data-type="survey" data-id="'+this.surveys[i].id+'" class="sp_button">Historical data<span class="detail_button_icon">></span></button>';
                   select_popup += '<button data-btn="notes" data-type="survey" data-id="'+this.surveys[i].id+'" class="sp_button">Notes<span class="detail_button_icon">></span></button>';
                   select_popup += '<button data-btn="drive" data-type="survey" data-id="'+this.surveys[i].id+'" class="sp_button">DriveTo<span class="detail_button_icon">></span></button>';
   
@@ -611,7 +607,6 @@ export class HomeComponent implements AfterViewInit {
                   var marker_i = L.marker(new L.LatLng(a.geometry['lat'], a.geometry['lng']), {icon:busIcon , title: this.surveys[i].name });
                   var select_popup = '<h2> survey ' + this.surveys[i].name + "</h2><hr>";
                   select_popup += '<button data-btn="detail" data-type="survey" data-id="'+this.surveys[i].id+'" class="sp_button">Details<span class="detail_button_icon">></span></button></a>';
-                  select_popup += '<button data-btn="history" data-type="survey" data-id="'+this.surveys[i].id+'" class="sp_button">Historical data<span class="detail_button_icon">></span></button>';
                   select_popup += '<button data-btn="notes" data-type="survey" data-id="'+this.surveys[i].id+'" class="sp_button">Notes<span class="detail_button_icon">></span></button>';
                   select_popup += '<button data-btn="drive" data-type="survey" data-id="'+this.surveys[i].id+'" class="sp_button">DriveTo<span class="detail_button_icon">></span></button>';
   
