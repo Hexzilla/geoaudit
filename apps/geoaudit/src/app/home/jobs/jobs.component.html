@@ -27,6 +27,17 @@
   >
     <mat-icon>event_available</mat-icon>
   </button>
+
+  <button
+  mat-icon-button
+  [matTooltip]="'CONTAINERS.home.jobs.actions.share' | translate"
+  color="accent"
+  aria-label="share icon button"
+  (click)="share()"
+  [disabled]="this.selection.selected.length === 0 || this.selection.selected.length > 1"
+>
+  <mat-icon>share</mat-icon>
+</button>
   
     <button
       mat-icon-button

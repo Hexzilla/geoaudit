@@ -1,4 +1,4 @@
-import { Component, AfterViewInit ,ElementRef } from '@angular/core';
+import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import L from 'leaflet';
 import 'leaflet-sidebar-v2';
@@ -33,7 +33,7 @@ const iconDefault = L.icon({
 });
 L.Marker.prototype.options.icon = iconDefault;
 
-import { Auth } from '../models';
+import { Auth , Notification} from '../models';
 import { Abriox } from '../models';
 import { Testpost } from '../models';
 import { Tr } from '../models';
@@ -55,6 +55,10 @@ import * as SurveyActions from '../store/survey/survey.actions';
 
 import * as SurveySelector from '../store/survey/survey.selectors';
 import { AlertService } from '../services';
+import { NotificationEntityService } from '../entity-services/notification-entity.service';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 @Component({
   selector: 'geoaudit-home',
   templateUrl: './home.component.html',
@@ -66,7 +70,7 @@ import { AlertService } from '../services';
     ResistivityEntityService
   ]
 })
-export class HomeComponent implements AfterViewInit {
+export class HomeComponent implements OnInit, AfterViewInit {
 
   // Icons
   faBars = faBars;
@@ -108,6 +112,12 @@ export class HomeComponent implements AfterViewInit {
 
   surveyCount$ = this.store.select(SurveySelector.Count);
 
+  notifications$: Observable<Array<Notification>> = this.notificationEntityService.entities$.pipe(
+    map(notification => {
+      return notification.filter(notification => !notification.seen);
+    })
+  )
+
   constructor(
     private authService: AuthService,
     private markerService: MarkerService,
@@ -120,9 +130,13 @@ export class HomeComponent implements AfterViewInit {
     private router: Router,
     private store: Store<fromApp.State>,
     private alertService: AlertService,
-    private elementRef: ElementRef
+    private notificationEntityService: NotificationEntityService
   ) {
     this.auth = this.authService.authValue;
+  }
+
+  ngOnInit(): void {
+    this.notificationEntityService.getAll();
   }
 
   ngAfterViewInit(): void {
@@ -1020,10 +1034,6 @@ export class HomeComponent implements AfterViewInit {
 
   calendar(): void {
     this.router.navigate(['/home/calendar']);
-  }
-
-  notifications(): void {
-    this.router.navigate(['/home/notifications']);
   }
 
   profile(): void {

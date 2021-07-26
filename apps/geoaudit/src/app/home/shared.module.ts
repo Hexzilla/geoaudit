@@ -8,6 +8,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 // Material
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {MatBadgeModule} from '@angular/material/badge';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -63,6 +64,8 @@ import { SurveyDataService } from '../data-services/survey-data.service';
 import { SurveyEntityService } from '../entity-services/survey-entity.service';
 import { JobDataService } from '../data-services/job-data.service';
 import { JobEntityService } from '../entity-services/job-entity.service';
+import { NotificationEntityService } from '../entity-services/notification-entity.service';
+import { NotificationDataService } from '../data-services/notification-data.service';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient) {
@@ -96,7 +99,8 @@ const entityMetadataMap: EntityMetadataMap = {
   Abriox:{},
   Testpost:{},
   Tr:{},
-  Resistivity:{}
+  Resistivity:{},
+  Notification: {}
 }
 
 @NgModule({
@@ -119,6 +123,7 @@ const entityMetadataMap: EntityMetadataMap = {
 
     // Material
     MatAutocompleteModule,
+    MatBadgeModule,
     MatButtonToggleModule,
     MatButtonModule,
     MatCardModule,
@@ -159,6 +164,9 @@ const entityMetadataMap: EntityMetadataMap = {
 
     JobTypeEntityService,
     JobTypeDataService,
+
+    NotificationEntityService,
+    NotificationDataService,
 
     StatusEntityService,
     StatusDataService,
@@ -202,6 +210,7 @@ const entityMetadataMap: EntityMetadataMap = {
     
     // Material
     MatAutocompleteModule,
+    MatBadgeModule,
     MatButtonToggleModule,
     MatButtonModule,
     MatCardModule,
@@ -236,6 +245,7 @@ export class SharedModule {
     private entityDataService: EntityDataService,
     private jobDataService: JobDataService,
     private jobTypeDataService: JobTypeDataService,
+    private notificationDataService: NotificationDataService,
     private statusDataService: StatusDataService,
     private surveyDataService: SurveyDataService,
     private userDataService: UserDataService,
@@ -256,7 +266,8 @@ export class SharedModule {
         Abriox: abrioxDataService,
         Testpost: testpostDataService,
         Tr: trDataService,
-        Resistivity: resistivityDataService
+        Resistivity: resistivityDataService,
+        Notification: notificationDataService
       }
     )
   }
