@@ -629,7 +629,7 @@ export class HomeComponent implements AfterViewInit {
         }
       );
     
-
+    //Show Layers on LayerControl
     var groupedOverlays = {
       "Testpost": {
         "WORKING": testpost_working_layer,
@@ -664,12 +664,7 @@ export class HomeComponent implements AfterViewInit {
       zoomControl : false // remove +/- Zoom Control.
     });
 
-
-    
     var groupLayerOptions = {
-      // Make the "Landmarks" group exclusive (use radio inputs)
-      // exclusiveGroups: [""],
-      // Show a checkbox next to non-exclusive group labels for toggling all
       groupCheckboxes: true,
       position:'topleft'
     };
@@ -698,7 +693,6 @@ export class HomeComponent implements AfterViewInit {
     ////
 
     // upload files. andrey
-
     L.Control.FileLayerLoad.LABEL = '<span class="fa fa-upload" aria-hidden="true"></span>';
     var uploadControl = L.Control.fileLayerLoad({
         // Allows you to use a customized version of L.geoJson.
