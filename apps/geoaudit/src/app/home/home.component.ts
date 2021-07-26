@@ -2,7 +2,7 @@ import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import L from 'leaflet';
 import 'leaflet-sidebar-v2';
-import 'leaflet-easyprint';
+import '../../../../../node_modules/leaflet.browser.print/dist/leaflet.browser.print.min.js';
 import 'leaflet.locatecontrol';
 import * as ToGeojson from 'togeojson';
 import * as FileLayer from 'leaflet-filelayer';
@@ -140,26 +140,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     tiles.addTo(this.map);
 
     //print map. andrey
-
-    var a3_landscape = {
-      width: 2339,
-      height: 3308,
-      className: 'a3CssClass_landscape',
-      name: 'A3 Landscape'
-    }
-
-    var a3_vertical = {
-      width: 2339,
-      height: 3308,
-      className: 'a3CssClass_portrait',
-      name: 'A3 Portrait'
-    }
-
-    L.easyPrint({
-      title: 'Print',
-      position: 'topleft',
-      sizeModes: ['A4Landscape', 'A4Portrait', a3_landscape, a3_vertical]
-    }).addTo(this.map);
+    L.control.browserPrint().addTo(this.map)
     ////
 
     // scale map. andrey
