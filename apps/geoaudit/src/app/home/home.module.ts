@@ -12,6 +12,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { ApprovalsComponent } from './approvals/approvals.component';
 
 import { SharedModule } from './shared.module';
+import { ShareModalComponent } from '../modals/share-modal/share-modal.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,8 @@ import { SharedModule } from './shared.module';
     NotificationsComponent,
     ProfileComponent,
     ApprovalsComponent,
+
+    ShareModalComponent
   ],
   imports: [
     HomeRoutingModule,

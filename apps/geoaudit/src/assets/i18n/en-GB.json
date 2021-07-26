@@ -53,6 +53,7 @@
 				"title": "My Jobs",
 				"filter": "Filter",
 				"actions": {
+					"share": "Share job",
 					"delete": "Delete job(s)",
 					"add": "Add new job",
 					"download": "Download job(s) data"
@@ -105,6 +106,12 @@
 			"navigation": {
 				"title": "Navigation"
 			},
+			"notifications": {
+				"title": "Notifications",
+				"types": {
+					"SHARE_JOB": "{{source}} shared a job with you"
+				}
+			},
 			"survey": {
 				"add_survey": {
 					"title": "Add Survey"
@@ -129,6 +136,11 @@
 			"title": "Delete",
 			"delete_surveys": "You're about to delete {{length}} record(s). Do you wish to continue?",
 			"delete": "Confirm"
+		},
+		"share_modal": {
+			"title": "Share this Job with",
+			"message": "Message",
+			"send": "Send"
 		},
 		"navigation_modal": {
 			"title": "Navigation",
