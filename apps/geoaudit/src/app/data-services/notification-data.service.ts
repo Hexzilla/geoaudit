@@ -27,8 +27,8 @@ export class NotificationDataService extends DefaultDataService<Notification> {
         const parameters = qs.stringify({
             _where: {
                 recipient: this.authService.authValue.user.id,
-                seen: false
-            }
+            },
+            _sort: 'created_at:DESC'
         })
 
         return this.http.get<any>(`${environment.API_URL}/notifications?${parameters}`);

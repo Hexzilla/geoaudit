@@ -5,7 +5,6 @@ export interface NOTIFICATION_DATA {
     subject: any,
     message: string
 }
-
 export interface Notification {
     seen?: boolean;
     source: User;

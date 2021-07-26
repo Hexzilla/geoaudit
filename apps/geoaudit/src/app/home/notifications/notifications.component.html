@@ -6,9 +6,10 @@
   *ngFor="let notification of notifications$ | async"
   (click)="dismiss(notification)"
 >
-  <div fxLayout="row">
-    <div fxLayout="column">
-      {{ notification.source.username }}
-    </div>
-  </div>
+  <mat-card-header>
+      <img mat-card-avatar src="https://material.angular.io/assets/img/examples/shiba1.jpg" />
+      <mat-card-subtitle>{{ 'CONTAINERS.home.notifications.types.SHARE_JOB' | translate: { source: notification.source.username } }} </mat-card-subtitle>
+      <mat-card-subtitle>{{ notification.created_at | date: 'dd/MM/YYYY HH:mm' }}</mat-card-subtitle>
+      <mat-icon *ngIf="!notification.seen" style="background-color: #0074d9; border-radius: 15px;">radio_button_unchecked</mat-icon>
+  </mat-card-header>
 </mat-card>

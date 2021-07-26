@@ -41,6 +41,7 @@ import * as SurveyActions from '../store/survey/survey.actions';
 import * as SurveySelector from '../store/survey/survey.selectors';
 import { NotificationEntityService } from '../entity-services/notification-entity.service';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators'
 @Component({
   selector: 'geoaudit-home',
   templateUrl: './home.component.html',
@@ -82,7 +83,11 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   surveyCount$ = this.store.select(SurveySelector.Count);
 
-  notifications$: Observable<Array<Notification>> = this.notificationEntityService.entities$;
+  notifications$: Observable<Array<Notification>> = this.notificationEntityService.entities$.pipe(
+    map(notification => {
+      return notification.filter(notification => !notification.seen);
+    })
+  )
 
   constructor(
     private authService: AuthService,
@@ -322,10 +327,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   calendar(): void {
     this.router.navigate(['/home/calendar']);
-  }
-
-  notifications(): void {
-    this.router.navigate(['/home/notifications']);
   }
 
   profile(): void {
