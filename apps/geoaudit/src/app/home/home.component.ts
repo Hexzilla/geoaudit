@@ -196,7 +196,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
           return 1;
         });
         this.testposts = marker_data;
-        console.log(marker_data)
+        
         var flag1 = 0 ,flag2 = 0 , flag3 = 0 , flag4 = 0;
         for( var i=0 ;i < this.testposts.length ;i ++)
         {
@@ -341,7 +341,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
             return 1;
           });
           this.trs = marker_data;
-          console.log(marker_data)
+          
           var flag1 = 0 ,flag2 = 0 , flag3 = 0 , flag4 = 0;
           for( var i=0 ;i < this.trs.length ;i ++)
           {
@@ -478,7 +478,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
         (marker_data) => {
          
           this.resistivities = marker_data;
-          console.log(marker_data)
+          
           for( var i=0 ;i < this.resistivities.length ;i ++)
           {
             var a = this.resistivities[i];
@@ -528,7 +528,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
       this.surveyEntityService.getAll().subscribe(
         (marker_data) => {
           this.surveys = marker_data;
-          console.log(marker_data)
+          
           for( var i=0 ;i < this.surveys.length ;i ++)
           {
             var a = this.surveys[i];
@@ -716,7 +716,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     
     uploadControl.loader.on('data:loaded', function (event) {
         // event.layer gives you access to the layers you just uploaded!
-        console.log(event);
+        
         // Add to map layer switcher
         // var layerswitcher = L.control.layers().addTo(this.map);
         layerControl.addOverlay(event.layer, event.filename , "Uploads");
@@ -757,7 +757,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
     this.map.on('click', (e) => {
       // when addMarker == true, add new marker to map
-      console.log(e);
+      
       if(this.addMarker)
       {
         var new_marker = L.marker(e.latlng).addTo(this.map);
@@ -787,7 +787,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
                 }
               }).subscribe((notification) => {
                 insert_id = notification['id'];
-                console.log(insert_id);
+                
                 this.router.navigate(['/home/abriox/'+insert_id]);
               });
               break;
@@ -812,7 +812,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
                 tp_type: null
               }).subscribe((notification) => {
                 insert_id = notification['id'];
-                console.log(insert_id);
+                
                 this.router.navigate(['/home/testpost/'+insert_id]);
               });
               break;
@@ -834,7 +834,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
                 reference: null
               }).subscribe((notification) => {
                 insert_id = notification['id'];
-                console.log(insert_id);
+                
                 this.router.navigate(['/home/tr/'+insert_id]);
               });
               break;
@@ -853,7 +853,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
                   status: null
                 }).subscribe((notification) => {
                   insert_id = notification['id'];
-                  console.log(insert_id);
+                  
                   this.router.navigate(['/home/resistivity/'+insert_id]);
                 });
                 break;
@@ -882,7 +882,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
                 tr_actions: []   
               }).subscribe((notification) => {
                 insert_id = notification['id'];
-                console.log(insert_id);
+                
                 this.router.navigate(['/home/survey/'+insert_id]);
               });
               break;
