@@ -190,6 +190,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     var testpost_replacing_layer = new L.LayerGroup();
     this.testpostEntityService.getAll().subscribe(
       (marker_data) => {
+        console.log(marker_data);
         marker_data.sort(function(a,b){
           if(a.tp_actions['date'] < b.tp_actions['date'] )
             return -1;
@@ -484,9 +485,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
             var a = this.resistivities[i];
   
             // if no geometry data and name, skip it
-            // if(!a || !a.geometry || !this.resistivities[i].name) continue;
+            if(!a || !a.geometry) continue;
             // if against Layer rule, skip it
-            if(!a.footer.approved) continue;
+            if(!a.footer || !a.footer.approved) continue;
 
             if(!a.status || a.status.name != "COMPLETED") continue;
   
@@ -707,9 +708,18 @@ export class HomeComponent implements OnInit, AfterViewInit {
         // Allows you to use a customized version of L.geoJson.
         layer: L.geoJson,
         // See http://leafletjs.com/reference.html#geojson-options
-        layerOptions: {style: {color:'red'}},
+        layerOptions: {
+          onEachFeature: function (feature, layer) {
+            console.log(feature);
+            console.log(layer);
+            layer.bindPopup(feature.properties.name);
+          }
+          ,style: {color:'red'}
+        },
         // Add to map after loading (default: true) ?
         addToMap: true,
+        onEachFeature: function (feature, layer) {
+          layer.bindPopup("Hello");},
         // File size limit in kb (default: 1024) ?
         fileSizeLimit: 10240
     }).addTo(this.map);
@@ -793,23 +803,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
               break;
             case "testpost":
               this.testpostEntityService.add({
-                tp_actions: null,
-                abriox: null,
-                reference: null,
-                name: '',
-                date_installation: null,
-                manufacture: null,
-                model: null,
-                serial_number: '',
                 geometry: {
                   lat:popup_geometry.lat,
                   lng:popup_geometry.lng
-                },
-                footer: [],
-                tp_notes: null,
-                status: null,
-                condition: null,
-                tp_type: null
+                }
               }).subscribe((notification) => {
                 insert_id = notification['id'];
                 
@@ -818,20 +815,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
               break;
             case "tr":
               this.trEntityService.add({
-                name: '',
-                abriox: null,
-                footer: null,
-                fault_detail: [],
-                serial_number: '',
-                date_installation: null,
                 geometry: {
                   lat:popup_geometry.lat,
                   lng:popup_geometry.lng
-                },
-                tr_notes: [],
-                status: null,
-                condition: null,
-                reference: null
+                }
               }).subscribe((notification) => {
                 insert_id = notification['id'];
                 
@@ -840,17 +827,11 @@ export class HomeComponent implements OnInit, AfterViewInit {
               break;
             case "resistivity":
                 this.resistivityEntityService.add({
-                  reference: '',
                   date: '2021-04-19T17:54:51.758Z',
                   geometry: {
                     lat:popup_geometry.lat,
                     lng:popup_geometry.lng
                   },
-                  survey: null,
-                  resistivity_detail: [],
-                  footer: null,
-                  resistivity_notes: null,
-                  status: null
                 }).subscribe((notification) => {
                   insert_id = notification['id'];
                   
@@ -859,27 +840,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
                 break;
             case "survey":
               this.surveyEntityService.add({
-                abrioxes: null,
-                conducted_by: null,
-                created_at: null,
-                date_assigned: null,
-                date_delivery: null,
-                footer: null,
                 geometry: {
                   lat:popup_geometry.lat,
                   lng:popup_geometry.lng
-                },
-                id: null,
-                reference: null,
-                job: null,
-                name: '',
-                prepared_by: null,
-                resistivities: [],
-                site: null,
-                status: null,
-                survey_notes: [],
-                tp_actions: [],
-                tr_actions: []   
+                }  
               }).subscribe((notification) => {
                 insert_id = notification['id'];
                 

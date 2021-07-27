@@ -6,13 +6,13 @@ import { Survey } from "./survey.model";
 
 export interface Resistivity {
     id?:number;
-    reference: string;
-    date: string;
+    reference?: string;
+    date?: string;
     geometry: object;
-    survey: Survey;
+    survey?: Survey;
     // resistivity_detail: ResistivityDetail;
-    resistivity_detail: any;
-    footer: Footer;
-    resistivity_notes: Array<ResistivityNote>;
-    status: Status;
+    resistivity_detail?: any;
+    footer?: Footer;
+    resistivity_notes?: Array<ResistivityNote>;
+    status?: Status;
 }
