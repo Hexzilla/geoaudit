@@ -1,19 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { environment } from 'apps/geoaudit/src/environments/environment';
-import { combineLatest, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { combineLatest, noop, Observable, of } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
 import { UserEntityService } from '../../entity-services/user-entity.service';
 import { User } from '../../models';
-import { AuthService } from '../../services';
+import { AlertService, AuthService } from '../../services';
 
 @Component({
   selector: 'geoaudit-profile',
   templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.scss']
+  styleUrls: ['./profile.component.scss'],
 })
 export class ProfileComponent implements OnInit {
-
   step = null;
 
   API_URL: string;
@@ -23,25 +22,28 @@ export class ProfileComponent implements OnInit {
   user$ = this.userEntityService.getByKey(this.authService.authValue.user.id);
 
   constructor(
+    private alertService: AlertService,
     private authService: AuthService,
     private formBuilder: FormBuilder,
     private userEntityService: UserEntityService
-  ) { 
+  ) {
     this.API_URL = environment.API_URL;
   }
 
   ngOnInit(): void {
     this.form = this.formBuilder.group({
-      username: ['', Validators.required]
-    })
+      username: ['', Validators.required],
+    });
 
-    this.user$.pipe(
-      map(user => {
-        this.form.patchValue({
-          username: user.username
+    this.user$
+      .pipe(
+        map((user) => {
+          this.form.patchValue({
+            username: user.username,
+          });
         })
-      })
-    ).subscribe();
+      )
+      .subscribe();
   }
 
   setStep(index: number) {
@@ -57,13 +59,33 @@ export class ProfileComponent implements OnInit {
   }
 
   saveUsername() {
-    this.user$.pipe(
-      map(user => {
-        this.user$ = this.userEntityService.update({
-          id: user.id,
-          username: this.form.value.username
+    this.user$
+      .pipe(
+        map((user) => {
+          this.userEntityService
+            .update({
+              id: user.id,
+              username: this.form.value.username,
+            })
+            .pipe(
+              tap(
+                () => {
+                  this.refreshUser();
+                },
+                (err) => {
+                  this.alertService.error(err.error[0].messages[0].message);
+                }
+              )
+            )
+            .subscribe();
         })
-      })
-    ).subscribe();
+      )
+      .subscribe();
+  }
+
+  refreshUser() {
+    this.user$ = this.userEntityService.getByKey(
+      this.authService.authValue.user.id
+    );
   }
 }
