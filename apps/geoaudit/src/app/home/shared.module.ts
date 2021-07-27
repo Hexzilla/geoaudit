@@ -55,6 +55,10 @@ import { JobTypeDataService } from '../data-services/job-type-data.service';
 import { JobTypeEntityService } from '../entity-services/job-type-entity.service';
 import { UserEntityService } from '../entity-services/user-entity.service';
 import { UserDataService } from '../data-services/user-data.service';
+import { AbrioxDataService } from '../data-services/abriox-data.service';
+import { TestpostDataService } from '../data-services/testpost-data.service';
+import { ResistivityDataService } from '../data-services/resistivity-data.service';
+import { TrDataService } from '../data-services/tr-data.service';
 import { UploadService } from '../services';
 import { SurveyDataService } from '../data-services/survey-data.service';
 import { SurveyEntityService } from '../entity-services/survey-entity.service';
@@ -91,8 +95,12 @@ const entityMetadataMap: EntityMetadataMap = {
     },
   },
   JobType: {},
-  Notification: {},
-  User: {}
+  User: {},
+  Abriox:{},
+  Testpost:{},
+  Tr:{},
+  Resistivity:{},
+  Notification: {}
 }
 
 @NgModule({
@@ -170,6 +178,10 @@ const entityMetadataMap: EntityMetadataMap = {
     
     UserEntityService,
     UserDataService,
+    AbrioxDataService,
+    TestpostDataService,
+    TrDataService,
+    ResistivityDataService,
 
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
@@ -236,7 +248,11 @@ export class SharedModule {
     private notificationDataService: NotificationDataService,
     private statusDataService: StatusDataService,
     private surveyDataService: SurveyDataService,
-    private userDataService: UserDataService
+    private userDataService: UserDataService,
+    private abrioxDataService: AbrioxDataService,
+    private testpostDataService: TestpostDataService,
+    private trDataService: TrDataService,
+    private resistivityDataService: ResistivityDataService
   ) {
     entityDefinitionService.registerMetadataMap(entityMetadataMap);
 
@@ -246,8 +262,12 @@ export class SharedModule {
         Survey: surveyDataService,
         Job: jobDataService,
         JobType: jobTypeDataService,
-        Notification: notificationDataService,
-        User: userDataService
+        User: userDataService,
+        Abriox: abrioxDataService,
+        Testpost: testpostDataService,
+        Tr: trDataService,
+        Resistivity: resistivityDataService,
+        Notification: notificationDataService
       }
     )
   }

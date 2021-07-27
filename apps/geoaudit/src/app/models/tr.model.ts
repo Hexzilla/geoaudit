@@ -6,15 +6,16 @@ import { Status } from "./status.model";
 import { TrNote } from "./tr-note.model";
 
 export interface Tr {
-    name: string;
-    abriox: Abriox;
-    footer: Footer;
-    fault_detail: Array<FaultDetail>;
-    serial_number: string;
-    date_installation: string;
+    id?:number;
+    name?: string;
+    abriox?: Abriox;
+    footer?: Footer;
+    fault_detail?: Array<FaultDetail>;
+    serial_number?: string;
+    date_installation?: string;
     geometry: object;
-    tr_notes: Array<TrNote>;
-    status: Status;
-    condition: Condition;
-    reference: string;
+    tr_notes?: Array<TrNote>;
+    status?: Status;
+    condition?: Condition;
+    reference?: string;
 }

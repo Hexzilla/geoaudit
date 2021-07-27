@@ -120,8 +120,8 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .leaflet-control-filelayer.leaflet-control-zoom
 {
   border: none;
-  margin-left: 13px;
-  top:210px;
+  margin-left: 16px;
+  top:200px;
   position: absolute;
 }
 
@@ -138,22 +138,53 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 }
 
 //Layer Button style
-// .leaflet-control-layers.leaflet-control
-// {
-//   border: none;
-//   left: 13px!important;
-//   top:80px!important;
-//   right:0px!important;
-//   position: absolute;
-// }
+.leaflet-control-layers.leaflet-control
+{
+  border: none;
+  left: 13px !important;
+  top: 77px !important;
+  position: absolute;
+  margin: 0px !important;
+  background: unset;
+  z-index: 100001;
+}
 
+.leaflet-control-layers.leaflet-control a{
+  width: 54px;
+  height: 54px;
+  border-radius: 50%!important;
+  border: 1px solid black;
+  background-color: white;
+}
 
-// Popup Style after Add Marker
+.leaflet-control-layers.leaflet-control .leaflet-control-layers-list
+{
+  width: 200px;
+  background-color: white;
+  padding: 6px;
+  box-shadow: 0px 0px 8px 1px grey;
+}
+
+.leaflet-control-layers-separator{
+  margin: 4px 0px !important;
+  border-color: black
+}
+
+.leaflet-control-layers-group label:not(.leaflet-control-layers-group-label){
+  margin-left:10px;
+}
+
+.leaflet-control-layers-group-label{
+  font-weight: bold;
+  margin-top:2px!important;
+}
+
+// Popup Style
 .add_marker_popup{
   width:220px;
 }
 
-.popup_select{
+.add_marker_popup .popup_select{
   width: 180px;
   height: 40px;
   font-size: 20px;
@@ -164,7 +195,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   float:right;
 }
 
-.popup_detail_btn{
+.add_marker_popup .popup_detail_btn{
   background-color: #270082;
   color: white;
   width: 180px;
@@ -173,6 +204,24 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   margin-top: 10px;
 }
 
-.popup_detail_btn:hover{
+.add_marker_popup .popup_detail_btn:hover{
   cursor:pointer;
+}
+
+.select_marker_popup{
+  width:350px;
+}
+
+.select_marker_popup .sp_button{
+  background-color: white;
+  color: black;
+  border:1px solid black;
+  width: 310px;
+  height: 40px;
+  font-size: 20px;
+  margin-top: 10px;
+}
+
+.select_marker_popup .sp_button:hover{
+  cursor: pointer;
 }
