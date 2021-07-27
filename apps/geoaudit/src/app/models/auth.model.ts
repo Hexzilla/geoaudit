@@ -4,3 +4,8 @@ export class Auth {
     jwt: string;
     user: User;
 }
+
+export interface ForgotPassword {
+    email: string;
+    url?: string;
+}

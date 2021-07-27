@@ -88,4 +88,13 @@ export class ProfileComponent implements OnInit {
       this.authService.authValue.user.id
     );
   }
+
+  updatePassword() {
+    this.authService.forgotPassword({
+      email: this.authService.authValue.user.email,
+      // url: `${this.API_URL}/admin/plugins/users-permissions/auth/reset-password`
+    }).subscribe((res) => {
+      console.log('res', res)
+    })
+  }
 }

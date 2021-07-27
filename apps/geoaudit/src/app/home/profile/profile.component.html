@@ -57,6 +57,28 @@
                 </mat-expansion-panel>
             </mat-accordion>
 
+            <br />
+
+            <h3>{{ 'CONTAINERS.home.profile.change_password' | translate }}</h3>
+
+            <mat-accordion class="example-headers-align">
+                <mat-expansion-panel hideToggle>
+                  <mat-expansion-panel-header>
+                    <mat-panel-title>
+                      {{ 'CONTAINERS.home.profile.password' | translate }}
+                    </mat-panel-title>
+                    <mat-panel-description>
+                      {{ 'CONTAINERS.home.profile.change_your_password' | translate }}
+                    </mat-panel-description>
+                  </mat-expansion-panel-header>
+
+                  <p>{{ 'CONTAINERS.home.profile.change_password_instructions' | translate }}</p>
+              
+                  <mat-action-row>
+                    <button mat-button color="primary" (click)="updatePassword()">{{ 'CONTAINERS.home.profile.submit' | translate }}</button>
+                  </mat-action-row>
+                </mat-expansion-panel>
+            </mat-accordion>
               <!-- <mat-accordion class="example-headers-align">
                 <mat-expansion-panel [expanded]="step === 0" (opened)="setStep(0)" hideToggle>
                   <mat-expansion-panel-header>

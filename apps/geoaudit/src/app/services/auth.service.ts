@@ -5,7 +5,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { environment } from '../../environments/environment';
-import { Auth, User } from '../models';
+import { Auth, ForgotPassword, User } from '../models';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -78,5 +78,9 @@ export class AuthService {
                 }
                 return x;
             }));
+    }
+
+    forgotPassword(data: ForgotPassword) {
+        return this.http.post(`${environment.API_URL}/auth/forgot-password`, data);
     }
 }
