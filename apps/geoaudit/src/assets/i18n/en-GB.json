@@ -114,7 +114,11 @@
 			},
 			"profile": {
 				"settings": "Settings",
-				"analytics": "Analytics"
+				"analytics": "Analytics",
+				"change_username": "Change Username",
+				"username": "Username",
+				"type_your_new_username": "Type your new username",
+				"save": "Save"
 			},
 			"survey": {
 				"add_survey": {
