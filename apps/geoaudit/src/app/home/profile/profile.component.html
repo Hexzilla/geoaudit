@@ -1,1 +1,27 @@
-<p>profile works!</p>
+<ng-container *ngIf="user$ | async as user">
+  <div fxLayout="column" fxLayoutAlign="center center">
+    <img
+      [src]="API_URL + user.avatar.url"
+      width="50px"
+      height="50px"
+      style="border-radius: 50%"
+    />
+    <br />
+    <h3>
+      {{ user.username }}
+      <p style="text-align: center">{{ user.role.name }}</p>
+    </h3>
+  </div>
+
+  <mat-tab-group mat-stretch-tabs>
+    <mat-tab [label]="'CONTAINERS.home.profile.settings' | translate">
+
+    </mat-tab>
+    <mat-tab
+      [label]="'CONTAINERS.home.profile.analytics' | translate"
+      [disabled]="true"
+    >
+    
+    </mat-tab>
+  </mat-tab-group>
+</ng-container>

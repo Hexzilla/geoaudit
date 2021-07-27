@@ -112,6 +112,10 @@
 					"SHARE_JOB": "{{source}} shared a job with you"
 				}
 			},
+			"profile": {
+				"settings": "Settings",
+				"analytics": "Analytics"
+			},
 			"survey": {
 				"add_survey": {
 					"title": "Add Survey"

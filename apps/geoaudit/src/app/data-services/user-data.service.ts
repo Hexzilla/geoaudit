@@ -18,4 +18,8 @@ export class UserDataService extends DefaultDataService<User> {
     getAll(): Observable<Array<User>> {
         return this.http.get<any>(`${environment.API_URL}/users`);
     }
+
+    getById(id): Observable<User> {
+        return this.http.get<any>(`${environment.API_URL}/users/${id}`);
+    }
 }
