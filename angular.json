@@ -49,6 +49,8 @@
             "aot": true,
             "assets": [
               "apps/geoaudit/src/favicon.ico",
+              "apps/geoaudit/src/map-pin-solid.svg",
+              "apps/geoaudit/src/marker-shadow.png",
               "apps/geoaudit/src/assets",
               {
                 "glob": "**/*",
@@ -61,7 +63,8 @@
               "apps/geoaudit/src/styles.scss",
               "./node_modules/leaflet-sidebar-v2/css/leaflet-sidebar.css",
               "./node_modules/leaflet-iconmaterial/dist/leaflet.icon-material.css",
-              "./node_modules/ngx-lightbox/lightbox.css"
+              "./node_modules/ngx-lightbox/lightbox.css",
+              "./node_modules/leaflet-draw/dist/leaflet.draw.css"
             ],
             "scripts": []
           },

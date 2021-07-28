@@ -9,6 +9,7 @@ import '../../../../../node_modules/leaflet.browser.print/dist/leaflet.browser.p
 import '../../../../../node_modules/leaflet-groupedlayercontrol/dist/leaflet.groupedlayercontrol.min.js';
 import 'leaflet.markercluster';
 import 'leaflet-iconmaterial';
+import 'leaflet-draw';
 import $ from 'jquery';
 
 FileLayer(null, L, ToGeojson);
@@ -105,7 +106,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
   private states;
 
   clickMarker;
-  addMarker; // for add marker to map. status variable.
   url: string;
 
   sidebar;
@@ -183,6 +183,125 @@ export class HomeComponent implements OnInit, AfterViewInit {
     };
 
     // Fetch Markers and Show with layers
+    //fetch testpost
+    var abriox_working_layer = new L.LayerGroup();
+    var abriox_not_working_layer = new L.LayerGroup();
+    var abriox_repairing_layer = new L.LayerGroup();
+    var abriox_replacing_layer = new L.LayerGroup();
+    this.abrioxEntityService.getAll().subscribe(
+      (marker_data) => {
+        this.abrioxes = marker_data;
+        
+        for( var i=0 ;i < this.abrioxes.length ;i ++)
+        {
+          var a = this.abrioxes[i];
+
+          // if no geometry data, skip it
+          if(!a.testpost || !a.testpost.geometry || !this.abrioxes[i].name) continue;
+          // if against Layer rule, skip it
+          if(!a.footer.approved ) continue;
+
+          // if no condition data, skip it
+          if(!a.condition || !a.condition.name) continue;
+
+          // seperate icons and layers for condition
+          var icon_name = "signal_wifi_0_bar";
+          switch(a.condition.name)
+          {
+            case "WORKING":
+                icon_name = "signal_wifi_0_bar";
+                var busIcon = L.IconMaterial.icon({
+                  icon: icon_name,            // Name of Material icon
+                  iconColor: 'black',              // Material icon color (could be rgba, hex, html name...)
+                  markerColor: 'rgba(255,255,255,0.8)',  // Marker fill color
+                  outlineColor: 'black',            // Marker outline color
+                  outlineWidth: 1,                   // Marker outline width 
+                  iconSize: [31, 42]                 // Width and height of the icon
+                })
+                var marker_i = L.marker(new L.LatLng(a.testpost.geometry['lat'], a.testpost.geometry['lng']), {icon:busIcon , title: this.abrioxes[i].name });
+                var select_popup = '<h2> abriox ' + this.abrioxes[i].name + "</h2><hr>";
+                select_popup += '<button data-btn="detail" data-type="abriox" data-id="'+this.abrioxes[i].id+'" class="sp_button">Details<span class="detail_button_icon">></span></button></a>';
+                select_popup += '<button data-btn="notes" data-type="abriox" data-id="'+this.abrioxes[i].id+'" class="sp_button">Notes<span class="detail_button_icon">></span></button>';
+                select_popup += '<button data-btn="drive" data-type="abriox" data-id="'+this.abrioxes[i].id+'" class="sp_button">DriveTo<span class="detail_button_icon">></span></button>';
+
+                var popup = L.popup({className: 'select_marker_popup' , 'closeButton' : false})
+                    .setContent(select_popup);
+                marker_i.bindPopup(popup);
+                marker_i.addTo(abriox_working_layer);
+              break;
+            case "NOT_WORKING":
+                icon_name = "signal_wifi_0_bar";
+                var busIcon = L.IconMaterial.icon({
+                  icon: icon_name,            // Name of Material icon
+                  iconColor: 'black',              // Material icon color (could be rgba, hex, html name...)
+                  markerColor: 'rgba(255,255,255,0.8)',  // Marker fill color
+                  outlineColor: 'black',            // Marker outline color
+                  outlineWidth: 1,                   // Marker outline width 
+                  iconSize: [31, 42]                 // Width and height of the icon
+                })
+                var marker_i = L.marker(new L.LatLng(a.testpost.geometry['lat'], a.testpost.geometry['lng']), {icon:busIcon , title: this.abrioxes[i].name });
+                var select_popup = '<h2> abriox ' + this.abrioxes[i].name + "</h2><hr>";
+                select_popup += '<button data-btn="detail" data-type="abriox" data-id="'+this.abrioxes[i].id+'" class="sp_button">Details<span class="detail_button_icon">></span></button></a>';
+                select_popup += '<button data-btn="notes" data-type="abriox" data-id="'+this.abrioxes[i].id+'" class="sp_button">Notes<span class="detail_button_icon">></span></button>';
+                select_popup += '<button data-btn="drive" data-type="abriox" data-id="'+this.abrioxes[i].id+'" class="sp_button">DriveTo<span class="detail_button_icon">></span></button>';
+
+                var popup = L.popup({className: 'select_marker_popup' , 'closeButton' : false})
+                    .setContent(select_popup);
+                marker_i.bindPopup(popup);
+                marker_i.addTo(abriox_not_working_layer);
+              break;
+            case "REPAIRING":
+                icon_name = "signal_wifi_0_bar";
+                var busIcon = L.IconMaterial.icon({
+                  icon: icon_name,            // Name of Material icon
+                  iconColor: 'black',              // Material icon color (could be rgba, hex, html name...)
+                  markerColor: 'rgba(255,255,255,0.8)',  // Marker fill color
+                  outlineColor: 'black',            // Marker outline color
+                  outlineWidth: 1,                   // Marker outline width 
+                  iconSize: [31, 42]                 // Width and height of the icon
+                })
+                var marker_i = L.marker(new L.LatLng(a.testpost.geometry['lat'], a.testpost.geometry['lng']), {icon:busIcon , title: this.abrioxes[i].name });
+                var select_popup = '<h2> abriox ' + this.abrioxes[i].name + "</h2><hr>";
+                select_popup += '<button data-btn="detail" data-type="abriox" data-id="'+this.abrioxes[i].id+'" class="sp_button">Details<span class="detail_button_icon">></span></button></a>';
+                select_popup += '<button data-btn="notes" data-type="abriox" data-id="'+this.abrioxes[i].id+'" class="sp_button">Notes<span class="detail_button_icon">></span></button>';
+                select_popup += '<button data-btn="drive" data-type="abriox" data-id="'+this.abrioxes[i].id+'" class="sp_button">DriveTo<span class="detail_button_icon">></span></button>';
+
+                var popup = L.popup({className: 'select_marker_popup' , 'closeButton' : false})
+                    .setContent(select_popup);
+                marker_i.bindPopup(popup);
+                marker_i.addTo(abriox_repairing_layer);
+              break;
+            case "REPLACING":
+                icon_name = "signal_wifi_0_bar";
+                var busIcon = L.IconMaterial.icon({
+                  icon: icon_name,            // Name of Material icon
+                  iconColor: 'black',              // Material icon color (could be rgba, hex, html name...)
+                  markerColor: 'rgba(255,255,255,0.8)',  // Marker fill color
+                  outlineColor: 'black',            // Marker outline color
+                  outlineWidth: 1,                   // Marker outline width 
+                  iconSize: [31, 42]                 // Width and height of the icon
+                })
+                var marker_i = L.marker(new L.LatLng(a.testpost.geometry['lat'], a.testpost.geometry['lng']), {icon:busIcon , title: this.abrioxes[i].name });
+                var select_popup = '<h2> abriox ' + this.abrioxes[i].name + "</h2><hr>";
+                select_popup += '<button data-btn="detail" data-type="abriox" data-id="'+this.abrioxes[i].id+'" class="sp_button">Details<span class="detail_button_icon">></span></button></a>';
+                select_popup += '<button data-btn="notes" data-type="abriox" data-id="'+this.abrioxes[i].id+'" class="sp_button">Notes<span class="detail_button_icon">></span></button>';
+                select_popup += '<button data-btn="drive" data-type="abriox" data-id="'+this.abrioxes[i].id+'" class="sp_button">DriveTo<span class="detail_button_icon">></span></button>';
+
+                var popup = L.popup({className: 'select_marker_popup' , 'closeButton' : false})
+                    .setContent(select_popup);
+                marker_i.bindPopup(popup);
+                marker_i.addTo(abriox_replacing_layer);
+              break;
+          }
+          
+        }
+      },
+
+      (err) => {
+        this.alertService.error(err.error);
+      }
+    );
+
       //fetch testpost
     var testpost_working_layer = new L.LayerGroup();
     var testpost_not_working_layer = new L.LayerGroup();
@@ -190,7 +309,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
     var testpost_replacing_layer = new L.LayerGroup();
     this.testpostEntityService.getAll().subscribe(
       (marker_data) => {
-        console.log(marker_data);
         marker_data.sort(function(a,b){
           if(a.tp_actions['date'] < b.tp_actions['date'] )
             return -1;
@@ -479,13 +597,12 @@ export class HomeComponent implements OnInit, AfterViewInit {
         (marker_data) => {
          
           this.resistivities = marker_data;
-          
           for( var i=0 ;i < this.resistivities.length ;i ++)
           {
             var a = this.resistivities[i];
   
             // if no geometry data and name, skip it
-            if(!a || !a.geometry) continue;
+            if(!a || !a.geometry || !a.geometry['lat'] || !a.geometry['lng'] ) continue;
             // if against Layer rule, skip it
             if(!a.footer || !a.footer.approved) continue;
 
@@ -641,6 +758,12 @@ export class HomeComponent implements OnInit, AfterViewInit {
     
     //Show Layers on LayerControl
     var groupedOverlays = {
+      "Abriox":{
+        "WORKING": abriox_working_layer,
+        "NOT_WORKING": abriox_not_working_layer,
+        "REPAIRING": abriox_repairing_layer,
+        "REPLACING": abriox_replacing_layer
+      },
       "Testpost": {
         "WORKING": testpost_working_layer,
         "NOT_WORKING": testpost_not_working_layer,
@@ -675,13 +798,248 @@ export class HomeComponent implements OnInit, AfterViewInit {
     });
 
     var groupLayerOptions = {
-      groupCheckboxes: true,
+      // groupCheckboxes: true,
       position:'topleft'
     };
 
     var layerControl = L.control.groupedLayers(Basemaps, groupedOverlays, groupLayerOptions);
     this.map.addControl(layerControl);
-    
+
+    var drawControl = new L.Control.Draw({
+      position:'bottomleft',
+      draw: {
+          polyline:false,
+          polygon: false,
+          rectangle: false,
+          circle:false,
+          circlemarker:false
+      }
+  });
+    this.map.addControl(drawControl);
+    var instance = this;
+    this.map.on(L.Draw.Event.CREATED, function (e) {
+      var type = e.layerType;
+              
+      if (type === 'marker') {
+          var new_marker = L.marker(e.layer._latlng).addTo(instance.map);
+          instance.map.setView(e.layer._latlng);
+          var select_popup = '<select class="popup_select"><option value="testpost">Testpost</option><option value="tr">Tr</option><option value="survey">Survey</option><option value="resistivity">Resistivity</option></select>';
+          select_popup += '<button class="popup_detail_btn">Details<span class="detail_button_icon">></span></button>'
+          // new_marker.bindPopup(select_popup , select_popup_css);
+          var popup = L.popup({className: 'add_marker_popup' , 'closeButton' : false})
+               .setContent(select_popup);
+          new_marker.bindPopup(popup);
+          new_marker.openPopup();
+  
+          var popup_geometry = e.layer._latlng;
+          
+          $(".popup_detail_btn").on('click',e=>{
+            var now_op_val = $(".popup_select").val();
+            var insert_id = -1;
+            var icon_name = "";
+                    
+            switch (now_op_val) {
+              case "abriox":
+                instance.abrioxEntityService.add({
+                  testpost:{
+                    geometry: {
+                      lat: popup_geometry.lat,
+                      lng: popup_geometry.lng
+                    }
+                  }
+                }).subscribe((notification) => {
+                  insert_id = notification['id'];
+                  if(insert_id > 0)
+                  {
+                    icon_name = "signal_wifi_0_bar";
+                    instance.sidebar.open('home');     
+                    new_marker.closePopup();
+  
+                    var busIcon = L.IconMaterial.icon({
+                      icon: icon_name,            // Name of Material icon
+                      iconColor: 'black',              // Material icon color (could be rgba, hex, html name...)
+                      markerColor: 'rgba(255,255,255,0.8)',  // Marker fill color
+                      outlineColor: 'black',            // Marker outline color
+                      outlineWidth: 1,                   // Marker outline width 
+                      iconSize: [31, 42]                 // Width and height of the icon
+                    })
+                    var marker_i = L.marker(new L.LatLng(popup_geometry.lat, popup_geometry.lng), {icon:busIcon , title: "" });
+                    var select_popup = '<h2> '+now_op_val+' ' + "" + "</h2><hr>";
+                    select_popup += '<button data-btn="detail" data-type="'+now_op_val+'" data-id="'+insert_id+'" class="sp_button">Details<span class="detail_button_icon">></span></button></a>';
+                    if(now_op_val == "testpost" || now_op_val == "tr")
+                      select_popup += '<button data-btn="history" data-type="'+now_op_val+'" data-id="'+insert_id+'" class="sp_button">Historical data<span class="detail_button_icon">></span></button>';
+                    select_popup += '<button data-btn="notes" data-type="'+now_op_val+'" data-id="'+insert_id+'" class="sp_button">Notes<span class="detail_button_icon">></span></button>';
+                    select_popup += '<button data-btn="drive" data-type="'+now_op_val+'" data-id="'+insert_id+'" class="sp_button">DriveTo<span class="detail_button_icon">></span></button>';
+  
+                    var popup = L.popup({className: 'select_marker_popup' , 'closeButton' : false})
+                        .setContent(select_popup);
+                    marker_i.bindPopup(popup);
+                    marker_i.addTo(instance.map);
+                    instance.map.removeLayer(new_marker);
+                    instance.router.navigate(['/home/abriox/'+insert_id]);
+                  }
+                });
+                break;
+              case "testpost":
+                instance.testpostEntityService.add({
+                  geometry: {
+                    lat:popup_geometry.lat,
+                    lng:popup_geometry.lng
+                  }
+                }).subscribe((notification) => {
+                  insert_id = notification['id'];
+                  if(insert_id > 0)
+                  {
+                    icon_name = "tv";
+                    instance.sidebar.open('home');     
+                    new_marker.closePopup();
+  
+                    var busIcon = L.IconMaterial.icon({
+                      icon: icon_name,            // Name of Material icon
+                      iconColor: 'black',              // Material icon color (could be rgba, hex, html name...)
+                      markerColor: 'rgba(255,255,255,0.8)',  // Marker fill color
+                      outlineColor: 'black',            // Marker outline color
+                      outlineWidth: 1,                   // Marker outline width 
+                      iconSize: [31, 42]                 // Width and height of the icon
+                    })
+                    var marker_i = L.marker(new L.LatLng(popup_geometry.lat, popup_geometry.lng), {icon:busIcon , title: "" });
+                    var select_popup = '<h2> '+now_op_val+' ' + "" + "</h2><hr>";
+                    select_popup += '<button data-btn="detail" data-type="'+now_op_val+'" data-id="'+insert_id+'" class="sp_button">Details<span class="detail_button_icon">></span></button></a>';
+                      select_popup += '<button data-btn="history" data-type="'+now_op_val+'" data-id="'+insert_id+'" class="sp_button">Historical data<span class="detail_button_icon">></span></button>';
+                    select_popup += '<button data-btn="notes" data-type="'+now_op_val+'" data-id="'+insert_id+'" class="sp_button">Notes<span class="detail_button_icon">></span></button>';
+                    select_popup += '<button data-btn="drive" data-type="'+now_op_val+'" data-id="'+insert_id+'" class="sp_button">DriveTo<span class="detail_button_icon">></span></button>';
+  
+                    var popup = L.popup({className: 'select_marker_popup' , 'closeButton' : false})
+                        .setContent(select_popup);
+                    marker_i.bindPopup(popup);
+                    marker_i.addTo(instance.map);
+                    instance.map.removeLayer(new_marker);
+                    instance.router.navigate(['/home/testpost/'+insert_id]);
+                  }
+                });
+                break;
+              case "tr":
+                instance.trEntityService.add({
+                  geometry: {
+                    lat:popup_geometry.lat,
+                    lng:popup_geometry.lng
+                  }
+                }).subscribe((notification) => {
+                  insert_id = notification['id'];
+                  if(insert_id > 0)
+                  {
+                    icon_name = "bolt";
+                    instance.sidebar.open('home');     
+                    new_marker.closePopup();
+  
+                    var busIcon = L.IconMaterial.icon({
+                      icon: icon_name,            // Name of Material icon
+                      iconColor: 'black',              // Material icon color (could be rgba, hex, html name...)
+                      markerColor: 'rgba(255,255,255,0.8)',  // Marker fill color
+                      outlineColor: 'black',            // Marker outline color
+                      outlineWidth: 1,                   // Marker outline width 
+                      iconSize: [31, 42]                 // Width and height of the icon
+                    })
+                    var marker_i = L.marker(new L.LatLng(popup_geometry.lat, popup_geometry.lng), {icon:busIcon , title: "" });
+                    var select_popup = '<h2> '+now_op_val+' ' + "" + "</h2><hr>";
+                    select_popup += '<button data-btn="detail" data-type="'+now_op_val+'" data-id="'+insert_id+'" class="sp_button">Details<span class="detail_button_icon">></span></button></a>';
+                      select_popup += '<button data-btn="history" data-type="'+now_op_val+'" data-id="'+insert_id+'" class="sp_button">Historical data<span class="detail_button_icon">></span></button>';
+                    select_popup += '<button data-btn="notes" data-type="'+now_op_val+'" data-id="'+insert_id+'" class="sp_button">Notes<span class="detail_button_icon">></span></button>';
+                    select_popup += '<button data-btn="drive" data-type="'+now_op_val+'" data-id="'+insert_id+'" class="sp_button">DriveTo<span class="detail_button_icon">></span></button>';
+  
+                    var popup = L.popup({className: 'select_marker_popup' , 'closeButton' : false})
+                        .setContent(select_popup);
+                    marker_i.bindPopup(popup);
+                    marker_i.addTo(instance.map);
+                    instance.map.removeLayer(new_marker);
+                    instance.router.navigate(['/home/tr/'+insert_id]);
+                  }
+                });
+                break;
+              case "resistivity":
+                  instance.resistivityEntityService.add({
+                    date: '2021-04-19T17:54:51.758Z',
+                    geometry: {
+                      lat:popup_geometry.lat,
+                      lng:popup_geometry.lng
+                    },
+                  }).subscribe((notification) => {
+                    insert_id = notification['id'];
+                    if(insert_id > 0)
+                    {
+                      icon_name = "filter_list";
+                      instance.sidebar.open('home');     
+                      new_marker.closePopup();
+  
+                      var busIcon = L.IconMaterial.icon({
+                        icon: icon_name,            // Name of Material icon
+                        iconColor: 'black',              // Material icon color (could be rgba, hex, html name...)
+                        markerColor: 'rgba(255,255,255,0.8)',  // Marker fill color
+                        outlineColor: 'black',            // Marker outline color
+                        outlineWidth: 1,                   // Marker outline width 
+                        iconSize: [31, 42]                 // Width and height of the icon
+                      })
+                      var marker_i = L.marker(new L.LatLng(popup_geometry.lat, popup_geometry.lng), {icon:busIcon , title: "" });
+                      var select_popup = '<h2> '+now_op_val+' ' + "" + "</h2><hr>";
+                      select_popup += '<button data-btn="detail" data-type="'+now_op_val+'" data-id="'+insert_id+'" class="sp_button">Details<span class="detail_button_icon">></span></button></a>';
+                      select_popup += '<button data-btn="notes" data-type="'+now_op_val+'" data-id="'+insert_id+'" class="sp_button">Notes<span class="detail_button_icon">></span></button>';
+                      select_popup += '<button data-btn="drive" data-type="'+now_op_val+'" data-id="'+insert_id+'" class="sp_button">DriveTo<span class="detail_button_icon">></span></button>';
+  
+                      var popup = L.popup({className: 'select_marker_popup' , 'closeButton' : false})
+                          .setContent(select_popup);
+                      marker_i.bindPopup(popup);
+                      marker_i.addTo(instance.map);
+                      instance.map.removeLayer(new_marker);
+                      instance.router.navigate(['/home/resistivity/'+insert_id]);
+                    }
+                  });
+                  break;
+              case "survey":
+                instance.surveyEntityService.add({
+                  geometry: {
+                    lat:popup_geometry.lat,
+                    lng:popup_geometry.lng
+                  }  
+                }).subscribe((notification) => {
+                  insert_id = notification['id'];
+                  if(insert_id > 0)
+                    {
+                      icon_name = "flag";
+                      instance.sidebar.open('home');     
+                      new_marker.closePopup();
+  
+                      var busIcon = L.IconMaterial.icon({
+                        icon: icon_name,            // Name of Material icon
+                        iconColor: 'black',              // Material icon color (could be rgba, hex, html name...)
+                        markerColor: 'rgba(255,255,255,0.8)',  // Marker fill color
+                        outlineColor: 'black',            // Marker outline color
+                        outlineWidth: 1,                   // Marker outline width 
+                        iconSize: [31, 42]                 // Width and height of the icon
+                      })
+                      var marker_i = L.marker(new L.LatLng(popup_geometry.lat, popup_geometry.lng), {icon:busIcon , title: "" });
+                      var select_popup = '<h2> '+now_op_val+' ' + "" + "</h2><hr>";
+                      select_popup += '<button data-btn="detail" data-type="'+now_op_val+'" data-id="'+insert_id+'" class="sp_button">Details<span class="detail_button_icon">></span></button></a>';
+                      select_popup += '<button data-btn="notes" data-type="'+now_op_val+'" data-id="'+insert_id+'" class="sp_button">Notes<span class="detail_button_icon">></span></button>';
+                      select_popup += '<button data-btn="drive" data-type="'+now_op_val+'" data-id="'+insert_id+'" class="sp_button">DriveTo<span class="detail_button_icon">></span></button>';
+  
+                      var popup = L.popup({className: 'select_marker_popup' , 'closeButton' : false})
+                          .setContent(select_popup);
+                      marker_i.bindPopup(popup);
+                      marker_i.addTo(instance.map);
+                      instance.map.removeLayer(new_marker);
+                      instance.router.navigate(['/home/survey/'+insert_id]);
+                    }
+                });
+                break;
+                
+              default:
+                break;
+            }
+          });
+      }
+
+      // drawnItems.addLayer(layer);
+  });
     //print map. andrey
     L.control.browserPrint().addTo(this.map)
     ////
@@ -710,8 +1068,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
         // See http://leafletjs.com/reference.html#geojson-options
         layerOptions: {
           onEachFeature: function (feature, layer) {
-            console.log(feature);
-            console.log(layer);
             layer.bindPopup(feature.properties.name);
           }
           ,style: {color:'red'}
@@ -739,7 +1095,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
     });
     ////
     
-    var instance = this;
     this.map.on('popupopen', function(e) {
       $(".sp_button").on('click',(e)=>{
         var self = e.currentTarget;
@@ -766,100 +1121,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
     });
 
     this.map.on('click', (e) => {
-      // when addMarker == true, add new marker to map
-      
-      if(this.addMarker)
-      {
-        var new_marker = L.marker(e.latlng).addTo(this.map);
-        this.map.setView(e.latlng, 13);
-        this.addMarker = false;
-        var select_popup = '<select class="popup_select"><option value="testpost">Testpost</option><option value="tr">Tr</option><option value="survey">Survey</option><option value="resistivity">Resistivity</option></select>';
-        select_popup += '<button class="popup_detail_btn">Details<span class="detail_button_icon">></span></button>'
-        // new_marker.bindPopup(select_popup , select_popup_css);
-        var popup = L.popup({className: 'add_marker_popup' , 'closeButton' : false})
-             .setContent(select_popup);
-        new_marker.bindPopup(popup);
-        new_marker.openPopup();
-
-        var popup_geometry = e.latlng;
-        
-        $(".popup_detail_btn").on('click',e=>{
-          var now_op_val = $(".popup_select").val();
-          var insert_id = -1;
-          switch (now_op_val) {
-            case "abriox":
-              this.abrioxEntityService.add({
-                testpost:{
-                  geometry: {
-                    lat: popup_geometry.lat,
-                    lng: popup_geometry.lng
-                  }
-                }
-              }).subscribe((notification) => {
-                insert_id = notification['id'];
-                
-                this.router.navigate(['/home/abriox/'+insert_id]);
-              });
-              break;
-            case "testpost":
-              this.testpostEntityService.add({
-                geometry: {
-                  lat:popup_geometry.lat,
-                  lng:popup_geometry.lng
-                }
-              }).subscribe((notification) => {
-                insert_id = notification['id'];
-                
-                this.router.navigate(['/home/testpost/'+insert_id]);
-              });
-              break;
-            case "tr":
-              this.trEntityService.add({
-                geometry: {
-                  lat:popup_geometry.lat,
-                  lng:popup_geometry.lng
-                }
-              }).subscribe((notification) => {
-                insert_id = notification['id'];
-                
-                this.router.navigate(['/home/tr/'+insert_id]);
-              });
-              break;
-            case "resistivity":
-                this.resistivityEntityService.add({
-                  date: '2021-04-19T17:54:51.758Z',
-                  geometry: {
-                    lat:popup_geometry.lat,
-                    lng:popup_geometry.lng
-                  },
-                }).subscribe((notification) => {
-                  insert_id = notification['id'];
-                  
-                  this.router.navigate(['/home/resistivity/'+insert_id]);
-                });
-                break;
-            case "survey":
-              this.surveyEntityService.add({
-                geometry: {
-                  lat:popup_geometry.lat,
-                  lng:popup_geometry.lng
-                }  
-              }).subscribe((notification) => {
-                insert_id = notification['id'];
-                
-                this.router.navigate(['/home/survey/'+insert_id]);
-              });
-              break;
-              
-            default:
-              break;
-          }
-          
-                   
-          
-        });
-      }
-      ////
       if (this.clickMarker) {
         this.map.removeLayer(this.clickMarker);
       }
@@ -963,11 +1224,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
       fillOpacity: 0.8,
       fillColor: '#6DB65B',
     });
-  }
-
-  //OnClick "Add Marker" Button
-  onMarker(): void{
-    this.addMarker = true;
   }
 
   toDoList(): void {

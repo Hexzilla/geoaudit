@@ -83,7 +83,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   z-index: 10000;
 }
 
-.leaflet-control-browser-print.leaflet-control a:hover, .leaflet-control-locate.leaflet-bar.leaflet-control a:hover ,.leaflet-control-filelayer.leaflet-control-zoom a:hover{
+.leaflet-control-browser-print.leaflet-control a:hover, .leaflet-control-locate.leaflet-bar.leaflet-control a:hover ,.leaflet-control-filelayer.leaflet-control-zoom a:hover, .leaflet-draw.leaflet-control .leaflet-draw-draw-marker:hover{
   box-shadow:0px 0px 8px 3px grey;
   cursor: pointer;
 }
@@ -224,4 +224,34 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 .select_marker_popup .sp_button:hover{
   cursor: pointer;
+}
+
+// Draw Marker Style
+.leaflet-draw.leaflet-control{
+  border: none;
+  left: 13px !important;
+  bottom: 115px !important;
+  position: absolute;
+  margin: 0px !important;
+  background: unset;
+  z-index: 100001; 
+}
+
+.leaflet-draw.leaflet-control .leaflet-draw-actions{
+  top:15px!important;
+  left:60px!important;
+}
+
+.leaflet-draw-toolbar.leaflet-bar.leaflet-draw-toolbar-top{
+  border:none;
+}
+
+.leaflet-draw.leaflet-control .leaflet-draw-draw-marker{
+  width: 54px;
+  height: 54px;
+  border-radius: 50%!important;
+  border: 1px solid black;
+  background-image: url(map-pin-solid.svg)!important;
+  background-position: center!important;
+  background-size: 27%;
 }
