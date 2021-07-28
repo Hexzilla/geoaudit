@@ -1101,6 +1101,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
         var type = $(self).data('type');
         var id = $(self).data('id');
         var btn_type = $(self).data('btn');
+
+        instance.sidebar.open('home');
         switch(btn_type)
         {
           case "detail":
