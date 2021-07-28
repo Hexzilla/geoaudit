@@ -90,7 +90,7 @@
 
             <mat-action-row>
               <button mat-button color="primary" (click)="updatePassword()">
-                {{ 'CONTAINERS.home.profile.submit' | translate }}
+                {{ 'CONTAINERS.home.profile.next' | translate }}
               </button>
             </mat-action-row>
           </mat-expansion-panel>
@@ -123,8 +123,8 @@
             </p> -->
 
             <mat-action-row>
-              <button mat-button color="primary" (click)="updatePassword()">
-                {{ 'CONTAINERS.home.profile.submit' | translate }}
+              <button mat-button color="primary" (click)="setStep(2, 'CHANGE_PASSWORD')">
+                {{ 'CONTAINERS.home.profile.next' | translate }}
               </button>
             </mat-action-row>
           </mat-expansion-panel>
@@ -143,14 +143,22 @@
               </mat-panel-description>
             </mat-expansion-panel-header>
 
-            <!-- <p>
-              {{
-                'CONTAINERS.home.profile.change_password_instructions' | translate
-              }}
-            </p> -->
+            <mat-form-field appearance="outline">
+              <mat-label>{{
+                'CONTAINERS.home.profile.password' | translate
+              }}</mat-label>
+              <input matInput formControlName="password" type="password" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>{{
+                  'CONTAINERS.home.profile.password_confirmation' | translate
+                }}</mat-label>
+                <input matInput formControlName="passwordConfirmation" type="password" />
+              </mat-form-field>
 
             <mat-action-row>
-              <button mat-button color="primary" (click)="updatePassword()">
+              <button mat-button color="primary" (click)="resetPassword()">
                 {{ 'CONTAINERS.home.profile.submit' | translate }}
               </button>
             </mat-action-row>

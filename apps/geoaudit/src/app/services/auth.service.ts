@@ -87,4 +87,9 @@ export class AuthService {
     resetPassword(data: ResetPassword) {
         return this.http.post(`${environment.API_URL}/auth/reset-password`, data);   
     }
+
+    setAuthSubject(auth: Auth) {
+        localStorage.setItem('auth', JSON.stringify(auth));
+        this.authSubject.next(auth);
+    }
 }

@@ -128,7 +128,9 @@
 				"verification_desc": "Enter verification code",
 				"email": "Email",
 				"email_desc": "Receive verification code",
-				"code": "Code"
+				"code": "Code",
+				"next": "Next",
+				"password_confirmation": "Password Confirmation"
 			},
 			"survey": {
 				"add_survey": {

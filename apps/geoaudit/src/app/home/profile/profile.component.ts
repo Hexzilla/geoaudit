@@ -4,7 +4,7 @@ import { environment } from 'apps/geoaudit/src/environments/environment';
 import { combineLatest, noop, Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { UserEntityService } from '../../entity-services/user-entity.service';
-import { User } from '../../models';
+import { Auth, User } from '../../models';
 import { AlertService, AuthService } from '../../services';
 
 @Component({
@@ -60,7 +60,7 @@ export class ProfileComponent implements OnInit {
   setStep(index: number, accordion: 'CHANGE_PASSWORD') {
     switch (accordion) {
       case 'CHANGE_PASSWORD':
-        this.step = index;
+        this.changePasswordStep = index;
       break;
     }
   }
@@ -123,8 +123,9 @@ export class ProfileComponent implements OnInit {
       code: this.changePasswordForm.value.code,
       password: this.changePasswordForm.value.password,
       passwordConfirmation: this.changePasswordForm.value.passwordConfirmation
-    }).subscribe((res) => {
-      console.log('res', res)
+    }).subscribe((auth: Auth) => {
+      this.authService.setAuthSubject(auth);
+      this.changePasswordStep = null;
     })
   }
 }
