@@ -74,28 +74,10 @@ export class ProfileComponent implements OnInit {
   }
 
   saveUsername() {
-    this.user$
-      .pipe(
-        map((user) => {
-          this.userEntityService
-            .update({
-              id: user.id,
-              username: this.changeUsernameForm.value.username,
-            })
-            .pipe(
-              tap(
-                () => {
-                  this.refreshUser();
-                },
-                (err) => {
-                  this.alertService.error(err.error[0].messages[0].message);
-                }
-              )
-            )
-            .subscribe();
-        })
-      )
-      .subscribe();
+    this.updateUser({
+      id: this.authService.authValue.user.id,
+      username: this.changeUsernameForm.value.username,
+    })
   }
 
   refreshUser() {
@@ -127,5 +109,28 @@ export class ProfileComponent implements OnInit {
       this.authService.setAuthSubject(auth);
       this.changePasswordStep = null;
     })
+  }
+
+  onImageUpload(event): void {        
+    this.updateUser({
+      id: this.authService.authValue.user.id,
+      avatar: event
+    })
+  }
+
+  updateUser(data: any) {
+    this.userEntityService
+    .update(data)
+    .pipe(
+      tap(
+        () => {
+          this.refreshUser();
+        },
+        (err) => {
+          this.alertService.error(err.error[0].messages[0].message);
+        }
+      )
+    )
+    .subscribe();
   }
 }

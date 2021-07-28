@@ -1,11 +1,15 @@
 <ng-container *ngIf="user$ | async as user">
   <div fxLayout="column" fxLayoutAlign="center center">
-    <img
+    <geoaudit-file-upload
+      label="CONTAINERS.home.jobs.job.attachments.images"
+      (upload)="onImageUpload($event)"
+      fileType="IMAGE"
+      [multiple]="false"
+      [template]="'AVATAR'"
       [src]="API_URL + user.avatar.url"
-      width="50px"
-      height="50px"
-      style="border-radius: 50%"
-    />
+    >
+    </geoaudit-file-upload>
+
     <br />
     <h3>
       {{ user.username }}
@@ -123,7 +127,11 @@
             </p> -->
 
             <mat-action-row>
-              <button mat-button color="primary" (click)="setStep(2, 'CHANGE_PASSWORD')">
+              <button
+                mat-button
+                color="primary"
+                (click)="setStep(2, 'CHANGE_PASSWORD')"
+              >
                 {{ 'CONTAINERS.home.profile.next' | translate }}
               </button>
             </mat-action-row>
@@ -151,11 +159,15 @@
             </mat-form-field>
 
             <mat-form-field appearance="outline">
-                <mat-label>{{
-                  'CONTAINERS.home.profile.password_confirmation' | translate
-                }}</mat-label>
-                <input matInput formControlName="passwordConfirmation" type="password" />
-              </mat-form-field>
+              <mat-label>{{
+                'CONTAINERS.home.profile.password_confirmation' | translate
+              }}</mat-label>
+              <input
+                matInput
+                formControlName="passwordConfirmation"
+                type="password"
+              />
+            </mat-form-field>
 
             <mat-action-row>
               <button mat-button color="primary" (click)="resetPassword()">
