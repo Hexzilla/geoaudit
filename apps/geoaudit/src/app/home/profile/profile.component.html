@@ -15,11 +15,9 @@
 
   <mat-tab-group mat-stretch-tabs>
     <mat-tab [label]="'CONTAINERS.home.profile.settings' | translate">
+      <br />
 
-        <br />
-
-        <form fxLayout="column" [formGroup]="form">
-            <!-- <mat-form-field appearance="outline">
+      <!-- <mat-form-field appearance="outline">
                 <mat-label>{{
                   'CONTAINERS.home.profile.username' | translate
                 }}</mat-label>
@@ -33,53 +31,65 @@
                 />
               </mat-form-field> -->
 
-              <h3>{{ 'CONTAINERS.home.profile.change_username' | translate }}</h3>
+      <h3>{{ 'CONTAINERS.home.profile.change_username' | translate }}</h3>
 
-              <mat-accordion class="example-headers-align">
-                <mat-expansion-panel hideToggle>
-                  <mat-expansion-panel-header>
-                    <mat-panel-title>
-                      {{ 'CONTAINERS.home.profile.username' | translate }}
-                    </mat-panel-title>
-                    <mat-panel-description>
-                      {{ 'CONTAINERS.home.profile.type_your_new_username' | translate }}
-                    </mat-panel-description>
-                  </mat-expansion-panel-header>
-              
-                  <mat-form-field appearance="outline">
-                    <mat-label>{{ 'CONTAINERS.home.profile.username' | translate }}</mat-label>
-                    <input matInput formControlName="username">
-                  </mat-form-field>
-              
-                  <mat-action-row>
-                    <button mat-button color="primary" (click)="saveUsername()">{{ 'CONTAINERS.home.profile.save' | translate }}</button>
-                  </mat-action-row>
-                </mat-expansion-panel>
-            </mat-accordion>
+      <mat-accordion class="example-headers-align">
+        <mat-expansion-panel hideToggle>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              {{ 'CONTAINERS.home.profile.username' | translate }}
+            </mat-panel-title>
+            <mat-panel-description>
+              {{ 'CONTAINERS.home.profile.type_your_new_username' | translate }}
+            </mat-panel-description>
+          </mat-expansion-panel-header>
 
-            <br />
+          <form fxLayout="column" [formGroup]="changeUsernameForm">
+            <mat-form-field appearance="outline">
+              <mat-label>{{
+                'CONTAINERS.home.profile.username' | translate
+              }}</mat-label>
+              <input matInput formControlName="username" />
+            </mat-form-field>
+          </form>
 
-            <h3>{{ 'CONTAINERS.home.profile.change_password' | translate }}</h3>
+          <mat-action-row>
+            <button mat-button color="primary" (click)="saveUsername()">
+              {{ 'CONTAINERS.home.profile.save' | translate }}
+            </button>
+          </mat-action-row>
+        </mat-expansion-panel>
+      </mat-accordion>
 
-            <mat-accordion class="example-headers-align">
-                <mat-expansion-panel hideToggle>
-                  <mat-expansion-panel-header>
-                    <mat-panel-title>
-                      {{ 'CONTAINERS.home.profile.password' | translate }}
-                    </mat-panel-title>
-                    <mat-panel-description>
-                      {{ 'CONTAINERS.home.profile.change_your_password' | translate }}
-                    </mat-panel-description>
-                  </mat-expansion-panel-header>
+      <br />
 
-                  <p>{{ 'CONTAINERS.home.profile.change_password_instructions' | translate }}</p>
-              
-                  <mat-action-row>
-                    <button mat-button color="primary" (click)="updatePassword()">{{ 'CONTAINERS.home.profile.submit' | translate }}</button>
-                  </mat-action-row>
-                </mat-expansion-panel>
-            </mat-accordion>
-              <!-- <mat-accordion class="example-headers-align">
+      <h3>{{ 'CONTAINERS.home.profile.change_password' | translate }}</h3>
+
+      <mat-accordion class="example-headers-align">
+        <mat-expansion-panel hideToggle>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              {{ 'CONTAINERS.home.profile.password' | translate }}
+            </mat-panel-title>
+            <mat-panel-description>
+              {{ 'CONTAINERS.home.profile.change_your_password' | translate }}
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+
+          <p>
+            {{
+              'CONTAINERS.home.profile.change_password_instructions' | translate
+            }}
+          </p>
+
+          <mat-action-row>
+            <button mat-button color="primary" (click)="updatePassword()">
+              {{ 'CONTAINERS.home.profile.submit' | translate }}
+            </button>
+          </mat-action-row>
+        </mat-expansion-panel>
+      </mat-accordion>
+      <!-- <mat-accordion class="example-headers-align">
                 <mat-expansion-panel [expanded]="step === 0" (opened)="setStep(0)" hideToggle>
                   <mat-expansion-panel-header>
                     <mat-panel-title>
@@ -146,14 +156,11 @@
                 </mat-expansion-panel>
               
               </mat-accordion> -->
-        </form>
-
     </mat-tab>
     <mat-tab
       [label]="'CONTAINERS.home.profile.analytics' | translate"
       [disabled]="true"
     >
-    
     </mat-tab>
   </mat-tab-group>
 </ng-container>

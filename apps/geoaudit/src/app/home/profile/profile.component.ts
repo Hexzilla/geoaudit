@@ -17,7 +17,9 @@ export class ProfileComponent implements OnInit {
 
   API_URL: string;
 
-  form: FormGroup;
+  changeUsernameForm: FormGroup;
+
+  changePasswordForm: FormGroup;
 
   user$ = this.userEntityService.getByKey(this.authService.authValue.user.id);
 
@@ -31,14 +33,20 @@ export class ProfileComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.form = this.formBuilder.group({
+    this.changeUsernameForm = this.formBuilder.group({
       username: ['', Validators.required],
     });
+
+    this.changePasswordForm = this.formBuilder.group({
+      code: ['', Validators.required],
+      password: ['', Validators.required],
+      passwordConfirmation: ['', Validators.required]
+    })
 
     this.user$
       .pipe(
         map((user) => {
-          this.form.patchValue({
+          this.changeUsernameForm.patchValue({
             username: user.username,
           });
         })
@@ -65,7 +73,7 @@ export class ProfileComponent implements OnInit {
           this.userEntityService
             .update({
               id: user.id,
-              username: this.form.value.username,
+              username: this.changeUsernameForm.value.username,
             })
             .pipe(
               tap(
@@ -93,6 +101,16 @@ export class ProfileComponent implements OnInit {
     this.authService.forgotPassword({
       email: this.authService.authValue.user.email,
       // url: `${this.API_URL}/admin/plugins/users-permissions/auth/reset-password`
+    }).subscribe((res) => {
+      console.log('res', res)
+    })
+  }
+
+  resetPassword() {
+    this.authService.resetPassword({
+      code: this.changePasswordForm.value.code,
+      password: this.changePasswordForm.value.password,
+      passwordConfirmation: this.changePasswordForm.value.passwordConfirmation
     }).subscribe((res) => {
       console.log('res', res)
     })
