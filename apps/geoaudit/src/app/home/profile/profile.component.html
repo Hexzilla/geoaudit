@@ -188,6 +188,41 @@
           </mat-expansion-panel>
         </mat-accordion>
       </form>
+
+      <br />
+
+      <h3>{{ 'CONTAINERS.home.profile.change_address' | translate }}</h3>
+
+      <form [formGroup]="changeAddressForm">
+        <mat-accordion class="example-headers-align">
+          <mat-expansion-panel
+            [expanded]="changeAddressStep === 0"
+            (opened)="setStep(0, 'CHANGE_ADDRESS')"
+            hideToggle
+          >
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                {{ 'CONTAINERS.home.profile.home' | translate }}
+              </mat-panel-title>
+              <mat-panel-description>
+                {{ 'CONTAINERS.home.profile.home_desc' | translate }}
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+
+            <mat-form-field class="full-width" appearance="outline">
+              <mat-label>{{ 'CONTAINERS.home.profile.enter_home_address' | translate }}</mat-label>
+              <input matInput type="text" class="form-control" (keydown.enter)="$event.preventDefault()" autocorrect="off" autocapitalize="off" spellcheck="off" type="text" [formControl]="homeAddressSearchCtrl" #homeAddressSearchInput>
+            </mat-form-field>
+
+
+            <mat-action-row>
+              <button mat-button color="primary" (click)="setStep(1, 'CHANGE_ADDRESS')">
+                {{ 'CONTAINERS.home.profile.next' | translate }}
+              </button>
+            </mat-action-row>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </form>
       <!-- <mat-accordion class="example-headers-align">
                 <mat-expansion-panel [expanded]="step === 0" (opened)="setStep(0)" hideToggle>
                   <mat-expansion-panel-header>

@@ -131,7 +131,14 @@
 				"code": "Code",
 				"next": "Next",
 				"password_confirmation": "Password Confirmation",
-				"logout": "Logout"
+				"logout": "Logout",
+				"change_address": "Change Address",
+				"home": "Home",
+				"home_desc": "Change home address",
+				"work": "Work",
+				"work_desc": "Change work address",
+				"enter_home_address": "Enter home address",
+				"enter_work_address": "Enter work address"
 			},
 			"survey": {
 				"add_survey": {
