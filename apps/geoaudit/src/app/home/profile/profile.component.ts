@@ -13,6 +13,7 @@ import { AlertService, AuthService } from '../../services';
   styleUrls: ['./profile.component.scss'],
 })
 export class ProfileComponent implements OnInit {
+
   step = null;
 
   API_URL: string;
@@ -20,6 +21,8 @@ export class ProfileComponent implements OnInit {
   changeUsernameForm: FormGroup;
 
   changePasswordForm: FormGroup;
+
+  changePasswordStep = null;
 
   user$ = this.userEntityService.getByKey(this.authService.authValue.user.id);
 
@@ -54,8 +57,12 @@ export class ProfileComponent implements OnInit {
       .subscribe();
   }
 
-  setStep(index: number) {
-    this.step = index;
+  setStep(index: number, accordion: 'CHANGE_PASSWORD') {
+    switch (accordion) {
+      case 'CHANGE_PASSWORD':
+        this.step = index;
+      break;
+    }
   }
 
   nextStep() {
@@ -103,6 +110,11 @@ export class ProfileComponent implements OnInit {
       // url: `${this.API_URL}/admin/plugins/users-permissions/auth/reset-password`
     }).subscribe((res) => {
       console.log('res', res)
+      
+      /**
+       * Changes the current step of the panel process to the next one i..e enter code, password, confirmation password.
+       */
+      this.changePasswordStep++;
     })
   }
 

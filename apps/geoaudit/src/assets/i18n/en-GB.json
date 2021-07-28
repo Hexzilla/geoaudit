@@ -123,7 +123,12 @@
 				"password": "Password",
 				"change_your_password": "Change your password",
 				"submit": "Submit",
-				"change_password_instructions": "On click of submit, you'll be logged out and you'll receive an email containing a link to update your password."
+				"change_password_instructions": "On click of submit, you'll receive an email containing a verification code.",
+				"verification": "Verification",
+				"verification_desc": "Enter verification code",
+				"email": "Email",
+				"email_desc": "Receive verification code",
+				"code": "Code"
 			},
 			"survey": {
 				"add_survey": {

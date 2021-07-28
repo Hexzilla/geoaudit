@@ -65,30 +65,98 @@
 
       <h3>{{ 'CONTAINERS.home.profile.change_password' | translate }}</h3>
 
-      <mat-accordion class="example-headers-align">
-        <mat-expansion-panel hideToggle>
-          <mat-expansion-panel-header>
-            <mat-panel-title>
-              {{ 'CONTAINERS.home.profile.password' | translate }}
-            </mat-panel-title>
-            <mat-panel-description>
-              {{ 'CONTAINERS.home.profile.change_your_password' | translate }}
-            </mat-panel-description>
-          </mat-expansion-panel-header>
+      <form [formGroup]="changePasswordForm">
+        <mat-accordion class="example-headers-align">
+          <mat-expansion-panel
+            [expanded]="changePasswordStep === 0"
+            (opened)="setStep(0, 'CHANGE_PASSWORD')"
+            hideToggle
+          >
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                {{ 'CONTAINERS.home.profile.email' | translate }}
+              </mat-panel-title>
+              <mat-panel-description>
+                {{ 'CONTAINERS.home.profile.email_desc' | translate }}
+              </mat-panel-description>
+            </mat-expansion-panel-header>
 
-          <p>
-            {{
-              'CONTAINERS.home.profile.change_password_instructions' | translate
-            }}
-          </p>
+            <p>
+              {{
+                'CONTAINERS.home.profile.change_password_instructions'
+                  | translate
+              }}
+            </p>
 
-          <mat-action-row>
-            <button mat-button color="primary" (click)="updatePassword()">
-              {{ 'CONTAINERS.home.profile.submit' | translate }}
-            </button>
-          </mat-action-row>
-        </mat-expansion-panel>
-      </mat-accordion>
+            <mat-action-row>
+              <button mat-button color="primary" (click)="updatePassword()">
+                {{ 'CONTAINERS.home.profile.submit' | translate }}
+              </button>
+            </mat-action-row>
+          </mat-expansion-panel>
+
+          <mat-expansion-panel
+            [expanded]="changePasswordStep === 1"
+            (opened)="setStep(1, 'CHANGE_PASSWORD')"
+            hideToggle
+          >
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                {{ 'CONTAINERS.home.profile.verification' | translate }}
+              </mat-panel-title>
+              <mat-panel-description>
+                {{ 'CONTAINERS.home.profile.verification_desc' | translate }}
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+
+            <mat-form-field appearance="outline">
+              <mat-label>{{
+                'CONTAINERS.home.profile.code' | translate
+              }}</mat-label>
+              <input matInput formControlName="code" />
+            </mat-form-field>
+
+            <!-- <p>
+              {{
+                'CONTAINERS.home.profile.change_password_instructions' | translate
+              }}
+            </p> -->
+
+            <mat-action-row>
+              <button mat-button color="primary" (click)="updatePassword()">
+                {{ 'CONTAINERS.home.profile.submit' | translate }}
+              </button>
+            </mat-action-row>
+          </mat-expansion-panel>
+
+          <mat-expansion-panel
+            [expanded]="changePasswordStep === 2"
+            (opened)="setStep(2, 'CHANGE_PASSWORD')"
+            hideToggle
+          >
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                {{ 'CONTAINERS.home.profile.password' | translate }}
+              </mat-panel-title>
+              <mat-panel-description>
+                {{ 'CONTAINERS.home.profile.change_your_password' | translate }}
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+
+            <!-- <p>
+              {{
+                'CONTAINERS.home.profile.change_password_instructions' | translate
+              }}
+            </p> -->
+
+            <mat-action-row>
+              <button mat-button color="primary" (click)="updatePassword()">
+                {{ 'CONTAINERS.home.profile.submit' | translate }}
+              </button>
+            </mat-action-row>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </form>
       <!-- <mat-accordion class="example-headers-align">
                 <mat-expansion-panel [expanded]="step === 0" (opened)="setStep(0)" hideToggle>
                   <mat-expansion-panel-header>
