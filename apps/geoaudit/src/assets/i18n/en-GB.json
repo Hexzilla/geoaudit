@@ -130,7 +130,8 @@
 				"email_desc": "Receive verification code",
 				"code": "Code",
 				"next": "Next",
-				"password_confirmation": "Password Confirmation"
+				"password_confirmation": "Password Confirmation",
+				"logout": "Logout"
 			},
 			"survey": {
 				"add_survey": {

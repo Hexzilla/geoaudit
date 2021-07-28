@@ -133,4 +133,8 @@ export class ProfileComponent implements OnInit {
     )
     .subscribe();
   }
+
+  logout() {
+    this.authService.logout();
+  }
 }

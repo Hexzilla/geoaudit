@@ -15,6 +15,17 @@
       {{ user.username }}
       <p style="text-align: center">{{ user.role.name }}</p>
     </h3>
+
+    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item (click)="logout()">
+        <mat-icon>logout</mat-icon>
+        <span>{{ 'CONTAINERS.home.profile.logout' | translate }}</span>
+      </button>
+    </mat-menu>
+    
   </div>
 
   <mat-tab-group mat-stretch-tabs>
