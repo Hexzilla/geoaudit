@@ -183,15 +183,15 @@ export class HomeComponent implements OnInit, AfterViewInit {
     };
 
     // Fetch Markers and Show with layers
-    //fetch testpost
-    var abriox_working_layer = new L.LayerGroup();
-    var abriox_not_working_layer = new L.LayerGroup();
-    var abriox_repairing_layer = new L.LayerGroup();
-    var abriox_replacing_layer = new L.LayerGroup();
+    //fetch abriox
+    var abriox_working_layer = new L.markerClusterGroup();
+    var abriox_not_working_layer = new L.markerClusterGroup();
+    var abriox_repairing_layer = new L.markerClusterGroup();
+    var abriox_replacing_layer = new L.markerClusterGroup();
     this.abrioxEntityService.getAll().subscribe(
       (marker_data) => {
         this.abrioxes = marker_data;
-        
+        console.log("abriox",marker_data);
         for( var i=0 ;i < this.abrioxes.length ;i ++)
         {
           var a = this.abrioxes[i];
@@ -227,7 +227,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
                 var popup = L.popup({className: 'select_marker_popup' , 'closeButton' : false})
                     .setContent(select_popup);
                 marker_i.bindPopup(popup);
-                marker_i.addTo(abriox_working_layer);
+                // marker_i.addTo(abriox_working_layer);
+                abriox_working_layer.addLayer(marker_i);
               break;
             case "NOT_WORKING":
                 icon_name = "signal_wifi_0_bar";
@@ -248,7 +249,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
                 var popup = L.popup({className: 'select_marker_popup' , 'closeButton' : false})
                     .setContent(select_popup);
                 marker_i.bindPopup(popup);
-                marker_i.addTo(abriox_not_working_layer);
+                // marker_i.addTo(abriox_not_working_layer);
+                abriox_not_working_layer.addLayer(marker_i);
               break;
             case "REPAIRING":
                 icon_name = "signal_wifi_0_bar";
@@ -269,7 +271,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
                 var popup = L.popup({className: 'select_marker_popup' , 'closeButton' : false})
                     .setContent(select_popup);
                 marker_i.bindPopup(popup);
-                marker_i.addTo(abriox_repairing_layer);
+                abriox_repairing_layer.addLayer(marker_i);
               break;
             case "REPLACING":
                 icon_name = "signal_wifi_0_bar";
@@ -290,7 +292,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
                 var popup = L.popup({className: 'select_marker_popup' , 'closeButton' : false})
                     .setContent(select_popup);
                 marker_i.bindPopup(popup);
-                marker_i.addTo(abriox_replacing_layer);
+                abriox_replacing_layer.addLayer(marker_i);
               break;
           }
           
@@ -303,10 +305,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
     );
 
       //fetch testpost
-    var testpost_working_layer = new L.LayerGroup();
-    var testpost_not_working_layer = new L.LayerGroup();
-    var testpost_repairing_layer = new L.LayerGroup();
-    var testpost_replacing_layer = new L.LayerGroup();
+    var testpost_working_layer = new L.markerClusterGroup();
+    var testpost_not_working_layer = new L.markerClusterGroup();
+    var testpost_repairing_layer = new L.markerClusterGroup();
+    var testpost_replacing_layer = new L.markerClusterGroup();
     this.testpostEntityService.getAll().subscribe(
       (marker_data) => {
         marker_data.sort(function(a,b){
@@ -314,6 +316,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
             return -1;
           return 1;
         });
+        console.log(marker_data);
         this.testposts = marker_data;
         
         var flag1 = 0 ,flag2 = 0 , flag3 = 0 , flag4 = 0;
@@ -324,7 +327,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
           // if no geometry data, skip it
           if(!a || !a.geometry || !this.testposts[i].name) continue;
           // if against Layer rule, skip it
-          if(a.footer['approved'] != "YES" ) continue;
+          if(!a.footer['approved']) continue;
 
           // if no condition data, skip it
           if(!a.condition || !a.condition.name) continue;
@@ -448,10 +451,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
     );
 
       //fetch tr
-      var tr_working_layer = new L.LayerGroup();
-      var tr_not_working_layer = new L.LayerGroup();
-      var tr_repairing_layer = new L.LayerGroup();
-      var tr_replacing_layer = new L.LayerGroup();
+      var tr_working_layer = new L.markerClusterGroup();
+      var tr_not_working_layer = new L.markerClusterGroup();
+      var tr_repairing_layer = new L.markerClusterGroup();
+      var tr_replacing_layer = new L.markerClusterGroup();
       this.trEntityService.getAll().subscribe(
         (marker_data) => {
           marker_data.sort(function(a,b){
@@ -459,6 +462,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
               return -1;
             return 1;
           });
+          console.log("tr",marker_data);
           this.trs = marker_data;
           
           var flag1 = 0 ,flag2 = 0 , flag3 = 0 , flag4 = 0;
@@ -500,7 +504,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
                   var popup = L.popup({className: 'select_marker_popup' , 'closeButton' : false})
                       .setContent(select_popup);
                   marker_i.bindPopup(popup);
-                  marker_i.addTo(tr_working_layer);
+                  // marker_i.addTo(tr_working_layer);
+                  tr_working_layer.addLayer(marker_i);
                   flag1 = 1;
                 }
                 break;
@@ -526,7 +531,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
                   var popup = L.popup({className: 'select_marker_popup' , 'closeButton' : false})
                       .setContent(select_popup);
                   marker_i.bindPopup(popup);
-                  marker_i.addTo(tr_not_working_layer);
+                  // marker_i.addTo(tr_not_working_layer);
+                  tr_not_working_layer.addLayer(marker_i);
                   flag2 = 1;
                 }
                 break;
@@ -552,7 +558,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
                   var popup = L.popup({className: 'select_marker_popup' , 'closeButton' : false})
                       .setContent(select_popup);
                   marker_i.bindPopup(popup);
-                  marker_i.addTo(tr_repairing_layer);
+                  // marker_i.addTo(tr_repairing_layer);
+                  tr_repairing_layer.addLayer(marker_i);
                   flag3 = 1;
                 }
                 break;
@@ -578,7 +585,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
                   var popup = L.popup({className: 'select_marker_popup' , 'closeButton' : false})
                       .setContent(select_popup);
                   marker_i.bindPopup(popup);
-                  marker_i.addTo(tr_replacing_layer);
+                  tr_replacing_layer.addLayer(marker_i);
                   flag4 = 1;
                 }
                 break;
@@ -640,22 +647,22 @@ export class HomeComponent implements OnInit, AfterViewInit {
       );
 
       //fetch survey
-      var survey_complete_layer = new L.LayerGroup();
-      var survey_not_complete_layer = new L.LayerGroup();
-      var survey_ongoing_layer = new L.LayerGroup();
-      var survey_refused_layer = new L.LayerGroup();
+      var survey_complete_layer = new L.markerClusterGroup();
+      var survey_not_complete_layer = new L.markerClusterGroup();
+      var survey_ongoing_layer = new L.markerClusterGroup();
+      var survey_refused_layer = new L.markerClusterGroup();
       this.surveyEntityService.getAll().subscribe(
         (marker_data) => {
           this.surveys = marker_data;
-          
+          console.log("survey",marker_data);
           for( var i=0 ;i < this.surveys.length ;i ++)
           {
             var a = this.surveys[i];
   
             // if no geometry data, skip it
-            if(!a || !a.geometry || !this.surveys[i].name) continue;
+            if(!a || !a.geometry) continue;
             // if against Layer rule, skip it
-            if(!a.footer.approved) continue;
+            if(!a.footer || !a.footer.approved) continue;
   
             // if no status data, skip it
             if(!a.status || !a.status.name) continue;
@@ -683,7 +690,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
                   var popup = L.popup({className: 'select_marker_popup' , 'closeButton' : false})
                       .setContent(select_popup);
                   marker_i.bindPopup(popup);
-                  marker_i.addTo(survey_complete_layer);
+                  // marker_i.addTo(survey_complete_layer);
+                  survey_complete_layer.addLayer(marker_i);
                 break;
               case "NOT_COMPLETED":
                   icon_name = "flag";
@@ -704,7 +712,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
                   var popup = L.popup({className: 'select_marker_popup' , 'closeButton' : false})
                       .setContent(select_popup);
                   marker_i.bindPopup(popup);
-                  marker_i.addTo(survey_not_complete_layer);
+                  // marker_i.addTo(survey_not_complete_layer);
+                  survey_not_complete_layer.addLayer(marker_i);
                 break;
               case "ONGOING":
                   icon_name = "flag";
@@ -725,7 +734,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
                   var popup = L.popup({className: 'select_marker_popup' , 'closeButton' : false})
                       .setContent(select_popup);
                   marker_i.bindPopup(popup);
-                  marker_i.addTo(survey_ongoing_layer);
+                  survey_ongoing_layer.addLayer(marker_i);
                 break;
               case "REFUSED":
                   icon_name = "flag";
@@ -746,7 +755,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
                   var popup = L.popup({className: 'select_marker_popup' , 'closeButton' : false})
                       .setContent(select_popup);
                   marker_i.bindPopup(popup);
-                  marker_i.addTo(survey_refused_layer);
+                  survey_refused_layer.addLayer(marker_i);
                 break;
             }
           }
