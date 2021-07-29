@@ -215,11 +215,38 @@
             </mat-form-field>
 
 
-            <mat-action-row>
+            <!-- <mat-action-row>
               <button mat-button color="primary" (click)="setStep(1, 'CHANGE_ADDRESS')">
                 {{ 'CONTAINERS.home.profile.next' | translate }}
               </button>
-            </mat-action-row>
+            </mat-action-row> -->
+          </mat-expansion-panel>
+
+          <mat-expansion-panel
+            [expanded]="changeAddressStep === 1"
+            (opened)="setStep(1, 'CHANGE_ADDRESS')"
+            hideToggle
+          >
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                {{ 'CONTAINERS.home.profile.work' | translate }}
+              </mat-panel-title>
+              <mat-panel-description>
+                {{ 'CONTAINERS.home.profile.work_desc' | translate }}
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+
+            <mat-form-field class="full-width" appearance="outline">
+              <mat-label>{{ 'CONTAINERS.home.profile.enter_work_address' | translate }}</mat-label>
+              <input matInput type="text" class="form-control" (keydown.enter)="$event.preventDefault()" autocorrect="off" autocapitalize="off" spellcheck="off" type="text" [formControl]="workAddressSearchCtrl" #workAddressSearchInput>
+            </mat-form-field>
+
+
+            <!-- <mat-action-row>
+              <button mat-button color="primary" (click)="setStep(null, 'CHANGE_ADDRESS')">
+                {{ 'CONTAINERS.home.profile.finished' | translate }}
+              </button>
+            </mat-action-row> -->
           </mat-expansion-panel>
         </mat-accordion>
       </form>

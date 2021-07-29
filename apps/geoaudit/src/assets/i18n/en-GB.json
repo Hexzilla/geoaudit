@@ -138,7 +138,8 @@
 				"work": "Work",
 				"work_desc": "Change work address",
 				"enter_home_address": "Enter home address",
-				"enter_work_address": "Enter work address"
+				"enter_work_address": "Enter work address",
+				"finished": "Finished"
 			},
 			"survey": {
 				"add_survey": {

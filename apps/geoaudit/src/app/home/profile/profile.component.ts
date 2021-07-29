@@ -40,6 +40,10 @@ export class ProfileComponent implements OnInit, AfterViewInit {
 
   @ViewChild('homeAddressSearchInput') homeAddressSearchInput: ElementRef;
 
+  workAddressSearchCtrl = new FormControl();
+
+  @ViewChild('workAddressSearchInput') workAddressSearchInput: ElementRef;
+
   constructor(
     private alertService: AlertService,
     private authService: AuthService,
@@ -75,33 +79,9 @@ export class ProfileComponent implements OnInit, AfterViewInit {
 
           // console.log('latlng', latlng)
 
-          this.mapsAPILoader.load().then(() => {
+          this.patchAddress('home', user.home.lat, user.home.lng, this.homeAddressSearchCtrl);
 
-          this.ngZone.run(() => {
-            const latlng = new google.maps.LatLng(user.home.lat, user.home.lng)
-
-            const geocoder = new google.maps.Geocoder();
-  
-            geocoder.geocode({ location: latlng }, (results, status) => {
-              if (status !== google.maps.GeocoderStatus.OK) {
-                alert(status);
-            }
-            // This is checking to see if the Geoeode Status is OK before proceeding
-            if (status == google.maps.GeocoderStatus.OK) {
-                console.log(results);
-                var address = (results[0].formatted_address);
-
-                console.log('address', address)
-  
-                this.changeAddressForm.patchValue({
-                  home: address
-                })
-
-                this.homeAddressSearchCtrl.patchValue(address)
-              }
-            })
-          })
-          })
+          this.patchAddress('work', user.work.lat, user.work.lng, this.workAddressSearchCtrl);
 
           this.changeUsernameForm.patchValue({
             username: user.username,
@@ -111,12 +91,44 @@ export class ProfileComponent implements OnInit, AfterViewInit {
       .subscribe();
   }
 
+  patchAddress(attribute: 'home' | 'work', lat: number, lng: number, searchCtrl: FormControl) {
+    this.mapsAPILoader.load().then(() => {
+
+      this.ngZone.run(() => {
+        const latlng = new google.maps.LatLng(lat, lng)
+
+        const geocoder = new google.maps.Geocoder();
+
+        geocoder.geocode({ location: latlng }, (results, status) => {
+          if (status !== google.maps.GeocoderStatus.OK) {
+            alert(status);
+        }
+        // This is checking to see if the Geoeode Status is OK before proceeding
+        if (status == google.maps.GeocoderStatus.OK) {
+            console.log(results);
+            var address = (results[0].formatted_address);
+
+            console.log('address', address)
+
+            this.changeAddressForm.patchValue({
+              [attribute]: address
+            })
+
+            searchCtrl.patchValue(address)
+          }
+        })
+      })
+      })
+  }
+
   ngAfterViewInit() {
 
     this.homeAddressSearchCtrl.valueChanges.subscribe((value) => {
-      const place = this.place(this.homeAddressSearchInput, 'home');
+      this.place(this.homeAddressSearchInput, 'home');
+    })
 
-      console.log('place', place, this.geometry)
+    this.workAddressSearchCtrl.valueChanges.subscribe((value) => {
+      this.place(this.workAddressSearchInput, 'work');
     })
   }
 
@@ -139,9 +151,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
             lat: place.geometry.location.lat(),
             lng: place.geometry.location.lng(),
           }
-          
-          this.geometry = geometry;
-          
+                    
           this.updateUser({
             id: this.authService.authValue.user.id,
             [attribute]: geometry
