@@ -592,7 +592,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
       );
 
       //fetch resistivites
-      var resistivity_layer = new L.LayerGroup();
+      var resistivity_layer = new L.markerClusterGroup();
       this.resistivityEntityService.getAll().subscribe(
         (marker_data) => {
          
@@ -629,7 +629,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
               var popup = L.popup({className: 'select_marker_popup' , 'closeButton' : false})
                   .setContent(select_popup);
               marker_i.bindPopup(popup);
-              marker_i.addTo(resistivity_layer);
+              // marker_i.addTo(resistivity_layer);
+              resistivity_layer.addLayer(marker_i);
           }
         },
   
@@ -1062,6 +1063,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
     // upload files. andrey
     L.Control.FileLayerLoad.LABEL = '<span class="fa fa-upload" aria-hidden="true"></span>';
+    
     var uploadControl = L.Control.fileLayerLoad({
         // Allows you to use a customized version of L.geoJson.
         layer: L.geoJson,
