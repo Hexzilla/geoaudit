@@ -327,7 +327,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
           // if no geometry data, skip it
           if(!a || !a.geometry || !this.testposts[i].name) continue;
           // if against Layer rule, skip it
-          if(!a.footer['approved']) continue;
+          if(!a.footer || !a.footer['approved']) continue;
 
           // if no condition data, skip it
           if(!a.condition || !a.condition.name) continue;
@@ -602,7 +602,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
       var resistivity_layer = new L.markerClusterGroup();
       this.resistivityEntityService.getAll().subscribe(
         (marker_data) => {
-         
+         console.log(marker_data);
           this.resistivities = marker_data;
           for( var i=0 ;i < this.resistivities.length ;i ++)
           {
