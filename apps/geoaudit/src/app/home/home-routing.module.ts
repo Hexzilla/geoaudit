@@ -42,6 +42,57 @@ const routes: Routes = [
             {
                 path: 'approvals', component: ApprovalsComponent
             },
+            {
+                path: 'abriox/:id', component: SearchComponent
+            },
+            {
+                path: 'abriox/:id/history', component: SearchComponent
+            },
+            {
+                path: 'abriox/:id/notes', component: SearchComponent
+            },
+            {
+                path: 'abriox/:id/drive', component: SearchComponent
+            },
+            {
+                path: 'testpost/:id', component: SearchComponent
+            },
+            {
+                path: 'testpost/:id/history', component: SearchComponent
+            },
+            {
+                path: 'testpost/:id/notes', component: SearchComponent
+            },
+            {
+                path: 'testpost/:id/drive', component: SearchComponent
+            },
+            {
+                path: 'tr/:id', component: SearchComponent
+            },
+            {
+                path: 'tr/:id/history', component: SearchComponent
+            },
+            {
+                path: 'tr/:id/notes', component: SearchComponent
+            },
+            {
+                path: 'tr/:id/drive', component: SearchComponent
+            },
+            // {
+            //     path: 'survey/:id', component: SearchComponent
+            // },
+            {
+                path: 'resistivity/:id', component: SearchComponent
+            },
+            {
+                path: 'resistivity/:id/history', component: SearchComponent
+            },
+            {
+                path: 'resistivity/:id/notes', component: SearchComponent
+            },
+            {
+                path: 'resistivity/:id/drive', component: SearchComponent
+            }
         ]
     },
 

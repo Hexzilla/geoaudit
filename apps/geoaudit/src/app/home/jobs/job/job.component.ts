@@ -459,10 +459,13 @@ export class JobComponent implements OnInit, AfterViewInit {
       * and then extract the id ready for when we
       * update the form.
       */
+     console.log("form");
+     console.log(this.form.value);
      this.jobEntityService.add(this.form.value).subscribe(
        (job) => {
          this.job = job;
- 
+         console.log("job add");
+        console.log(job);
          this.form.patchValue({
            id: job.id
          })

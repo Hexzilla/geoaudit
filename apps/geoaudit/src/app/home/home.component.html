@@ -1,16 +1,13 @@
 <div class="map-container">
   <div class="map-frame">
     <div class="map-button-container">
-      <button mat-fab class="search_button" (click)="search()">
+      <button title="Search" mat-fab class="search_button" (click)="search()">
         <fa-icon [icon]="faSearch"></fa-icon>
-      </button>
-      <button mat-fab class="layer_button">
-        <fa-icon [icon]="faLayerGroup"></fa-icon>
-      </button>     
-      <button mat-fab class="marker_button">
+      </button>   
+      <button title="Add Marker" mat-fab class="marker_button" (click)="onMarker()">
         <fa-icon [icon]="faMapPin"></fa-icon>
       </button>
-
+      
     </div>
     <div id="map"></div>
 

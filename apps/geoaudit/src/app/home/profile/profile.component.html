@@ -1,1 +1,327 @@
-<p>profile works!</p>
+<ng-container *ngIf="user$ | async as user">
+  <div fxLayout="column" fxLayoutAlign="center center">
+    <geoaudit-file-upload
+      label="CONTAINERS.home.jobs.job.attachments.images"
+      (upload)="onImageUpload($event)"
+      fileType="IMAGE"
+      [multiple]="false"
+      [template]="'AVATAR'"
+      [src]="API_URL + user.avatar.url"
+    >
+    </geoaudit-file-upload>
+
+    <br />
+    <h3>
+      {{ user.username }}
+      <p style="text-align: center">{{ user.role.name }}</p>
+    </h3>
+
+    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item (click)="logout()">
+        <mat-icon>logout</mat-icon>
+        <span>{{ 'CONTAINERS.home.profile.logout' | translate }}</span>
+      </button>
+    </mat-menu>
+    
+  </div>
+
+  <mat-tab-group mat-stretch-tabs>
+    <mat-tab [label]="'CONTAINERS.home.profile.settings' | translate">
+      <br />
+
+      <!-- <mat-form-field appearance="outline">
+                <mat-label>{{
+                  'CONTAINERS.home.profile.username' | translate
+                }}</mat-label>
+                <input
+                  matInput
+                  [placeholder]="
+                    'CONTAINERS.home.profile.username' | translate
+                  "
+                  formControlName="username"
+                  class="form-control"
+                />
+              </mat-form-field> -->
+
+      <h3>{{ 'CONTAINERS.home.profile.change_username' | translate }}</h3>
+
+      <mat-accordion class="example-headers-align">
+        <mat-expansion-panel hideToggle>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              {{ 'CONTAINERS.home.profile.username' | translate }}
+            </mat-panel-title>
+            <mat-panel-description>
+              {{ 'CONTAINERS.home.profile.type_your_new_username' | translate }}
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+
+          <form fxLayout="column" [formGroup]="changeUsernameForm">
+            <mat-form-field appearance="outline">
+              <mat-label>{{
+                'CONTAINERS.home.profile.username' | translate
+              }}</mat-label>
+              <input matInput formControlName="username" />
+            </mat-form-field>
+          </form>
+
+          <mat-action-row>
+            <button mat-button color="primary" (click)="saveUsername()">
+              {{ 'CONTAINERS.home.profile.save' | translate }}
+            </button>
+          </mat-action-row>
+        </mat-expansion-panel>
+      </mat-accordion>
+
+      <br />
+
+      <h3>{{ 'CONTAINERS.home.profile.change_password' | translate }}</h3>
+
+      <form [formGroup]="changePasswordForm">
+        <mat-accordion class="example-headers-align">
+          <mat-expansion-panel
+            [expanded]="changePasswordStep === 0"
+            (opened)="setStep(0, 'CHANGE_PASSWORD')"
+            hideToggle
+          >
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                {{ 'CONTAINERS.home.profile.email' | translate }}
+              </mat-panel-title>
+              <mat-panel-description>
+                {{ 'CONTAINERS.home.profile.email_desc' | translate }}
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+
+            <p>
+              {{
+                'CONTAINERS.home.profile.change_password_instructions'
+                  | translate
+              }}
+            </p>
+
+            <mat-action-row>
+              <button mat-button color="primary" (click)="updatePassword()">
+                {{ 'CONTAINERS.home.profile.next' | translate }}
+              </button>
+            </mat-action-row>
+          </mat-expansion-panel>
+
+          <mat-expansion-panel
+            [expanded]="changePasswordStep === 1"
+            (opened)="setStep(1, 'CHANGE_PASSWORD')"
+            hideToggle
+          >
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                {{ 'CONTAINERS.home.profile.verification' | translate }}
+              </mat-panel-title>
+              <mat-panel-description>
+                {{ 'CONTAINERS.home.profile.verification_desc' | translate }}
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+
+            <mat-form-field appearance="outline">
+              <mat-label>{{
+                'CONTAINERS.home.profile.code' | translate
+              }}</mat-label>
+              <input matInput formControlName="code" />
+            </mat-form-field>
+
+            <!-- <p>
+              {{
+                'CONTAINERS.home.profile.change_password_instructions' | translate
+              }}
+            </p> -->
+
+            <mat-action-row>
+              <button
+                mat-button
+                color="primary"
+                (click)="setStep(2, 'CHANGE_PASSWORD')"
+              >
+                {{ 'CONTAINERS.home.profile.next' | translate }}
+              </button>
+            </mat-action-row>
+          </mat-expansion-panel>
+
+          <mat-expansion-panel
+            [expanded]="changePasswordStep === 2"
+            (opened)="setStep(2, 'CHANGE_PASSWORD')"
+            hideToggle
+          >
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                {{ 'CONTAINERS.home.profile.password' | translate }}
+              </mat-panel-title>
+              <mat-panel-description>
+                {{ 'CONTAINERS.home.profile.change_your_password' | translate }}
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+
+            <mat-form-field appearance="outline">
+              <mat-label>{{
+                'CONTAINERS.home.profile.password' | translate
+              }}</mat-label>
+              <input matInput formControlName="password" type="password" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>{{
+                'CONTAINERS.home.profile.password_confirmation' | translate
+              }}</mat-label>
+              <input
+                matInput
+                formControlName="passwordConfirmation"
+                type="password"
+              />
+            </mat-form-field>
+
+            <mat-action-row>
+              <button mat-button color="primary" (click)="resetPassword()">
+                {{ 'CONTAINERS.home.profile.submit' | translate }}
+              </button>
+            </mat-action-row>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </form>
+
+      <br />
+
+      <h3>{{ 'CONTAINERS.home.profile.change_address' | translate }}</h3>
+
+      <form [formGroup]="changeAddressForm">
+        <mat-accordion class="example-headers-align">
+          <mat-expansion-panel
+            [expanded]="changeAddressStep === 0"
+            (opened)="setStep(0, 'CHANGE_ADDRESS')"
+            hideToggle
+          >
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                {{ 'CONTAINERS.home.profile.home' | translate }}
+              </mat-panel-title>
+              <mat-panel-description>
+                {{ 'CONTAINERS.home.profile.home_desc' | translate }}
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+
+            <mat-form-field class="full-width" appearance="outline">
+              <mat-label>{{ 'CONTAINERS.home.profile.enter_home_address' | translate }}</mat-label>
+              <input matInput type="text" class="form-control" (keydown.enter)="$event.preventDefault()" autocorrect="off" autocapitalize="off" spellcheck="off" type="text" [formControl]="homeAddressSearchCtrl" #homeAddressSearchInput>
+            </mat-form-field>
+
+
+            <!-- <mat-action-row>
+              <button mat-button color="primary" (click)="setStep(1, 'CHANGE_ADDRESS')">
+                {{ 'CONTAINERS.home.profile.next' | translate }}
+              </button>
+            </mat-action-row> -->
+          </mat-expansion-panel>
+
+          <mat-expansion-panel
+            [expanded]="changeAddressStep === 1"
+            (opened)="setStep(1, 'CHANGE_ADDRESS')"
+            hideToggle
+          >
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                {{ 'CONTAINERS.home.profile.work' | translate }}
+              </mat-panel-title>
+              <mat-panel-description>
+                {{ 'CONTAINERS.home.profile.work_desc' | translate }}
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+
+            <mat-form-field class="full-width" appearance="outline">
+              <mat-label>{{ 'CONTAINERS.home.profile.enter_work_address' | translate }}</mat-label>
+              <input matInput type="text" class="form-control" (keydown.enter)="$event.preventDefault()" autocorrect="off" autocapitalize="off" spellcheck="off" type="text" [formControl]="workAddressSearchCtrl" #workAddressSearchInput>
+            </mat-form-field>
+
+
+            <!-- <mat-action-row>
+              <button mat-button color="primary" (click)="setStep(null, 'CHANGE_ADDRESS')">
+                {{ 'CONTAINERS.home.profile.finished' | translate }}
+              </button>
+            </mat-action-row> -->
+          </mat-expansion-panel>
+        </mat-accordion>
+      </form>
+      <!-- <mat-accordion class="example-headers-align">
+                <mat-expansion-panel [expanded]="step === 0" (opened)="setStep(0)" hideToggle>
+                  <mat-expansion-panel-header>
+                    <mat-panel-title>
+                      Personal data
+                    </mat-panel-title>
+                    <mat-panel-description>
+                      Type your name and age
+                      <mat-icon>account_circle</mat-icon>
+                    </mat-panel-description>
+                  </mat-expansion-panel-header>
+              
+                  <mat-form-field appearance="fill">
+                    <mat-label>First name</mat-label>
+                    <input matInput>
+                  </mat-form-field>
+              
+                  <mat-form-field appearance="fill">
+                    <mat-label>Age</mat-label>
+                    <input matInput type="number" min="1">
+                  </mat-form-field>
+                  <mat-action-row>
+                    <button mat-button color="primary" (click)="nextStep()">Next</button>
+                  </mat-action-row>
+                </mat-expansion-panel>
+              
+                <mat-expansion-panel [expanded]="step === 1" (opened)="setStep(1)" hideToggle>
+                  <mat-expansion-panel-header>
+                    <mat-panel-title>
+                      Destination
+                    </mat-panel-title>
+                    <mat-panel-description>
+                      Type the country name
+                      <mat-icon>map</mat-icon>
+                    </mat-panel-description>
+                  </mat-expansion-panel-header>
+              
+                  <mat-form-field appearance="fill">
+                    <mat-label>Country</mat-label>
+                    <input matInput>
+                  </mat-form-field>
+              
+                  <mat-action-row>
+                    <button mat-button color="warn" (click)="prevStep()">Previous</button>
+                    <button mat-button color="primary" (click)="nextStep()">Next</button>
+                  </mat-action-row>
+                </mat-expansion-panel>
+              
+                <mat-expansion-panel [expanded]="step === 2" (opened)="setStep(2)" hideToggle>
+                  <mat-expansion-panel-header>
+                    <mat-panel-title>
+                      Day of the trip
+                    </mat-panel-title>
+                    <mat-panel-description>
+                      Inform the date you wish to travel
+                      <mat-icon>date_range</mat-icon>
+                    </mat-panel-description>
+                  </mat-expansion-panel-header>
+            
+              
+                  <mat-action-row>
+                    <button mat-button color="warn" (click)="prevStep()">Previous</button>
+                    <button mat-button color="primary" (click)="nextStep()">End</button>
+                  </mat-action-row>
+                </mat-expansion-panel>
+              
+              </mat-accordion> -->
+    </mat-tab>
+    <mat-tab
+      [label]="'CONTAINERS.home.profile.analytics' | translate"
+      [disabled]="true"
+    >
+    </mat-tab>
+  </mat-tab-group>
+</ng-container>

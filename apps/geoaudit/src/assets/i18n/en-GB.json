@@ -112,6 +112,35 @@
 					"SHARE_JOB": "{{source}} shared a job with you"
 				}
 			},
+			"profile": {
+				"settings": "Settings",
+				"analytics": "Analytics",
+				"change_username": "Change Username",
+				"username": "Username",
+				"type_your_new_username": "Type your new username",
+				"save": "Save",
+				"change_password": "Change Password",
+				"password": "Password",
+				"change_your_password": "Change your password",
+				"submit": "Submit",
+				"change_password_instructions": "On click of submit, you'll receive an email containing a verification code.",
+				"verification": "Verification",
+				"verification_desc": "Enter verification code",
+				"email": "Email",
+				"email_desc": "Receive verification code",
+				"code": "Code",
+				"next": "Next",
+				"password_confirmation": "Password Confirmation",
+				"logout": "Logout",
+				"change_address": "Change Address",
+				"home": "Home",
+				"home_desc": "Change home address",
+				"work": "Work",
+				"work_desc": "Change work address",
+				"enter_home_address": "Enter home address",
+				"enter_work_address": "Enter work address",
+				"finished": "Finished"
+			},
 			"survey": {
 				"add_survey": {
 					"title": "Add Survey"

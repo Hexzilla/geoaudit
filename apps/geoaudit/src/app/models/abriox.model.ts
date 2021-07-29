@@ -6,15 +6,16 @@ import { Survey } from "./survey.model";
 import { Testpost } from "./testpost.model";
 
 export interface Abriox {
-    name: string;
-    telephone: number;
-    serial_number: string;
-    date_installation: string;
-    footer: Footer;
-    tr: TrackEvent;
+    id? :number;
+    name?: string;
+    telephone?: number;
+    serial_number?: string;
+    date_installation?: string;
+    footer?: Footer;
+    tr?: TrackEvent;
     testpost: Testpost;
-    surveys: Array<Survey>;
-    abriox_notes: Array<AbrioxNote>;
-    status: Status;
-    condition: Condition;
+    surveys?: Array<Survey>;
+    abriox_notes?: Array<AbrioxNote>;
+    status?: Status;
+    condition?: Condition;
 }
