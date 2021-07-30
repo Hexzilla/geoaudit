@@ -1,5 +1,14 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { AfterViewInit, EventEmitter, Component, ElementRef, Input, OnInit, Output, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  EventEmitter,
+  Component,
+  ElementRef,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
@@ -12,7 +21,12 @@ import autoTable from 'jspdf-autotable';
 import * as moment from 'moment';
 import Papa from 'papaparse';
 import { fromEvent } from 'rxjs';
-import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  filter,
+  map,
+} from 'rxjs/operators';
 
 import { DeleteModalComponent } from '../../modals/delete-modal/delete-modal.component';
 import { NavigationModalComponent } from '../../modals/navigation-modal/navigation-modal.component';
@@ -24,11 +38,16 @@ import * as SurveyActions from '../../store/survey/survey.actions';
 @Component({
   selector: 'geoaudit-survey-table',
   templateUrl: './survey-table.component.html',
-  styleUrls: ['./survey-table.component.scss']
+  styleUrls: ['./survey-table.component.scss'],
 })
 export class SurveyTableComponent implements OnInit, AfterViewInit {
-
-  displayedColumns: string[] = ['select', 'name', 'date_delivery', 'status', 'actions'];
+  displayedColumns: string[] = [
+    'select',
+    'name',
+    'date_delivery',
+    'status',
+    'actions',
+  ];
 
   form: FormGroup;
 
@@ -43,15 +62,11 @@ export class SurveyTableComponent implements OnInit, AfterViewInit {
 
   @Input() job?: Job;
 
-  @Input() length: number;
-
   @Input() filterMode: 'LOCAL' | 'NETWORK';
 
   @Input() role: 'MANAGER';
 
   @Input() pageSize: number;
-
-  @Input() pageSizeOptions: number[];
 
   @ViewChild('input', { static: true }) input: ElementRef;
 
@@ -66,7 +81,7 @@ export class SurveyTableComponent implements OnInit, AfterViewInit {
     private store: Store<fromApp.State>,
     private dialog: MatDialog,
     private router: Router
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.form = this.formBuilder.group({
@@ -85,40 +100,42 @@ export class SurveyTableComponent implements OnInit, AfterViewInit {
      *
      * https://www.freakyjolly.com/angular-rxjs-debounce-time-optimize-search-for-server-response/
      */
-     fromEvent(this.input.nativeElement, 'keyup')
-     .pipe(
-       map((event: any) => {
-         return event.target.value;
-       }),
-       filter((res) => res.length >= 0),
-       debounceTime(1000),
-       distinctUntilChanged()
-     )
-     .subscribe((text: string) => {
-       if (this.dataSource.paginator) {
-         this.dataSource.paginator.firstPage();
-       }
+    fromEvent(this.input.nativeElement, 'keyup')
+      .pipe(
+        map((event: any) => {
+          return event.target.value;
+        }),
+        filter((res) => res.length >= 0),
+        debounceTime(1000),
+        distinctUntilChanged()
+      )
+      .subscribe((text: string) => {
+        if (this.dataSource.paginator) {
+          this.dataSource.paginator.firstPage();
+        }
 
-       if (this.filterMode === 'NETWORK') {
-        this.store.dispatch(
-          SurveyActions.fetchSurveys({
-            start: 0,
-            limit: this.pageSize,
-            filter: text,
-          })
-        );
-       }
-
-       if (this.filterMode === 'LOCAL') {
-        this.dataSource.data = this.data.filter((survey) => {
-          return (
-            (typeof survey.name === "string" && survey.name.toLowerCase().indexOf(text) === 0) ||
-            (typeof survey.reference === "string" && survey.reference.toLowerCase().indexOf(text) === 0) ||
-            (typeof survey.id === "number" && survey.id.toString() === text)
+        if (this.filterMode === 'NETWORK') {
+          this.store.dispatch(
+            SurveyActions.fetchSurveys({
+              start: 0,
+              limit: this.pageSize,
+              filter: text,
+            })
           );
-        });
-       }
-     });
+        }
+
+        if (this.filterMode === 'LOCAL') {
+          this.dataSource.data = this.data.filter((survey) => {
+            return (
+              (typeof survey.name === 'string' &&
+                survey.name.toLowerCase().indexOf(text) === 0) ||
+              (typeof survey.reference === 'string' &&
+                survey.reference.toLowerCase().indexOf(text) === 0) ||
+              (typeof survey.id === 'number' && survey.id.toString() === text)
+            );
+          });
+        }
+      });
   }
 
   // convenience getter for easy access to form fields
@@ -128,44 +145,45 @@ export class SurveyTableComponent implements OnInit, AfterViewInit {
 
   calendar(): void {
     const surveys = this.selection.isEmpty()
-    ? this.dataSource.data
-    : this.selection.selected;
+      ? this.dataSource.data
+      : this.selection.selected;
 
-    const surveyIds = surveys.map(survey => survey.id);    
-    console.log('surveyIds', surveyIds)
+    const surveyIds = surveys.map((survey) => survey.id);
+    console.log('surveyIds', surveyIds);
 
     // Add the array of values to the query parameter as a JSON string
     const queryParams = {
-      surveys: JSON.stringify(surveyIds)
-    }
-
-    console.log(queryParams)
-    
-    // Create our 'NaviationExtras' object which is expected by the Angular Router
-    const navigationExtras: NavigationExtras = {
-      queryParams
+      surveys: JSON.stringify(surveyIds),
     };
 
-    console.log(navigationExtras)
+    console.log(queryParams);
+
+    // Create our 'NaviationExtras' object which is expected by the Angular Router
+    const navigationExtras: NavigationExtras = {
+      queryParams,
+    };
+
+    console.log(navigationExtras);
 
     this.router.navigate([`/home/calendar/event`], navigationExtras);
   }
 
   drive(): void {
     const surveys = this.selection.isEmpty()
-    ? this.dataSource.data
-    : this.selection.selected;
+      ? this.dataSource.data
+      : this.selection.selected;
 
     // Open modal
     const dialogRef = this.dialog.open(NavigationModalComponent, {
       data: {
-        surveys
+        surveys,
       },
       autoFocus: true,
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (result) {}       
+      if (result) {
+      }
     });
   }
 
@@ -178,27 +196,26 @@ export class SurveyTableComponent implements OnInit, AfterViewInit {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (result)
-        this.onDelete.emit(this.selection.selected);
-        this.selection.clear();
+      if (result) this.onDelete.emit(this.selection.selected);
+      this.selection.clear();
     });
   }
 
   addSurvey(): void {
-    console.log('add survey')
+    console.log('add survey');
 
     if (this.job) {
       const queryParams = {
-        job: this.job.id  
-      }
-      
+        job: this.job.id,
+      };
+
       // Create our 'NaviationExtras' object which is expected by the Angular Router
       const navigationExtras: NavigationExtras = {
-        queryParams
+        queryParams,
       };
-  
-      console.log(navigationExtras)
-  
+
+      console.log(navigationExtras);
+
       this.router.navigate([`/home/survey`], navigationExtras);
     } else {
       this.router.navigate(['home/survey']);
@@ -223,13 +240,15 @@ export class SurveyTableComponent implements OnInit, AfterViewInit {
 
     const body = surveys.map((survey) => {
       return [
-        (survey.reference ? survey.reference : ''),
-        (survey.name ? survey.name : ''),
-        (survey.date_assigned ? moment(survey.date_assigned).format('L LT') : ''),
-        (survey.date_delivery ? moment(survey.date_delivery).format('L LT') : ''),
-        (survey.status.name ? survey.status.name : ''),
-        (survey.job.reference ? survey.job.reference : ''),
-        (survey.prepared_by && survey.prepared_by.username ? survey.prepared_by.username : ''),
+        survey.reference ? survey.reference : '',
+        survey.name ? survey.name : '',
+        survey.date_assigned ? moment(survey.date_assigned).format('L LT') : '',
+        survey.date_delivery ? moment(survey.date_delivery).format('L LT') : '',
+        survey.status.name ? survey.status.name : '',
+        survey.job.reference ? survey.job.reference : '',
+        survey.prepared_by && survey.prepared_by.username
+          ? survey.prepared_by.username
+          : '',
       ];
     });
 
@@ -245,9 +264,7 @@ export class SurveyTableComponent implements OnInit, AfterViewInit {
 
     autoTable(doc, {
       startY: 35,
-      head: [
-        fields
-      ],
+      head: [fields],
       body,
     });
 
@@ -255,15 +272,15 @@ export class SurveyTableComponent implements OnInit, AfterViewInit {
 
     const csv = Papa.unparse({
       data: body,
-      fields
+      fields,
     });
     const blob = new Blob([csv]);
 
-    var a = window.document.createElement("a");
+    var a = window.document.createElement('a');
     a.href = window.URL.createObjectURL(blob);
     a.download = `${moment().toISOString(true)}-survey-download.csv`;
     document.body.appendChild(a);
-    a.click();  // IE: "Access is denied"; see: https://connect.microsoft.com/IE/feedback/details/797361/ie-10-treats-blob-url-as-cross-origin-and-denies-access
+    a.click(); // IE: "Access is denied"; see: https://connect.microsoft.com/IE/feedback/details/797361/ie-10-treats-blob-url-as-cross-origin-and-denies-access
     document.body.removeChild(a);
   }
 
@@ -280,14 +297,14 @@ export class SurveyTableComponent implements OnInit, AfterViewInit {
   details(id): void {
     if (this.job) {
       const queryParams = {
-        job: this.job.id
-      }
-      
+        job: this.job.id,
+      };
+
       // Create our 'NaviationExtras' object which is expected by the Angular Router
       const navigationExtras: NavigationExtras = {
-        queryParams
+        queryParams,
       };
-    
+
       this.router.navigate([`/home/survey/${id}`], navigationExtras);
     } else {
       this.router.navigate([`home/survey/${id}`]);

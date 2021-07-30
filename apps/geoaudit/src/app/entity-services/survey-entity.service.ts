@@ -7,8 +7,8 @@ import { Survey } from "../models";
 export class SurveyEntityService extends EntityCollectionServiceBase<Survey> {
 
     constructor(
-        serviceElementsFactory: EntityCollectionServiceElementsFactory
+        serviceElementsFactory: EntityCollectionServiceElementsFactory,
     ) {
         super('Survey', serviceElementsFactory);
-    }
+    }    
 }

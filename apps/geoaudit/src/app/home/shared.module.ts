@@ -68,6 +68,8 @@ import { JobDataService } from '../data-services/job-data.service';
 import { JobEntityService } from '../entity-services/job-entity.service';
 import { NotificationEntityService } from '../entity-services/notification-entity.service';
 import { NotificationDataService } from '../data-services/notification-data.service';
+import { ToDoListEntityService } from '../entity-services/to-do-list-entity.service';
+import { ToDoListDataService } from '../data-services/to-do-list-data.service';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient) {
@@ -102,7 +104,9 @@ const entityMetadataMap: EntityMetadataMap = {
   Testpost:{},
   Tr:{},
   Resistivity:{},
-  Notification: {}
+  Notification: {},
+
+  ToDoList:{}
 }
 
 @NgModule({
@@ -182,10 +186,17 @@ const entityMetadataMap: EntityMetadataMap = {
     
     UserEntityService,
     UserDataService,
+
     AbrioxDataService,
+
     TestpostDataService,
+    
     TrDataService,
+    
     ResistivityDataService,
+
+    ToDoListEntityService,
+    ToDoListDataService,
 
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
@@ -258,7 +269,8 @@ export class SharedModule {
     private abrioxDataService: AbrioxDataService,
     private testpostDataService: TestpostDataService,
     private trDataService: TrDataService,
-    private resistivityDataService: ResistivityDataService
+    private resistivityDataService: ResistivityDataService,
+    private toDoListDataService: ToDoListDataService
   ) {
     entityDefinitionService.registerMetadataMap(entityMetadataMap);
 
@@ -273,7 +285,8 @@ export class SharedModule {
         Testpost: testpostDataService,
         Tr: trDataService,
         Resistivity: resistivityDataService,
-        Notification: notificationDataService
+        Notification: notificationDataService,
+        ToDoList: toDoListDataService
       }
     )
   }

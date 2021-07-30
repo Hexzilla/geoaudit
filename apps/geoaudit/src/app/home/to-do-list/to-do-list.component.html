@@ -6,10 +6,8 @@
 
 <geoaudit-survey-table
   *ngIf="dataSource"
-  [filterMode]="'NETWORK'"
+  [filterMode]="'LOCAL'"
   [dataSource]="dataSource"
-  [length]="length"
   [pageSize]="pageSize"
-  [pageSizeOptions]="pageSizeOptions"
   (onDelete)="delete($event)"
 ></geoaudit-survey-table>
