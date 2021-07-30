@@ -1,6 +1,8 @@
 <geoaudit-sidebar-header
   title="CONTAINERS.home.survey.add_survey.title"
-></geoaudit-sidebar-header>
+>
+  <mat-icon (click)="delete()">delete</mat-icon>
+</geoaudit-sidebar-header>
 
 <mat-horizontal-stepper (selectionChange)="selectionChange($event)">
     <mat-step

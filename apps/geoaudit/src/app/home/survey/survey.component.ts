@@ -238,13 +238,15 @@ export class SurveyComponent implements OnInit, AfterViewInit {
       (survey) => {
         this.survey = survey;
 
-        const { status, name, job, id, prepared_by, conducted_by, geometry, footer } = survey;
+        const { status, name, job, id, prepared_by, conducted_by, geometry, footer, reference } = survey;
 
         this.form.patchValue({
-          status: status.id,
+          status: status?.id,
           name,
 
           job,
+
+          reference,
 
           prepared_by: prepared_by?.id,
           conducted_by: conducted_by?.id,
@@ -590,5 +592,15 @@ export class SurveyComponent implements OnInit, AfterViewInit {
           job.id.toString().indexOf(filterValue) === 0
       );
     }
+  }
+
+  delete() {
+    this.surveyEntityService.delete(this.survey.id).subscribe(
+      (res) => {
+        this.router.navigate(['/home/todolist'])
+      },
+
+      (err) => console.log('err', err)
+    )
   }
 }

@@ -199,7 +199,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
           // if no geometry data, skip it
           if(!a.testpost || !a.testpost.geometry || !this.abrioxes[i].name) continue;
           // if against Layer rule, skip it
-          if(!a.footer.approved ) continue;
+          if(!a.footer?.approved ) continue;
 
           // if no condition data, skip it
           if(!a.condition || !a.condition.name) continue;
