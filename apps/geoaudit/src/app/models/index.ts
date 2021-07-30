@@ -23,6 +23,7 @@ export * from './job-note.model';
 export * from './job-type.model';
 export * from './job.model';
 export * from './map.model';
+export * from './note.model';
 export * from './notification.model';
 export * from './pipe-off.model';
 export * from './reference-cell.model';

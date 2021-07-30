@@ -13,6 +13,7 @@ import { NotificationsComponent } from './notifications/notifications.component'
 import { ProfileComponent } from './profile/profile.component';
 import { ApprovalsComponent } from './approvals/approvals.component';
 import { ArchiveComponent } from './archive/archive.component';
+import { NotesComponent } from './notes/notes.component';
 
 const routes: Routes = [
     { 
@@ -45,6 +46,9 @@ const routes: Routes = [
             },
             {
                 path: 'archive', component: ArchiveComponent
+            },
+            {
+                path: 'notes', component: NotesComponent
             },
             {
                 path: 'abriox/:id', component: SearchComponent

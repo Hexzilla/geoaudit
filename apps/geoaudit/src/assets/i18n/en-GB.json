@@ -16,6 +16,9 @@
 			"archive": {
 				"title": "Archive"
 			},
+			"notes": {
+				"title": "Notes"
+			},
 			"buttons": {
 				"approvals": {
 					"text": "N approvals required",
@@ -36,6 +39,10 @@
 				"archive": {
 					"text": "",
 					"title": "Archive"
+				},
+				"notes": {
+					"text": "",
+					"title": "Notes"
 				}
 			},
 			"geoaudit": "Geoaudit",
