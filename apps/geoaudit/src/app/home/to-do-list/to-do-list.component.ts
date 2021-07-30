@@ -7,7 +7,7 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Store } from '@ngrx/store';
-import { fromEvent } from 'rxjs';
+import { fromEvent, Observable } from 'rxjs';
 import {
   debounceTime,
   distinctUntilChanged,
@@ -28,6 +28,8 @@ import * as fromApp from '../../store';
 import * as SurveyActions from '../../store/survey/survey.actions';
 import { NavigationExtras, Router } from '@angular/router';
 import { NavigationModalComponent } from '../../modals/navigation-modal/navigation-modal.component';
+import { SurveyEntityService } from '../../entity-services/survey-entity.service';
+import { ToDoListEntityService } from '../../entity-services/to-do-list-entity.service';
 
 @Component({
   selector: 'geoaudit-to-do-list',
@@ -38,30 +40,22 @@ export class ToDoListComponent implements OnInit {
   dataSource: MatTableDataSource<Survey>;
 
   // MatPaginator Inputs
-  length = 100;
-  pageSize = 10;
-  pageSizeOptions: number[] = [5, 10, 25, 100];
+  pageSize = 5;
+
+  surveys$: Observable<Array<Survey>>;
 
   constructor(
-    private formBuilder: FormBuilder,
     private store: Store<fromApp.State>,
     public dialog: MatDialog,
-    private router: Router
+    private toDoListEntityService: ToDoListEntityService
   ) {}
 
   ngOnInit(): void {
-    this.store.dispatch(
-      SurveyActions.countSurveys()
-    );
-    
-    this.store.dispatch(
-      SurveyActions.fetchSurveys({ start: 0, limit: this.pageSize })
-    );
+    this.surveys$ = this.toDoListEntityService.getAll();
 
-    this.store.select('survey').subscribe((state) => {
-      this.length = state.count;
-      this.dataSource = new MatTableDataSource(state.surveys);
-    });
+    this.surveys$.subscribe(surveys => {
+        this.dataSource = new MatTableDataSource(surveys);
+    })
   }
 
   delete(surveys: Array<Survey>): void {

@@ -99,7 +99,7 @@
     <ng-container matColumnDef="status">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
       <td mat-cell *matCellDef="let row">
-        <span [ngSwitch]="row.status.name">
+        <span [ngSwitch]="row?.status?.name">
           <mat-icon *ngSwitchCase="'COMPLETED'">done</mat-icon>
           <mat-icon *ngSwitchCase="'NOT_STARTED'">assignment</mat-icon>
           <mat-icon *ngSwitchCase="'ONGOING'">autorenew</mat-icon>
@@ -135,9 +135,7 @@
   </table>
 
   <mat-paginator
-    [length]="length"
     [pageSize]="pageSize"
-    [pageSizeOptions]="pageSizeOptions"
     (page)="pageEvent = onPageEvent($event)"
     [hidePageSize]="true"
   ></mat-paginator>

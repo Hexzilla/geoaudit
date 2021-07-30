@@ -104,7 +104,7 @@
     [completed]="isAttachmentStepCompleted()"
     [optional]="false"
   >
-<!-- 
+    <!-- 
   <geoaudit-attachment-card title="CONTAINERS.home.jobs.job.attachments.images" icon="add_a_photo" type="IMAGE" [multiple]="true">
 
   </geoaudit-attachment-card>
@@ -113,21 +113,21 @@
 
   </geoaudit-attachment-card> -->
 
-<geoaudit-file-upload
-  label="CONTAINERS.home.jobs.job.attachments.images"
-  (preview)="onPreview($event)"
-  (upload)="onImageUpload($event)"
-  fileType="IMAGE"
-  [multiple]="true"
-></geoaudit-file-upload>
+    <geoaudit-file-upload
+      label="CONTAINERS.home.jobs.job.attachments.images"
+      (preview)="onPreview($event)"
+      (upload)="onImageUpload($event)"
+      fileType="IMAGE"
+      [multiple]="true"
+    ></geoaudit-file-upload>
 
-<geoaudit-file-upload
-  label="CONTAINERS.home.jobs.job.attachments.documents"
-  (preview)="onPreview($event)"
-  (upload)="onDocumentUpload($event)"
-  fileType="DOCUMENT"
-  [multiple]="true"
-></geoaudit-file-upload>
+    <geoaudit-file-upload
+      label="CONTAINERS.home.jobs.job.attachments.documents"
+      (preview)="onPreview($event)"
+      (upload)="onDocumentUpload($event)"
+      fileType="DOCUMENT"
+      [multiple]="true"
+    ></geoaudit-file-upload>
   </mat-step>
 
   <!-- Surveys -->
@@ -140,28 +140,24 @@
       <div fxLayout="column">
         <h3>Surveys</h3>
         <p>Progress</p>
-      </div>  
+      </div>
       <!-- Progress -->
       <apx-chart
-      [series]="chartOptions.series"
-      [chart]="chartOptions.chart"
-      [dataLabels]="chartOptions.dataLabels"
-      [plotOptions]="chartOptions.plotOptions"
-      [xaxis]="chartOptions.xaxis"
-      [yaxis]="chartOptions.yaxis"
-      [stroke]="chartOptions.stroke"
-      [fill]="chartOptions.fill"
-      [title]="chartOptions.title"
-      [tooltip]="chartOptions.tooltip"
-      [legend]="chartOptions.legend"
-    ></apx-chart>
+        [series]="chartOptions.series"
+        [chart]="chartOptions.chart"
+        [dataLabels]="chartOptions.dataLabels"
+        [plotOptions]="chartOptions.plotOptions"
+        [xaxis]="chartOptions.xaxis"
+        [yaxis]="chartOptions.yaxis"
+        [stroke]="chartOptions.stroke"
+        [fill]="chartOptions.fill"
+        [title]="chartOptions.title"
+        [tooltip]="chartOptions.tooltip"
+        [legend]="chartOptions.legend"
+      ></apx-chart>
     </div>
-    
 
-  
-    <div id="chart">
-
-    </div>
+    <div id="chart"></div>
 
     <mat-form-field appearance="outline">
       <mat-label>Survey</mat-label>
@@ -176,10 +172,7 @@
         #autoSurvey="matAutocomplete"
         (optionSelected)="onSurveySelect($event)"
       >
-        <mat-option
-          *ngFor="let survey of filteredSurveys"
-          [value]="survey"
-        >
+        <mat-option *ngFor="let survey of filteredSurveys" [value]="survey">
           <span>{{ survey.reference }}</span> |
           <small>ID: {{ survey.id }}</small>
         </mat-option>
@@ -188,15 +181,15 @@
 
     <!-- Reusable survey table component -->
     <geoaudit-survey-table
-    *ngIf="dataSource"
-    [filterMode]="'LOCAL'"
-    [dataSource]="dataSource"
-    [length]="length"
-    [pageSize]="pageSize"
-    [pageSizeOptions]="pageSizeOptions"
-    (onDelete)="delete($event)"
-    [job]="job"
-  ></geoaudit-survey-table>
+      *ngIf="dataSource"
+      [filterMode]="'LOCAL'"
+      [dataSource]="dataSource"
+      [length]="length"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="pageSizeOptions"
+      (onDelete)="delete($event)"
+      [job]="job"
+    ></geoaudit-survey-table>
   </mat-step>
 </mat-horizontal-stepper>
 

@@ -32,4 +32,8 @@ export class SurveyDataService extends DefaultDataService<Survey> {
         console.log('update', update)
         return this.http.put<any>(`${environment.API_URL}/surveys/${update.id}`, update.changes);
     }
+
+    delete(id: number) {
+        return this.http.delete<any>(`${environment.API_URL}/surveys/${id}`);
+    } 
 }
