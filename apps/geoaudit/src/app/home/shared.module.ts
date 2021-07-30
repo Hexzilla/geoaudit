@@ -70,6 +70,7 @@ import { NotificationEntityService } from '../entity-services/notification-entit
 import { NotificationDataService } from '../data-services/notification-data.service';
 import { ToDoListEntityService } from '../entity-services/to-do-list-entity.service';
 import { ToDoListDataService } from '../data-services/to-do-list-data.service';
+import { NotificationService } from '../services/notification.service';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient) {
@@ -197,6 +198,8 @@ const entityMetadataMap: EntityMetadataMap = {
 
     ToDoListEntityService,
     ToDoListDataService,
+
+    NotificationService,
 
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
