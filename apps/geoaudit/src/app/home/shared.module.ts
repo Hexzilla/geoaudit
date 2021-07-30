@@ -71,6 +71,8 @@ import { NotificationDataService } from '../data-services/notification-data.serv
 import { ToDoListEntityService } from '../entity-services/to-do-list-entity.service';
 import { ToDoListDataService } from '../data-services/to-do-list-data.service';
 import { NotificationService } from '../services/notification.service';
+import { NotesComponent } from './notes/notes.component';
+import { NoteComponent } from './notes/note/note.component';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient) {
@@ -165,7 +167,9 @@ const entityMetadataMap: EntityMetadataMap = {
     SidebarActionsComponent,
     AttachmentModalComponent,
     NavigationModalComponent,
-    SurveyTableComponent
+    SurveyTableComponent,
+    NotesComponent,
+    NoteComponent
   ],
   providers: [
     JobEntityService,
