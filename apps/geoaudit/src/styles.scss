@@ -3,6 +3,7 @@
 // For more information: https://material.angular.io/guide/theming
 @import '~@angular/material/theming';
 // Plus imports for other components in your app.
+@import "../../../node_modules/angular-calendar/css/angular-calendar.css";
 
 // Include the common styles for Angular Material. We include this here so that you only
 // have to load a single css file for Angular Material in your app.
@@ -59,4 +60,207 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 .leaflet-sidebar-content {
   overflow-y:hidden !important;
+  // width: 100%; // Remove toggle for sidebar nav which is no good on a mobile until we have a way to toggle the sidebar.
+}
+
+
+//leaflet control css. andrey.
+
+// SideBar Toggle Button on Top Right
+.leaflet-sidebar.collapsed
+{
+  height:40px!important;
+}
+
+.leaflet-control-browser-print.leaflet-control a
+{
+  width: 56px;
+  height: 56px;
+  border-radius: 50%!important;
+  background-color: white;
+  border:1px solid #333;
+  background-size: 20px 20px!important;
+  z-index: 10000;
+}
+
+.leaflet-control-browser-print.leaflet-control a:hover, .leaflet-control-locate.leaflet-bar.leaflet-control a:hover ,.leaflet-control-filelayer.leaflet-control-zoom a:hover, .leaflet-draw.leaflet-control .leaflet-draw-draw-marker:hover{
+  box-shadow:0px 0px 8px 3px grey;
+  cursor: pointer;
+}
+
+.leaflet-control-browser-print.leaflet-control
+{
+  top: 133px;
+  left: 4px;
+  border:none;
+}
+
+//My Location Button's style
+.leaflet-control-locate.leaflet-bar.leaflet-control
+{
+  border: none;
+  margin-left: 13px;
+}
+
+.leaflet-control-locate.leaflet-bar.leaflet-control a
+{
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  border: 1px solid black;
+}
+
+.leaflet-control-locate.leaflet-bar.leaflet-control a span
+{
+  font-size: 20px;
+  margin-top:18px;
+}
+
+//Upload Button's style
+.leaflet-control-filelayer.leaflet-control-zoom
+{
+  border: none;
+  margin-left: 16px;
+  top:200px;
+  position: absolute;
+}
+
+.leaflet-control-filelayer.leaflet-control-zoom a
+{
+  width: 54px;
+  height: 54px;
+  border-radius: 50%!important;
+  border: 1px solid black;
+}
+
+.leaflet-control-filelayer.leaflet-control-zoom a span{
+  margin-top:15px;
+}
+
+//Layer Button style
+.leaflet-control-layers.leaflet-control
+{
+  border: none;
+  left: 13px !important;
+  top: 77px !important;
+  position: absolute;
+  margin: 0px !important;
+  background: unset;
+  z-index: 100001;
+}
+
+.leaflet-control-layers.leaflet-control a{
+  width: 54px;
+  height: 54px;
+  border-radius: 50%!important;
+  border: 1px solid black;
+  background-color: white;
+}
+
+.leaflet-control-layers.leaflet-control .leaflet-control-layers-list
+{
+  width: 200px;
+  background-color: white;
+  padding: 6px;
+  box-shadow: 0px 0px 8px 1px grey;
+}
+
+.leaflet-control-layers-separator{
+  margin: 4px 0px !important;
+  border-color: black
+}
+
+.leaflet-control-layers-group label:not(.leaflet-control-layers-group-label){
+  margin-left:10px;
+}
+
+.leaflet-control-layers-group-label{
+  font-weight: bold;
+  margin-top:2px!important;
+}
+
+// Popup Style
+.add_marker_popup{
+  width:200px;
+}
+
+.add_marker_popup .popup_select{
+  width: 160px;
+  height: 40px;
+  font-size: 20px;
+  padding-left: 10px;
+}
+
+.detail_button_icon{
+  float:right;
+}
+
+.add_marker_popup .popup_detail_btn{
+  background-color: #270082;
+  color: white;
+  width: 160px;
+  height: 30px;
+  font-size: 20px;
+  margin-top: 6px;
+}
+
+.add_marker_popup .popup_detail_btn:hover{
+  cursor:pointer;
+}
+
+.select_marker_popup{
+  width:200px;
+  bottom:35px!important;
+}
+
+.select_marker_popup h2{
+  margin:0px!important;
+}
+
+.select_marker_popup hr{
+  margin:2px!important;
+}
+
+.select_marker_popup .sp_button{
+  background-color: white;
+  color: black;
+  border:1px solid black;
+  width: 160px;
+  height: 30px;
+  font-size: 20px;
+  margin-top: 6px;
+}
+
+.select_marker_popup .sp_button:hover{
+  cursor: pointer;
+}
+
+// Draw Marker Style
+.leaflet-draw.leaflet-control{
+  border: none;
+  left: 13px !important;
+  bottom: 115px !important;
+  position: absolute;
+  margin: 0px !important;
+  background: unset;
+  z-index: 100001; 
+}
+
+.leaflet-draw.leaflet-control .leaflet-draw-actions{
+  top:15px!important;
+  left:60px!important;
+}
+
+.leaflet-draw-toolbar.leaflet-bar.leaflet-draw-toolbar-top{
+  border:none;
+}
+
+.leaflet-draw.leaflet-control .leaflet-draw-draw-marker{
+  width: 54px;
+  height: 54px;
+  border-radius: 50%!important;
+  border: 1px solid black;
+  background-image: url(map-pin-solid.svg)!important;
+  background-position: center!important;
+  background-size: 27%;
 }

@@ -1,4 +1,7 @@
 import { NgModule } from '@angular/core';
+import { CalendarModule as AngularCalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { FlatpickrModule } from 'angularx-flatpickr';
 
 // Routing
 import { CalendarRoutingModule } from './calendar-routing.module';
@@ -16,6 +19,12 @@ import { SharedModule } from '../shared.module';
   ],
   imports: [
     CalendarRoutingModule,
+
+    FlatpickrModule.forRoot(),
+    AngularCalendarModule.forRoot({
+      provide: DateAdapter,
+      useFactory: adapterFactory,
+    }),
 
     SharedModule
   ],

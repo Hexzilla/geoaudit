@@ -23,11 +23,15 @@ export class FileUploadComponent implements OnInit {
 
   @Input() multiple? = false;
 
+  @Input() template?: 'GENERAL' | 'AVATAR' = 'GENERAL' ;
+
+  @Input() src?: string;
+
   selectedFile: FileSnippet;
 
   @Output() upload: EventEmitter<any> = new EventEmitter();
 
-  @Output() preview: EventEmitter<any> = new EventEmitter();
+  @Output() preview?: EventEmitter<any> = new EventEmitter();
 
   constructor(private uploadService: UploadService) {}
 
@@ -78,6 +82,6 @@ export class FileUploadComponent implements OnInit {
   }
 
   handleOnPreview() {
-    this.preview.emit();
+    if (this.preview) this.preview.emit();
   }
 }

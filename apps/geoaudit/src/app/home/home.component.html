@@ -1,5 +1,10 @@
 <div class="map-container">
   <div class="map-frame">
+    <div class="map-button-container">
+      <button title="Search" mat-fab class="search_button" (click)="search()">
+        <fa-icon [icon]="faSearch"></fa-icon>
+      </button>   
+    </div>
     <div id="map"></div>
 
     <div id="sidebar" class="leaflet-sidebar collapsed">
@@ -84,8 +89,16 @@
                 <button mat-icon-button color="accent" aria-label="search icon button" (click)="calendar()">
                   <mat-icon>date_range</mat-icon>
                 </button>
-                <button mat-icon-button color="accent" aria-label="search icon button" (click)="notifications()">
-                  <mat-icon>notifications</mat-icon>
+                <button *ngIf="(notifications$ | async) as notifications" mat-icon-button color="accent" aria-label="search icon button" routerLink="/home/notifications">
+
+                  <mat-icon *ngIf="!notifications.length">notifications</mat-icon>
+
+                  <!-- <mat-icon>notifications</mat-icon> ({{ (notifications$ | async)?.length }}) -->
+                  <mat-icon *ngIf="notifications.length >= 1" [matBadge]="notifications.length" matBadgeColor="warn">notifications</mat-icon>
+                  <!-- Include text description of the icon's meaning for screen-readers -->
+                  <span class="cdk-visually-hidden">
+                    Notification icon with overlaid badge showing the number of notifications
+                  </span>
                 </button>
                 <button mat-icon-button color="accent" aria-label="search icon button" (click)="profile()">
                   <mat-icon>person</mat-icon>

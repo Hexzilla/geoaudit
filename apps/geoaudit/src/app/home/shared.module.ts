@@ -8,12 +8,15 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 // Material
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {MatBadgeModule} from '@angular/material/badge';
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import {MatChipsModule} from '@angular/material/chips';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { MatDialogModule } from '@angular/material/dialog';
+import {MatExpansionModule} from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -23,8 +26,10 @@ import {MatRadioModule} from '@angular/material/radio';
 import {MatSelectModule} from '@angular/material/select';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatStepperModule} from '@angular/material/stepper';
+import {MatTabsModule} from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTableModule } from '@angular/material/table';
+
 
 // Modals
 import { AttachmentModalComponent } from '../modals/attachment-modal/attachment-modal.component';
@@ -52,11 +57,17 @@ import { JobTypeDataService } from '../data-services/job-type-data.service';
 import { JobTypeEntityService } from '../entity-services/job-type-entity.service';
 import { UserEntityService } from '../entity-services/user-entity.service';
 import { UserDataService } from '../data-services/user-data.service';
+import { AbrioxDataService } from '../data-services/abriox-data.service';
+import { TestpostDataService } from '../data-services/testpost-data.service';
+import { ResistivityDataService } from '../data-services/resistivity-data.service';
+import { TrDataService } from '../data-services/tr-data.service';
 import { UploadService } from '../services';
 import { SurveyDataService } from '../data-services/survey-data.service';
 import { SurveyEntityService } from '../entity-services/survey-entity.service';
 import { JobDataService } from '../data-services/job-data.service';
 import { JobEntityService } from '../entity-services/job-entity.service';
+import { NotificationEntityService } from '../entity-services/notification-entity.service';
+import { NotificationDataService } from '../data-services/notification-data.service';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient) {
@@ -86,7 +97,12 @@ const entityMetadataMap: EntityMetadataMap = {
     },
   },
   JobType: {},
-  User: {}
+  User: {},
+  Abriox:{},
+  Testpost:{},
+  Tr:{},
+  Resistivity:{},
+  Notification: {}
 }
 
 @NgModule({
@@ -109,12 +125,15 @@ const entityMetadataMap: EntityMetadataMap = {
 
     // Material
     MatAutocompleteModule,
+    MatBadgeModule,
+    MatButtonToggleModule,
     MatButtonModule,
     MatCardModule,
     MatCheckboxModule,
     MatChipsModule,
     MatDatepickerModule,
     MatDialogModule,
+    MatExpansionModule,
     MatIconModule,
     MatFormFieldModule,
     MatInputModule,
@@ -124,6 +143,7 @@ const entityMetadataMap: EntityMetadataMap = {
     MatSelectModule,
     MatSlideToggleModule,
     MatStepperModule,
+    MatTabsModule,
     MatTooltipModule,
     MatTableModule,
 
@@ -149,6 +169,9 @@ const entityMetadataMap: EntityMetadataMap = {
     JobTypeEntityService,
     JobTypeDataService,
 
+    NotificationEntityService,
+    NotificationDataService,
+
     StatusEntityService,
     StatusDataService,
 
@@ -159,6 +182,10 @@ const entityMetadataMap: EntityMetadataMap = {
     
     UserEntityService,
     UserDataService,
+    AbrioxDataService,
+    TestpostDataService,
+    TrDataService,
+    ResistivityDataService,
 
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
@@ -187,12 +214,15 @@ const entityMetadataMap: EntityMetadataMap = {
     
     // Material
     MatAutocompleteModule,
+    MatBadgeModule,
+    MatButtonToggleModule,
     MatButtonModule,
     MatCardModule,
     MatCheckboxModule,
     MatChipsModule,
     MatDatepickerModule,
     MatDialogModule,
+    MatExpansionModule,
     MatIconModule,
     MatFormFieldModule,
     MatInputModule,
@@ -202,6 +232,7 @@ const entityMetadataMap: EntityMetadataMap = {
     MatSelectModule,
     MatSlideToggleModule,
     MatStepperModule,
+    MatTabsModule,
     MatTooltipModule,
     MatTableModule,
 
@@ -220,9 +251,14 @@ export class SharedModule {
     private entityDataService: EntityDataService,
     private jobDataService: JobDataService,
     private jobTypeDataService: JobTypeDataService,
+    private notificationDataService: NotificationDataService,
     private statusDataService: StatusDataService,
     private surveyDataService: SurveyDataService,
-    private userDataService: UserDataService
+    private userDataService: UserDataService,
+    private abrioxDataService: AbrioxDataService,
+    private testpostDataService: TestpostDataService,
+    private trDataService: TrDataService,
+    private resistivityDataService: ResistivityDataService
   ) {
     entityDefinitionService.registerMetadataMap(entityMetadataMap);
 
@@ -232,7 +268,12 @@ export class SharedModule {
         Survey: surveyDataService,
         Job: jobDataService,
         JobType: jobTypeDataService,
-        User: userDataService
+        User: userDataService,
+        Abriox: abrioxDataService,
+        Testpost: testpostDataService,
+        Tr: trDataService,
+        Resistivity: resistivityDataService,
+        Notification: notificationDataService
       }
     )
   }

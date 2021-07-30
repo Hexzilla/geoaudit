@@ -136,12 +136,31 @@
     [completed]="isSurveysStepCompleted()"
     [optional]="false"
   >
-    <div fxLayout="row">
-      <div fxLayout="column" fxLayoutAlign="space-between">
+    <div fxLayout="row" fxLayoutAlign="space-between center">
+      <div fxLayout="column">
         <h3>Surveys</h3>
-        <!-- <p>Total number of survey</p> -->
+        <p>Progress</p>
       </div>  
       <!-- Progress -->
+      <apx-chart
+      [series]="chartOptions.series"
+      [chart]="chartOptions.chart"
+      [dataLabels]="chartOptions.dataLabels"
+      [plotOptions]="chartOptions.plotOptions"
+      [xaxis]="chartOptions.xaxis"
+      [yaxis]="chartOptions.yaxis"
+      [stroke]="chartOptions.stroke"
+      [fill]="chartOptions.fill"
+      [title]="chartOptions.title"
+      [tooltip]="chartOptions.tooltip"
+      [legend]="chartOptions.legend"
+    ></apx-chart>
+    </div>
+    
+
+  
+    <div id="chart">
+
     </div>
 
     <mat-form-field appearance="outline">

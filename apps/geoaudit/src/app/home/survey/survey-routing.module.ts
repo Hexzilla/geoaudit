@@ -10,6 +10,12 @@ const routes: Routes = [
     { 
         path: ':id', component: SurveyComponent, 
     },
+    {
+        path: ':id/notes', component: SurveyComponent
+    },
+    {
+        path: ':id/drive', component: SurveyComponent
+    },
 
     // otherwise redirect to home
     { path: '**', redirectTo: '' }

@@ -19,8 +19,7 @@ export const DELETE_JOB_FAILED = '[To Do List - Jobs] Delete job failed';
 export const CLEAR_RESULT = '[To Do List - Jobs] Clear result';
 
 export const countJobs = createAction(
-    COUNT_JOBS,
-    props<Parameters>()
+    COUNT_JOBS
 );
 
 export const setCount = createAction(

@@ -16,7 +16,7 @@ export class JobEffects {
 
     countJobs$ = createEffect(() => this.actions$.pipe(
         ofType(JobActions.COUNT_JOBS),
-        mergeMap((payload) => this.jobService.count(payload)
+        mergeMap(() => this.jobService.count()
             .pipe(
                 map(count => ({ type: JobActions.SET_COUNT, count}))
             ))

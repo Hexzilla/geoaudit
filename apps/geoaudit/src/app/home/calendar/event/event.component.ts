@@ -22,15 +22,17 @@ import {
 } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 
+import * as JobActions from '../../../store/job/job.actions';
 import * as SurveyActions from '../../../store/survey/survey.actions';
 
 import * as CalendarEventSelectors from '../../../store/calendar-event/calendar-event.selectors';
 import * as SurveySelectors from '../../../store/survey/survey.selectors';
+import * as JobSelectors from '../../../store/job/job.selectors';
 
 import { AlertService, SurveyService } from '../../../services';
 import * as fromApp from '../../../store';
 import * as CalendarEventActions from '../../../store/calendar-event/calendar-event.actions';
-import { Result, Survey } from '../../../models';
+import { Job, Result, Survey } from '../../../models';
 import { fromEvent } from 'rxjs';
 import { distinctUntilChanged, filter, map, take } from 'rxjs/operators';
 
@@ -72,6 +74,7 @@ export class EventComponent implements OnInit, AfterViewInit {
   selectable = true;
   removable = true;
   separatorKeysCodes: number[] = [ENTER, COMMA];
+
   surveyControl = new FormControl();
   filteredSurveys: Array<Survey>;
   surveys: Array<Survey> = [];
@@ -79,6 +82,14 @@ export class EventComponent implements OnInit, AfterViewInit {
 
   @ViewChild('surveyInput') surveyInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto') matAutocomplete: MatAutocomplete;
+
+  jobControl = new FormControl();
+  filteredJobs: Array<Job>;
+  jobs: Array<Job> = [];
+  allJobs: Array<Job> = [];
+
+  @ViewChild('jobInput') jobInput: ElementRef<HTMLInputElement>;
+  @ViewChild('auto') matAutocompleteJob: MatAutocomplete;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -134,6 +145,14 @@ export class EventComponent implements OnInit, AfterViewInit {
     );
 
     this.store.dispatch(SurveyActions.fetchSurveys({ start: 0, limit: 100 }));
+
+    this.store.dispatch(
+      JobActions.countJobs()
+    );
+    
+    this.store.dispatch(
+      JobActions.fetchJobs({ start: 0, limit: 100 })
+    );
   }
 
   /**
@@ -148,6 +167,14 @@ export class EventComponent implements OnInit, AfterViewInit {
     this.store.select(SurveySelectors.Count).subscribe((count) => {
       this.length = count;
     });
+
+    this.store.select(JobSelectors.Jobs).subscribe((jobs) => {
+      this.allJobs = jobs;
+    });
+
+    // this.store.select(JobSelectors.Count).subscribe((count) => {
+    //   this.length = count;
+    // });
   }
 
   /**
@@ -160,7 +187,8 @@ export class EventComponent implements OnInit, AfterViewInit {
       start: [moment().toISOString(), Validators.required],
       end: [moment().toISOString(), Validators.required],
       notes: [''],
-      surveys: [[], Validators.required],
+      surveys: [[]],
+      jobs: [[]],
 
       id: null,
       published: false
@@ -194,6 +222,7 @@ export class EventComponent implements OnInit, AfterViewInit {
             end,
             notes,
             surveys,
+            jobs,
 
             id,
           } = calendarEvent;
@@ -204,6 +233,7 @@ export class EventComponent implements OnInit, AfterViewInit {
             end,
             notes,
             surveys,
+            jobs,
 
             id,
             published: true
@@ -215,6 +245,12 @@ export class EventComponent implements OnInit, AfterViewInit {
           surveys.map((survey) => {
             if (!this.surveys.find((item) => item.id === survey.id)) {
               this.surveys.push(survey);
+            }
+          });
+
+          jobs.map((job) => {
+            if (!this.jobs.find((item) => item.id === job.id)) {
+              this.jobs.push(job);
             }
           });
         }
@@ -265,6 +301,32 @@ export class EventComponent implements OnInit, AfterViewInit {
         }
       });
 
+      this.store
+      .select(JobSelectors.Jobs)
+      .subscribe((jobs) => {
+        // Survey ids as query parameter.
+        const jobIds = this.route.snapshot.queryParamMap.get('jobs');
+
+        // If the value is null, create a new array and store it
+        // Else parse the JSON string we sent into an array
+        if (jobIds === null) {
+          this.jobs = new Array<Job>();
+        } else {
+          const parsedJobs = JSON.parse(jobIds);
+
+          if (parsedJobs) {
+            parsedJobs.map((id) => {
+              const exists = jobs.find((job) => job.id === id);
+              if (exists) {
+                if (!this.jobs.find((job) => job.id === id)) {
+                  this.jobs.push(exists);
+                }
+              }
+            });
+          }
+        }
+      });
+
     this.store.dispatch(
       CalendarEventActions.createCalendarEvent({
         calendarEvent: this.form.value,
@@ -296,6 +358,19 @@ export class EventComponent implements OnInit, AfterViewInit {
       )
       .subscribe((text: string) => {
         this.filteredSurveys = this._filter(text);
+      });
+
+      fromEvent(this.jobInput.nativeElement, 'keyup')
+      .pipe(
+        map((event: any) => {
+          return event.target.value;
+        }),
+        filter((res) => res.length >= 0),
+        // debounceTime(1000), // if needed for delay
+        distinctUntilChanged()
+      )
+      .subscribe((text: string) => {
+        this.filteredJobs = this._filterJobs(text);
       });
   }
 
@@ -337,6 +412,7 @@ export class EventComponent implements OnInit, AfterViewInit {
   submit(): void {
     this.form.patchValue({
       surveys: this.surveys.map((survey) => survey.id),
+      jobs: this.jobs.map((job) => job.id),
       published: true
     });
 
@@ -416,6 +492,48 @@ export class EventComponent implements OnInit, AfterViewInit {
       return (
         survey.name.toLowerCase().indexOf(filterValue) === 0 ||
         survey.id.toString() === filterValue
+      );
+    });
+  }
+
+  addJob(event: MatChipInputEvent): void {
+    const value = (event.value || '').trim();
+
+    // Add our job
+    if (value) {
+      const filterAllJobsOnValue = this._filterJobs(value);
+
+      if (filterAllJobsOnValue.length >= 1) {
+        this.jobs.push(filterAllJobsOnValue[0]);
+      }
+    }
+
+    // Clear the input value
+    this.jobInput.nativeElement.value = '';
+
+    this.jobControl.setValue(null);
+  }
+
+  removeJob(job: Job): void {
+    const exists = this.jobs.find((item) => item.id === job.id);
+    if (exists) {
+      this.jobs = this.jobs.filter((item) => item.id !== exists.id);
+    }
+  }
+
+  selectedJob(event: MatAutocompleteSelectedEvent): void {
+    this.jobs.push(event.option.value);
+    this.jobInput.nativeElement.value = '';
+    this.jobControl.setValue(null);
+  }
+
+  private _filterJobs(value: string): Array<Job> {
+    const filterValue = value.toLowerCase();
+
+    return this.allJobs.filter((job) => {
+      return (
+        job.name.toLowerCase().indexOf(filterValue) === 0 ||
+        job.id.toString() === filterValue
       );
     });
   }
