@@ -24,13 +24,10 @@ export class NotificationsComponent implements OnInit {
     this.notificationEntityService.getAll();
   }
 
-  dismiss(notification: Notification) {
+  toggle(notification: Notification) {
     this.notificationEntityService.update({
       ...notification,
-      seen: true,
+      seen: !notification.seen,
     })
-    // .subscribe(() => {
-    //   this.notificationEntityService.removeOneFromCache(notification);
-    // });
   }
 }
