@@ -1,6 +1,17 @@
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { ThemePalette } from '@angular/material/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -11,9 +22,17 @@ import { Status, Statuses, Survey, User, Image, Job } from '../../models';
 import { AlertService } from '../../services';
 import { StatusEntityService } from '../../entity-services/status-entity.service';
 import { SurveyEntityService } from '../../entity-services/survey-entity.service';
-import { debounceTime, tap, distinctUntilChanged, takeUntil } from 'rxjs/operators';
+import {
+  debounceTime,
+  tap,
+  distinctUntilChanged,
+  takeUntil,
+} from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import {
+  MatAutocomplete,
+  MatAutocompleteSelectedEvent,
+} from '@angular/material/autocomplete';
 import { UserEntityService } from '../../entity-services/user-entity.service';
 
 import * as MapActions from '../../store/map/map.actions';
@@ -30,7 +49,6 @@ import { JobEntityService } from '../../entity-services/job-entity.service';
   styleUrls: ['./survey.component.scss'],
 })
 export class SurveyComponent implements OnInit, AfterViewInit {
-
   API_URL: string;
 
   color: ThemePalette = 'primary';
@@ -56,7 +74,7 @@ export class SurveyComponent implements OnInit, AfterViewInit {
 
   survey: Survey;
 
-  private unsubscribe = new Subject<void>()
+  private unsubscribe = new Subject<void>();
 
   @ViewChild('dateAssignedDateTimePicker') dateAssignedDateTimePicker: any;
   @ViewChild('dateDeliveryDateTimePicker') dateDeliveryDateTimePicker: any;
@@ -129,7 +147,7 @@ export class SurveyComponent implements OnInit, AfterViewInit {
 
       (err) => {}
     );
-    
+
     // Fetch statuses
     this.statusEntityService.getAll().subscribe(
       (statuses) => {
@@ -139,22 +157,22 @@ export class SurveyComponent implements OnInit, AfterViewInit {
       (err) => {}
     );
 
-     // Fetch users for assignees
-     this.userEntityService.getAll().subscribe(
+    // Fetch users for assignees
+    this.userEntityService.getAll().subscribe(
       (users) => {
         this.allUsers = users;
-        console.log('users', users)
+        console.log('users', users);
       },
 
       (err) => {}
-    )
+    );
 
-    this.store.select('map').subscribe(map => {
+    this.store.select('map').subscribe((map) => {
       if (map.clickMarker) {
         this.latCtrl.setValue(map.clickMarker.lat);
         this.lngCtrl.setValue(map.clickMarker.lng);
       }
-    })
+    });
 
     /**
      * Initialise the form with properties and
@@ -192,7 +210,7 @@ export class SurveyComponent implements OnInit, AfterViewInit {
       } else {
         this.filteredJobs = this.allJobs.slice();
       }
-    })
+    });
 
     this.preparedByCtrl.valueChanges.subscribe((value) => {
       if (value) {
@@ -200,7 +218,7 @@ export class SurveyComponent implements OnInit, AfterViewInit {
       } else {
         this.filteredUsers = this.allUsers.slice();
       }
-    })
+    });
 
     this.conductedByCtrl.valueChanges.subscribe((value) => {
       if (value) {
@@ -208,29 +226,29 @@ export class SurveyComponent implements OnInit, AfterViewInit {
       } else {
         this.filteredUsers = this.allUsers.slice();
       }
-    })
+    });
 
     this.latCtrl.valueChanges.subscribe((value) => {
       if (value) {
         this.form.patchValue({
           geometry: {
             ...this.form.value.geometry,
-            lat: value
-          }
-        })
+            lat: value,
+          },
+        });
       }
-    })
+    });
 
     this.lngCtrl.valueChanges.subscribe((value) => {
       if (value) {
         this.form.patchValue({
           geometry: {
             ...this.form.value.geometry,
-            lng: value
-          }
-        })
+            lng: value,
+          },
+        });
       }
-    })
+    });
   }
 
   editAndViewMode() {
@@ -238,7 +256,17 @@ export class SurveyComponent implements OnInit, AfterViewInit {
       (survey) => {
         this.survey = survey;
 
-        const { status, name, job, id, prepared_by, conducted_by, geometry, footer, reference } = survey;
+        const {
+          status,
+          name,
+          job,
+          id,
+          prepared_by,
+          conducted_by,
+          geometry,
+          footer,
+          reference,
+        } = survey;
 
         this.form.patchValue({
           status: status?.id,
@@ -253,15 +281,17 @@ export class SurveyComponent implements OnInit, AfterViewInit {
 
           geometry,
 
-          footer: footer ? footer : {
-            images: [],
-            documents: [],
-          },
+          footer: footer
+            ? footer
+            : {
+                images: [],
+                documents: [],
+              },
 
-          id
-        })
+          id,
+        });
 
-        console.log('job', job)
+        console.log('job', job);
 
         this.jobCtrl.setValue(job?.reference);
         this.selectedJob = job;
@@ -271,18 +301,15 @@ export class SurveyComponent implements OnInit, AfterViewInit {
 
         this.conductedByCtrl.setValue(conducted_by?.username);
         this.selectedConductedBy = conducted_by;
-        
+
         this.latCtrl.setValue(geometry?.lat);
         this.lngCtrl.setValue(geometry?.lng);
 
         this.autoSave();
       },
 
-      (err) => {
-
-      }
-
-    )
+      (err) => {}
+    );
   }
 
   createMode() {
@@ -296,8 +323,8 @@ export class SurveyComponent implements OnInit, AfterViewInit {
         this.survey = survey;
 
         this.form.patchValue({
-          id: survey.id
-        })
+          id: survey.id,
+        });
 
         this.autoSave();
       },
@@ -305,7 +332,7 @@ export class SurveyComponent implements OnInit, AfterViewInit {
       (err) => {
         this.alertService.error('Something went wrong');
       }
-    )
+    );
   }
 
   onJobSelect(event: MatAutocompleteSelectedEvent): void {
@@ -313,8 +340,8 @@ export class SurveyComponent implements OnInit, AfterViewInit {
     this.selectedJob = event.option.value;
 
     this.form.patchValue({
-      job: event.option.value.id
-    })
+      job: event.option.value.id,
+    });
   }
 
   onPreparedBySelect(event: MatAutocompleteSelectedEvent): void {
@@ -322,8 +349,8 @@ export class SurveyComponent implements OnInit, AfterViewInit {
     this.selectedPreparedBy = event.option.value;
 
     this.form.patchValue({
-      prepared_by: event.option.value.id
-    })
+      prepared_by: event.option.value.id,
+    });
   }
 
   onConductedBySelect(event: MatAutocompleteSelectedEvent): void {
@@ -331,20 +358,22 @@ export class SurveyComponent implements OnInit, AfterViewInit {
     this.selectedConductedBy = event.option.value;
 
     this.form.patchValue({
-      conducted_by: event.option.value.id
-    })
+      conducted_by: event.option.value.id,
+    });
   }
 
   autoSave() {
-    this.form.valueChanges.pipe(
-      debounceTime(500),
-      tap(() => {
-       this.submit(false)
-      }),
-      distinctUntilChanged(),
-      takeUntil(this.unsubscribe),
-    ).subscribe();
-   }
+    this.form.valueChanges
+      .pipe(
+        debounceTime(500),
+        tap(() => {
+          this.submit(false);
+        }),
+        distinctUntilChanged(),
+        takeUntil(this.unsubscribe)
+      )
+      .subscribe();
+  }
 
   /**
    * Initialisation of the form, properties, and validation.
@@ -382,10 +411,12 @@ export class SurveyComponent implements OnInit, AfterViewInit {
 
       // calendar_events: [],
 
-      footer: [{
-        images: [[]],
-        documents: [[]],
-      }],
+      footer: [
+        {
+          images: [[]],
+          documents: [[]],
+        },
+      ],
 
       id: null,
       reference: '',
@@ -395,7 +426,7 @@ export class SurveyComponent implements OnInit, AfterViewInit {
 
   submit(navigate = true): void {
     this.submitted = true;
- 
+
     // reset alerts on submit
     this.alertService.clear();
 
@@ -407,12 +438,12 @@ export class SurveyComponent implements OnInit, AfterViewInit {
     /**
      * Invoke the backend with a PUT request to update
      * the job with the form values.
-     * 
+     *
      * If create then navigate to the job id.
      */
     this.surveyEntityService.update(this.form.value).subscribe(
       (update) => {
-         this.alertService.info('Saved Changes');
+        this.alertService.info('Saved Changes');
 
         if (navigate) this.router.navigate([`/home`]);
       },
@@ -421,15 +452,16 @@ export class SurveyComponent implements OnInit, AfterViewInit {
         this.alertService.error('Something went wrong');
       },
 
-      () => {
-      }
-    )
+      () => {}
+    );
   }
 
   clickMarker(): void {
-    this.store.dispatch(MapActions.toggleSidebar({
-      url: this.router.url
-    }));
+    this.store.dispatch(
+      MapActions.toggleSidebar({
+        url: this.router.url,
+      })
+    );
   }
 
   /**
@@ -481,11 +513,11 @@ export class SurveyComponent implements OnInit, AfterViewInit {
   }
 
   onImageUpload(event): void {
-    console.log('on image upload', event)
+    console.log('on image upload', event);
 
     const { images } = this.form.value.footer;
 
-    console.log('images', [...images, event])
+    console.log('images', [...images, event]);
 
     // this.images.push(event)
 
@@ -494,11 +526,11 @@ export class SurveyComponent implements OnInit, AfterViewInit {
     this.form.patchValue({
       footer: {
         ...this.form.value.footer,
-        images: [...images, event]
-      }
+        images: [...images, event],
+      },
     });
 
-    console.log('patched', this.form.value)
+    console.log('patched', this.form.value);
 
     this.submit(false);
 
@@ -506,57 +538,56 @@ export class SurveyComponent implements OnInit, AfterViewInit {
   }
 
   onDocumentUpload(event): void {
-    console.log('onDocumentUpload', event)
+    console.log('onDocumentUpload', event);
 
     const { documents } = this.form.value.footer;
 
-    console.log('documents', [...documents, event])
+    console.log('documents', [...documents, event]);
 
     this.form.patchValue({
       footer: {
         ...this.form.value.footer,
-        documents: [...documents, event]
-      }
+        documents: [...documents, event],
+      },
     });
 
-    console.log('patched', this.form.value)
+    console.log('patched', this.form.value);
 
     this.submit(false);
   }
 
   onPreview(fileType: FileTypes): void {
-    console.log('onPreview', fileType, this.form.value.footer)
+    console.log('onPreview', fileType, this.form.value.footer);
 
     const { images, documents } = this.form.value.footer;
 
     switch (fileType) {
-      case FileTypes.IMAGE: 
-
+      case FileTypes.IMAGE:
         let _album: Array<IAlbum> = [];
 
         images.map((image: Image) => {
           const album = {
             src: `${this.API_URL}${image.url}`,
             caption: image.name,
-            thumb: `${this.API_URL}${image.formats.thumbnail.url}`
-          }
+            thumb: `${this.API_URL}${image.formats.thumbnail.url}`,
+          };
 
           _album.push(album);
-        })
+        });
 
         if (_album.length >= 1) this._lightbox.open(_album, 0);
-      break;
+        break;
 
       case FileTypes.DOCUMENT:
         const dialogRef = this.dialog.open(AttachmentModalComponent, {
           data: {
             fileType,
-            documents
-          }
+            documents,
+          },
         });
-    
-        dialogRef.afterClosed().subscribe((result) => {})
-      break;
+
+        dialogRef.afterClosed().subscribe((result) => {});
+        break;
     }
   }
 
@@ -565,7 +596,7 @@ export class SurveyComponent implements OnInit, AfterViewInit {
    * @param value
    * @returns
    */
-   private _filterUsers(value: string): Array<User> {
+  private _filterUsers(value: string): Array<User> {
     if (value && typeof value === 'string') {
       const filterValue = value.toLowerCase();
       return this.allUsers.filter(
@@ -582,13 +613,14 @@ export class SurveyComponent implements OnInit, AfterViewInit {
    * @param value
    * @returns
    */
-   private _filterJobs(value: string): Array<Job> {
+  private _filterJobs(value: string): Array<Job> {
     if (value && typeof value === 'string') {
       const filterValue = value.toLowerCase();
       return this.allJobs.filter(
         (job) =>
-          job.reference && job.reference.toLowerCase().indexOf(filterValue) === 0 ||
-          job.name && job.name.toLowerCase().indexOf(filterValue) === 0 ||
+          (job.reference &&
+            job.reference.toLowerCase().indexOf(filterValue) === 0) ||
+          (job.name && job.name.toLowerCase().indexOf(filterValue) === 0) ||
           job.id.toString().indexOf(filterValue) === 0
       );
     }
@@ -597,10 +629,10 @@ export class SurveyComponent implements OnInit, AfterViewInit {
   delete() {
     this.surveyEntityService.delete(this.survey.id).subscribe(
       (res) => {
-        this.router.navigate(['/home/todolist'])
+        this.router.navigate(['/home/todolist']);
       },
 
       (err) => console.log('err', err)
-    )
+    );
   }
 }
