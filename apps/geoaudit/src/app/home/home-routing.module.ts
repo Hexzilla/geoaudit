@@ -12,6 +12,7 @@ import { SearchComponent } from './search/search.component';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { ProfileComponent } from './profile/profile.component';
 import { ApprovalsComponent } from './approvals/approvals.component';
+import { ArchiveComponent } from './archive/archive.component';
 
 const routes: Routes = [
     { 
@@ -41,6 +42,9 @@ const routes: Routes = [
             },
             {
                 path: 'approvals', component: ApprovalsComponent
+            },
+            {
+                path: 'archive', component: ArchiveComponent
             },
             {
                 path: 'abriox/:id', component: SearchComponent

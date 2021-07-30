@@ -13,6 +13,9 @@
 			"geoaudit": "Geoaudit"
 		},
 		"home": {
+			"archive": {
+				"title": "Archive"
+			},
 			"buttons": {
 				"approvals": {
 					"text": "N approvals required",
@@ -29,6 +32,10 @@
 				"to_do_list": {
 					"text": "{{placeholder}} surveys to complete",
 					"title": "To Do List"
+				},
+				"archive": {
+					"text": "",
+					"title": "Archive"
 				}
 			},
 			"geoaudit": "Geoaudit",
