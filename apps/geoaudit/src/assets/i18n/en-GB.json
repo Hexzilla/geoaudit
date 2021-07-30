@@ -13,6 +13,9 @@
 			"geoaudit": "Geoaudit"
 		},
 		"home": {
+			"archive": {
+				"title": "Archive"
+			},
 			"buttons": {
 				"approvals": {
 					"text": "N approvals required",
