@@ -29,6 +29,10 @@
 				"to_do_list": {
 					"text": "{{placeholder}} surveys to complete",
 					"title": "To Do List"
+				},
+				"archive": {
+					"text": "",
+					"title": "Archive"
 				}
 			},
 			"geoaudit": "Geoaudit",

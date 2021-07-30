@@ -13,6 +13,7 @@ import { ApprovalsComponent } from './approvals/approvals.component';
 
 import { SharedModule } from './shared.module';
 import { ShareModalComponent } from '../modals/share-modal/share-modal.component';
+import { ArchiveComponent } from './archive/archive.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { ShareModalComponent } from '../modals/share-modal/share-modal.component
     ProfileComponent,
     ApprovalsComponent,
 
-    ShareModalComponent
+    ShareModalComponent,
+     ArchiveComponent
   ],
   imports: [
     HomeRoutingModule,
