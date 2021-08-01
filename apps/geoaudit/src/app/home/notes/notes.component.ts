@@ -11,7 +11,8 @@ import { AuthService } from '../../services';
   styleUrls: ['./notes.component.scss'],
 })
 export class NotesComponent implements OnInit {
-  
+  id: string;
+
   filter: NoteFilter;
 
   notes$ = this.noteEntityService.entities$;
@@ -25,9 +26,20 @@ export class NotesComponent implements OnInit {
 
   ngOnInit(): void {
     this.filter = this.route.snapshot.queryParamMap.get('filter') as NoteFilter;
+    this.id = this.route.snapshot.paramMap.get('id');
+
+    const { url } = this.router;
 
     if (this.filter) {
       this.query(this.filter);
+    } else if (url.includes('jobs')) {
+      console.log('jobs here');
+
+      if (url.includes(`jobs/job/${this.id}/notes`)) {
+        console.log('query notes for job id');
+      } else {
+        console.log('query notes for all jobs');
+      }
     } else {
       this.noteEntityService.getAll();
     }
@@ -35,7 +47,7 @@ export class NotesComponent implements OnInit {
 
   isRoot() {
     const { url } = this.router;
-    return url === '/home/notes' || url === `/home/notes?filter=${this.filter}`;
+    return url === '/home/notes' || url.includes('jobs');
   }
 
   query(attribute: string) {
