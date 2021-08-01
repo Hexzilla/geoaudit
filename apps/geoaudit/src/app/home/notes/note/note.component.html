@@ -9,6 +9,8 @@
 </h3> -->
 
 <mat-horizontal-stepper>
+
+    <!-- Datetime, Assignees, and Description -->
   <mat-step>
     <mat-card-content>
       <form [formGroup]="form">
@@ -78,5 +80,24 @@
         </mat-form-field>
       </form>
     </mat-card-content>
+  </mat-step>
+
+  <!-- Images and Attachments -->
+  <mat-step>
+    <geoaudit-file-upload
+      label="CONTAINERS.home.jobs.job.attachments.images"
+      (preview)="onPreview($event)"
+      (upload)="onImageUpload($event)"
+      fileType="IMAGE"
+      [multiple]="true"
+    ></geoaudit-file-upload>
+
+    <geoaudit-file-upload
+      label="CONTAINERS.home.jobs.job.attachments.documents"
+      (preview)="onPreview($event)"
+      (upload)="onDocumentUpload($event)"
+      fileType="DOCUMENT"
+      [multiple]="true"
+    ></geoaudit-file-upload>
   </mat-step>
 </mat-horizontal-stepper>

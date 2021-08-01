@@ -28,7 +28,8 @@ import { fromEvent, Subject } from 'rxjs';
 import { NoteEntityService } from '../../../entity-services/note-entity.service';
 import { UserEntityService } from '../../../entity-services/user-entity.service';
 import { Note, User } from '../../../models';
-import { AlertService } from '../../../services';
+import { AlertService, UploadService } from '../../../services';
+import { FileTypes } from '../../../components/file-upload/file-upload.component';
 
 @Component({
   selector: 'geoaudit-note',
@@ -62,7 +63,8 @@ export class NoteComponent implements OnInit, AfterViewInit {
     private formBuilder: FormBuilder,
     private userEntityService: UserEntityService,
     private alertService: AlertService,
-    private router: Router
+    private router: Router,
+    private uploadService: UploadService
   ) {}
 
   ngOnInit(): void {
@@ -108,8 +110,8 @@ export class NoteComponent implements OnInit, AfterViewInit {
     this.form = this.formBuilder.group({
       datetime: moment().toISOString(),
       description: null,
-      images: [],
-      attachmnts: [],
+      images: [[]],
+      attachments: [[]],
 
       assignees: [],
 
@@ -133,13 +135,15 @@ export class NoteComponent implements OnInit, AfterViewInit {
   }
 
   patchForm(note: Note) {
-    const { id, datetime, description, assignees } = note;
+    const { id, datetime, description, assignees, images, attachments } = note;
 
     this.form.patchValue({
       id,
       datetime,
       description,
       assignees,
+      images,
+      attachments,
     });
 
     // Setup autosave after the form is patched
@@ -254,5 +258,26 @@ export class NoteComponent implements OnInit, AfterViewInit {
 
       () => {}
     );
+  }
+
+  onPreview(fileType: FileTypes) {
+    const { images, attachments } = this.form.value;
+    this.uploadService.onPreview(fileType, images, attachments);
+  }
+
+  onImageUpload(event): void {
+    this.form.patchValue({
+      images: [...this.form.value.images, event],
+    });
+
+    this.submit(false);
+  }
+
+  onDocumentUpload(event): void {
+    this.form.patchValue({
+      attachments: [...this.form.value.attachments, event],
+    });
+
+    this.submit(false);
   }
 }

@@ -64,7 +64,7 @@ import { AttachmentModalComponent } from '../../../modals/attachment-modal/attac
 import { Job, Status, Statuses, Survey, User } from '../../../models';
 import { Image } from '../../../models/image.model';
 import { JobType } from '../../../models/job-type.model';
-import { AlertService, AuthService } from '../../../services';
+import { AlertService, AuthService, UploadService } from '../../../services';
 
 import * as fromApp from '../../../store';
 
@@ -190,7 +190,8 @@ export class JobComponent implements OnInit, AfterViewInit {
     private alertService: AlertService,
     private dialog: MatDialog,
     private _lightbox: Lightbox,
-    private authService: AuthService
+    private authService: AuthService,
+    private uploadService: UploadService
   ) {
     this.chartOptions = {
       series: [
@@ -742,38 +743,8 @@ export class JobComponent implements OnInit, AfterViewInit {
   }
 
   onPreview(fileType: FileTypes): void {
-    console.log('onPreview', fileType, this.form.value.footer);
-
     const { images, documents } = this.form.value.footer;
-
-    switch (fileType) {
-      case FileTypes.IMAGE:
-        let _album: Array<IAlbum> = [];
-
-        images.map((image: Image) => {
-          const album = {
-            src: `${this.API_URL}${image.url}`,
-            caption: image.name,
-            thumb: `${this.API_URL}${image.formats.thumbnail.url}`,
-          };
-
-          _album.push(album);
-        });
-
-        this._lightbox.open(_album, 0);
-        break;
-
-      case FileTypes.DOCUMENT:
-        const dialogRef = this.dialog.open(AttachmentModalComponent, {
-          data: {
-            fileType,
-            documents,
-          },
-        });
-
-        dialogRef.afterClosed().subscribe((result) => {});
-        break;
-    }
+    this.uploadService.onPreview(fileType, images, documents);
   }
 
   delete(surveys: Array<Survey>): void {

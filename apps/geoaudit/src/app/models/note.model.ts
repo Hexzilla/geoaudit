@@ -12,8 +12,8 @@ export interface Note {
     id?: number;
     datetime: string;
     description: string;
-    image: Image;
-    attachment: Image;
+    images: Array<Image>;
+    attachments: Array<Image>;
     
     assignees: Array<User>;
 
