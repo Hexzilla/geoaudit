@@ -17,7 +17,14 @@
 				"title": "Archive"
 			},
 			"notes": {
-				"title": "Notes"
+				"title": "Notes",
+				"abriox": "Abriox",
+				"job": "Job",
+				"resistivity": "Resistivity",
+				"site": "Site",
+				"survey": "Survey",
+				"tp": "Tp",
+				"tr": "Tr"
 			},
 			"buttons": {
 				"approvals": {

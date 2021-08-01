@@ -26,12 +26,4 @@ export interface Note {
     trs: Array<Tr>;
 }
 
-export const NoteTypes = {
-    ABRIOX: 'ABRIOX',
-    JOB: 'JOB',
-    RESISTIVITY: 'RESISTIVITY',
-    SITE: 'SITE',
-    SURVEY: 'SURVEY',
-    TP: 'TP',
-    TR: 'TR'
-}
+export type NoteFilter = 'abriox' | 'job' | 'resistivity' | 'site' | 'survey' | 'tp' | 'tr';

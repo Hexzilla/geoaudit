@@ -1,3 +1,7 @@
 <geoaudit-sidebar-header
   title="CONTAINERS.home.notes.title"
 ></geoaudit-sidebar-header>
+
+<h3 fxLayout="row" fxLayoutAlign="space-between">
+  <span *ngIf="filter">{{ 'CONTAINERS.home.notes.' + filter | translate }}</span>
+</h3>

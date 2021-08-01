@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { NoteTypes } from '../../models';
+import { NoteFilter } from '../../models';
 @Component({
   selector: 'geoaudit-notes',
   templateUrl: './notes.component.html',
@@ -9,40 +9,51 @@ import { NoteTypes } from '../../models';
 })
 export class NotesComponent implements OnInit {
 
+  filter: NoteFilter;
+
+  // aFilter: filters;
+  
   constructor(
     private route: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
-    const type = this.route.snapshot.queryParamMap.get('type').toUpperCase();
 
-    switch (type) {
-      case NoteTypes.ABRIOX:
+    this.filter = this.route.snapshot.queryParamMap.get('filter') as NoteFilter;
+
+    switch (this.filter) {
+      case 'abriox':
         console.log('this one')
       break;
 
-      case NoteTypes.JOB:
+      case 'job':
         console.log('no this one');
       break;
 
-      case NoteTypes.RESISTIVITY:
+      case 'resistivity':
         console.log('no this one');
       break;
 
-      case NoteTypes.SITE:
+      case 'site':
         console.log('no this one');
       break;
 
-      case NoteTypes.SURVEY:
+      case 'survey':
         console.log('no this one');
       break;
 
-      case NoteTypes.TP:
+      case 'tp':
         console.log('no this one');
       break;
 
-      case NoteTypes.TR:
+      case 'tr':
         console.log('no this one');
+      break;
+
+      default:
+        // this.type = NoteTypes
+
+        console.log('none')
       break;
     }
 
