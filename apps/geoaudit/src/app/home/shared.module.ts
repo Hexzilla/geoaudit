@@ -74,6 +74,8 @@ import { NotificationService } from '../services/notification.service';
 import { NoteEntityService } from '../entity-services/note-entity.service';
 import { NoteDataService } from '../data-services/note-data.service';
 import { ItemSelectorComponent } from '../components/item-selector/item-selector.component';
+import { SiteEntityService } from '../entity-services/site-entity.service';
+import { SiteDataService } from '../data-services/site-data.service';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient) {
@@ -108,6 +110,8 @@ const entityMetadataMap: EntityMetadataMap = {
   Testpost:{},
   Tr:{},
   Resistivity:{},
+
+  Site: {},
 
   Note: {},
 
@@ -211,6 +215,9 @@ const entityMetadataMap: EntityMetadataMap = {
 
     NotificationService,
 
+    SiteEntityService,
+    SiteDataService,
+
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     
@@ -285,7 +292,8 @@ export class SharedModule {
     private testpostDataService: TestpostDataService,
     private trDataService: TrDataService,
     private resistivityDataService: ResistivityDataService,
-    private toDoListDataService: ToDoListDataService
+    private toDoListDataService: ToDoListDataService,
+    private siteDataService: SiteDataService
   ) {
     entityDefinitionService.registerMetadataMap(entityMetadataMap);
 
@@ -302,7 +310,8 @@ export class SharedModule {
         Resistivity: resistivityDataService,
         Note: noteDataService,
         Notification: notificationDataService,
-        ToDoList: toDoListDataService
+        ToDoList: toDoListDataService,
+        Site: siteDataService
       }
     )
   }

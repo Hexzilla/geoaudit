@@ -45,7 +45,7 @@
       label="CONTAINERS.home.notes.assignees"
       placeholder="CONTAINERS.home.notes.new_assignee"
       [items]="form.value.assignees"
-      (itemsChange)="onUsersChange($event)"
+      (itemsChange)="onItemsChange($event, 'assignees')"
       attribute="username"
     ></geoaudit-item-selector>
 
@@ -86,7 +86,67 @@
       label="CONTAINERS.home.notes.abrioxes"
       placeholder="CONTAINERS.home.notes.new_abriox"
       [items]="form.value.abrioxes"
-      (itemsChange)="onAbrioxesChange($event)"
+      (itemsChange)="onItemsChange($event, 'abrioxes')"
+      attribute="name"
+    ></geoaudit-item-selector>
+
+    <geoaudit-item-selector
+      *ngIf="form.value.jobs"
+      selector="job"
+      label="CONTAINERS.home.notes.jobs"
+      placeholder="CONTAINERS.home.notes.new_job"
+      [items]="form.value.jobs"
+      (itemsChange)="onItemsChange($event, 'jobs')"
+      attribute="name"
+    ></geoaudit-item-selector>
+
+    <geoaudit-item-selector
+      *ngIf="form.value.resistivities"
+      selector="resistivity"
+      label="CONTAINERS.home.notes.resistivities"
+      placeholder="CONTAINERS.home.notes.new_resistivity"
+      [items]="form.value.resistivities"
+      (itemsChange)="onItemsChange($event, 'resistivities')"
+      attribute="reference"
+    ></geoaudit-item-selector>
+
+    <geoaudit-item-selector
+      *ngIf="form.value.sites"
+      selector="site"
+      label="CONTAINERS.home.notes.sites"
+      placeholder="CONTAINERS.home.notes.new_site"
+      [items]="form.value.sites"
+      (itemsChange)="onItemsChange($event, 'sites')"
+      attribute="name"
+    ></geoaudit-item-selector>
+
+    <geoaudit-item-selector
+      *ngIf="form.value.surveys"
+      selector="survey"
+      label="CONTAINERS.home.notes.surveys"
+      placeholder="CONTAINERS.home.notes.new_survey"
+      [items]="form.value.surveys"
+      (itemsChange)="onItemsChange($event, 'surveys')"
+      attribute="name"
+    ></geoaudit-item-selector>
+
+    <geoaudit-item-selector
+      *ngIf="form.value.testposts"
+      selector="testpost"
+      label="CONTAINERS.home.notes.testposts"
+      placeholder="CONTAINERS.home.notes.new_testpost"
+      [items]="form.value.testposts"
+      (itemsChange)="onItemsChange($event, 'testposts')"
+      attribute="name"
+    ></geoaudit-item-selector>
+
+    <geoaudit-item-selector
+      *ngIf="form.value.trs"
+      selector="tr"
+      label="CONTAINERS.home.notes.trs"
+      placeholder="CONTAINERS.home.notes.new_tr"
+      [items]="form.value.trs"
+      (itemsChange)="onItemsChange($event, 'trs')"
       attribute="name"
     ></geoaudit-item-selector>
   </mat-step>

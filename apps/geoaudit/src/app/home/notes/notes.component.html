@@ -8,6 +8,12 @@
       'CONTAINERS.home.notes.' + filter | translate
     }}</span>
   </h3>
+
+  <div fxLayout="row-reverse">
+    <button mat-flat-button fxFlexFill color="primary" routerLink="/home/notes/create">
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
 </ng-container>
 
 <router-outlet></router-outlet>

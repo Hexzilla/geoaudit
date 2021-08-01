@@ -31,7 +31,19 @@
 				"abrioxes": "Abrioxes",
 				"new_abriox": "New Abriox",
 				"assignees": "Assignees",
-				"new_assignee": "New assignee"
+				"new_assignee": "New assignee",
+				"jobs": "Jobs",
+				"new_job": "New job",
+				"resistivities": "Resistivities",
+				"new_resistivity": "New resistivity",
+				"sites": "Sites",
+				"new_site": "New site",
+				"surveys": "Surveys",
+				"new_survey": "New survey",
+				"testposts": "Testposts",
+				"new_testpost": "New testpost",
+				"trs": "TRs",
+				"new_tr": "New tr"
 			},
 			"buttons": {
 				"approvals": {

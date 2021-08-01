@@ -1,34 +1,18 @@
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import {
-  MatAutocomplete,
-  MatAutocompleteSelectedEvent,
-} from '@angular/material/autocomplete';
-import { MatChipInputEvent } from '@angular/material/chips';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { ThemePalette } from '@angular/material/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as moment from 'moment';
 import {
-  map,
-  filter,
   distinctUntilChanged,
-  switchMap,
   debounceTime,
   takeUntil,
   tap,
 } from 'rxjs/operators';
-import { fromEvent, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { NoteEntityService } from '../../../entity-services/note-entity.service';
-import { UserEntityService } from '../../../entity-services/user-entity.service';
-import { Abriox, Note, User } from '../../../models';
-import { AlertService, UploadService } from '../../../services';
+import { Note } from '../../../models';
+import { AlertService, AuthService, UploadService } from '../../../services';
 import { FileTypes } from '../../../components/file-upload/file-upload.component';
 
 @Component({
@@ -53,7 +37,8 @@ export class NoteComponent implements OnInit, AfterViewInit {
     private formBuilder: FormBuilder,
     private alertService: AlertService,
     private router: Router,
-    private uploadService: UploadService
+    private uploadService: UploadService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -64,7 +49,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
     if (this.id) {
       this.getNoteAndPatchForm(this.id);
     } else {
-      console.log('create');
+      this.createMode();
     }
   }
 
@@ -102,7 +87,21 @@ export class NoteComponent implements OnInit, AfterViewInit {
   }
 
   patchForm(note: Note) {
-    const { id, datetime, description, assignees, images, attachments, abrioxes } = note;
+    const {
+      id,
+      datetime,
+      description,
+      assignees,
+      images,
+      attachments,
+      abrioxes,
+      jobs,
+      resistivities,
+      sites,
+      surveys,
+      testposts,
+      trs,
+    } = note;
 
     this.form.patchValue({
       id,
@@ -112,11 +111,35 @@ export class NoteComponent implements OnInit, AfterViewInit {
       images,
       attachments,
 
-      abrioxes
+      abrioxes,
+      jobs,
+      resistivities,
+      sites,
+      surveys,
+      testposts,
+      trs,
     });
 
     // Setup autosave after the form is patched
     this.autoSave();
+  }
+
+  createMode() {
+    this.form.patchValue({
+      assignees: [this.authService.authValue.user],
+    });
+
+    this.noteEntityService.add(this.form.value).subscribe(
+      (note) => {
+        this.patchForm(note);
+
+        this.autoSave();
+
+        this.router.navigate([`/home/notes/${note.id}`], { replaceUrl: true });
+      },
+
+      (err) => {}
+    );
   }
 
   autoSave() {
@@ -136,12 +159,12 @@ export class NoteComponent implements OnInit, AfterViewInit {
     // reset alerts on submit
     this.alertService.clear();
 
-    console.log('this', this.form.value);
-
     if (this.form.invalid) {
       this.alertService.error('Invalid');
       return;
     }
+
+    console.log('submit', this.form.value);
 
     /**
      * Invoke the backend with a PUT request to update
@@ -187,17 +210,9 @@ export class NoteComponent implements OnInit, AfterViewInit {
     this.submit(false);
   }
 
-  onUsersChange(users: Array<User>): void {
+  onItemsChange(items: Array<any>, attribute: string): void {
     this.form.patchValue({
-      assignees: users.map((user) => user.id),
-      published: true,
-    });
-  }
-
-  onAbrioxesChange(abrioxes: Array<Abriox>): void {
-    this.form.patchValue({
-      abrioxes: abrioxes.map((abriox) => abriox.id),
-      published: true,
+      [attribute]: items.map((item) => item.id),
     });
   }
 }

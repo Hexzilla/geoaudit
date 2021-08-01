@@ -14,6 +14,12 @@ import { MatChipInputEvent } from '@angular/material/chips';
 import { fromEvent } from 'rxjs';
 import { map, filter, distinctUntilChanged } from 'rxjs/operators';
 import { AbrioxEntityService } from '../../entity-services/abriox-entity.service';
+import { JobEntityService } from '../../entity-services/job-entity.service';
+import { ResistivityEntityService } from '../../entity-services/resistivity-entity.service';
+import { SiteEntityService } from '../../entity-services/site-entity.service';
+import { SurveyEntityService } from '../../entity-services/survey-entity.service';
+import { TestpostEntityService } from '../../entity-services/testpost-entity.service';
+import { TrEntityService } from '../../entity-services/tr-entity.service';
 import { UserEntityService } from '../../entity-services/user-entity.service';
 import { Abriox, User } from '../../models';
 
@@ -56,7 +62,13 @@ export class ItemSelectorComponent implements OnInit {
 
   constructor(
     private abrioxEntityService: AbrioxEntityService,
-    private userEntityService: UserEntityService
+    private userEntityService: UserEntityService,
+    private jobEntityService: JobEntityService,
+    private resistivityEntityService: ResistivityEntityService,
+    private siteEntityService: SiteEntityService,
+    private surveyEntityService: SurveyEntityService,
+    private testpostEntityService: TestpostEntityService,
+    private trEntityService: TrEntityService
   ) {}
 
   ngOnInit(): void {
@@ -71,21 +83,51 @@ export class ItemSelectorComponent implements OnInit {
         break;
 
       case 'job':
+        this.jobEntityService.getAll().subscribe(
+          (jobs) => {
+            this.allItems = jobs;
+          }
+        )
         break;
 
       case 'resistivity':
+        this.resistivityEntityService.getAll().subscribe(
+          (resistivities) => {
+            this.allItems = resistivities;
+          }
+        )
         break;
 
       case 'site':
+        this.siteEntityService.getAll().subscribe(
+          (sites) => {
+            this.allItems = sites;
+          }
+        )
         break;
 
       case 'survey':
+        this.surveyEntityService.getAll().subscribe(
+          (surveys) => {
+            this.allItems = surveys;
+          }
+        )
         break;
 
       case 'tp':
+        this.testpostEntityService.getAll().subscribe(
+          (testposts) => {
+            this.allItems = testposts;
+          }
+        )
         break;
 
       case 'tr':
+        this.trEntityService.getAll().subscribe(
+          (trs) => {
+            this.allItems = trs;
+          }
+        )
         break;
 
       case 'user':
