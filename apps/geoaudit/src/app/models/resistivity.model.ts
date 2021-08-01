@@ -1,6 +1,5 @@
 import { Footer } from "./footer.model";
-import { ResistivityDetail } from "./resistivity-detail.model";
-import { ResistivityNote } from "./resistivity-note.model";
+import { Note } from "./note.model";
 import { Status } from "./status.model";
 import { Survey } from "./survey.model";
 
@@ -13,6 +12,6 @@ export interface Resistivity {
     // resistivity_detail: ResistivityDetail;
     resistivity_detail?: any;
     footer?: Footer;
-    resistivity_notes?: Array<ResistivityNote>;
+    notes?: Array<Note>;
     status?: Status;
 }

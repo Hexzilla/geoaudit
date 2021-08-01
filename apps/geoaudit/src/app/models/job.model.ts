@@ -1,6 +1,6 @@
 import { Footer } from './footer.model';
-import { JobNote } from "./job-note.model";
 import { JobType } from "./job-type.model";
+import { Note } from './note.model';
 import { Status } from "./status.model";
 import { Survey } from "./survey.model";
 import { User } from "./user.model";
@@ -14,7 +14,7 @@ export interface Job {
     name: string;
     status: Status;
     assignees: Array<User>;
-    job_notes: Array<JobNote>;
+    notes: Array<Note>;
     surveys: Array<Survey>;
     updated_at: any;
     published: boolean;

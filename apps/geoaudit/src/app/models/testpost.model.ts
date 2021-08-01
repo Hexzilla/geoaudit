@@ -1,9 +1,9 @@
 import { Abriox } from "./abriox.model";
 import { Condition } from "./condition.model";
 import { Footer } from "./footer.model";
+import { Note } from "./note.model";
 import { Status } from "./status.model";
 import { TpAction } from "./tp-action.model";
-import { TpNote } from "./tp-note.model";
 import { TpType } from "./tp-type.model";
 
 export interface Testpost {
@@ -18,7 +18,7 @@ export interface Testpost {
     serial_number?: string;
     geometry: object;
     footer?: Array<Footer>;
-    tp_notes?: Array<TpNote>;
+    notes?: Array<Note>;
     status?: Status;
     condition?: Condition;
     tp_type?: TpType;
