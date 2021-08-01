@@ -1,10 +1,4 @@
 {
-	"COMPONENTS": {
-		"abriox_selector": {
-			"abrioxes": "Abrioxes",
-			"new_abriox": "New Abriox"
-		}
-	},
 	"CONTAINERS": {
 		"auth": {
 			"form": {
@@ -33,7 +27,9 @@
 				"tr": "Tr",
 				"note": "Note",
 				"date": "Date",
-				"description": "Description"
+				"description": "Description",
+				"abrioxes": "Abrioxes",
+				"new_abriox": "New Abriox"
 			},
 			"buttons": {
 				"approvals": {

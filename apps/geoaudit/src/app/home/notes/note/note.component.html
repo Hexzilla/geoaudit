@@ -72,8 +72,11 @@
   <mat-step>
     <geoaudit-abriox-selector
       *ngIf="form.value.abrioxes"
-      [abrioxes]="form.value.abrioxes"
-      (abrioxesChange)="onAbrioxesChange($event)"
+      selector="abriox"
+      label="CONTAINERS.home.notes.abrioxes"
+      placeholder="CONTAINERS.home.notes.new_abriox"
+      [items]="form.value.abrioxes"
+      (itemsChange)="onAbrioxesChange($event)"
     ></geoaudit-abriox-selector>
   </mat-step>
 </mat-horizontal-stepper>

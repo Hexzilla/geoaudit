@@ -1,5 +1,14 @@
 import { ENTER, COMMA } from '@angular/cdk/keycodes';
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
@@ -8,46 +17,85 @@ import { map, filter, distinctUntilChanged } from 'rxjs/operators';
 import { AbrioxEntityService } from '../../entity-services/abriox-entity.service';
 import { Abriox, User } from '../../models';
 
+type Selectors =
+  | 'abriox'
+  | 'job'
+  | 'resistivity'
+  | 'site'
+  | 'survey'
+  | 'tp'
+  | 'tr';
+
 @Component({
   selector: 'geoaudit-abriox-selector',
   templateUrl: './abriox-selector.component.html',
-  styleUrls: ['./abriox-selector.component.scss']
+  styleUrls: ['./abriox-selector.component.scss'],
 })
-export class AbrioxSelectorComponent implements OnInit {
+export class AbrioxSelectorComponent implements OnInit, AfterViewInit {
+  @Input() selector: Selectors;
 
-  @Input() abrioxes: Array<Abriox> = [];
+  @Input() label: string;
 
-  selected: Array<Abriox> = [];
-  allAbrioxes: Array<Abriox> = [];
-  abrioxControl = new FormControl();
+  @Input() placeholder: string;
+
+  @Input() items: Array<any> = [];
+
+  selectedItems: Array<any> = [];
+  allItems: Array<any> = [];
+  itemControl = new FormControl();
   separatorKeysCodes: number[] = [ENTER, COMMA];
-  filteredAbrioxes: Array<Abriox> = [];
-  @ViewChild('abrioxInput') abrioxInput: ElementRef<HTMLInputElement>;
+  filteredItems: Array<Abriox> = [];
+  @ViewChild('itemInput') itemInput: ElementRef<HTMLInputElement>;
   selectable = true;
   removable = true;
 
-  @Output() abrioxesChange: EventEmitter<Array<Abriox>> = new EventEmitter();
-  
-  constructor(
-    private abrioxEntityService: AbrioxEntityService
-  ) { }
+  @Output() itemsChange: EventEmitter<Array<any>> = new EventEmitter();
+
+  constructor(private abrioxEntityService: AbrioxEntityService) {}
 
   ngOnInit(): void {
-    this.abrioxEntityService.getAll().subscribe(
-      (abrioxes) => (this.allAbrioxes = abrioxes),
-      (err) => {}
-    );
+    switch (this.selector) {
+      case 'abriox':
+        this.abrioxEntityService.getAll().subscribe(
+          (abrioxes) => {
+            console.log('abrioxes', abrioxes);
+            this.allItems = abrioxes;
+          },
+          (err) => {}
+        );
+        break;
 
-    this.abrioxes.map((abriox) => {
-      if (!this.selected.find((item) => item.id === abriox.id)) {
-        this.selected.push(abriox);
+      case 'job':
+        break;
+
+      case 'resistivity':
+        break;
+
+      case 'site':
+        break;
+
+      case 'survey':
+        break;
+
+      case 'tp':
+        break;
+
+      case 'tr':
+        break;
+    }
+
+    this.items.map((item) => {
+      if (
+        !this.selectedItems.find((selectedItem) => selectedItem.id === item.id)
+      ) {
+        this.selectedItems.push(item);
       }
     });
   }
 
   ngAfterViewInit() {
     // Users
-    fromEvent(this.abrioxInput.nativeElement, 'keyup')
+    fromEvent(this.itemInput.nativeElement, 'keyup')
       .pipe(
         map((event: any) => {
           return event.target.value;
@@ -56,7 +104,7 @@ export class AbrioxSelectorComponent implements OnInit {
         distinctUntilChanged()
       )
       .subscribe((text: string) => {
-        this.filteredAbrioxes = this.filter(text);
+        this.filteredItems = this.filter(text);
       });
   }
 
@@ -69,45 +117,46 @@ export class AbrioxSelectorComponent implements OnInit {
       const filterAllItemsOnValue = this.filter(value);
 
       if (filterAllItemsOnValue.length >= 1) {
-        this.selected.push(filterAllItemsOnValue[0]);
+        this.selectedItems.push(filterAllItemsOnValue[0]);
       }
     }
 
     // Clear the input value
-    this.abrioxInput.nativeElement.value = '';
+    this.itemInput.nativeElement.value = '';
 
-    this.abrioxControl.setValue(null);
+    this.itemControl.setValue(null);
 
-    this.abrioxesChange.emit(this.selected);
+    this.itemsChange.emit(this.selectedItems);
   }
 
   remove(user: User): void {
-    const exists = this.selected.find((item) => item.id === user.id);
+    const exists = this.selectedItems.find((item) => item.id === user.id);
     if (exists) {
-      this.selected = this.selected.filter((item) => item.id !== exists.id);
+      this.selectedItems = this.selectedItems.filter(
+        (item) => item.id !== exists.id
+      );
     }
 
-    this.abrioxesChange.emit(this.selected);
+    this.itemsChange.emit(this.selectedItems);
   }
 
   onSelected(event: MatAutocompleteSelectedEvent) {
-    this.selected.push(event.option.value);
-    this.abrioxInput.nativeElement.value = '';
-    this.abrioxControl.setValue(null);
+    this.selectedItems.push(event.option.value);
+    this.itemInput.nativeElement.value = '';
+    this.itemControl.setValue(null);
 
-    this.abrioxesChange.emit(this.selected);
+    this.itemsChange.emit(this.selectedItems);
   }
 
-  filter(value: string): Array<Abriox> {
+  filter(value: string): Array<any> {
     const filterValue = value.toLowerCase();
 
-    return this.allAbrioxes.filter((abriox) => {
+    return this.allItems.filter((item) => {
       return (
-        abriox?.name?.toLowerCase().indexOf(filterValue) === 0 ||
-        abriox?.serial_number?.toLowerCase().indexOf(filterValue) === 0 ||
-        abriox?.id?.toString() === filterValue
+        item?.name?.toLowerCase().indexOf(filterValue) === 0 ||
+        item?.serial_number?.toLowerCase().indexOf(filterValue) === 0 ||
+        item?.id?.toString() === filterValue
       );
     });
   }
-
 }
