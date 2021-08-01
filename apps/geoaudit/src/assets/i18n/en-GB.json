@@ -1,4 +1,10 @@
 {
+	"COMPONENTS": {
+		"abriox_selector": {
+			"abrioxes": "Abrioxes",
+			"new_abriox": "New Abriox"
+		}
+	},
 	"CONTAINERS": {
 		"auth": {
 			"form": {

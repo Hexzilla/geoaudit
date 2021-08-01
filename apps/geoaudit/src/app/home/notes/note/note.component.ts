@@ -27,7 +27,7 @@ import {
 import { fromEvent, Subject } from 'rxjs';
 import { NoteEntityService } from '../../../entity-services/note-entity.service';
 import { UserEntityService } from '../../../entity-services/user-entity.service';
-import { Note, User } from '../../../models';
+import { Abriox, Note, User } from '../../../models';
 import { AlertService, UploadService } from '../../../services';
 import { FileTypes } from '../../../components/file-upload/file-upload.component';
 
@@ -102,7 +102,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
   }
 
   patchForm(note: Note) {
-    const { id, datetime, description, assignees, images, attachments } = note;
+    const { id, datetime, description, assignees, images, attachments, abrioxes } = note;
 
     this.form.patchValue({
       id,
@@ -111,6 +111,8 @@ export class NoteComponent implements OnInit, AfterViewInit {
       assignees,
       images,
       attachments,
+
+      abrioxes
     });
 
     // Setup autosave after the form is patched
@@ -186,9 +188,15 @@ export class NoteComponent implements OnInit, AfterViewInit {
   }
 
   onUsersChange(users: Array<User>): void {
-    console.log();
     this.form.patchValue({
       assignees: users.map((user) => user.id),
+      published: true,
+    });
+  }
+
+  onAbrioxesChange(abrioxes: Array<Abriox>): void {
+    this.form.patchValue({
+      abrioxes: abrioxes.map((abriox) => abriox.id),
       published: true,
     });
   }
