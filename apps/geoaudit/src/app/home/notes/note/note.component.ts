@@ -45,23 +45,12 @@ export class NoteComponent implements OnInit, AfterViewInit {
 
   color: ThemePalette = 'primary';
 
-  // Assignees
-  users: Array<User> = [];
-  allUsers: Array<User> = [];
-  userControl = new FormControl();
-  separatorKeysCodes: number[] = [ENTER, COMMA];
-  filteredUsers: Array<User> = [];
-  @ViewChild('userInput') userInput: ElementRef<HTMLInputElement>;
-  selectable = true;
-  removable = true;
-
   private unsubscribe = new Subject<void>();
 
   constructor(
     private route: ActivatedRoute,
     private noteEntityService: NoteEntityService,
     private formBuilder: FormBuilder,
-    private userEntityService: UserEntityService,
     private alertService: AlertService,
     private router: Router,
     private uploadService: UploadService
@@ -72,8 +61,6 @@ export class NoteComponent implements OnInit, AfterViewInit {
 
     this.initForm();
 
-    this.getData();
-
     if (this.id) {
       this.getNoteAndPatchForm(this.id);
     } else {
@@ -81,20 +68,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
     }
   }
 
-  ngAfterViewInit() {
-    // Users
-    fromEvent(this.userInput.nativeElement, 'keyup')
-      .pipe(
-        map((event: any) => {
-          return event.target.value;
-        }),
-        filter((res) => res.length >= 0),
-        distinctUntilChanged()
-      )
-      .subscribe((text: string) => {
-        this.filteredUsers = this.filterUsers(text);
-      });
-  }
+  ngAfterViewInit() {}
 
   getNoteAndPatchForm(id: string) {
     this.noteEntityService.getByKey(id).subscribe(
@@ -127,13 +101,6 @@ export class NoteComponent implements OnInit, AfterViewInit {
     });
   }
 
-  getData() {
-    this.userEntityService.getAll().subscribe(
-      (users) => (this.allUsers = users),
-      (err) => {}
-    );
-  }
-
   patchForm(note: Note) {
     const { id, datetime, description, assignees, images, attachments } = note;
 
@@ -148,69 +115,6 @@ export class NoteComponent implements OnInit, AfterViewInit {
 
     // Setup autosave after the form is patched
     this.autoSave();
-
-    assignees.map((assignee) => {
-      if (!this.users.find((item) => item.id === assignee.id)) {
-        this.users.push(assignee);
-      }
-    });
-  }
-
-  // Users (Assignees)
-  addUser(event: MatChipInputEvent) {
-    const value = (event.value || '').trim();
-
-    // Add our user
-    if (value) {
-      const filterAllUsersOnValue = this.filterUsers(value);
-
-      if (filterAllUsersOnValue.length >= 1) {
-        this.users.push(filterAllUsersOnValue[0]);
-      }
-    }
-
-    // Clear the input value
-    this.userInput.nativeElement.value = '';
-
-    this.userControl.setValue(null);
-
-    this.usersChange();
-  }
-
-  removeUser(user: User): void {
-    const exists = this.users.find((item) => item.id === user.id);
-    if (exists) {
-      this.users = this.users.filter((item) => item.id !== exists.id);
-    }
-
-    this.usersChange();
-  }
-
-  selectedUser(event: MatAutocompleteSelectedEvent) {
-    this.users.push(event.option.value);
-    this.userInput.nativeElement.value = '';
-    this.userControl.setValue(null);
-
-    this.usersChange();
-  }
-
-  usersChange(): void {
-    this.form.patchValue({
-      assignees: this.users.map((user) => user.id),
-      published: true,
-    });
-  }
-
-  filterUsers(value: string): Array<User> {
-    const filterValue = value.toLowerCase();
-
-    return this.allUsers.filter((user) => {
-      return (
-        user.username.toLowerCase().indexOf(filterValue) === 0 ||
-        user.email.toLowerCase().indexOf(filterValue) === 0 ||
-        user.id.toString() === filterValue
-      );
-    });
   }
 
   autoSave() {
@@ -279,5 +183,13 @@ export class NoteComponent implements OnInit, AfterViewInit {
     });
 
     this.submit(false);
+  }
+
+  onUsersChange(users: Array<User>): void {
+    console.log();
+    this.form.patchValue({
+      assignees: users.map((user) => user.id),
+      published: true,
+    });
   }
 }
