@@ -71,8 +71,12 @@ export class NoteComponent implements OnInit {
   }
 
   patchForm(note: Note) {
+
+    const { datetime, description } = note;
+
     this.form.patchValue({
-      datetime: note.datetime
+      datetime,
+      description
     })
   }
 

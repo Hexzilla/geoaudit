@@ -26,7 +26,8 @@
 				"tp": "Tp",
 				"tr": "Tr",
 				"note": "Note",
-				"date": "Date"
+				"date": "Date",
+				"description": "Description"
 			},
 			"buttons": {
 				"approvals": {
