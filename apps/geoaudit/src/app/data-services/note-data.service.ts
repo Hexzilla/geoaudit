@@ -1,7 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import qs from 'qs';
-import { DefaultDataService, HttpUrlGenerator } from "@ngrx/data";
+import { DefaultDataService, HttpUrlGenerator, QueryParams } from "@ngrx/data";
 import { Update } from "@ngrx/entity";
 import { Observable } from "rxjs";
 import { environment } from "../../environments/environment";
@@ -36,6 +36,10 @@ export class NoteDataService extends DefaultDataService<Note> {
     
     getById(id): Observable<Note> {
         return this.http.get<any>(`${environment.API_URL}/notes/${id}`);
+    }
+    
+    getWithQuery(queryParams: string | QueryParams): Observable<Array<Note>> {
+        return this.http.get<any>(`${environment.API_URL}/notes?${queryParams}`);
     }
 
     update(update: Update<Note>): Observable<any> {

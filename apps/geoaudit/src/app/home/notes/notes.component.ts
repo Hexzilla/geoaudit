@@ -1,70 +1,52 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import qs from 'qs';
 import { NoteEntityService } from '../../entity-services/note-entity.service';
 
 import { NoteFilter } from '../../models';
+import { AuthService } from '../../services';
 @Component({
   selector: 'geoaudit-notes',
   templateUrl: './notes.component.html',
-  styleUrls: ['./notes.component.scss']
+  styleUrls: ['./notes.component.scss'],
 })
 export class NotesComponent implements OnInit {
-
+  
   filter: NoteFilter;
 
   notes$ = this.noteEntityService.entities$;
 
-  // aFilter: filters;
-  
   constructor(
     private route: ActivatedRoute,
     public router: Router,
-    private noteEntityService: NoteEntityService
-  ) { }
+    private noteEntityService: NoteEntityService,
+    private authService: AuthService
+  ) {}
 
   ngOnInit(): void {
-
     this.filter = this.route.snapshot.queryParamMap.get('filter') as NoteFilter;
 
-    switch (this.filter) {
-      case 'abriox':
-        console.log('this one')
-      break;
-
-      case 'job':
-        console.log('no this one');
-      break;
-
-      case 'resistivity':
-        console.log('no this one');
-      break;
-
-      case 'site':
-        console.log('no this one');
-      break;
-
-      case 'survey':
-        console.log('no this one');
-      break;
-
-      case 'tp':
-        console.log('no this one');
-      break;
-
-      case 'tr':
-        console.log('no this one');
-      break;
-
-      default:
-
-        this.noteEntityService.getAll();
-      
-        break;
+    if (this.filter) {
+      this.query(this.filter);
+    } else {
+      this.noteEntityService.getAll();
     }
+  }
 
-    this.notes$.subscribe(notes => {
-      console.log('notes', notes)
-    })
+  isRoot() {
+    const { url } = this.router;
+    return url === '/home/notes' || url === `/home/notes?filter=${this.filter}`;
+  }
 
+  query(attribute: string) {
+    const parameters = qs.stringify({
+      _where: {
+        assignees: this.authService.authValue.user.id,
+        [`${attribute}_null`]: false,
+      },
+      _sort: 'datetime:DESC',
+    });
+
+    this.noteEntityService.getWithQuery(parameters);
   }
 }

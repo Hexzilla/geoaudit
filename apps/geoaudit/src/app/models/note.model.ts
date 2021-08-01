@@ -26,4 +26,4 @@ export interface Note {
     trs: Array<Tr>;
 }
 
-export type NoteFilter = 'abriox' | 'job' | 'resistivity' | 'site' | 'survey' | 'tp' | 'tr';
+export type NoteFilter = 'abrioxes' | 'jobs' | 'resistivities' | 'sites' | 'surveys' | 'testposts' | 'trs';
