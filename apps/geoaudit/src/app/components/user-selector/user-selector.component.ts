@@ -25,7 +25,7 @@ import { User } from '../../models';
 export class UserSelectorComponent implements OnInit, AfterViewInit {
   @Input() assignees: Array<User> = [];
 
-  users: Array<User> = [];
+  selected: Array<User> = [];
   allUsers: Array<User> = [];
   userControl = new FormControl();
   separatorKeysCodes: number[] = [ENTER, COMMA];
@@ -45,8 +45,8 @@ export class UserSelectorComponent implements OnInit, AfterViewInit {
     );
 
     this.assignees.map((assignee) => {
-      if (!this.users.find((item) => item.id === assignee.id)) {
-        this.users.push(assignee);
+      if (!this.selected.find((item) => item.id === assignee.id)) {
+        this.selected.push(assignee);
       }
     });
   }
@@ -75,7 +75,7 @@ export class UserSelectorComponent implements OnInit, AfterViewInit {
       const filterAllUsersOnValue = this.filter(value);
 
       if (filterAllUsersOnValue.length >= 1) {
-        this.users.push(filterAllUsersOnValue[0]);
+        this.selected.push(filterAllUsersOnValue[0]);
       }
     }
 
@@ -84,24 +84,24 @@ export class UserSelectorComponent implements OnInit, AfterViewInit {
 
     this.userControl.setValue(null);
 
-    this.usersChange.emit(this.users);
+    this.usersChange.emit(this.selected);
   }
 
   remove(user: User): void {
-    const exists = this.users.find((item) => item.id === user.id);
+    const exists = this.selected.find((item) => item.id === user.id);
     if (exists) {
-      this.users = this.users.filter((item) => item.id !== exists.id);
+      this.selected = this.selected.filter((item) => item.id !== exists.id);
     }
 
-    this.usersChange.emit(this.users);
+    this.usersChange.emit(this.selected);
   }
 
-  selected(event: MatAutocompleteSelectedEvent) {
-    this.users.push(event.option.value);
+  onSelected(event: MatAutocompleteSelectedEvent) {
+    this.selected.push(event.option.value);
     this.userInput.nativeElement.value = '';
     this.userControl.setValue(null);
 
-    this.usersChange.emit(this.users);
+    this.usersChange.emit(this.selected);
   }
 
   filter(value: string): Array<User> {

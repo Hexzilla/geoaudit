@@ -69,5 +69,11 @@
   </mat-step>
 
   <!-- Link note to other items i.e. abriox, job, etc -->
-  <mat-step> </mat-step>
+  <mat-step>
+    <geoaudit-abriox-selector
+      *ngIf="form.value.abrioxes"
+      [abrioxes]="form.value.abrioxes"
+      (abrioxesChange)="onAbrioxesChange($event)"
+    ></geoaudit-abriox-selector>
+  </mat-step>
 </mat-horizontal-stepper>
