@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NoteEntityService } from '../../entity-services/note-entity.service';
 
 import { NoteFilter } from '../../models';
 @Component({
@@ -11,11 +12,14 @@ export class NotesComponent implements OnInit {
 
   filter: NoteFilter;
 
+  notes$ = this.noteEntityService.entities$;
+
   // aFilter: filters;
   
   constructor(
     private route: ActivatedRoute,
-    public router: Router
+    public router: Router,
+    private noteEntityService: NoteEntityService
   ) { }
 
   ngOnInit(): void {
@@ -52,12 +56,15 @@ export class NotesComponent implements OnInit {
       break;
 
       default:
-        // this.type = NoteTypes
 
-        console.log('none')
-      break;
+        this.noteEntityService.getAll();
+      
+        break;
     }
 
-  }
+    this.notes$.subscribe(notes => {
+      console.log('notes', notes)
+    })
 
+  }
 }

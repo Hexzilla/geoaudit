@@ -9,8 +9,42 @@
     }}</span>
   </h3>
 
+  <mat-card
+    *ngFor="let note of notes$ | async"
+    [routerLink]="'/home/notes/' + note.id"
+    style="cursor: pointer; margin-top: 20px"
+    fxLayout="row"
+    fxLayoutAlign="space-between"
+  >
+    <!-- <mat-card-header> -->
+    <div fxLayout="column">
+      <p>{{ note.datetime | date: 'HH:mm dd/MM/yyyy' }}</p>
+      <p *ngIf="note.description">
+        <em>{{ note.description | slice: 0:100 }} </em
+        ><span *ngIf="note.description?.length >= 10">...</span>
+      </p>
+
+      <div fxLayout="row"></div>
+    </div>
+
+    <button
+      mat-icon-button
+      color="accent"
+      aria-label="Example icon button with a plus one icon"
+    >
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+
+    <!-- <mat-icon style="background-color: #0074d9; border-radius: 15px;">radio_button_unchecked</mat-icon> -->
+  </mat-card>
+
   <div fxLayout="row-reverse">
-    <button mat-flat-button fxFlexFill color="primary" routerLink="/home/notes/create">
+    <button
+      mat-flat-button
+      fxFlexFill
+      color="primary"
+      routerLink="/home/notes/create"
+    >
       <mat-icon>add</mat-icon>
     </button>
   </div>

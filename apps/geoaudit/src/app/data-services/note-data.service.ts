@@ -1,17 +1,20 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import qs from 'qs';
 import { DefaultDataService, HttpUrlGenerator } from "@ngrx/data";
 import { Update } from "@ngrx/entity";
 import { Observable } from "rxjs";
 import { environment } from "../../environments/environment";
 import { Note } from "../models";
+import { AuthService } from "../services";
 
 @Injectable()
 export class NoteDataService extends DefaultDataService<Note> {
 
     constructor(
         httpClient: HttpClient,
-        httpUrlGenerator: HttpUrlGenerator
+        httpUrlGenerator: HttpUrlGenerator,
+        private authService: AuthService
     ) {
         super('Note', httpClient, httpUrlGenerator);
     }
@@ -21,7 +24,14 @@ export class NoteDataService extends DefaultDataService<Note> {
     }
 
     getAll(): Observable<Array<Note>> {
-        return this.http.get<any>(`${environment.API_URL}/notes`);
+        const parameters = qs.stringify({
+            _where: {
+                assignees: this.authService.authValue.user.id,
+            },
+            _sort: 'datetime:DESC'
+        })
+
+        return this.http.get<any>(`${environment.API_URL}/notes?${parameters}`);
     }
     
     getById(id): Observable<Note> {
