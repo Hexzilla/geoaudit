@@ -10,7 +10,7 @@ import { User } from "./user.model";
 
 export interface Note {
     id?: number;
-    date: string;
+    datetime: string;
     description: string;
     image: Image;
     attachment: Image;

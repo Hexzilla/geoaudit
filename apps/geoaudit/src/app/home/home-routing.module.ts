@@ -4,6 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 const calendarModule = () => import('./calendar/calendar.module').then(x => x.CalendarModule);
 const surveyModule = () => import('./survey/survey.module').then(x => x.SurveyModule);
 const jobsModule = () => import('./jobs/jobs.module').then(x => x.JobsModule);
+const notesModule = () => import('./notes/notes.module').then(x => x.NotesModule);
 
 import { HomeComponent } from './home.component';
 import { AuthGuard } from '../guards';
@@ -13,7 +14,6 @@ import { NotificationsComponent } from './notifications/notifications.component'
 import { ProfileComponent } from './profile/profile.component';
 import { ApprovalsComponent } from './approvals/approvals.component';
 import { ArchiveComponent } from './archive/archive.component';
-import { NotesComponent } from './notes/notes.component';
 
 const routes: Routes = [
     { 
@@ -48,7 +48,7 @@ const routes: Routes = [
                 path: 'archive', component: ArchiveComponent
             },
             {
-                path: 'notes', component: NotesComponent
+                path: 'notes', loadChildren: notesModule
             },
             {
                 path: 'abriox/:id', component: SearchComponent

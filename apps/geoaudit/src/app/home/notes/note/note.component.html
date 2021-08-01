@@ -1,1 +1,41 @@
-<p>note works!</p>
+<geoaudit-sidebar-header
+title="CONTAINERS.home.notes.note"
+></geoaudit-sidebar-header>
+
+<!-- <h3 fxLayout="row" fxLayoutAlign="space-between">
+<span *ngIf="filter">{{
+  'CONTAINERS.home.notes.' + filter | translate
+}}</span>
+</h3> -->
+
+<mat-horizontal-stepper>
+    <mat-step>
+        <mat-card-content>
+            <form [formGroup]="form">
+                <mat-form-field appearance="outline">
+                    <mat-label>{{
+                      'CONTAINERS.home.notes.date' | translate
+                    }}</mat-label>
+                    <input
+                      matInput
+                      [ngxMatDatetimePicker]="dateAssignedDateTimePicker"
+                      [placeholder]="'CONTAINERS.notes.date' | translate"
+                      formControlName="datetime"
+                      [disabled]="disabled"
+                    />
+          
+                    <mat-datepicker-toggle
+                      matSuffix
+                      [for]="dateAssignedDateTimePicker"
+                    ></mat-datepicker-toggle>
+          
+                    <ngx-mat-datetime-picker
+                      #dateAssignedDateTimePicker
+                      [color]="color"
+                    >
+                    </ngx-mat-datetime-picker>
+                  </mat-form-field>
+            </form>
+        </mat-card-content>
+    </mat-step>
+</mat-horizontal-stepper>

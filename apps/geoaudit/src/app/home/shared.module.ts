@@ -71,8 +71,6 @@ import { NotificationDataService } from '../data-services/notification-data.serv
 import { ToDoListEntityService } from '../entity-services/to-do-list-entity.service';
 import { ToDoListDataService } from '../data-services/to-do-list-data.service';
 import { NotificationService } from '../services/notification.service';
-import { NotesComponent } from './notes/notes.component';
-import { NoteComponent } from './notes/note/note.component';
 import { NoteEntityService } from '../entity-services/note-entity.service';
 import { NoteDataService } from '../data-services/note-data.service';
 
@@ -173,8 +171,6 @@ const entityMetadataMap: EntityMetadataMap = {
     AttachmentModalComponent,
     NavigationModalComponent,
     SurveyTableComponent,
-    NotesComponent,
-    NoteComponent
   ],
   providers: [
     JobEntityService,

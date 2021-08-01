@@ -24,7 +24,9 @@
 				"site": "Site",
 				"survey": "Survey",
 				"tp": "Tp",
-				"tr": "Tr"
+				"tr": "Tr",
+				"note": "Note",
+				"date": "Date"
 			},
 			"buttons": {
 				"approvals": {

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { NoteFilter } from '../../models';
 @Component({
@@ -14,7 +14,8 @@ export class NotesComponent implements OnInit {
   // aFilter: filters;
   
   constructor(
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    public router: Router
   ) { }
 
   ngOnInit(): void {
