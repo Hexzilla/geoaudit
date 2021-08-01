@@ -1,33 +1,33 @@
 <mat-form-field class="example-chip-list" appearance="outline">
   <mat-label>
-    {{ 'CONTAINERS.home.jobs.job.form.assignees' | translate }}
+    {{ label | translate }}
   </mat-label>
-  <mat-chip-list #chipList aria-label="Assignee selection">
+  <mat-chip-list #chipList aria-label="selection">
     <mat-chip
-      *ngFor="let user of selected"
+      *ngFor="let item of selectedItems"
       [selectable]="selectable"
       [removable]="removable"
-      (removed)="remove(user)"
+      (removed)="remove(item)"
     >
-      {{ user.username }}
+      {{ item[attribute] }}
       <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
     </mat-chip>
     <input
-      [placeholder]="'CONTAINERS.home.jobs.job.form.new_assignee' | translate"
-      #userInput
-      [formControl]="userControl"
-      [matAutocomplete]="autoUsers"
+      [placeholder]="placeholder | translate"
+      #itemInput
+      [formControl]="itemControl"
+      [matAutocomplete]="autoItems"
       [matChipInputFor]="chipList"
       [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
       (matChipInputTokenEnd)="add($event)"
     />
   </mat-chip-list>
   <mat-autocomplete
-    #autoUsers="matAutocomplete"
+    #autoItems="matAutocomplete"
     (optionSelected)="onSelected($event)"
   >
-    <mat-option *ngFor="let user of filteredUsers" [value]="user">
-      {{ user.username }}
+    <mat-option *ngFor="let item of filteredItems" [value]="item">
+      {{ item[attribute] }}
     </mat-option>
   </mat-autocomplete>
 </mat-form-field>

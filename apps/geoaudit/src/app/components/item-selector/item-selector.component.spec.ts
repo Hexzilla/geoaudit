@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { UserSelectorComponent } from './user-selector.component';
+import { ItemSelectorComponent } from './item-selector.component';
 
-describe('UserSelectorComponent', () => {
-  let component: UserSelectorComponent;
-  let fixture: ComponentFixture<UserSelectorComponent>;
+describe('ItemSelectorComponent', () => {
+  let component: ItemSelectorComponent;
+  let fixture: ComponentFixture<ItemSelectorComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ UserSelectorComponent ]
+      declarations: [ ItemSelectorComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(UserSelectorComponent);
+    fixture = TestBed.createComponent(ItemSelectorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

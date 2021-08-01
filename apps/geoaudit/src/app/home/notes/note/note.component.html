@@ -33,11 +33,21 @@
       </mat-form-field>
 
       <!-- User (Assignee) -->
-      <geoaudit-user-selector
+      <!-- <geoaudit-user-selector
         *ngIf="form.value.assignees"
         [assignees]="form.value.assignees"
         (usersChange)="onUsersChange($event)"
-      ></geoaudit-user-selector>
+      ></geoaudit-user-selector> -->
+
+      <geoaudit-item-selector
+      *ngIf="form.value.assignees"
+      selector="user"
+      label="CONTAINERS.home.notes.assignees"
+      placeholder="CONTAINERS.home.notes.new_assignee"
+      [items]="form.value.assignees"
+      (itemsChange)="onUsersChange($event)"
+      attribute="username"
+    ></geoaudit-item-selector>
 
       <!-- Description -->
       <mat-form-field appearance="outline">
@@ -70,13 +80,14 @@
 
   <!-- Link note to other items i.e. abriox, job, etc -->
   <mat-step>
-    <geoaudit-abriox-selector
+    <geoaudit-item-selector
       *ngIf="form.value.abrioxes"
       selector="abriox"
       label="CONTAINERS.home.notes.abrioxes"
       placeholder="CONTAINERS.home.notes.new_abriox"
       [items]="form.value.abrioxes"
       (itemsChange)="onAbrioxesChange($event)"
-    ></geoaudit-abriox-selector>
+      attribute="name"
+    ></geoaudit-item-selector>
   </mat-step>
 </mat-horizontal-stepper>

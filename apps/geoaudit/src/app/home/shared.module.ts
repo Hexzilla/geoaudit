@@ -73,8 +73,7 @@ import { ToDoListDataService } from '../data-services/to-do-list-data.service';
 import { NotificationService } from '../services/notification.service';
 import { NoteEntityService } from '../entity-services/note-entity.service';
 import { NoteDataService } from '../data-services/note-data.service';
-import { UserSelectorComponent } from '../components/user-selector/user-selector.component';
-import { AbrioxSelectorComponent } from '../components/abriox-selector/abriox-selector.component';
+import { ItemSelectorComponent } from '../components/item-selector/item-selector.component';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient) {
@@ -173,10 +172,7 @@ const entityMetadataMap: EntityMetadataMap = {
     AttachmentModalComponent,
     NavigationModalComponent,
     SurveyTableComponent,
-
-    // Selector components
-    UserSelectorComponent,
-    AbrioxSelectorComponent
+    ItemSelectorComponent
   ],
   providers: [
     JobEntityService,
@@ -239,10 +235,7 @@ const entityMetadataMap: EntityMetadataMap = {
     SidebarActionsComponent,
     AttachmentModalComponent,
     SurveyTableComponent,
-
-    // Selector components
-    UserSelectorComponent,
-    AbrioxSelectorComponent,
+    ItemSelectorComponent,
     
     // Material
     MatAutocompleteModule,

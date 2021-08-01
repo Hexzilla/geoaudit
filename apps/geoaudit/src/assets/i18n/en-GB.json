@@ -29,7 +29,9 @@
 				"date": "Date",
 				"description": "Description",
 				"abrioxes": "Abrioxes",
-				"new_abriox": "New Abriox"
+				"new_abriox": "New Abriox",
+				"assignees": "Assignees",
+				"new_assignee": "New assignee"
 			},
 			"buttons": {
 				"approvals": {

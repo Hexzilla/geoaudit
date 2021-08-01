@@ -1,6 +1,5 @@
 import { ENTER, COMMA } from '@angular/cdk/keycodes';
 import {
-  AfterViewInit,
   Component,
   ElementRef,
   EventEmitter,
@@ -15,6 +14,7 @@ import { MatChipInputEvent } from '@angular/material/chips';
 import { fromEvent } from 'rxjs';
 import { map, filter, distinctUntilChanged } from 'rxjs/operators';
 import { AbrioxEntityService } from '../../entity-services/abriox-entity.service';
+import { UserEntityService } from '../../entity-services/user-entity.service';
 import { Abriox, User } from '../../models';
 
 type Selectors =
@@ -24,14 +24,15 @@ type Selectors =
   | 'site'
   | 'survey'
   | 'tp'
-  | 'tr';
+  | 'tr'
+  | 'user';
 
 @Component({
-  selector: 'geoaudit-abriox-selector',
-  templateUrl: './abriox-selector.component.html',
-  styleUrls: ['./abriox-selector.component.scss'],
+  selector: 'geoaudit-item-selector',
+  templateUrl: './item-selector.component.html',
+  styleUrls: ['./item-selector.component.scss'],
 })
-export class AbrioxSelectorComponent implements OnInit, AfterViewInit {
+export class ItemSelectorComponent implements OnInit {
   @Input() selector: Selectors;
 
   @Input() label: string;
@@ -39,6 +40,8 @@ export class AbrioxSelectorComponent implements OnInit, AfterViewInit {
   @Input() placeholder: string;
 
   @Input() items: Array<any> = [];
+
+  @Input() attribute: string;
 
   selectedItems: Array<any> = [];
   allItems: Array<any> = [];
@@ -51,14 +54,16 @@ export class AbrioxSelectorComponent implements OnInit, AfterViewInit {
 
   @Output() itemsChange: EventEmitter<Array<any>> = new EventEmitter();
 
-  constructor(private abrioxEntityService: AbrioxEntityService) {}
+  constructor(
+    private abrioxEntityService: AbrioxEntityService,
+    private userEntityService: UserEntityService
+  ) {}
 
   ngOnInit(): void {
     switch (this.selector) {
       case 'abriox':
         this.abrioxEntityService.getAll().subscribe(
           (abrioxes) => {
-            console.log('abrioxes', abrioxes);
             this.allItems = abrioxes;
           },
           (err) => {}
@@ -81,6 +86,15 @@ export class AbrioxSelectorComponent implements OnInit, AfterViewInit {
         break;
 
       case 'tr':
+        break;
+
+      case 'user':
+        this.userEntityService.getAll().subscribe(
+          (users) => {
+            this.allItems = users;
+          },
+          (err) => {}
+        );
         break;
     }
 
@@ -153,6 +167,10 @@ export class AbrioxSelectorComponent implements OnInit, AfterViewInit {
 
     return this.allItems.filter((item) => {
       return (
+        // User
+        item?.username?.toLowerCase().indexOf(filterValue) === 0 ||
+        item?.email?.toLowerCase().indexOf(filterValue) === 0 ||
+        // Abriox
         item?.name?.toLowerCase().indexOf(filterValue) === 0 ||
         item?.serial_number?.toLowerCase().indexOf(filterValue) === 0 ||
         item?.id?.toString() === filterValue
