@@ -1,5 +1,5 @@
 <geoaudit-sidebar-header
-title="CONTAINERS.home.notes.note"
+  title="CONTAINERS.home.notes.note"
 ></geoaudit-sidebar-header>
 
 <!-- <h3 fxLayout="row" fxLayoutAlign="space-between">
@@ -9,42 +9,74 @@ title="CONTAINERS.home.notes.note"
 </h3> -->
 
 <mat-horizontal-stepper>
-    <mat-step>
-        <mat-card-content>
-            <form [formGroup]="form">
+  <mat-step>
+    <mat-card-content>
+      <form [formGroup]="form">
+        <!-- Datetime -->
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'CONTAINERS.home.notes.date' | translate }}</mat-label>
+          <input
+            matInput
+            [ngxMatDatetimePicker]="dateAssignedDateTimePicker"
+            [placeholder]="'CONTAINERS.notes.date' | translate"
+            formControlName="datetime"
+            [disabled]="disabled"
+          />
 
-                <!-- Datetime -->
-                <mat-form-field appearance="outline">
-                    <mat-label>{{
-                      'CONTAINERS.home.notes.date' | translate
-                    }}</mat-label>
-                    <input
-                      matInput
-                      [ngxMatDatetimePicker]="dateAssignedDateTimePicker"
-                      [placeholder]="'CONTAINERS.notes.date' | translate"
-                      formControlName="datetime"
-                      [disabled]="disabled"
-                    />
-          
-                    <mat-datepicker-toggle
-                      matSuffix
-                      [for]="dateAssignedDateTimePicker"
-                    ></mat-datepicker-toggle>
-          
-                    <ngx-mat-datetime-picker
-                      #dateAssignedDateTimePicker
-                      [color]="color"
-                    >
-                    </ngx-mat-datetime-picker>
-                  </mat-form-field>
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="dateAssignedDateTimePicker"
+          ></mat-datepicker-toggle>
 
-                  <!-- Description -->
-                  <mat-form-field appearance="outline">
-                      <mat-label>{{ 'CONTAINERS.home.notes.description' | translate }}</mat-label>
-                      <textarea matInput formControlName="description"></textarea>
-                  </mat-form-field>
-                  
-            </form>
-        </mat-card-content>
-    </mat-step>
+          <ngx-mat-datetime-picker #dateAssignedDateTimePicker [color]="color">
+          </ngx-mat-datetime-picker>
+        </mat-form-field>
+
+        <!-- User (Assignee) -->
+        <mat-form-field class="example-chip-list" appearance="outline">
+          <mat-label>
+            {{ 'CONTAINERS.home.jobs.job.form.assignees' | translate }}
+          </mat-label>
+          <mat-chip-list #chipList aria-label="Assignee selection">
+            <mat-chip
+              *ngFor="let user of users"
+              [selectable]="selectable"
+              [removable]="removable"
+              (removed)="removeUser(user)"
+            >
+              {{ user.username }}
+              <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+            </mat-chip>
+            <input
+              [placeholder]="
+                'CONTAINERS.home.jobs.job.form.new_assignee' | translate
+              "
+              #userInput
+              [formControl]="userControl"
+              [matAutocomplete]="autoUsers"
+              [matChipInputFor]="chipList"
+              [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+              (matChipInputTokenEnd)="addUser($event)"
+            />
+          </mat-chip-list>
+          <mat-autocomplete
+            #autoUsers="matAutocomplete"
+            (optionSelected)="selectedUser($event)"
+          >
+            <mat-option *ngFor="let user of filteredUsers" [value]="user">
+              {{ user.username }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+
+        <!-- Description -->
+        <mat-form-field appearance="outline">
+          <mat-label>{{
+            'CONTAINERS.home.notes.description' | translate
+          }}</mat-label>
+          <textarea matInput formControlName="description"></textarea>
+        </mat-form-field>
+      </form>
+    </mat-card-content>
+  </mat-step>
 </mat-horizontal-stepper>
