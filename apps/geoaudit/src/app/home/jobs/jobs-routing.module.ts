@@ -17,15 +17,15 @@ const routes: Routes = [
     },
 
     {
-        path: 'job', component: JobComponent
+        path: 'create', component: JobComponent
     },
 
     {
-        path: 'job/:id', component: JobComponent
+        path: ':id', component: JobComponent
     },
 
     {
-        path: 'job/:id/notes', component: NotesComponent
+        path: ':id/notes', component: NotesComponent
     },
 
     // otherwise redirect to home

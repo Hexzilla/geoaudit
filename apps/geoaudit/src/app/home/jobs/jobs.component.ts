@@ -328,7 +328,7 @@ export class JobsComponent implements OnInit, AfterViewInit {
   }
 
   addJob(): void {
-    this.router.navigate([`/home/jobs/job`]);
+    this.router.navigate([`/home/jobs/create`]);
   }
 
   delete(): void {
@@ -404,7 +404,7 @@ export class JobsComponent implements OnInit, AfterViewInit {
   }
 
   details(id) {
-    this.router.navigate([`/home/jobs/job/${id}`]);
+    this.router.navigate([`/home/jobs/${id}`]);
   }
 
   // convenience getter for easy access to form fields

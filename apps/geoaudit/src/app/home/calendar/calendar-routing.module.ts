@@ -14,11 +14,11 @@ const routes: Routes = [
     },
 
     {
-        path: 'event', component: EventComponent
+        path: 'create', component: EventComponent
     },
 
     {
-        path: 'event/:id', component: EventComponent
+        path: ':id', component: EventComponent
     },
 
     // otherwise redirect to home

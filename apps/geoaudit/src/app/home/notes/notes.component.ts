@@ -32,13 +32,21 @@ export class NotesComponent implements OnInit {
 
     if (this.filter) {
       this.query(this.filter);
-    } else if (url.includes('jobs')) {
-      console.log('jobs here');
+    } else if (
+      url.includes('abrioxes') ||
+      url.includes('jobs') ||
+      url.includes('resistivities') ||
+      url.includes('sites') ||
+      url.includes('surveys') ||
+      url.includes('testposts') ||
+      url.includes('trs')
+    ) {
+      const includes = url.split('/');
 
-      if (url.includes(`jobs/job/${this.id}/notes`)) {
-        console.log('query notes for job id');
+      if (url.includes(`${includes[2]}/${this.id}/notes`)) {
+        this.query(includes[2], Number(this.id));
       } else {
-        console.log('query notes for all jobs');
+        this.query(includes[2]);
       }
     } else {
       this.noteEntityService.getAll();
@@ -47,15 +55,34 @@ export class NotesComponent implements OnInit {
 
   isRoot() {
     const { url } = this.router;
-    return url === '/home/notes' || url.includes('jobs');
+    return (
+      url === '/home/notes' ||
+      url === `/home/notes?filter=${this.filter}` ||
+      url.includes('abrioxes') ||
+      url.includes('jobs') ||
+      url.includes('resistivities') ||
+      url.includes('sites') ||
+      url.includes('surveys') ||
+      url.includes('testposts') ||
+      url.includes('trs')
+    );
   }
 
-  query(attribute: string) {
+  query(attribute: string, id?: number) {
+    let where = {
+      assignees: this.authService.authValue.user.id,
+      [`${attribute}_null`]: false,
+    };
+
+    if (id) {
+      where = {
+        ...where,
+        [`${attribute}`]: id,
+      };
+    }
+
     const parameters = qs.stringify({
-      _where: {
-        assignees: this.authService.authValue.user.id,
-        [`${attribute}_null`]: false,
-      },
+      _where: where,
       _sort: 'datetime:DESC',
     });
 
