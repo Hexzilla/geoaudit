@@ -1,5 +1,6 @@
 import { GeoJson } from "./geo-json.model";
 import { Image } from "./image.model";
+import { Note } from "./note.model";
 
 export class User {
   blocked: boolean;
@@ -19,4 +20,5 @@ export class User {
   home: GeoJson;
   work: GeoJson;
   avatar: Image;
+  notes: Array<Note>;
 }

@@ -1,1 +1,153 @@
-<p>note works!</p>
+<geoaudit-sidebar-header
+  title="CONTAINERS.home.notes.note"
+></geoaudit-sidebar-header>
+
+<!-- <h3 fxLayout="row" fxLayoutAlign="space-between">
+<span *ngIf="filter">{{
+  'CONTAINERS.home.notes.' + filter | translate
+}}</span>
+</h3> -->
+
+<mat-horizontal-stepper>
+  <!-- Datetime, Assignees, and Description -->
+  <mat-step>
+    <form [formGroup]="form">
+      <!-- Datetime -->
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'CONTAINERS.home.notes.date' | translate }}</mat-label>
+        <input
+          matInput
+          [ngxMatDatetimePicker]="dateAssignedDateTimePicker"
+          [placeholder]="'CONTAINERS.notes.date' | translate"
+          formControlName="datetime"
+          [disabled]="disabled"
+        />
+
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="dateAssignedDateTimePicker"
+        ></mat-datepicker-toggle>
+
+        <ngx-mat-datetime-picker #dateAssignedDateTimePicker [color]="color">
+        </ngx-mat-datetime-picker>
+      </mat-form-field>
+
+      <!-- User (Assignee) -->
+      <!-- <geoaudit-user-selector
+        *ngIf="form.value.assignees"
+        [assignees]="form.value.assignees"
+        (usersChange)="onUsersChange($event)"
+      ></geoaudit-user-selector> -->
+
+      <geoaudit-item-selector
+      *ngIf="form.value.assignees"
+      selector="user"
+      label="CONTAINERS.home.notes.assignees"
+      placeholder="CONTAINERS.home.notes.new_assignee"
+      [items]="form.value.assignees"
+      (itemsChange)="onItemsChange($event, 'assignees')"
+      attribute="username"
+    ></geoaudit-item-selector>
+
+      <!-- Description -->
+      <mat-form-field appearance="outline">
+        <mat-label>{{
+          'CONTAINERS.home.notes.description' | translate
+        }}</mat-label>
+        <textarea matInput formControlName="description"></textarea>
+      </mat-form-field>
+    </form>
+  </mat-step>
+
+  <!-- Images and Attachments -->
+  <mat-step>
+    <geoaudit-file-upload
+      label="CONTAINERS.home.jobs.job.attachments.images"
+      (preview)="onPreview($event)"
+      (upload)="onImageUpload($event)"
+      fileType="IMAGE"
+      [multiple]="true"
+    ></geoaudit-file-upload>
+
+    <geoaudit-file-upload
+      label="CONTAINERS.home.jobs.job.attachments.documents"
+      (preview)="onPreview($event)"
+      (upload)="onDocumentUpload($event)"
+      fileType="DOCUMENT"
+      [multiple]="true"
+    ></geoaudit-file-upload>
+  </mat-step>
+
+  <!-- Link note to other items i.e. abriox, job, etc -->
+  <mat-step>
+    <geoaudit-item-selector
+      *ngIf="form.value.abrioxes"
+      selector="abriox"
+      label="CONTAINERS.home.notes.abrioxes"
+      placeholder="CONTAINERS.home.notes.new_abriox"
+      [items]="form.value.abrioxes"
+      (itemsChange)="onItemsChange($event, 'abrioxes')"
+      attribute="name"
+    ></geoaudit-item-selector>
+
+    <geoaudit-item-selector
+      *ngIf="form.value.jobs"
+      selector="job"
+      label="CONTAINERS.home.notes.jobs"
+      placeholder="CONTAINERS.home.notes.new_job"
+      [items]="form.value.jobs"
+      (itemsChange)="onItemsChange($event, 'jobs')"
+      attribute="name"
+    ></geoaudit-item-selector>
+
+    <geoaudit-item-selector
+      *ngIf="form.value.resistivities"
+      selector="resistivity"
+      label="CONTAINERS.home.notes.resistivities"
+      placeholder="CONTAINERS.home.notes.new_resistivity"
+      [items]="form.value.resistivities"
+      (itemsChange)="onItemsChange($event, 'resistivities')"
+      attribute="reference"
+    ></geoaudit-item-selector>
+
+    <geoaudit-item-selector
+      *ngIf="form.value.sites"
+      selector="site"
+      label="CONTAINERS.home.notes.sites"
+      placeholder="CONTAINERS.home.notes.new_site"
+      [items]="form.value.sites"
+      (itemsChange)="onItemsChange($event, 'sites')"
+      attribute="name"
+    ></geoaudit-item-selector>
+
+    <geoaudit-item-selector
+      *ngIf="form.value.surveys"
+      selector="survey"
+      label="CONTAINERS.home.notes.surveys"
+      placeholder="CONTAINERS.home.notes.new_survey"
+      [items]="form.value.surveys"
+      (itemsChange)="onItemsChange($event, 'surveys')"
+      attribute="name"
+    ></geoaudit-item-selector>
+
+    <geoaudit-item-selector
+      *ngIf="form.value.testposts"
+      selector="testpost"
+      label="CONTAINERS.home.notes.testposts"
+      placeholder="CONTAINERS.home.notes.new_testpost"
+      [items]="form.value.testposts"
+      (itemsChange)="onItemsChange($event, 'testposts')"
+      attribute="name"
+    ></geoaudit-item-selector>
+
+    <geoaudit-item-selector
+      *ngIf="form.value.trs"
+      selector="tr"
+      label="CONTAINERS.home.notes.trs"
+      placeholder="CONTAINERS.home.notes.new_tr"
+      [items]="form.value.trs"
+      (itemsChange)="onItemsChange($event, 'trs')"
+      attribute="name"
+    ></geoaudit-item-selector>
+  </mat-step>
+</mat-horizontal-stepper>

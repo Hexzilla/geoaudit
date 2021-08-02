@@ -305,9 +305,9 @@ export class SurveyTableComponent implements OnInit, AfterViewInit {
         queryParams,
       };
 
-      this.router.navigate([`/home/survey/${id}`], navigationExtras);
+      this.router.navigate([`/home/surveys/${id}`], navigationExtras);
     } else {
-      this.router.navigate([`home/survey/${id}`]);
+      this.router.navigate([`home/surveys/${id}`]);
     }
   }
 

@@ -264,11 +264,11 @@ export class CalendarComponent implements OnInit {
   }
 
   addCalendarEvent(): void {
-    this.router.navigate(['/home/calendar/event']);
+    this.router.navigate(['/home/calendar/create']);
   }
 
   onCalendarEventClick(event: AngularCalendarEvent): void {
-    this.router.navigate([`/home/calendar/event/${event.id}`]);
+    this.router.navigate([`/home/calendar/${event.id}`]);
   }
 
   dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {

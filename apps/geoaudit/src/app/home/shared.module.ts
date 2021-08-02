@@ -71,8 +71,11 @@ import { NotificationDataService } from '../data-services/notification-data.serv
 import { ToDoListEntityService } from '../entity-services/to-do-list-entity.service';
 import { ToDoListDataService } from '../data-services/to-do-list-data.service';
 import { NotificationService } from '../services/notification.service';
-import { NotesComponent } from './notes/notes.component';
-import { NoteComponent } from './notes/note/note.component';
+import { NoteEntityService } from '../entity-services/note-entity.service';
+import { NoteDataService } from '../data-services/note-data.service';
+import { ItemSelectorComponent } from '../components/item-selector/item-selector.component';
+import { SiteEntityService } from '../entity-services/site-entity.service';
+import { SiteDataService } from '../data-services/site-data.service';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient) {
@@ -107,6 +110,11 @@ const entityMetadataMap: EntityMetadataMap = {
   Testpost:{},
   Tr:{},
   Resistivity:{},
+
+  Site: {},
+
+  Note: {},
+
   Notification: {},
 
   ToDoList:{}
@@ -168,8 +176,7 @@ const entityMetadataMap: EntityMetadataMap = {
     AttachmentModalComponent,
     NavigationModalComponent,
     SurveyTableComponent,
-    NotesComponent,
-    NoteComponent
+    ItemSelectorComponent
   ],
   providers: [
     JobEntityService,
@@ -177,6 +184,9 @@ const entityMetadataMap: EntityMetadataMap = {
 
     JobTypeEntityService,
     JobTypeDataService,
+
+    NoteEntityService,
+    NoteDataService,
 
     NotificationEntityService,
     NotificationDataService,
@@ -205,6 +215,9 @@ const entityMetadataMap: EntityMetadataMap = {
 
     NotificationService,
 
+    SiteEntityService,
+    SiteDataService,
+
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     
@@ -229,6 +242,7 @@ const entityMetadataMap: EntityMetadataMap = {
     SidebarActionsComponent,
     AttachmentModalComponent,
     SurveyTableComponent,
+    ItemSelectorComponent,
     
     // Material
     MatAutocompleteModule,
@@ -269,6 +283,7 @@ export class SharedModule {
     private entityDataService: EntityDataService,
     private jobDataService: JobDataService,
     private jobTypeDataService: JobTypeDataService,
+    private noteDataService: NoteDataService,
     private notificationDataService: NotificationDataService,
     private statusDataService: StatusDataService,
     private surveyDataService: SurveyDataService,
@@ -277,7 +292,8 @@ export class SharedModule {
     private testpostDataService: TestpostDataService,
     private trDataService: TrDataService,
     private resistivityDataService: ResistivityDataService,
-    private toDoListDataService: ToDoListDataService
+    private toDoListDataService: ToDoListDataService,
+    private siteDataService: SiteDataService
   ) {
     entityDefinitionService.registerMetadataMap(entityMetadataMap);
 
@@ -292,8 +308,10 @@ export class SharedModule {
         Testpost: testpostDataService,
         Tr: trDataService,
         Resistivity: resistivityDataService,
+        Note: noteDataService,
         Notification: notificationDataService,
-        ToDoList: toDoListDataService
+        ToDoList: toDoListDataService,
+        Site: siteDataService
       }
     )
   }

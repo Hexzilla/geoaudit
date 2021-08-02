@@ -2,14 +2,18 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { AuthGuard } from '../../guards';
-import { JobsComponent } from './jobs.component'
-import { JobComponent } from './job/job.component';
+
 import { NotesComponent } from '../notes/notes.component';
+import { SearchComponent } from '../search/search.component';
 
 const routes: Routes = [
     { 
-        path: '', component: JobsComponent, 
+        path: '', component: SearchComponent, 
         canActivate: [AuthGuard],
+    },
+
+    {
+        path: 'history', component: SearchComponent
     },
 
     {
@@ -17,11 +21,15 @@ const routes: Routes = [
     },
 
     {
-        path: 'create', component: JobComponent
+        path: 'drive', component: SearchComponent
     },
 
+    // {
+    //     path: 'create', component: AbrioxComponent
+    // },
+
     {
-        path: ':id', component: JobComponent
+        path: ':id', component: SearchComponent
     },
 
     {
@@ -36,4 +44,4 @@ const routes: Routes = [
     imports: [RouterModule.forChild(routes)],
     exports: [RouterModule]
 })
-export class JobsRoutingModule { }
+export class TrsRoutingModule { }

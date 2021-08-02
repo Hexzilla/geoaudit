@@ -1,4 +1,5 @@
 import { Job, User } from '.';
+import { Note } from './note.model';
 
 export interface Survey {
     abrioxes?: [];
@@ -16,7 +17,7 @@ export interface Survey {
     resistivities?: []
     site?: any;
     status?: any;
-    survey_notes?: []
+    notes?: Array<Note>;
     tp_actions?: []
     tr_actions?: []   
 }

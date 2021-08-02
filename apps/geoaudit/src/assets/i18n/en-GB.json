@@ -17,7 +17,33 @@
 				"title": "Archive"
 			},
 			"notes": {
-				"title": "Notes"
+				"title": "Notes",
+				"abriox": "Abriox",
+				"job": "Job",
+				"resistivity": "Resistivity",
+				"site": "Site",
+				"survey": "Survey",
+				"tp": "Tp",
+				"tr": "Tr",
+				"note": "Note",
+				"date": "Date",
+				"description": "Description",
+				"abrioxes": "Abrioxes",
+				"new_abriox": "New Abriox",
+				"assignees": "Assignees",
+				"new_assignee": "New assignee",
+				"jobs": "Jobs",
+				"new_job": "New job",
+				"resistivities": "Resistivities",
+				"new_resistivity": "New resistivity",
+				"sites": "Sites",
+				"new_site": "New site",
+				"surveys": "Surveys",
+				"new_survey": "New survey",
+				"testposts": "Testposts",
+				"new_testpost": "New testpost",
+				"trs": "TRs",
+				"new_tr": "New tr"
 			},
 			"buttons": {
 				"approvals": {
