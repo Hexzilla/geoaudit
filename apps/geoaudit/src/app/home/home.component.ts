@@ -886,7 +886,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
                     marker_i.bindPopup(popup);
                     marker_i.addTo(instance.map);
                     instance.map.removeLayer(new_marker);
-                    instance.router.navigate(['/home/abriox/'+insert_id]);
+                    instance.router.navigate(['/home/abrioxes/'+insert_id]);
                   }
                 });
                 break;
@@ -924,7 +924,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
                     marker_i.bindPopup(popup);
                     marker_i.addTo(instance.map);
                     instance.map.removeLayer(new_marker);
-                    instance.router.navigate(['/home/testpost/'+insert_id]);
+                    instance.router.navigate(['/home/testposts/'+insert_id]);
                   }
                 });
                 break;
@@ -962,7 +962,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
                     marker_i.bindPopup(popup);
                     marker_i.addTo(instance.map);
                     instance.map.removeLayer(new_marker);
-                    instance.router.navigate(['/home/tr/'+insert_id]);
+                    instance.router.navigate(['/home/trs/'+insert_id]);
                   }
                 });
                 break;
@@ -1000,7 +1000,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
                       marker_i.bindPopup(popup);
                       marker_i.addTo(instance.map);
                       instance.map.removeLayer(new_marker);
-                      instance.router.navigate(['/home/resistivity/'+insert_id]);
+                      instance.router.navigate(['/home/resistivities/'+insert_id]);
                     }
                   });
                   break;
@@ -1037,7 +1037,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
                       marker_i.bindPopup(popup);
                       marker_i.addTo(instance.map);
                       instance.map.removeLayer(new_marker);
-                      instance.router.navigate(['/home/survey/'+insert_id]);
+                      instance.router.navigate(['/home/surveys/'+insert_id]);
                     }
                 });
                 break;

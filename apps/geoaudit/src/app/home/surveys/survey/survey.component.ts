@@ -17,11 +17,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import * as moment from 'moment';
 
-import * as fromApp from '../../store';
-import { Status, Statuses, Survey, User, Image, Job } from '../../models';
-import { AlertService } from '../../services';
-import { StatusEntityService } from '../../entity-services/status-entity.service';
-import { SurveyEntityService } from '../../entity-services/survey-entity.service';
+import * as fromApp from '../../../store';
+import { Status, Statuses, Survey, User, Image, Job } from '../../../models';
+import { AlertService } from '../../../services';
+import { StatusEntityService } from '../../../entity-services/status-entity.service';
+import { SurveyEntityService } from '../../../entity-services/survey-entity.service';
 import {
   debounceTime,
   tap,
@@ -33,22 +33,22 @@ import {
   MatAutocomplete,
   MatAutocompleteSelectedEvent,
 } from '@angular/material/autocomplete';
-import { UserEntityService } from '../../entity-services/user-entity.service';
+import { UserEntityService } from '../../../entity-services/user-entity.service';
 
-import * as MapActions from '../../store/map/map.actions';
-import { FileTypes } from '../../components/file-upload/file-upload.component';
+import * as MapActions from '../../../store/map/map.actions';
+import { FileTypes } from '../../../components/file-upload/file-upload.component';
 import { IAlbum, Lightbox } from 'ngx-lightbox';
 import { environment } from 'apps/geoaudit/src/environments/environment';
 import { MatDialog } from '@angular/material/dialog';
-import { AttachmentModalComponent } from '../../modals/attachment-modal/attachment-modal.component';
-import { JobEntityService } from '../../entity-services/job-entity.service';
+import { AttachmentModalComponent } from '../../../modals/attachment-modal/attachment-modal.component';
+import { JobEntityService } from '../../../entity-services/job-entity.service';
 
 @Component({
   selector: 'geoaudit-survey',
   templateUrl: './survey.component.html',
   styleUrls: ['./survey.component.scss'],
 })
-export class SurveyComponent implements OnInit, AfterViewInit {
+export class SurveyComponent implements OnInit {
   API_URL: string;
 
   color: ThemePalette = 'primary';
@@ -320,6 +320,7 @@ export class SurveyComponent implements OnInit, AfterViewInit {
      */
     this.surveyEntityService.add(this.form.value).subscribe(
       (survey) => {
+        console.log('survey', survey);
         this.survey = survey;
 
         this.form.patchValue({
@@ -380,7 +381,7 @@ export class SurveyComponent implements OnInit, AfterViewInit {
    */
   initialiseForm(): void {
     this.form = this.formBuilder.group({
-      status: [Statuses.NOT_STARTED, Validators.required],
+      status: [null, Validators.required],
       name: [null, Validators.required],
 
       date_assigned: [moment().toISOString(), Validators.required],
@@ -391,35 +392,35 @@ export class SurveyComponent implements OnInit, AfterViewInit {
       //   documents: [[]],
       // }],
 
-      geometry: null,
+      geometry: [null],
 
-      // tp_actions: [],
-      // tr_actions: [],
+      // // tp_actions: [],
+      // // tr_actions: [],
 
-      job: null,
+      job: [null],
 
-      // resistivities: [],
+      // // resistivities: [],
 
-      prepared_by: null,
-      conducted_by: null,
+      prepared_by: [null],
+      conducted_by: [null],
 
-      // site: null,
+      // // site: null,
 
-      // abrioxes: null,
+      // // abrioxes: null,
 
-      // survey_notes: [],
+      // // survey_notes: [],
 
-      // calendar_events: [],
+      // // calendar_events: [],
 
-      footer: [
-        {
-          images: [[]],
-          documents: [[]],
-        },
-      ],
+      // footer: [
+      //   {
+      //     images: [[]],
+      //     documents: [[]],
+      //   },
+      // ],
 
-      id: null,
-      reference: '',
+      id: [null],
+      reference: [null],
       // published: false,
     });
   }
