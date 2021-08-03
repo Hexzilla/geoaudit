@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import qs from 'qs';
 import { NoteEntityService } from '../../entity-services/note-entity.service';
 
@@ -87,5 +87,56 @@ export class NotesComponent implements OnInit {
     });
 
     this.noteEntityService.getWithQuery(parameters);
+  }
+
+  isCoreNotesComponent() {
+    const { url } = this.router;
+
+    return url.includes('notes');
+  }
+
+  /**
+   * Adding a note, we may add a note without any associate to an
+   * abriox or a job for example but we may also be looking 
+   * at the list of notes whilst under jobs/2 or jobs/2/notes for examples.
+   * 
+   * We should take into account what our url is such that we can 
+   * pass the correct parameters such that we can automatically
+   * populate the fields for jobs for example.
+   */
+  add() {
+    // this.router.navigate(['/home/notes/create'])
+
+    const { url } = this.router;
+
+    if (
+      (
+      url.includes('abrioxes') ||
+      url.includes('jobs') ||
+      url.includes('resistivities') ||
+      url.includes('sites') ||
+      url.includes('surveys') ||
+      url.includes('testposts') ||
+      url.includes('trs')
+      ) &&
+      this.id
+    ) {
+      const includes = url.split('/');
+
+      console.log('includes', includes[2], this.id)
+
+      const navigationExtras: NavigationExtras = {
+        queryParams: {
+          [includes[2]]: JSON.stringify([this.id])
+        }
+      }
+
+      console.log('navigationExtras', navigationExtras)
+
+      this.router.navigate([`/home/notes/create`], navigationExtras);
+
+    } else {
+      this.router.navigate(['/home/notes/create'])
+    }
   }
 }

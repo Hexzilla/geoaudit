@@ -13,6 +13,9 @@ import { NotesRoutingModule } from './notes-routing.module';
     NotesRoutingModule,
 
     SharedModule
+  ],
+  exports: [
+    NotesComponent
   ]
 })
 export class NotesModule { }

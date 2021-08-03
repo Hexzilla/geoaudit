@@ -176,7 +176,7 @@ const entityMetadataMap: EntityMetadataMap = {
     AttachmentModalComponent,
     NavigationModalComponent,
     SurveyTableComponent,
-    ItemSelectorComponent
+    ItemSelectorComponent,
   ],
   providers: [
     JobEntityService,
