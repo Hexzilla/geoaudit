@@ -30,7 +30,8 @@ import {
 
 import { DeleteModalComponent } from '../../modals/delete-modal/delete-modal.component';
 import { NavigationModalComponent } from '../../modals/navigation-modal/navigation-modal.component';
-import { Job, Survey } from '../../models';
+import { Job, Survey, Roles } from '../../models';
+import { AuthService } from '../../services';
 
 import * as fromApp from '../../store';
 import * as SurveyActions from '../../store/survey/survey.actions';
@@ -64,8 +65,6 @@ export class SurveyTableComponent implements OnInit, AfterViewInit {
 
   @Input() filterMode: 'LOCAL' | 'NETWORK';
 
-  @Input() role: 'MANAGER';
-
   @Input() pageSize: number;
 
   @ViewChild('input', { static: true }) input: ElementRef;
@@ -77,6 +76,7 @@ export class SurveyTableComponent implements OnInit, AfterViewInit {
   @Output() onDelete: EventEmitter<Array<Survey>> = new EventEmitter();
 
   constructor(
+    private authService: AuthService,
     private formBuilder: FormBuilder,
     private store: Store<fromApp.State>,
     private dialog: MatDialog,
@@ -214,11 +214,9 @@ export class SurveyTableComponent implements OnInit, AfterViewInit {
         queryParams,
       };
 
-      console.log(navigationExtras);
-
-      this.router.navigate([`/home/survey`], navigationExtras);
+      this.router.navigate([`/home/surveys/create`], navigationExtras);
     } else {
-      this.router.navigate(['home/survey']);
+      this.router.navigate(['home/surveys/create']);
     }
   }
 
@@ -335,5 +333,9 @@ export class SurveyTableComponent implements OnInit, AfterViewInit {
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${
       row.id + 1
     }`;
+  }
+
+  isManager() {
+    return this.authService.authValue.user.role.name === Roles.MANAGER
   }
 }

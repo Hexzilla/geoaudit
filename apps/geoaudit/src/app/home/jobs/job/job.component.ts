@@ -298,6 +298,7 @@ export class JobComponent implements OnInit, AfterViewInit {
     this.jobTypeEntityervice.getAll().subscribe(
       (jobTypes) => {
         this.jobTypes = jobTypes;
+        console.log('job types', jobTypes)
       },
 
       (err) => {}

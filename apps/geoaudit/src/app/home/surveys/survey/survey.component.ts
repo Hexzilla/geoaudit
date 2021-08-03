@@ -194,13 +194,22 @@ export class SurveyComponent implements OnInit {
       console.log('no survey');
     }
 
-    this.jobId = this.route.snapshot.queryParamMap.get('job');
+    // this.jobId = this.route.snapshot.queryParamMap.get('job');
 
-    if (this.jobId) {
-      console.log('get job', this.jobId);
-    } else {
-      console.log('no job');
-    }
+    // if (this.jobId) {
+    //   this.jobEntityService.getByKey(this.jobId).subscribe(
+    //     (job) => {
+    //       console.log('job', job);
+    //       this.form.patchValue({
+    //         job,
+    //       });
+
+    //       console.log('this', this.form.value);
+    //     },
+
+    //     (err) => {}
+    //   );
+    // }
   }
 
   ngAfterViewInit() {
@@ -328,6 +337,10 @@ export class SurveyComponent implements OnInit {
         });
 
         this.autoSave();
+
+        this.router.navigate([`/home/surveys/${this.form.value.id}`], {
+          replaceUrl: true,
+        });
       },
 
       (err) => {

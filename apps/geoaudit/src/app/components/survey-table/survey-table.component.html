@@ -23,7 +23,7 @@
     aria-label="delete icon button"
     (click)="delete()"
     [disabled]="this.selection.selected.length === 0"
-    *ngIf="role === 'MANAGER'"
+    *ngIf="isManager()"
   >
     <mat-icon>delete</mat-icon>
   </button>
@@ -33,7 +33,7 @@
     color="accent"
     aria-label="add icon button"
     (click)="addSurvey()"
-    *ngIf="role === 'MANAGER'"
+    *ngIf="isManager()"
   >
     <mat-icon>add_circle</mat-icon>
   </button>

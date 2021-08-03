@@ -22,3 +22,9 @@ export class User {
   avatar: Image;
   notes: Array<Note>;
 }
+
+export const Roles = {
+  MANAGER: "MANAGER",
+  TECHNICIAN: "TECHNICIAN",
+  READER: "READER"
+}
