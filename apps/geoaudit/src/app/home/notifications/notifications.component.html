@@ -11,6 +11,7 @@
       <img *ngIf="!notification?.source?.avatar" mat-card-avatar src="https://bestoked.ams3.digitaloceanspaces.com/geoaudit/static/assets/Avatar%20-%20Geoaudit.png" />
       <mat-card-subtitle>{{ 'CONTAINERS.home.notifications.types.SHARE_JOB' | translate: { source: notification.source.username } }} </mat-card-subtitle>
       <mat-card-subtitle>{{ notification.created_at | date: 'dd/MM/YYYY HH:mm' }}</mat-card-subtitle>
+      <mat-card-subtitle><em>{{ notification.data?.message }}</em></mat-card-subtitle>
       <mat-icon *ngIf="!notification.seen" style="background-color: #0074d9; border-radius: 15px;">radio_button_unchecked</mat-icon>
   </mat-card-header>
 </mat-card>
