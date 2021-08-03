@@ -12,6 +12,7 @@ import { SharedModule } from '../shared.module';
 import { JobsComponent } from './jobs.component';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { JobComponent } from './job/job.component';
+import { NotesModule } from '../notes/notes.module';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { JobComponent } from './job/job.component';
     NgApexchartsModule,
 
     SharedModule,
+    NotesModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

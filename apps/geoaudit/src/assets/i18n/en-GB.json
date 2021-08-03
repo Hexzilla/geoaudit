@@ -139,7 +139,8 @@
 					"steps": {
 						"details": "Details",
 						"attachments": "Attachments",
-						"surveys": "Surveys"
+						"surveys": "Surveys",
+						"notes": "Notes"
 					}
 				}
 			},

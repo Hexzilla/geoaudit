@@ -1,13 +1,15 @@
 <ng-container *ngIf="isRoot()">
-  <geoaudit-sidebar-header
-    title="CONTAINERS.home.notes.title"
-  ></geoaudit-sidebar-header>
+  <ng-container *ngIf="isCoreNotesComponent()">
+    <geoaudit-sidebar-header
+      title="CONTAINERS.home.notes.title"
+    ></geoaudit-sidebar-header>
 
-  <h3 fxLayout="row" fxLayoutAlign="space-between">
-    <span *ngIf="filter">{{
-      'CONTAINERS.home.notes.' + filter | translate
-    }}</span>
-  </h3>
+    <h3 fxLayout="row" fxLayoutAlign="space-between">
+      <span *ngIf="filter">{{
+        'CONTAINERS.home.notes.' + filter | translate
+      }}</span>
+    </h3>
+  </ng-container>
 
   <mat-card
     *ngFor="let note of notes$ | async"
@@ -43,8 +45,8 @@
       mat-flat-button
       fxFlexFill
       color="primary"
-      routerLink="/home/notes/create"
-    >
+      (click)="add()"
+      >
       <mat-icon>add</mat-icon>
     </button>
   </div>

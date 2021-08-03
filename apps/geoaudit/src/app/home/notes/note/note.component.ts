@@ -14,6 +14,13 @@ import { NoteEntityService } from '../../../entity-services/note-entity.service'
 import { Note } from '../../../models';
 import { AlertService, AuthService, UploadService } from '../../../services';
 import { FileTypes } from '../../../components/file-upload/file-upload.component';
+import { JobEntityService } from '../../../entity-services/job-entity.service';
+import { AbrioxEntityService } from '../../../entity-services/abriox-entity.service';
+import { ResistivityEntityService } from '../../../entity-services/resistivity-entity.service';
+import { SiteEntityService } from '../../../entity-services/site-entity.service';
+import { SurveyEntityService } from '../../../entity-services/survey-entity.service';
+import { TestpostEntityService } from '../../../entity-services/testpost-entity.service';
+import { TrEntityService } from '../../../entity-services/tr-entity.service';
 
 @Component({
   selector: 'geoaudit-note',
@@ -33,6 +40,13 @@ export class NoteComponent implements OnInit, AfterViewInit {
 
   constructor(
     private route: ActivatedRoute,
+    private abrioxEntityService: AbrioxEntityService,
+    private jobEntityService: JobEntityService,
+    private resistivityEntityService: ResistivityEntityService,
+    private siteEntityService: SiteEntityService,
+    private surveyEntityService: SurveyEntityService,
+    private testpostEntityService: TestpostEntityService,
+    private trEntityService: TrEntityService,
     private noteEntityService: NoteEntityService,
     private formBuilder: FormBuilder,
     private alertService: AlertService,
@@ -120,7 +134,101 @@ export class NoteComponent implements OnInit, AfterViewInit {
       trs,
     });
 
-    // Setup autosave after the form is patched
+    /**
+     * Handle additional query parameters such that when we're creating a note
+     * for a given job that we have a jobs query parameter with an array of
+     * job ids although this may just be one job. There may be other items too.
+     */
+    const abrioxIds = this.route.snapshot.queryParamMap.get('abrioxes');
+
+    if (abrioxIds) {
+      JSON.parse(abrioxIds).map((abrioxId) => {
+        this.abrioxEntityService.getByKey(abrioxId).subscribe((abriox) => {
+          this.form.patchValue({
+            abrioxes: [...this.form.value.abrioxes, abriox],
+          });
+        });
+      });
+    }
+
+    const jobIds = this.route.snapshot.queryParamMap.get('jobs');
+
+    if (jobIds) {
+      JSON.parse(jobIds).map((jobId) => {
+        this.jobEntityService.getByKey(jobId).subscribe((job) => {
+          this.form.patchValue({
+            jobs: [...this.form.value.jobs, job],
+          });
+        });
+      });
+    }
+
+    const resistivityIds = this.route.snapshot.queryParamMap.get(
+      'resistivities'
+    );
+
+    if (resistivityIds) {
+      JSON.parse(resistivityIds).map((resistivityId) => {
+        this.resistivityEntityService
+          .getByKey(resistivityId)
+          .subscribe((resistivity) => {
+            this.form.patchValue({
+              resistivities: [...this.form.value.resistivities, resistivity],
+            });
+          });
+      });
+    }
+
+    const siteIds = this.route.snapshot.queryParamMap.get('sites');
+
+    if (siteIds) {
+      JSON.parse(siteIds).map((siteId) => {
+        this.siteEntityService.getByKey(siteId).subscribe((site) => {
+          this.form.patchValue({
+            sites: [...this.form.value.sites, site],
+          });
+        });
+      });
+    }
+
+    const surveyIds = this.route.snapshot.queryParamMap.get('surveys');
+
+    if (surveyIds) {
+      JSON.parse(surveyIds).map((surveyId) => {
+        this.surveyEntityService.getByKey(surveyId).subscribe((survey) => {
+          this.form.patchValue({
+            surveys: [...this.form.value.surveys, survey],
+          });
+        });
+      });
+    }
+
+    const testpostIds = this.route.snapshot.queryParamMap.get('testposts');
+
+    if (testpostIds) {
+      JSON.parse(testpostIds).map((testpostId) => {
+        this.testpostEntityService
+          .getByKey(testpostId)
+          .subscribe((testpost) => {
+            this.form.patchValue({
+              testposts: [...this.form.value.testposts, testpost],
+            });
+          });
+      });
+    }
+
+    const trIds = this.route.snapshot.queryParamMap.get('trs');
+
+    if (trIds) {
+      JSON.parse(trIds).map((trId) => {
+        this.trEntityService.getByKey(trId).subscribe((tr) => {
+          this.form.patchValue({
+            trs: [...this.form.value.trs, tr],
+          });
+        });
+      });
+    }
+
     this.autoSave();
   }
 
@@ -133,16 +241,18 @@ export class NoteComponent implements OnInit, AfterViewInit {
       (note) => {
         this.patchForm(note);
 
-        this.autoSave();
+        this.autoSave(true);
 
-        this.router.navigate([`/home/notes/${note.id}`], { replaceUrl: true });
+        this.router.navigate([`/home/notes/${this.form.value.id}`], {
+          replaceUrl: true,
+        });
       },
 
       (err) => {}
     );
   }
 
-  autoSave() {
+  autoSave(reload = false) {
     this.form.valueChanges
       .pipe(
         debounceTime(500),
@@ -152,7 +262,23 @@ export class NoteComponent implements OnInit, AfterViewInit {
         distinctUntilChanged(),
         takeUntil(this.unsubscribe)
       )
-      .subscribe();
+      .subscribe(() => {
+        /**
+         * Workaround.
+         *
+         * When we navigate to the create a note component. We may have
+         * provided a jobs query parameter. However the jobs selector is not
+         * updated with that and therefore we're reloading such that it
+         * goes into edit mode.
+         */
+        if (reload) {
+          this.router
+            .navigate([`/home/notes/${this.form.value.id}`])
+            .then(() => {
+              window.location.reload();
+            });
+        }
+      });
   }
 
   submit(navigate = true) {
@@ -164,8 +290,6 @@ export class NoteComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    console.log('submit', this.form.value);
-
     /**
      * Invoke the backend with a PUT request to update
      * the job with the form values.
@@ -175,8 +299,6 @@ export class NoteComponent implements OnInit, AfterViewInit {
     this.noteEntityService.update(this.form.value).subscribe(
       (update) => {
         this.alertService.info('Saved Changes');
-
-        // this.dataSource = new MatTableDataSource(update.surveys);
 
         if (navigate) this.router.navigate([`/home/notes`]);
       },
@@ -212,7 +334,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
 
   onItemsChange(items: Array<any>, attribute: string): void {
     this.form.patchValue({
-      [attribute]: items.map((item) => item.id),
+      [attribute]: items.length > 0 ? items.map((item) => item.id) : [],
     });
   }
 }
