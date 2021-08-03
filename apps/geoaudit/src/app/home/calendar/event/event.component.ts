@@ -100,8 +100,6 @@ export class EventComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit(): void {
-    // console.log('route snp', this.route.snapshot.data.calendarEvent);
-
     /**
      * Fetch calendar event related data including surveys and
      * a count of the surveys.

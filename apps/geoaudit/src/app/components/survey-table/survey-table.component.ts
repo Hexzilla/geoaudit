@@ -149,21 +149,16 @@ export class SurveyTableComponent implements OnInit, AfterViewInit {
       : this.selection.selected;
 
     const surveyIds = surveys.map((survey) => survey.id);
-    console.log('surveyIds', surveyIds);
 
     // Add the array of values to the query parameter as a JSON string
     const queryParams = {
       surveys: JSON.stringify(surveyIds),
     };
 
-    console.log(queryParams);
-
     // Create our 'NaviationExtras' object which is expected by the Angular Router
     const navigationExtras: NavigationExtras = {
       queryParams,
     };
-
-    console.log(navigationExtras);
 
     this.router.navigate([`/home/calendar/event`], navigationExtras);
   }
@@ -202,8 +197,6 @@ export class SurveyTableComponent implements OnInit, AfterViewInit {
   }
 
   addSurvey(): void {
-    console.log('add survey');
-
     if (this.job) {
       const queryParams = {
         job: this.job.id,

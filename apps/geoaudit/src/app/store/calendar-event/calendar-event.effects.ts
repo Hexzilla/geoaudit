@@ -32,7 +32,6 @@ export class CalendarEventEffects {
 
     fetchCalendarEvents$ = createEffect(() => this.actions$.pipe(
         ofType(CalendarActions.FETCH_CALENDAR_EVENTS),
-        tap(console.log),
         mergeMap((payload) => this.calendarEventService.getCalendarEvents(payload)
             .pipe(
                 map(calendarEvents => ({ type: CalendarActions.SET_CALENDAR_EVENTS, calendarEvents })),

@@ -24,7 +24,6 @@ export class SurveyEffects {
 
     fetchSurveys$ = createEffect(() => this.actions$.pipe(
         ofType(SurveyActions.FETCH_SURVEYS),
-        tap(console.log),
         mergeMap((payload) => this.surveyService.getSurveys(payload)
             .pipe(
                 map(surveys => ({ type: SurveyActions.SET_SURVEYS, surveys })),

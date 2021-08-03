@@ -29,7 +29,6 @@ export class SiteDataService extends DefaultDataService<Site> {
     }
 
     update(update: Update<Site>): Observable<any> {
-        console.log('update', update)
         return this.http.put<any>(`${environment.API_URL}/sites/${update.id}`, update.changes);
     }
 

@@ -11,7 +11,6 @@ export class CalendarEventsResolver implements Resolve<Array<CalendarEvent>> {
   }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Array<CalendarEvent>> {
-    console.log('in the calendar events resolver')
     return this.calendarEventService.getCalendarEvents({ start: 0, limit: 10 });
   }
 }

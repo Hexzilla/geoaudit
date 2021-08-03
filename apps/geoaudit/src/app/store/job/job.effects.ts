@@ -24,7 +24,6 @@ export class JobEffects {
 
     fetchJobs$ = createEffect(() => this.actions$.pipe(
         ofType(JobActions.FETCH_JOBS),
-        tap(console.log),
         mergeMap((payload) => this.jobService.getJobs(payload)
             .pipe(
                 map(jobs => ({ type: JobActions.SET_JOBS, jobs })),

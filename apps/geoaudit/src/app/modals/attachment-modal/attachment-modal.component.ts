@@ -61,7 +61,6 @@ export class AttachmentModalComponent implements OnInit, AfterViewInit {
     var a = window.document.createElement("a");
     a.href = this.API_URL + row.url;
 
-    console.log('a', a.href)
     a.download = row.name;
     a.target = '_blank'
     document.body.appendChild(a);

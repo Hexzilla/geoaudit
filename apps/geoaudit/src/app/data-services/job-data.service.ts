@@ -29,7 +29,6 @@ export class JobDataService extends DefaultDataService<Job> {
     }
 
     update(update: Update<Job>): Observable<any> {
-        console.log('update', update)
         return this.http.put<any>(`${environment.API_URL}/jobs/${update.id}`, update.changes);
     }
 }

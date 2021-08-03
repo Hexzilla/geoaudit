@@ -62,9 +62,7 @@ export class FileUploadComponent implements OnInit {
             // Alert service
           },
 
-          () => {
-            console.log('we are finished')
-          }
+          () => {}
         );
       });
 
