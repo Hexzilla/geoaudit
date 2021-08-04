@@ -4,21 +4,21 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { FlatpickrModule } from 'angularx-flatpickr';
 
 // Routing
-import { CalendarRoutingModule } from './calendar-routing.module';
+import { EventsRoutingModule } from './events-routing.module';
 
 // Declarations
-import { CalendarComponent } from './calendar.component';
-import { EventComponent } from '../calendar/event/event.component';
+import { EventsComponent } from './events.component';
+import { EventComponent } from './event/event.component';
 
 import { SharedModule } from '../shared.module';
 
 @NgModule({
   declarations: [
-    CalendarComponent,
-    EventComponent,
+    EventsComponent,
+    EventComponent
   ],
   imports: [
-    CalendarRoutingModule,
+    EventsRoutingModule,
 
     FlatpickrModule.forRoot(),
     AngularCalendarModule.forRoot({
@@ -29,4 +29,4 @@ import { SharedModule } from '../shared.module';
     SharedModule
   ],
 })
-export class CalendarModule {}
+export class EventsModule {}

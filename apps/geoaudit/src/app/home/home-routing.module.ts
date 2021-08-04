@@ -3,8 +3,8 @@ import { Routes, RouterModule } from '@angular/router';
 
 const abrioxesModule = () =>
   import('./abrioxes/abrioxes.module').then((x) => x.AbrioxesModule);
-const calendarModule = () =>
-  import('./calendar/calendar.module').then((x) => x.CalendarModule);
+const eventsModule = () =>
+  import('./events/events.module').then((x) => x.EventsModule);
 const surveysModule = () =>
   import('./surveys/surveys.module').then((x) => x.SurveysModule);
 const jobsModule = () => import('./jobs/jobs.module').then((x) => x.JobsModule);
@@ -40,8 +40,8 @@ const routes: Routes = [
         component: SearchComponent,
       },
       {
-        path: 'calendar',
-        loadChildren: calendarModule,
+        path: 'events',
+        loadChildren: eventsModule,
       },
       {
         path: 'notifications',

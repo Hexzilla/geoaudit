@@ -6,7 +6,7 @@ import * as moment from 'moment';
 import { ThemePalette } from '@angular/material/core';
 
 import { AlertService, AuthService } from '../../../services';
-import { CalendarEvent } from '../../../models';
+import { Event } from '../../../models';
 import {
   debounceTime,
   distinctUntilChanged,
@@ -15,8 +15,8 @@ import {
 } from 'rxjs/operators';
 import { SurveyEntityService } from '../../../entity-services/survey-entity.service';
 import { JobEntityService } from '../../../entity-services/job-entity.service';
-import { CalendarEventEntityService } from '../../../entity-services/calendar-event-entity.service';
 import { Subject } from 'rxjs';
+import { EventEntityService } from '../../../entity-services/event-entity.service';
 
 @Component({
   selector: 'geoaudit-event',
@@ -66,7 +66,7 @@ export class EventComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private alertService: AlertService,
-    private calendarEventEntityService: CalendarEventEntityService,
+    private eventEntityService: EventEntityService,
     private surveyEntityService: SurveyEntityService,
     private jobEntityService: JobEntityService,
     private authService: AuthService
@@ -85,7 +85,7 @@ export class EventComponent implements OnInit {
   }
 
   getNoteAndPatchForm(id: string) {
-    this.calendarEventEntityService.getByKey(id).subscribe(
+    this.eventEntityService.getByKey(id).subscribe(
       (calendarEvent) => {
         this.patchForm(calendarEvent);
       },
@@ -111,7 +111,7 @@ export class EventComponent implements OnInit {
     });
   }
 
-  patchForm(event: CalendarEvent) {
+  patchForm(event: Event) {
     const {
       id,
       title,
@@ -170,7 +170,7 @@ export class EventComponent implements OnInit {
       users_permissions_users: [this.authService.authValue.user],
     });
 
-    this.calendarEventEntityService.add(this.form.value).subscribe(
+    this.eventEntityService.add(this.form.value).subscribe(
       (calendarEvent) => {
         this.patchForm(calendarEvent);
 
@@ -233,7 +233,7 @@ export class EventComponent implements OnInit {
       return;
     }
 
-    this.calendarEventEntityService.update(this.form.value).subscribe(
+    this.eventEntityService.update(this.form.value).subscribe(
       (update) => {
         this.alertService.info('Saved Changes');
 

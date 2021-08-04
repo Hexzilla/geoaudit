@@ -1,14 +1,14 @@
 import { Injectable } from "@angular/core";
 import { EntityCollectionServiceBase, EntityCollectionServiceElementsFactory } from '@ngrx/data';
 
-import { CalendarEvent } from "../models";
+import { Event } from "../models";
 
 @Injectable()
-export class CalendarEventEntityService extends EntityCollectionServiceBase<CalendarEvent> {
+export class EventEntityService extends EntityCollectionServiceBase<Event> {
 
     constructor(
         serviceElementsFactory: EntityCollectionServiceElementsFactory
     ) {
-        super('CalendarEvent', serviceElementsFactory);
+        super('Event', serviceElementsFactory);
     }
 }

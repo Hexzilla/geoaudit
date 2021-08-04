@@ -160,7 +160,7 @@ export class SurveyTableComponent implements OnInit, AfterViewInit {
       queryParams,
     };
 
-    this.router.navigate([`/home/calendar/event`], navigationExtras);
+    this.router.navigate([`/home/events/create`], navigationExtras);
   }
 
   drive(): void {
