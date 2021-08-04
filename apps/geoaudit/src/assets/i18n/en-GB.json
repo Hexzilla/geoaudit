@@ -14,7 +14,9 @@
 		},
 		"home": {
 			"archive": {
-				"title": "Archive"
+				"title": "Archive",
+				"show_all_jobs": "Show all jobs",
+				"show_some_jobs": "Show some jobs"
 			},
 			"notes": {
 				"title": "Notes",
