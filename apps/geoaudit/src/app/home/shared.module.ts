@@ -76,6 +76,8 @@ import { NoteDataService } from '../data-services/note-data.service';
 import { ItemSelectorComponent } from '../components/item-selector/item-selector.component';
 import { SiteEntityService } from '../entity-services/site-entity.service';
 import { SiteDataService } from '../data-services/site-data.service';
+import { CalendarEventDataService } from '../data-services/calendar-event-data.service';
+import { CalendarEventEntityService } from '../entity-services/calendar-event-entity.service';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient) {
@@ -96,6 +98,9 @@ const CUSTOM_MOMENT_FORMATS: NgxMatDateFormats = {
 };
 
 const entityMetadataMap: EntityMetadataMap = {
+
+  CalendarEvent: {},
+
   Status: {},
   Survey: {},
   Job: {
@@ -179,6 +184,9 @@ const entityMetadataMap: EntityMetadataMap = {
     ItemSelectorComponent,
   ],
   providers: [
+    CalendarEventEntityService,
+    CalendarEventDataService,
+    
     JobEntityService,
     JobDataService,
 
@@ -281,6 +289,7 @@ export class SharedModule {
   constructor(
     private entityDefinitionService: EntityDefinitionService,
     private entityDataService: EntityDataService,
+    private calendarEventDataService: CalendarEventDataService,
     private jobDataService: JobDataService,
     private jobTypeDataService: JobTypeDataService,
     private noteDataService: NoteDataService,
@@ -299,7 +308,9 @@ export class SharedModule {
 
     // entityDataService.registerService('Status', statusDataService);
     entityDataService.registerServices(
-      { Status: statusDataService,
+      { 
+        CalendarEvent: calendarEventDataService,
+        Status: statusDataService,
         Survey: surveyDataService,
         Job: jobDataService,
         JobType: jobTypeDataService,

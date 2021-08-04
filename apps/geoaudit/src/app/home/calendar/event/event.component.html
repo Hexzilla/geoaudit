@@ -13,113 +13,119 @@
       />
     </mat-form-field>
 
-      <mat-slide-toggle
-          class="example-margin"
-          [color]="color"
-          [checked]="form.value.allDay"
-          formControlName="allDay"
-          [disabled]="false"
-          (change)="toggleAllDay()"
-      >
-        {{ 'CONTAINERS.home.calendar.event.form.all_day' | translate }}
-      </mat-slide-toggle>
-
-      <mat-form-field>
-        <input matInput [ngxMatDatetimePicker]="startDateTimePicker" [placeholder]="'CONTAINERS.home.calendar.event.form.start' | translate" formControlName="start"
-           [min]="minDate" [max]="maxDate" [disabled]="disabled">
-
-        <mat-datepicker-toggle matSuffix [for]="startDateTimePicker"></mat-datepicker-toggle>
-        
-        <ngx-mat-datetime-picker #startDateTimePicker [showSpinners]="showSpinners" [showSeconds]="showSeconds"
-           [stepHour]="stepHour" [stepMinute]="stepMinute" [stepSecond]="stepSecond"
-           [touchUi]="touchUi" [color]="color" [enableMeridian]="enableMeridian" 
-           [disableMinute]="disableMinute" [hideTime]="hideTime">
-        </ngx-mat-datetime-picker>
-     </mat-form-field>
-
-     <mat-form-field>
-      <input matInput [ngxMatDatetimePicker]="endDateTimePicker" [placeholder]="'CONTAINERS.home.calendar.event.form.end' | translate" formControlName="end"
-         [min]="minDate" [max]="maxDate" [disabled]="disabled">
-
-      <mat-datepicker-toggle matSuffix [for]="endDateTimePicker"></mat-datepicker-toggle>
-
-      <ngx-mat-datetime-picker #endDateTimePicker [showSpinners]="showSpinners" [showSeconds]="showSeconds"
-         [stepHour]="stepHour" [stepMinute]="stepMinute" [stepSecond]="stepSecond"
-         [touchUi]="touchUi" [color]="color" [enableMeridian]="enableMeridian" 
-         [disableMinute]="disableMinute" [hideTime]="hideTime">
-      </ngx-mat-datetime-picker>
-   </mat-form-field>
-
-   <mat-form-field class="example-full-width">
-    <mat-label>{{ 'CONTAINERS.home.calendar.event.form.notes' | translate }}</mat-label>
-    <textarea matInput formControlName="notes"></textarea>
-  </mat-form-field>
-
-  <mat-form-field class="example-chip-list" appearance="outline">
-    <mat-label>Surveys</mat-label>
-    <mat-chip-list #chipList aria-label="Survey selection">
-      <mat-chip
-        *ngFor="let survey of surveys"
-      [selectable]="selectable"
-        [removable]="removable"
-        (removed)="remove(survey)">
-        {{survey.name}}
-        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-      </mat-chip>
-      <input
-        placeholder="New survey..."
-        #surveyInput
-        [formControl]="surveyControl"
-        [matAutocomplete]="auto"
-        [matChipInputFor]="chipList"
-        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-        (matChipInputTokenEnd)="add($event)">
-    </mat-chip-list>
-    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-      <mat-option *ngFor="let survey of filteredSurveys" [value]="survey">
-        {{survey.name}}
-      </mat-option>
-    </mat-autocomplete>
-  </mat-form-field>  
-
-  <mat-form-field class="example-chip-list" appearance="outline">
-    <mat-label>Jobs</mat-label>
-    <mat-chip-list #chipList aria-label="Job selection">
-      <mat-chip
-        *ngFor="let job of jobs"
-      [selectable]="selectable"
-        [removable]="removable"
-        (removed)="remove(job)">
-        {{job.name}}
-        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-      </mat-chip>
-      <input
-        placeholder="New job..."
-        #jobInput
-        [formControl]="jobControl"
-        [matAutocomplete]="auto"
-        [matChipInputFor]="chipList"
-        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-        (matChipInputTokenEnd)="add($event)">
-    </mat-chip-list>
-    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-      <mat-option *ngFor="let job of filteredJobs" [value]="job">
-        {{job.name}}
-      </mat-option>
-    </mat-autocomplete>
-  </mat-form-field>  
-
-   <div fxLayout="row-reverse">
-    <button
-      mat-flat-button
-      color="primary"
-      (click)="submit()"
-      fxFlexFill
-      type="submit"
+    <mat-slide-toggle
+      class="example-margin"
+      [color]="color"
+      [checked]="form.value.allDay"
+      formControlName="allDay"
+      [disabled]="false"
+      (change)="toggleAllDay()"
     >
-    {{ 'CONTAINERS.home.calendar.event.form.submit' | translate }}
-  </button>
-  </div>
+      {{ 'CONTAINERS.home.calendar.event.form.all_day' | translate }}
+    </mat-slide-toggle>
+
+    <mat-form-field>
+      <input
+        matInput
+        [ngxMatDatetimePicker]="startDateTimePicker"
+        [placeholder]="'CONTAINERS.home.calendar.event.form.start' | translate"
+        formControlName="start"
+        [min]="minDate"
+        [max]="maxDate"
+        [disabled]="disabled"
+      />
+
+      <mat-datepicker-toggle
+        matSuffix
+        [for]="startDateTimePicker"
+      ></mat-datepicker-toggle>
+
+      <ngx-mat-datetime-picker
+        #startDateTimePicker
+        [showSpinners]="showSpinners"
+        [showSeconds]="showSeconds"
+        [stepHour]="stepHour"
+        [stepMinute]="stepMinute"
+        [stepSecond]="stepSecond"
+        [touchUi]="touchUi"
+        [color]="color"
+        [enableMeridian]="enableMeridian"
+        [disableMinute]="disableMinute"
+        [hideTime]="hideTime"
+      >
+      </ngx-mat-datetime-picker>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input
+        matInput
+        [ngxMatDatetimePicker]="endDateTimePicker"
+        [placeholder]="'CONTAINERS.home.calendar.event.form.end' | translate"
+        formControlName="end"
+        [min]="minDate"
+        [max]="maxDate"
+        [disabled]="disabled"
+      />
+
+      <mat-datepicker-toggle
+        matSuffix
+        [for]="endDateTimePicker"
+      ></mat-datepicker-toggle>
+
+      <ngx-mat-datetime-picker
+        #endDateTimePicker
+        [showSpinners]="showSpinners"
+        [showSeconds]="showSeconds"
+        [stepHour]="stepHour"
+        [stepMinute]="stepMinute"
+        [stepSecond]="stepSecond"
+        [touchUi]="touchUi"
+        [color]="color"
+        [enableMeridian]="enableMeridian"
+        [disableMinute]="disableMinute"
+        [hideTime]="hideTime"
+      >
+      </ngx-mat-datetime-picker>
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width">
+      <mat-label>{{
+        'CONTAINERS.home.calendar.event.form.notes' | translate
+      }}</mat-label>
+      <textarea matInput formControlName="notes"></textarea>
+    </mat-form-field>
+
+    <geoaudit-item-selector
+      *ngIf="form.value.surveys"
+      selector="survey"
+      label="CONTAINERS.home.notes.surveys"
+      placeholder="CONTAINERS.home.notes.new_survey"
+      [items]="form.value.surveys"
+      (itemsChange)="onItemsChange($event, 'surveys')"
+      attribute="name"
+    ></geoaudit-item-selector>
+    
+    <geoaudit-item-selector
+      *ngIf="form.value.jobs"
+      selector="job"
+      label="CONTAINERS.home.notes.jobs"
+      placeholder="CONTAINERS.home.notes.new_job"
+      [items]="form.value.jobs"
+      (itemsChange)="onItemsChange($event, 'jobs')"
+      attribute="name"
+    ></geoaudit-item-selector>
+
+    <div fxLayout="row-reverse">
+      <button
+        mat-flat-button
+        color="primary"
+        (click)="submit()"
+        fxFlexFill
+        type="submit"
+      >
+        {{ 'CONTAINERS.home.calendar.event.form.submit' | translate }}
+      </button>
+    </div>
   </form>
 </mat-card-content>
 

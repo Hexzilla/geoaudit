@@ -77,6 +77,7 @@ export class ItemSelectorComponent implements OnInit {
         this.abrioxEntityService.getAll().subscribe(
           (abrioxes) => {
             this.allItems = abrioxes;
+            this.mapItmsAndPushAsSelected()
           },
           (err) => {}
         );
@@ -86,6 +87,7 @@ export class ItemSelectorComponent implements OnInit {
         this.jobEntityService.getAll().subscribe(
           (jobs) => {
             this.allItems = jobs;
+            this.mapItmsAndPushAsSelected()
           }
         )
         break;
@@ -94,6 +96,7 @@ export class ItemSelectorComponent implements OnInit {
         this.resistivityEntityService.getAll().subscribe(
           (resistivities) => {
             this.allItems = resistivities;
+            this.mapItmsAndPushAsSelected()
           }
         )
         break;
@@ -102,6 +105,7 @@ export class ItemSelectorComponent implements OnInit {
         this.siteEntityService.getAll().subscribe(
           (sites) => {
             this.allItems = sites;
+            this.mapItmsAndPushAsSelected()
           }
         )
         break;
@@ -110,6 +114,7 @@ export class ItemSelectorComponent implements OnInit {
         this.surveyEntityService.getAll().subscribe(
           (surveys) => {
             this.allItems = surveys;
+            this.mapItmsAndPushAsSelected()
           }
         )
         break;
@@ -118,6 +123,7 @@ export class ItemSelectorComponent implements OnInit {
         this.testpostEntityService.getAll().subscribe(
           (testposts) => {
             this.allItems = testposts;
+            this.mapItmsAndPushAsSelected()
           }
         )
         break;
@@ -126,6 +132,7 @@ export class ItemSelectorComponent implements OnInit {
         this.trEntityService.getAll().subscribe(
           (trs) => {
             this.allItems = trs;
+            this.mapItmsAndPushAsSelected()
           }
         )
         break;
@@ -134,19 +141,12 @@ export class ItemSelectorComponent implements OnInit {
         this.userEntityService.getAll().subscribe(
           (users) => {
             this.allItems = users;
+            this.mapItmsAndPushAsSelected()
           },
           (err) => {}
         );
         break;
     }
-
-    this.items.map((item) => {
-      if (
-        !this.selectedItems.find((selectedItem) => selectedItem.id === item.id)
-      ) {
-        this.selectedItems.push(item);
-      }
-    });
   }
 
   ngAfterViewInit() {
@@ -162,6 +162,16 @@ export class ItemSelectorComponent implements OnInit {
       .subscribe((text: string) => {
         this.filteredItems = this.filter(text);
       });
+  }
+
+  mapItmsAndPushAsSelected() {
+    this.items.map((item) => {
+      if (
+        !this.selectedItems.find((selectedItem) => selectedItem.id === item.id)
+      ) {
+        this.selectedItems.push(item);
+      }
+    });
   }
 
   // Users (Assignees)

@@ -1,47 +1,31 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Store } from '@ngrx/store';
 import * as moment from 'moment';
 import { ThemePalette } from '@angular/material/core';
+
+import { AlertService, AuthService } from '../../../services';
+import { CalendarEvent } from '../../../models';
 import {
-  MatAutocompleteSelectedEvent,
-  MatAutocomplete,
-} from '@angular/material/autocomplete';
-import { MatChipInputEvent } from '@angular/material/chips';
-
-import * as JobActions from '../../../store/job/job.actions';
-import * as SurveyActions from '../../../store/survey/survey.actions';
-
-import * as CalendarEventSelectors from '../../../store/calendar-event/calendar-event.selectors';
-import * as SurveySelectors from '../../../store/survey/survey.selectors';
-import * as JobSelectors from '../../../store/job/job.selectors';
-
-import { AlertService, SurveyService } from '../../../services';
-import * as fromApp from '../../../store';
-import * as CalendarEventActions from '../../../store/calendar-event/calendar-event.actions';
-import { Job, Result, Survey } from '../../../models';
-import { fromEvent } from 'rxjs';
-import { distinctUntilChanged, filter, map, take } from 'rxjs/operators';
+  debounceTime,
+  distinctUntilChanged,
+  takeUntil,
+  tap,
+} from 'rxjs/operators';
+import { SurveyEntityService } from '../../../entity-services/survey-entity.service';
+import { JobEntityService } from '../../../entity-services/job-entity.service';
+import { CalendarEventEntityService } from '../../../entity-services/calendar-event-entity.service';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'geoaudit-event',
   templateUrl: './event.component.html',
   styleUrls: ['./event.component.scss'],
 })
-export class EventComponent implements OnInit, AfterViewInit {
+export class EventComponent implements OnInit {
+  id: string;
+
   color: ThemePalette = 'primary';
 
   form: FormGroup;
@@ -75,314 +59,157 @@ export class EventComponent implements OnInit, AfterViewInit {
   removable = true;
   separatorKeysCodes: number[] = [ENTER, COMMA];
 
-  surveyControl = new FormControl();
-  filteredSurveys: Array<Survey>;
-  surveys: Array<Survey> = [];
-  allSurveys: Array<Survey> = [];
-
-  @ViewChild('surveyInput') surveyInput: ElementRef<HTMLInputElement>;
-  @ViewChild('auto') matAutocomplete: MatAutocomplete;
-
-  jobControl = new FormControl();
-  filteredJobs: Array<Job>;
-  jobs: Array<Job> = [];
-  allJobs: Array<Job> = [];
-
-  @ViewChild('jobInput') jobInput: ElementRef<HTMLInputElement>;
-  @ViewChild('auto') matAutocompleteJob: MatAutocomplete;
+  private unsubscribe = new Subject<void>();
 
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private store: Store<fromApp.State>,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private calendarEventEntityService: CalendarEventEntityService,
+    private surveyEntityService: SurveyEntityService,
+    private jobEntityService: JobEntityService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
-    /**
-     * Fetch calendar event related data including surveys and
-     * a count of the surveys.
-     */
-    this.fetchData();
+    this.id = this.route.snapshot.paramMap.get('id');
 
-    /**
-     * Select from fetched data for event component data.
-     */
-    this.selectData();
+    this.initForm();
 
-    /**
-     * Initialise the form with properties and
-     * validation constraints.
-     */
-    this.initialiseForm();
-
-    // Determine whether a calendar-event id has been provided
-    const id = this.route.snapshot.paramMap.get('id');
-
-    /**
-     * If id provided then fetch the calendar event with the id
-     * form the backend and then subscribe to the store
-     * and then patch the form with the values.
-     */
-    if (id) {
-      this.editAndViewMode(id);
+    if (this.id) {
+      this.getNoteAndPatchForm(this.id);
     } else {
       this.createMode();
     }
   }
 
-  /**
-   * Fetch data using ngrx dispatch action firstly for a count of the surveys
-   * and then the surveys. In selectData we subscribe to the store to use
-   * this data.
-   */
-  fetchData(): void {
-    this.store.dispatch(
-      SurveyActions.countSurveys()
-    );
+  getNoteAndPatchForm(id: string) {
+    this.calendarEventEntityService.getByKey(id).subscribe(
+      (calendarEvent) => {
+        this.patchForm(calendarEvent);
+      },
 
-    this.store.dispatch(SurveyActions.fetchSurveys({ start: 0, limit: 100 }));
-
-    this.store.dispatch(
-      JobActions.countJobs()
-    );
-    
-    this.store.dispatch(
-      JobActions.fetchJobs({ start: 0, limit: 100 })
+      (err) => {}
     );
   }
 
-  /**
-   * We select data from the store and we subscribe to it such that
-   * should the data change, we'll have the latest.
-   */
-  selectData(): void {
-    this.store.select(SurveySelectors.Surveys).subscribe((surveys) => {
-      this.allSurveys = surveys;
-    });
-
-    this.store.select(SurveySelectors.Count).subscribe((count) => {
-      this.length = count;
-    });
-
-    this.store.select(JobSelectors.Jobs).subscribe((jobs) => {
-      this.allJobs = jobs;
-    });
-
-    // this.store.select(JobSelectors.Count).subscribe((count) => {
-    //   this.length = count;
-    // });
-  }
-
-  /**
-   * Initialisation of the form, properties, and validation.
-   */
-  initialiseForm(): void {
+  initForm(): void {
     this.form = this.formBuilder.group({
-      title: ['Event Title', Validators.required],
-      allDay: [false, Validators.required],
-      start: [moment().toISOString(), Validators.required],
-      end: [moment().toISOString(), Validators.required],
-      notes: [''],
+      title: [null],
+      allDay: [false],
+      start: [moment().toISOString()],
+      end: [moment().toISOString()],
+      notes: [null],
+
+      users_permissions_users: [[]],
       surveys: [[]],
       jobs: [[]],
 
       id: null,
-      published: false
+      published: false,
     });
   }
 
-  /**
-   * In edit and view mode, we have a calendar-event id
-   * of which use to fetch the calendar-event from the backend.
-   * We then patch the form values with the values from calendar-event.
-   * @param id 
-   */
-  editAndViewMode(id: string): void {
-    this.store.dispatch(
-      CalendarEventActions.fetchCalendarEvent({
-        id: Number(id),
-      })
-    );
+  patchForm(event: CalendarEvent) {
+    const {
+      id,
+      title,
+      allDay,
+      start,
+      end,
+      notes,
+      surveys,
+      jobs,
+      users_permissions_users,
+    } = event;
 
-    /**
-     * Subscribe to store and patch form values.
-     */
-    this.store
-      .select(CalendarEventSelectors.CalendarEvent)
-      .subscribe((calendarEvent) => {
-        if (calendarEvent) {
-          const {
-            title,
-            allDay,
-            start,
-            end,
-            notes,
-            surveys,
-            jobs,
+    console.log('event', event.surveys);
 
-            id,
-          } = calendarEvent;
+    this.form.patchValue({
+      id,
+      title,
+      allDay,
+      start,
+      end,
+      notes,
+      surveys,
+      jobs,
+      users_permissions_users,
+    });
+
+    const surveyIds = this.route.snapshot.queryParamMap.get('surveys');
+
+    if (surveyIds) {
+      JSON.parse(surveyIds).map((surveyId) => {
+        this.surveyEntityService.getByKey(surveyId).subscribe((survey) => {
           this.form.patchValue({
-            title,
-            allDay,
-            start,
-            end,
-            notes,
-            surveys,
-            jobs,
-
-            id,
-            published: true
+            surveys: [...this.form.value.surveys, survey],
           });
-
-          /**
-           * Do not push already existing surveys onto the array.
-           */
-          surveys.map((survey) => {
-            if (!this.surveys.find((item) => item.id === survey.id)) {
-              this.surveys.push(survey);
-            }
-          });
-
-          jobs.map((job) => {
-            if (!this.jobs.find((item) => item.id === job.id)) {
-              this.jobs.push(job);
-            }
-          });
-        }
-      });
-  }
-
-  /**
-   * In create mode, we've navigated to this component route
-   * without an id. We may have navigated with some survey ids
-   * in the address bar of which having fetched survey data for
-   * we can associate the full survey object for the survey id.
-   *
-   * We then proceed to create the calendar-event with the default
-   * form values.
-   *
-   * We then subscribe to the store awaiting for the calendar-event
-   * and then we can set the id within the form as required
-   * for when we submit.
-   */
-  createMode(): void {
-    /**
-     * We only expect an array of surveys as query parameter
-     * before we create a Calendar Event.
-     */
-    this.store
-      .select(SurveySelectors.Surveys)
-      .subscribe((surveys) => {
-        // Survey ids as query parameter.
-        const surveyIds = this.route.snapshot.queryParamMap.get('surveys');
-
-        // If the value is null, create a new array and store it
-        // Else parse the JSON string we sent into an array
-        if (surveyIds === null) {
-          this.surveys = new Array<Survey>();
-        } else {
-          const parsedSurveys = JSON.parse(surveyIds);
-
-          if (parsedSurveys) {
-            parsedSurveys.map((id) => {
-              const exists = surveys.find((survey) => survey.id === id);
-              if (exists) {
-                if (!this.surveys.find((survey) => survey.id === id)) {
-                  this.surveys.push(exists);
-                }
-              }
-            });
-          }
-        }
-      });
-
-      this.store
-      .select(JobSelectors.Jobs)
-      .subscribe((jobs) => {
-        // Survey ids as query parameter.
-        const jobIds = this.route.snapshot.queryParamMap.get('jobs');
-
-        // If the value is null, create a new array and store it
-        // Else parse the JSON string we sent into an array
-        if (jobIds === null) {
-          this.jobs = new Array<Job>();
-        } else {
-          const parsedJobs = JSON.parse(jobIds);
-
-          if (parsedJobs) {
-            parsedJobs.map((id) => {
-              const exists = jobs.find((job) => job.id === id);
-              if (exists) {
-                if (!this.jobs.find((job) => job.id === id)) {
-                  this.jobs.push(exists);
-                }
-              }
-            });
-          }
-        }
-      });
-
-    this.store.dispatch(
-      CalendarEventActions.createCalendarEvent({
-        calendarEvent: this.form.value,
-      })
-    );
-
-    this.store
-      .select(CalendarEventSelectors.CalendarEvent)
-      .pipe(
-        filter((calendarEvent) => calendarEvent !== null),
-        take(1)
-      )
-      .subscribe((calendarEvent) => {
-        this.form.patchValue({
-          id: calendarEvent.id,
         });
       });
-  }
+    }
 
-  ngAfterViewInit(): void {
-    fromEvent(this.surveyInput.nativeElement, 'keyup')
-      .pipe(
-        map((event: any) => {
-          return event.target.value;
-        }),
-        filter((res) => res.length >= 0),
-        // debounceTime(1000), // if needed for delay
-        distinctUntilChanged()
-      )
-      .subscribe((text: string) => {
-        this.filteredSurveys = this._filter(text);
+    const jobIds = this.route.snapshot.queryParamMap.get('jobs');
+
+    if (jobIds) {
+      JSON.parse(jobIds).map((jobId) => {
+        this.jobEntityService.getByKey(jobId).subscribe((job) => {
+          this.form.patchValue({
+            jobs: [...this.form.value.jobs, job],
+          });
+        });
       });
+    }
 
-      fromEvent(this.jobInput.nativeElement, 'keyup')
+    this.autoSave();
+  }
+
+  createMode() {
+    this.form.patchValue({
+      users_permissions_users: [this.authService.authValue.user],
+    });
+
+    this.calendarEventEntityService.add(this.form.value).subscribe(
+      (calendarEvent) => {
+        this.patchForm(calendarEvent);
+
+        this.autoSave();
+      },
+
+      (err) => {}
+    );
+  }
+
+  autoSave(reload = false) {
+    this.form.valueChanges
       .pipe(
-        map((event: any) => {
-          return event.target.value;
+        debounceTime(500),
+        tap(() => {
+          this.submit(false);
         }),
-        filter((res) => res.length >= 0),
-        // debounceTime(1000), // if needed for delay
-        distinctUntilChanged()
+        distinctUntilChanged(),
+        takeUntil(this.unsubscribe)
       )
-      .subscribe((text: string) => {
-        this.filteredJobs = this._filterJobs(text);
+      .subscribe(() => {
+        /**
+         * Workaround.
+         *
+         * When we navigate to the create a note component. We may have
+         * provided a jobs query parameter. However the jobs selector is not
+         * updated with that and therefore we're reloading such that it
+         * goes into edit mode.
+         */
+        if (reload) {
+          this.router
+            .navigate([`/home/calendar/${this.form.value.id}`])
+            .then(() => {
+              window.location.reload();
+            });
+        }
       });
   }
 
-  // convenience getter for easy access to form fields
-  get f() {
-    return this.form.controls;
-  }
-
-  /**
-   * All day toggle slider.
-   *
-   * If enabled then patch form values start and end to start and end of day respectively
-   * otherwise to the current date time.
-   */
   toggleAllDay(): void {
     if (this.form.value.allDay) {
       this.form.patchValue({
@@ -397,25 +224,7 @@ export class EventComponent implements OnInit, AfterViewInit {
     }
   }
 
-  /**
-   * On submit of the calendar-event form we return array of survey ids,
-   * validate the form, and the make a PUT network request with the
-   * calendar-event data as already exists as created on entry to this
-   * component or we're in view or edit mode. Following that
-   * we subscribe and then check for the result such
-   * that we know what to do next i.e display an alert.
-   *
-   * @returns
-   */
-  submit(): void {
-    this.form.patchValue({
-      surveys: this.surveys.map((survey) => survey.id),
-      jobs: this.jobs.map((job) => job.id),
-      published: true
-    });
-
-    this.submitted = true;
-
+  submit(navigate = true): void {
     // reset alerts on submit
     this.alertService.clear();
 
@@ -424,115 +233,24 @@ export class EventComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    this.store.dispatch(
-      CalendarEventActions.putCalendarEvent({
-        calendarEvent: this.form.value,
-      })
+    this.calendarEventEntityService.update(this.form.value).subscribe(
+      (update) => {
+        this.alertService.info('Saved Changes');
+
+        if (navigate) this.router.navigate([`/home/calendar`]);
+      },
+
+      (err) => {
+        this.alertService.error('Something went wrong');
+      },
+
+      () => {}
     );
-
-    this.store
-      .select(CalendarEventSelectors.Result)
-      .pipe(
-        filter((result) => result !== Result.NONE),
-        take(1)
-      )
-      .subscribe((result) => {
-        if (result === Result.SUCCESS) {
-          this.alertService.success('Calendar Event Successfully Updated');
-          this.store.dispatch(CalendarEventActions.clearResult());
-          this.router.navigate([`/home/calendar`]);
-        }
-
-        if (result === Result.ERROR) {
-          this.alertService.success(
-            'An Error Occurred Whilst Trying To Update Your Calendar Event'
-          );
-          this.store.dispatch(CalendarEventActions.clearResult());
-        }
-      });
   }
 
-  add(event: MatChipInputEvent): void {
-    const value = (event.value || '').trim();
-
-    // Add our survey
-    if (value) {
-      const filterAllSurveysOnValue = this._filter(value);
-
-      if (filterAllSurveysOnValue.length >= 1) {
-        this.surveys.push(filterAllSurveysOnValue[0]);
-      }
-    }
-
-    // Clear the input value
-    this.surveyInput.nativeElement.value = '';
-
-    this.surveyControl.setValue(null);
-  }
-
-  remove(survey: Survey): void {
-    const exists = this.surveys.find((item) => item.id === survey.id);
-    if (exists) {
-      this.surveys = this.surveys.filter((item) => item.id !== exists.id);
-    }
-  }
-
-  selected(event: MatAutocompleteSelectedEvent): void {
-    this.surveys.push(event.option.value);
-    this.surveyInput.nativeElement.value = '';
-    this.surveyControl.setValue(null);
-  }
-
-  private _filter(value: string): Array<Survey> {
-    const filterValue = value.toLowerCase();
-
-    return this.allSurveys.filter((survey) => {
-      return (
-        survey.name.toLowerCase().indexOf(filterValue) === 0 ||
-        survey.id.toString() === filterValue
-      );
-    });
-  }
-
-  addJob(event: MatChipInputEvent): void {
-    const value = (event.value || '').trim();
-
-    // Add our job
-    if (value) {
-      const filterAllJobsOnValue = this._filterJobs(value);
-
-      if (filterAllJobsOnValue.length >= 1) {
-        this.jobs.push(filterAllJobsOnValue[0]);
-      }
-    }
-
-    // Clear the input value
-    this.jobInput.nativeElement.value = '';
-
-    this.jobControl.setValue(null);
-  }
-
-  removeJob(job: Job): void {
-    const exists = this.jobs.find((item) => item.id === job.id);
-    if (exists) {
-      this.jobs = this.jobs.filter((item) => item.id !== exists.id);
-    }
-  }
-
-  selectedJob(event: MatAutocompleteSelectedEvent): void {
-    this.jobs.push(event.option.value);
-    this.jobInput.nativeElement.value = '';
-    this.jobControl.setValue(null);
-  }
-
-  private _filterJobs(value: string): Array<Job> {
-    const filterValue = value.toLowerCase();
-
-    return this.allJobs.filter((job) => {
-      return (
-        job.name.toLowerCase().indexOf(filterValue) === 0 ||
-        job.id.toString() === filterValue
-      );
+  onItemsChange(items: Array<any>, attribute: string): void {
+    this.form.patchValue({
+      [attribute]: items.length > 0 ? items.map((item) => item.id) : [],
     });
   }
 }
