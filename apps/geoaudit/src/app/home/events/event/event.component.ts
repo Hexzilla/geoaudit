@@ -202,7 +202,7 @@ export class EventComponent implements OnInit {
          */
         if (reload) {
           this.router
-            .navigate([`/home/calendar/${this.form.value.id}`])
+            .navigate([`/home/events/${this.form.value.id}`])
             .then(() => {
               window.location.reload();
             });
@@ -237,7 +237,7 @@ export class EventComponent implements OnInit {
       (update) => {
         this.alertService.info('Saved Changes');
 
-        if (navigate) this.router.navigate([`/home/calendar`]);
+        if (navigate) this.router.navigate([`/home/events`]);
       },
 
       (err) => {

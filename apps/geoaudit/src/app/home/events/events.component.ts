@@ -113,8 +113,7 @@ export class EventsComponent implements OnInit {
     const parameters = qs.stringify({
       _where: {
         users_permissions_users: this.authService.authValue.user.id,
-      },
-      _sort: 'datetime:DESC',
+      }
     });
 
     this.eventEntityService.getWithQuery(parameters).subscribe(
@@ -268,6 +267,6 @@ export class EventsComponent implements OnInit {
   }
 
   get isRoot(): boolean {
-    return this.router.url === '/home/calendar';
+    return this.router.url === '/home/events';
   }
 }

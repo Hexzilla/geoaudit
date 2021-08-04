@@ -1263,7 +1263,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   calendar(): void {
-    this.router.navigate(['/home/calendar']);
+    this.router.navigate(['/home/events']);
   }
 
   profile(): void {
