@@ -74,11 +74,6 @@ export class ProfileComponent implements OnInit, AfterViewInit {
     this.user$
       .pipe(
         map((user) => {
-
-          // const latlng = new google.maps.LatLng(user.home.lat, user.home.lng)
-
-          // console.log('latlng', latlng)
-
           this.patchAddress('home', user.home.lat, user.home.lng, this.homeAddressSearchCtrl);
 
           this.patchAddress('work', user.work.lat, user.work.lng, this.workAddressSearchCtrl);
@@ -105,10 +100,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
         }
         // This is checking to see if the Geoeode Status is OK before proceeding
         if (status == google.maps.GeocoderStatus.OK) {
-            console.log(results);
             var address = (results[0].formatted_address);
-
-            console.log('address', address)
 
             this.changeAddressForm.patchValue({
               [attribute]: address
@@ -198,9 +190,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
     this.authService.forgotPassword({
       email: this.authService.authValue.user.email,
       // url: `${this.API_URL}/admin/plugins/users-permissions/auth/reset-password`
-    }).subscribe((res) => {
-      console.log('res', res)
-      
+    }).subscribe((res) => {      
       /**
        * Changes the current step of the panel process to the next one i..e enter code, password, confirmation password.
        */

@@ -161,7 +161,6 @@ export class SurveyComponent implements OnInit {
     this.userEntityService.getAll().subscribe(
       (users) => {
         this.allUsers = users;
-        console.log('users', users);
       },
 
       (err) => {}
@@ -185,22 +184,27 @@ export class SurveyComponent implements OnInit {
     if (this.id) {
       this.mode = 'EDIT_VIEW';
       this.editAndViewMode();
-
-      console.log('get survey', this.id);
     } else {
       this.mode = 'CREATE';
       this.createMode();
-
-      console.log('no survey');
     }
 
-    this.jobId = this.route.snapshot.queryParamMap.get('job');
+    // this.jobId = this.route.snapshot.queryParamMap.get('job');
 
-    if (this.jobId) {
-      console.log('get job', this.jobId);
-    } else {
-      console.log('no job');
-    }
+    // if (this.jobId) {
+    //   this.jobEntityService.getByKey(this.jobId).subscribe(
+    //     (job) => {
+    //       console.log('job', job);
+    //       this.form.patchValue({
+    //         job,
+    //       });
+
+    //       console.log('this', this.form.value);
+    //     },
+
+    //     (err) => {}
+    //   );
+    // }
   }
 
   ngAfterViewInit() {
@@ -291,8 +295,6 @@ export class SurveyComponent implements OnInit {
           id,
         });
 
-        console.log('job', job);
-
         this.jobCtrl.setValue(job?.reference);
         this.selectedJob = job;
 
@@ -320,7 +322,6 @@ export class SurveyComponent implements OnInit {
      */
     this.surveyEntityService.add(this.form.value).subscribe(
       (survey) => {
-        console.log('survey', survey);
         this.survey = survey;
 
         this.form.patchValue({
@@ -328,6 +329,10 @@ export class SurveyComponent implements OnInit {
         });
 
         this.autoSave();
+
+        this.router.navigate([`/home/surveys/${this.form.value.id}`], {
+          replaceUrl: true,
+        });
       },
 
       (err) => {
@@ -471,7 +476,6 @@ export class SurveyComponent implements OnInit {
    * @param event
    */
   selectionChange(event: StepperSelectionEvent) {
-    console.log('selectionChange', event.selectedIndex);
     switch (event.selectedIndex) {
       case 0:
         break;
@@ -514,11 +518,7 @@ export class SurveyComponent implements OnInit {
   }
 
   onImageUpload(event): void {
-    console.log('on image upload', event);
-
     const { images } = this.form.value.footer;
-
-    console.log('images', [...images, event]);
 
     // this.images.push(event)
 
@@ -531,19 +531,11 @@ export class SurveyComponent implements OnInit {
       },
     });
 
-    console.log('patched', this.form.value);
-
     this.submit(false);
-
-    // console.log('images', this.images)
   }
 
   onDocumentUpload(event): void {
-    console.log('onDocumentUpload', event);
-
     const { documents } = this.form.value.footer;
-
-    console.log('documents', [...documents, event]);
 
     this.form.patchValue({
       footer: {
@@ -552,14 +544,10 @@ export class SurveyComponent implements OnInit {
       },
     });
 
-    console.log('patched', this.form.value);
-
     this.submit(false);
   }
 
   onPreview(fileType: FileTypes): void {
-    console.log('onPreview', fileType, this.form.value.footer);
-
     const { images, documents } = this.form.value.footer;
 
     switch (fileType) {
@@ -633,7 +621,7 @@ export class SurveyComponent implements OnInit {
         this.router.navigate(['/home/todolist']);
       },
 
-      (err) => console.log('err', err)
+      (err) => {}
     );
   }
 }

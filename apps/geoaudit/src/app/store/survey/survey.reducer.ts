@@ -32,7 +32,6 @@ const surveyReducer = createReducer(
         }
     }),
     on(SurveyActions.setSurveys, (state, action) => {
-        console.log('SET_SURVEYS', action.surveys)
         return {
             ...state,
             surveys: action.surveys,

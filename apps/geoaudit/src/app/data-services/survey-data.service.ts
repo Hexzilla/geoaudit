@@ -29,7 +29,6 @@ export class SurveyDataService extends DefaultDataService<Survey> {
     }
 
     update(update: Update<Survey>): Observable<any> {
-        console.log('update', update)
         return this.http.put<any>(`${environment.API_URL}/surveys/${update.id}`, update.changes);
     }
 

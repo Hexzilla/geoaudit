@@ -2,7 +2,7 @@ import { Job } from "./job.model";
 import { Survey } from "./survey.model";
 import { User } from "./user.model";
 
-export interface CalendarEvent {
+export interface Event {
     id: number;
     title?: string;
     start?: string;

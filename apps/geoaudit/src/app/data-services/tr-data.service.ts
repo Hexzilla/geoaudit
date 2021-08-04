@@ -29,7 +29,6 @@ export class TrDataService extends DefaultDataService<Tr> {
     }
 
     update(update: Update<Tr>): Observable<any> {
-        console.log('update', update)
         return this.http.put<any>(`${environment.API_URL}/trs/${update.id}`, update.changes);
     }
 }

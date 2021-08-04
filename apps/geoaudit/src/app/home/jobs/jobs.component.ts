@@ -211,8 +211,6 @@ export class JobsComponent implements OnInit, AfterViewInit {
       let completedJobs = [];
       let refusedJobs = [];
 
-      console.log('jobs', state.jobs)
-
       state.jobs.map(job => {
         if (job.status.name === Statuses.NOT_STARTED) notStartedJobs.push(job);
         if (job.status.name === Statuses.ONGOING) onGoingJobs.push(job);
@@ -267,7 +265,6 @@ export class JobsComponent implements OnInit, AfterViewInit {
        distinctUntilChanged()
      )
      .subscribe((text: string) => {
-       console.log('text', text)
        if (this.dataSource.paginator) {
          this.dataSource.paginator.firstPage();
        }
@@ -288,29 +285,21 @@ export class JobsComponent implements OnInit, AfterViewInit {
     : this.selection.selected;
 
     const jobIds = jobs.map(survey => survey.id);    
-    console.log('jobIds', jobIds)
 
     // Add the array of values to the query parameter as a JSON string
     const queryParams = {
       jobs: JSON.stringify(jobIds)
     }
-
-    console.log(queryParams)
     
     // Create our 'NaviationExtras' object which is expected by the Angular Router
     const navigationExtras: NavigationExtras = {
       queryParams
     };
 
-    console.log(navigationExtras)
-
-    this.router.navigate([`/home/calendar/event`], navigationExtras);
+    this.router.navigate([`/home/events/create`], navigationExtras);
   }
 
   share(): void {
-
-    console.log('share', this.selection.selected)
-
     // this.selection.selected
 
     // Capture selected job

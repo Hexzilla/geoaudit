@@ -29,7 +29,6 @@ export class AbrioxDataService extends DefaultDataService<Abriox> {
     }
 
     update(update: Update<Abriox>): Observable<any> {
-        console.log('update', update)
         return this.http.put<any>(`${environment.API_URL}/abrioxes/${update.id}`, update.changes);
     }
 }

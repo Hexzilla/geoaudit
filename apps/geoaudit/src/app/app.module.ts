@@ -30,10 +30,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
 import { EffectsModule } from '@ngrx/effects';
 import { reducers } from './store';
-import { SurveyEffects } from './store/survey/survey.effects';
 import { DeleteModalComponent } from './modals/delete-modal/delete-modal.component';
-import { CalendarEventEffects } from './store/calendar-event/calendar-event.effects';
-import { JobEffects } from './store/job/job.effects';
 import { DefaultDataServiceConfig, EntityDataModule } from '@ngrx/data';
 import { entityConfig } from './entity-metadata';
 // import { SidebarHeaderComponent } from './components/sidebar-header/sidebar-header.component';
@@ -93,7 +90,7 @@ const defaultDataServiceConfig: DefaultDataServiceConfig = {
 
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
 
-    EffectsModule.forRoot([CalendarEventEffects, JobEffects, SurveyEffects]),
+    EffectsModule.forRoot([]),
 
     EntityDataModule.forRoot(entityConfig),
 

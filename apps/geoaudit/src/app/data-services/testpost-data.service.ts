@@ -29,7 +29,6 @@ export class TestpostDataService extends DefaultDataService<Testpost> {
     }
 
     update(update: Update<Testpost>): Observable<any> {
-        console.log('update', update)
         return this.http.put<any>(`${environment.API_URL}/testposts/${update.id}`, update.changes);
     }
 }

@@ -315,7 +315,6 @@ export class JobComponent implements OnInit, AfterViewInit {
     // Fetch statuses
     this.statusEntityService.getAll().subscribe(
       (statuses) => {
-        console.log('statuses', statuses);
         this.statuses = statuses;
       },
 
@@ -475,8 +474,6 @@ export class JobComponent implements OnInit, AfterViewInit {
         });
 
         this.dataSource = new MatTableDataSource(surveys);
-
-        console.log('surveys', this.surveys);
       },
 
       (err) => {}
@@ -496,13 +493,9 @@ export class JobComponent implements OnInit, AfterViewInit {
         : [this.authService.authValue.user.id],
     });
 
-    console.log('form');
-    console.log(this.form.value);
     this.jobEntityService.add(this.form.value).subscribe(
       (job) => {
         this.job = job;
-        console.log('job add');
-        console.log(job);
         this.form.patchValue({
           id: job.id,
         });
@@ -556,8 +549,6 @@ export class JobComponent implements OnInit, AfterViewInit {
 
     // reset alerts on submit
     this.alertService.clear();
-
-    console.log('this', this.form.value);
 
     if (this.form.invalid) {
       this.alertService.error('Invalid');
@@ -631,7 +622,6 @@ export class JobComponent implements OnInit, AfterViewInit {
   }
 
   assigneesChange(): void {
-    console.log('assigneesChange');
     this.form.patchValue({
       assignees: this.users.map((user) => user.id),
       published: true,
@@ -703,11 +693,7 @@ export class JobComponent implements OnInit, AfterViewInit {
   }
 
   onImageUpload(event): void {
-    console.log('on image upload', event);
-
     const { images } = this.form.value.footer;
-
-    console.log('images', [...images, event]);
 
     // this.images.push(event)
 
@@ -721,16 +707,10 @@ export class JobComponent implements OnInit, AfterViewInit {
     });
 
     this.submit(false);
-
-    // console.log('images', this.images)
   }
 
   onDocumentUpload(event): void {
-    console.log('onDocumentUpload', event);
-
     const { documents } = this.form.value.footer;
-
-    console.log('documents', [...documents, event]);
 
     this.form.patchValue({
       footer: {

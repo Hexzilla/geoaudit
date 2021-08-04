@@ -123,15 +123,11 @@ export class NotesComponent implements OnInit {
     ) {
       const includes = url.split('/');
 
-      console.log('includes', includes[2], this.id)
-
       const navigationExtras: NavigationExtras = {
         queryParams: {
           [includes[2]]: JSON.stringify([this.id])
         }
       }
-
-      console.log('navigationExtras', navigationExtras)
 
       this.router.navigate([`/home/notes/create`], navigationExtras);
 

@@ -1173,10 +1173,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     })
 
     this.sidebar.on('closing', (e) => {
-      // e.id contains the id of the opened panel
-      console.log('closing')
-      
-
+      // e.id contains the id of the opened panel      
       this.router.navigate(['/home']);
     })
 
@@ -1266,7 +1263,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   calendar(): void {
-    this.router.navigate(['/home/calendar']);
+    this.router.navigate(['/home/events']);
   }
 
   profile(): void {

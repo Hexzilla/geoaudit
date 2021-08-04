@@ -2,14 +2,12 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { AuthGuard } from '../../guards';
-import { CalendarEventResolver } from '../../resolvers/calendar-event.resolver ';
-import { CalendarEventsResolver } from '../../resolvers/calendar-events.resolver';
-import { CalendarComponent } from './calendar.component';
+import { EventsComponent } from './events.component';
 import { EventComponent } from './event/event.component';
 
 const routes: Routes = [
     { 
-        path: '', component: CalendarComponent, 
+        path: '', component: EventsComponent, 
         canActivate: [AuthGuard],
     },
 
@@ -27,10 +25,6 @@ const routes: Routes = [
 
 @NgModule({
     imports: [RouterModule.forChild(routes)],
-    exports: [RouterModule],
-    providers: [
-        CalendarEventResolver,
-        CalendarEventsResolver
-    ]
+    exports: [RouterModule]
 })
-export class CalendarRoutingModule { }
+export class EventsRoutingModule { }
