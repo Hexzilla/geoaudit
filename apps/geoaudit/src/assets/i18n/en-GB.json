@@ -13,6 +13,9 @@
 			"geoaudit": "Geoaudit"
 		},
 		"home": {
+			"approval": {
+				"title": "Approval List"
+			},
 			"archive": {
 				"title": "Archive",
 				"show_all_jobs": "Show all jobs",

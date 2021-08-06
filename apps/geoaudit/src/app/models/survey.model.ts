@@ -1,4 +1,5 @@
 import { Job, User } from '.';
+import { Footer } from './footer.model';
 import { Note } from './note.model';
 
 export interface Survey {
@@ -7,7 +8,7 @@ export interface Survey {
     created_at?: string;
     date_assigned?: string;
     date_delivery?: string;
-    footer?: any;
+    footer?: Footer;
     geometry: any;
     id?: number;
     reference?: string;
