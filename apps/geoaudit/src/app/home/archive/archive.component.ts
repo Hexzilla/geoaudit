@@ -25,6 +25,7 @@ export class ArchiveComponent implements OnInit {
     'job_type',
     'approved_by',
     'surveys',
+    'actions'
   ];
 
   dataSource: MatTableDataSource<Job>;
