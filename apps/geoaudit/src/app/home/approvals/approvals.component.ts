@@ -1,9 +1,11 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import qs from 'qs';
 import { StatusEntityService } from '../../entity-services/status-entity.service';
 import { SurveyEntityService } from '../../entity-services/survey-entity.service';
+import { RefusalModalComponent } from '../../modals/refusal-modal/refusal-modal.component';
 import { Status, Statuses, Survey } from '../../models';
 import { AuthService } from '../../services';
 
@@ -31,7 +33,8 @@ export class ApprovalsComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private statusEntityService: StatusEntityService,
-    private surveyEntityService: SurveyEntityService
+    private surveyEntityService: SurveyEntityService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -89,24 +92,33 @@ export class ApprovalsComponent implements OnInit {
   }
 
   disapprove() {
-    this.selection.selected.map((survey) => {
-      this.surveyEntityService
-        .update({
-          ...survey,
-          status: this.refusedStatus,
-          footer: {
-            ...survey?.footer,
-            approved: false,
-          },
-        })
-        .subscribe(
-          (update) => {
-            console.log('update', update);
-            this.query();
-          },
 
-          (err) => {}
-        );
+    const dialogRef = this.dialog.open(RefusalModalComponent, {
+      data: {
+        surveys: this.selection.selected
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.selection.selected.map((survey) => {
+        this.surveyEntityService
+          .update({
+            ...survey,
+            status: this.refusedStatus,
+            footer: {
+              ...survey?.footer,
+              approved: false,
+            },
+          })
+          .subscribe(
+            (update) => {
+              console.log('update', update);
+              this.query();
+            },
+  
+            (err) => {}
+          );
+      });
     });
   }
 

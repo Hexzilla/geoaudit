@@ -34,7 +34,7 @@ import { MatTableModule } from '@angular/material/table';
 // Modals
 import { AttachmentModalComponent } from '../modals/attachment-modal/attachment-modal.component';
 import { NavigationModalComponent } from '../modals/navigation-modal/navigation-modal.component';
-
+import { RefusalModalComponent } from '../modals/refusal-modal/refusal-modal.component';
 // Custom
 import { NgxMatDatetimePickerModule, NgxMatTimepickerModule, NgxMatNativeDateModule, NgxMatDateFormats, NGX_MAT_DATE_FORMATS } from '@angular-material-components/datetime-picker';
 import { NgxMatMomentModule } from '@angular-material-components/moment-adapter';
@@ -180,6 +180,7 @@ const entityMetadataMap: EntityMetadataMap = {
     SidebarActionsComponent,
     AttachmentModalComponent,
     NavigationModalComponent,
+    RefusalModalComponent,
     SurveyTableComponent,
     ItemSelectorComponent,
   ],
@@ -249,6 +250,7 @@ const entityMetadataMap: EntityMetadataMap = {
     SidebarHeaderComponent,
     SidebarActionsComponent,
     AttachmentModalComponent,
+    RefusalModalComponent,
     SurveyTableComponent,
     ItemSelectorComponent,
     
