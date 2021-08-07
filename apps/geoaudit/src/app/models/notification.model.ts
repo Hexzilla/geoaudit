@@ -1,7 +1,7 @@
 import { User } from "./user.model";
 
 export interface NOTIFICATION_DATA {
-    type: 'SHARE_JOB',
+    type: 'SHARE_JOB' | 'SURVEY_REFUSAL',
     subject: any,
     message: string
 }

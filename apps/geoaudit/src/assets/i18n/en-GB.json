@@ -13,6 +13,9 @@
 			"geoaudit": "Geoaudit"
 		},
 		"home": {
+			"approval": {
+				"title": "Approval List"
+			},
 			"archive": {
 				"title": "Archive",
 				"show_all_jobs": "Show all jobs",
@@ -152,8 +155,10 @@
 			"notifications": {
 				"title": "Notifications",
 				"types": {
-					"SHARE_JOB": "{{source}} shared a job with you"
-				}
+					"SHARE_JOB": "{{source}} shared job {{reference}} with you.",
+					"SURVEY_REFUSAL": "The survey {{reference}} has been refused for the following reason:"
+				},
+				"please_amend": "Please amend it and re-submit"
 			},
 			"profile": {
 				"settings": "Settings",
@@ -208,6 +213,11 @@
 			"title": "Delete",
 			"delete_surveys": "You're about to delete {{length}} record(s). Do you wish to continue?",
 			"delete": "Confirm"
+		},
+		"refusal_modal": {
+			"title": "Reason for Refusal",
+			"message": "Message",
+			"submit": "Submit" 
 		},
 		"share_modal": {
 			"title": "Share this Job with",

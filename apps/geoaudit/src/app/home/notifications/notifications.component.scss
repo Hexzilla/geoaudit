@@ -1,3 +1,19 @@
 .notification-header-image {
-    background-size: cover;
+  background-size: cover;
+}
+
+.cards-container {
+    overflow: auto;
+    height: 75vh;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.cards-container::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.cards-container {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }

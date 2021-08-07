@@ -2,16 +2,71 @@
   title="CONTAINERS.home.notifications.title"
 ></geoaudit-sidebar-header>
 
-<mat-card
-  *ngFor="let notification of notifications$ | async"
-  (click)="toggle(notification)"
->
-  <mat-card-header>
-      <img *ngIf="notification?.source?.avatar" mat-card-avatar [src]="API_URL + notification.source.avatar.url" />
-      <img *ngIf="!notification?.source?.avatar" mat-card-avatar src="https://bestoked.ams3.digitaloceanspaces.com/geoaudit/static/assets/Avatar%20-%20Geoaudit.png" />
-      <mat-card-subtitle>{{ 'CONTAINERS.home.notifications.types.SHARE_JOB' | translate: { source: notification.source.username } }} </mat-card-subtitle>
-      <mat-card-subtitle>{{ notification.created_at | date: 'dd/MM/YYYY HH:mm' }}</mat-card-subtitle>
-      <mat-card-subtitle><em>{{ notification.data?.message }}</em></mat-card-subtitle>
-      <mat-icon *ngIf="!notification.seen" style="background-color: #0074d9; border-radius: 15px;">radio_button_unchecked</mat-icon>
-  </mat-card-header>
-</mat-card>
+<div class="cards-container">
+  <mat-card
+    *ngFor="let notification of notifications$ | async"
+    (click)="toggle(notification)"
+    style="margin-top: 15px"
+  >
+    <mat-card-header>
+      <img
+        *ngIf="notification?.source?.avatar"
+        mat-card-avatar
+        [src]="API_URL + notification.source.avatar.url"
+      />
+      <img
+        *ngIf="!notification?.source?.avatar"
+        mat-card-avatar
+        src="https://bestoked.ams3.digitaloceanspaces.com/geoaudit/static/assets/Avatar%20-%20Geoaudit.png"
+      />
+
+      <ng-container *ngIf="notification.data.type === 'SHARE_JOB'">
+        <mat-card-subtitle>
+          {{ notification.created_at | date: 'dd/MM/YYYY HH:mm' }}
+
+          <br /><br />
+          {{
+            'CONTAINERS.home.notifications.types.SHARE_JOB'
+              | translate
+                : {
+                    source: notification.source.username,
+                    reference: notification.data.subject.reference
+                  }
+          }}
+
+          <br /><br />
+          <q
+            ><em>{{ notification.data.message }}</em></q
+          >
+        </mat-card-subtitle>
+      </ng-container>
+
+      <ng-container *ngIf="notification.data.type === 'SURVEY_REFUSAL'">
+        <mat-card-subtitle>
+          {{ notification.created_at | date: 'dd/MM/YYYY HH:mm' }}
+          <br /><br />
+          {{
+            'CONTAINERS.home.notifications.types.SURVEY_REFUSAL'
+              | translate: { reference: notification.data.subject.reference }
+          }}
+
+          <br /><br />
+          <q
+            ><em>{{ notification.data.message }}</em></q
+          >
+
+          <br /><br />
+          {{ 'CONTAINERS.home.notifications.please_amend' | translate }}
+        </mat-card-subtitle>
+      </ng-container>
+
+      <!-- <mat-card-subtitle>{{ notification.created_at | date: 'dd/MM/YYYY HH:mm' }}</mat-card-subtitle> -->
+
+      <mat-icon
+        *ngIf="!notification.seen"
+        style="background-color: #0074d9; border-radius: 15px"
+        >radio_button_unchecked</mat-icon
+      >
+    </mat-card-header>
+  </mat-card>
+</div>
