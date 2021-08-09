@@ -49,6 +49,7 @@ import { TestpostEntityService } from '../entity-services/testpost-entity.servic
 import { TrEntityService } from '../entity-services/tr-entity.service';
 import { ResistivityEntityService } from '../entity-services/resistivity-entity.service';
 import { SurveyEntityService } from '../entity-services/survey-entity.service';
+import { ToDoListEntityService } from '../entity-services/to-do-list-entity.service';
 
 import * as fromApp from '../store';
 import * as MapActions from '../store/map/map.actions';
@@ -110,13 +111,13 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   sidebar;
 
-  surveyCount$ = this.store.select(SurveySelector.Count);
-
   notifications$: Observable<Array<Notification>> = this.notificationEntityService.entities$.pipe(
     map(notification => {
       return notification.filter(notification => !notification.seen);
     })
   )
+
+  toDoList$ = this.toDoListEntityService.entities$;
 
   constructor(
     private authService: AuthService,
@@ -130,13 +131,15 @@ export class HomeComponent implements OnInit, AfterViewInit {
     private router: Router,
     private store: Store<fromApp.State>,
     private alertService: AlertService,
-    private notificationEntityService: NotificationEntityService
+    private notificationEntityService: NotificationEntityService,
+    private toDoListEntityService: ToDoListEntityService
   ) {
     this.auth = this.authService.authValue;
   }
 
   ngOnInit(): void {
     this.notificationEntityService.getAll();
+    this.toDoListEntityService.getAll();
   }
 
   ngAfterViewInit(): void {
