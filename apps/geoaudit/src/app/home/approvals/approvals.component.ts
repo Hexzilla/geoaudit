@@ -26,6 +26,7 @@ export class ApprovalsComponent implements OnInit {
     'date_delivery',
     'conducted_by',
     'job',
+    'actions'
   ];
 
   fields = ['ID Reference', 'Name', 'Delivery Date', 'Conducted By', 'Job'];
@@ -81,7 +82,7 @@ export class ApprovalsComponent implements OnInit {
     this.selection.selected.map((survey) => {
       this.surveyEntityService
         .update({
-          ...survey,
+          id: survey.id,
           footer: {
             ...survey?.footer,
             approved: true,
