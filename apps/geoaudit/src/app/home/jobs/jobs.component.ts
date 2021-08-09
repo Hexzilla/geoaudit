@@ -1,5 +1,11 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
@@ -9,10 +15,16 @@ import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { fromEvent } from 'rxjs';
 import Papa from 'papaparse';
+import qs from 'qs';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as moment from 'moment';
-import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  filter,
+  map,
+} from 'rxjs/operators';
 import { DeleteModalComponent } from '../../modals/delete-modal/delete-modal.component';
 import { Job, Statuses } from '../../models';
 
@@ -29,13 +41,15 @@ import {
   ApexFill,
   ApexLegend,
   ApexYAxis,
-  ApexGrid
-} from "ng-apexcharts";
+  ApexGrid,
+} from 'ng-apexcharts';
 
 // Store
 import * as fromApp from '../../store';
 import * as JobActions from '../../store/job/job.actions';
 import { ShareModalComponent } from '../../modals/share-modal/share-modal.component';
+import { JobEntityService } from '../../entity-services/job-entity.service';
+import { AuthService } from '../../services';
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
@@ -55,11 +69,17 @@ export type ChartOptions = {
 @Component({
   selector: 'geoaudit-jobs',
   templateUrl: './jobs.component.html',
-  styleUrls: ['./jobs.component.scss']
+  styleUrls: ['./jobs.component.scss'],
 })
-export class JobsComponent implements OnInit, AfterViewInit {
-
-  displayedColumns: string[] = ['select', 'reference', 'name', 'status', 'job_type', 'actions'];
+export class JobsComponent implements OnInit {
+  displayedColumns: string[] = [
+    'select',
+    'reference',
+    'name',
+    'status',
+    'job_type',
+    'actions',
+  ];
   dataSource: MatTableDataSource<Job>;
   selection = new SelectionModel<Job>(true, []);
 
@@ -79,16 +99,18 @@ export class JobsComponent implements OnInit, AfterViewInit {
   // MatPaginator Output
   pageEvent: PageEvent;
 
-  @ViewChild("chart") chart: ChartComponent;
+  @ViewChild('chart') chart: ChartComponent;
+
+  jobs$ = this.jobEntityService.entities$;
 
   public chartOptions: Partial<ChartOptions>;
 
   constructor(
     public dialog: MatDialog,
     private formBuilder: FormBuilder,
-    private route: ActivatedRoute,
     private router: Router,
-    private store: Store<fromApp.State>
+    private jobEntityService: JobEntityService,
+    private authService: AuthService
   ) {
     this.form = this.formBuilder.group({
       filter: [''],
@@ -99,76 +121,76 @@ export class JobsComponent implements OnInit, AfterViewInit {
         {
           name: Statuses.NOT_STARTED,
           data: [44],
-          color: '#FF0000'
+          color: '#FF0000',
         },
         {
           name: Statuses.ONGOING,
           data: [53],
-          color: "#FFA500"
+          color: '#FFA500',
         },
         {
           name: Statuses.COMPLETED,
           data: [12],
-          color: "#90EE90"
+          color: '#90EE90',
         },
         {
           name: Statuses.REFUSED,
           data: [9],
-          color: "#000000"
-        }
+          color: '#000000',
+        },
       ],
       chart: {
-        type: "bar",
+        type: 'bar',
         height: 100,
         stacked: true,
-        stackType: "100%",
+        stackType: '100%',
 
         dropShadow: {
-          enabled: false
+          enabled: false,
         },
 
         toolbar: {
-          show: false
+          show: false,
         },
 
         sparkline: {
           // enabled: true
-        }
+        },
       },
       plotOptions: {
         bar: {
           horizontal: true,
           // borderRadius: 15
-        }
+        },
       },
       stroke: {
         width: 0,
-        colors: ["#fff"]
+        colors: ['#fff'],
       },
       title: {
         // text: "100% Stacked Bar"
-        text: ""
+        text: '',
       },
       xaxis: {
         // categories: [2008, 2009, 2010, 2011, 2012, 2013, 2014]
         categories: [],
         labels: {
-          show: false
+          show: false,
         },
         axisBorder: {
-          show: false
+          show: false,
         },
         axisTicks: {
-          show: false
-        }
+          show: false,
+        },
       },
       yaxis: {
         labels: {
-          show: false
+          show: false,
         },
         axisBorder: {
-          show: false
-        }
+          show: false,
+        },
       },
       tooltip: {
         // y: {
@@ -177,123 +199,96 @@ export class JobsComponent implements OnInit, AfterViewInit {
         //   }
         // }
         x: {
-          show: false
-        }
-        
+          show: false,
+        },
       },
       fill: {
-        opacity: 1
+        opacity: 1,
       },
       legend: {
         show: false,
-        position: "bottom",
-        horizontalAlign: "left",
-        offsetX: 40
-      }
+        position: 'bottom',
+        horizontalAlign: 'left',
+        offsetX: 40,
+      },
     };
   }
 
   ngOnInit(): void {
-    this.store.dispatch(
-      JobActions.countJobs()
-    );
-    
-    this.store.dispatch(
-      JobActions.fetchJobs({ start: 0, limit: this.pageSize })
-    );
-
-    this.store.select('job').subscribe((state) => {
-      this.length = state.count;
-      this.dataSource = new MatTableDataSource(state.jobs);
-
-      let notStartedJobs = [];
-      let onGoingJobs = [];
-      let completedJobs = [];
-      let refusedJobs = [];
-
-      state.jobs.map(job => {
-        if (job.status.name === Statuses.NOT_STARTED) notStartedJobs.push(job);
-        if (job.status.name === Statuses.ONGOING) onGoingJobs.push(job);
-        if (job.status.name === Statuses.COMPLETED) completedJobs.push(job);
-        if (job.status.name === Statuses.REFUSED) refusedJobs.push(job);
-      });
-
-      this.chartOptions.series = [
-        {
-          name: Statuses.NOT_STARTED,
-          data: [notStartedJobs.length],
-          color: '#FF0000'
-        },
-        {
-          name: Statuses.ONGOING,
-          data: [onGoingJobs.length],
-          color: "#FFA500"
-        },
-        {
-          name: Statuses.COMPLETED,
-          data: [completedJobs.length],
-          color: "#90EE90"
-        },
-        {
-          name: Statuses.REFUSED,
-          data: [refusedJobs.length],
-          color: "#000000"
-        }
-      ]
+    const parameters = qs.stringify({
+      _where: {
+        assignees: this.authService.authValue.user.id,
+      },
+      _sort: 'created_at:DESC',
     });
-  }
 
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+    this.jobEntityService.getWithQuery(parameters).subscribe(
+      (jobs) => {
+        let notStartedJobs = [];
+        let onGoingJobs = [];
+        let completedJobs = [];
+        let refusedJobs = [];
 
-    /**
-     * Uses rxjs to delay and cancel requests made to the backend
-     * when filtering on jobs.
-     *
-     * https://www.freakyjolly.com/angular-rxjs-debounce-time-optimize-search-for-server-response/
-     */
-    //  fromEvent(this.input.nativeElement, 'keyup')
-    this.filterCtrl.valueChanges
-     .pipe(
-      //  Map unrequired here as working with value directly
-      //  map((event: any) => {
-      //    return event.target.value;
-      //  }),
-       filter((res) => res.length >= 0),
-       debounceTime(1000),
-       distinctUntilChanged()
-     )
-     .subscribe((text: string) => {
-       if (this.dataSource.paginator) {
-         this.dataSource.paginator.firstPage();
-       }
+        jobs.map((job) => {
+          if (job?.status?.name === Statuses.NOT_STARTED)
+            notStartedJobs.push(job);
+          if (job?.status?.name === Statuses.ONGOING) onGoingJobs.push(job);
+          if (job?.status?.name === Statuses.COMPLETED) completedJobs.push(job);
+          if (job?.status?.name === Statuses.REFUSED) refusedJobs.push(job);
+        });
 
-       this.store.dispatch(
-         JobActions.fetchJobs({
-           start: 0,
-           limit: this.pageSize,
-           filter: text,
-         })
-       );
-     });
+        this.chartOptions.series = [
+          {
+            name: Statuses.NOT_STARTED,
+            data: [notStartedJobs.length],
+            color: '#FF0000',
+          },
+          {
+            name: Statuses.ONGOING,
+            data: [onGoingJobs.length],
+            color: '#FFA500',
+          },
+          {
+            name: Statuses.COMPLETED,
+            data: [completedJobs.length],
+            color: '#90EE90',
+          },
+          {
+            name: Statuses.REFUSED,
+            data: [refusedJobs.length],
+            color: '#000000',
+          },
+        ];
+      },
+
+      (err) => {}
+    );
+
+    this.jobs$.subscribe(
+      (jobs) => {
+        this.length = jobs.length;
+        this.dataSource = new MatTableDataSource(jobs);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+      }
+    )
   }
 
   calendar(): void {
     const jobs = this.selection.isEmpty()
-    ? this.dataSource.data
-    : this.selection.selected;
+      ? this.dataSource.data
+      : this.selection.selected;
 
-    const jobIds = jobs.map(survey => survey.id);    
+    const jobIds = jobs.map((survey) => survey.id);
 
     // Add the array of values to the query parameter as a JSON string
     const queryParams = {
-      jobs: JSON.stringify(jobIds)
-    }
-    
+      jobs: JSON.stringify(jobIds),
+    };
+
     // Create our 'NaviationExtras' object which is expected by the Angular Router
     const navigationExtras: NavigationExtras = {
-      queryParams
+      queryParams,
     };
 
     this.router.navigate([`/home/events/create`], navigationExtras);
@@ -305,15 +300,15 @@ export class JobsComponent implements OnInit, AfterViewInit {
     // Capture selected job
 
     // Open share modal with data and do the rest there.
-  
+
     const dialogRef = this.dialog.open(ShareModalComponent, {
       data: {
-        job: this.selection.selected[0] 
+        job: this.selection.selected[0],
       },
       width: '50%',
-    })
+    });
 
-    dialogRef.afterClosed().subscribe((result) => {})
+    dialogRef.afterClosed().subscribe((result) => {});
   }
 
   addJob(): void {
@@ -329,10 +324,13 @@ export class JobsComponent implements OnInit, AfterViewInit {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (result)
-        this.store.dispatch(
-          JobActions.deleteJobs({ jobs: this.selection.selected })
+      this.selection.selected.map((job) => {
+        this.jobEntityService.delete(job).subscribe(
+          (res) => {},
+
+          (err) => {}
         );
+      });
     });
   }
 
@@ -361,18 +359,11 @@ export class JobsComponent implements OnInit, AfterViewInit {
       ];
     });
 
-    const fields = [
-      'Job Reference',
-      'Name',
-      'Status',
-      'Type'
-    ];
+    const fields = ['Job Reference', 'Name', 'Status', 'Type'];
 
     autoTable(doc, {
       startY: 35,
-      head: [
-        fields
-      ],
+      head: [fields],
       body,
     });
 
@@ -380,15 +371,15 @@ export class JobsComponent implements OnInit, AfterViewInit {
 
     const csv = Papa.unparse({
       data: body,
-      fields
+      fields,
     });
     const blob = new Blob([csv]);
 
-    var a = window.document.createElement("a");
+    var a = window.document.createElement('a');
     a.href = window.URL.createObjectURL(blob);
     a.download = `${moment().toISOString(true)}-job-download.csv`;
     document.body.appendChild(a);
-    a.click();  // IE: "Access is denied"; see: https://connect.microsoft.com/IE/feedback/details/797361/ie-10-treats-blob-url-as-cross-origin-and-denies-access
+    a.click(); // IE: "Access is denied"; see: https://connect.microsoft.com/IE/feedback/details/797361/ie-10-treats-blob-url-as-cross-origin-and-denies-access
     document.body.removeChild(a);
   }
 
@@ -405,20 +396,10 @@ export class JobsComponent implements OnInit, AfterViewInit {
     return this.router.url === '/home/jobs';
   }
 
-  onPageEvent(event?: PageEvent) {
-    this.store.dispatch(
-      JobActions.fetchJobs({
-        start: event.pageIndex * event.pageSize,
-        limit: event.pageSize,
-      })
-    );
-    return event;
-  }
-
   /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
     const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.data.length;
+    const numRows = this.dataSource?.data.length;
     return numSelected === numRows;
   }
 
@@ -426,7 +407,7 @@ export class JobsComponent implements OnInit, AfterViewInit {
   masterToggle() {
     this.isAllSelected()
       ? this.selection.clear()
-      : this.dataSource.data.forEach((row) => this.selection.select(row));
+      : this.dataSource?.data.forEach((row) => this.selection.select(row));
   }
 
   /** The label for the checkbox on the passed row */
