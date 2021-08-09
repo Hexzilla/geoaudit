@@ -119,7 +119,7 @@
       <ng-container matColumnDef="status">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'CONTAINERS.home.jobs.table.status' | translate }}</th>
         <td mat-cell *matCellDef="let row">
-          <span [ngSwitch]="row.status.name">
+          <span [ngSwitch]="row?.status?.name">
             <mat-icon *ngSwitchCase="'COMPLETED'" [matTooltip]="'STATUSES.COMPLETED' | translate">done</mat-icon>
             <mat-icon *ngSwitchCase="'NOT_STARTED'" [matTooltip]="'STATUSES.NOT_STARTED' | translate">assignment</mat-icon>
             <mat-icon *ngSwitchCase="'ONGOING'" [matTooltip]="'STATUSES.ONGOING' | translate">autorenew</mat-icon>
