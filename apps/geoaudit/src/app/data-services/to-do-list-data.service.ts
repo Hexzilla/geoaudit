@@ -27,6 +27,7 @@ export class ToDoListDataService extends DefaultDataService<Survey> {
                 'job.assignees': this.authService.authValue.user.id,
                 'date_delivery_lte': moment().add(14, 'days').toISOString(),
                 _or: [
+                  { 'status.name': Statuses.REFUSED },
                   { 'status.name': Statuses.NOT_STARTED },
                   { 'status.name': Statuses.ONGOING },
                 ],
