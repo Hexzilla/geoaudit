@@ -1,6 +1,7 @@
 import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import L from 'leaflet';
+import qs from 'qs';
 import 'leaflet-sidebar-v2';
 import 'leaflet.locatecontrol';
 import * as ToGeojson from 'togeojson';
@@ -60,6 +61,7 @@ import { AlertService } from '../services';
 import { NotificationEntityService } from '../entity-services/notification-entity.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { JobEntityService } from '../entity-services/job-entity.service';
 
 @Component({
   selector: 'geoaudit-home',
@@ -117,6 +119,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
     })
   )
 
+  myJobsCount$: Observable<number>;
+
   toDoList$ = this.toDoListEntityService.entities$;
 
   constructor(
@@ -132,7 +136,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
     private store: Store<fromApp.State>,
     private alertService: AlertService,
     private notificationEntityService: NotificationEntityService,
-    private toDoListEntityService: ToDoListEntityService
+    private toDoListEntityService: ToDoListEntityService,
+    private jobEntityService: JobEntityService
   ) {
     this.auth = this.authService.authValue;
   }
@@ -140,6 +145,15 @@ export class HomeComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.notificationEntityService.getAll();
     this.toDoListEntityService.getAll();
+
+    const parameters = qs.stringify({
+      _where: {
+        assignees: this.authService.authValue.user.id,
+        archived: false
+      }
+    });
+
+    this.myJobsCount$ = this.jobEntityService.count(parameters);
   }
 
   ngAfterViewInit(): void {
