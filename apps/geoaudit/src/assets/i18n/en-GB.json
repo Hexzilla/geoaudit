@@ -56,7 +56,7 @@
 					"title": "Approve"
 				},
 				"jobs": {
-					"text": "N surveys to complete",
+					"text": "{{placeholder}} jobs to complete",
 					"title": "My Jobs"
 				},
 				"surveys": {
