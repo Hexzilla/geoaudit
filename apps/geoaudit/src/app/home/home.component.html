@@ -115,7 +115,7 @@
             <ng-container *ngIf="isRoot">
               <geoaudit-card-button title="CONTAINERS.home.buttons.to_do_list.title" text="CONTAINERS.home.buttons.to_do_list.text" [placeholder]="(toDoList$ | async)?.length" icon="list" (onClick)="toDoList()"></geoaudit-card-button>
 
-              <geoaudit-card-button title="CONTAINERS.home.buttons.jobs.title" text="CONTAINERS.home.buttons.to_do_list.text" [placeholder]="myJobsCount$ | async" icon="work" (onClick)="jobs()"></geoaudit-card-button>
+              <geoaudit-card-button title="CONTAINERS.home.buttons.jobs.title" text="CONTAINERS.home.buttons.jobs.text" [placeholder]="myJobsCount$ | async" icon="work" (onClick)="jobs()"></geoaudit-card-button>
   
               <geoaudit-card-button title="CONTAINERS.home.buttons.surveys.title" text="CONTAINERS.home.buttons.to_do_list.text" icon="history" (onClick)="recentSurveys()"></geoaudit-card-button>
   
