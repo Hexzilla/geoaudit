@@ -20,6 +20,6 @@ export interface Testpost {
     footer?: Array<Footer>;
     notes?: Array<Note>;
     status?: Status;
-    condition?: Condition;
+    actions?: TpAction;
     tp_type?: TpType;
 }

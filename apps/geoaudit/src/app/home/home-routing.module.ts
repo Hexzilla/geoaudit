@@ -83,7 +83,6 @@ const routes: Routes = [
         path: 'resistivities',
         loadChildren: resistivitiesModule,
       },
-
       {
         path: 'sites',
         loadChildren: sitesModule,

@@ -4,6 +4,7 @@ import { FaultDetail } from "./fault-detail.model";
 import { Footer } from "./footer.model";
 import { Note } from "./note.model";
 import { Status } from "./status.model";
+import { TpAction } from "./tp-action.model";
 
 export interface Tr {
     id?:number;
@@ -16,6 +17,6 @@ export interface Tr {
     geometry: object;
     notes?: Array<Note>;
     status?: Status;
-    condition?: Condition;
+    actions?: TpAction;
     reference?: string;
 }
