@@ -155,14 +155,13 @@ export class EventComponent implements OnInit {
     if (jobIds) {
       JSON.parse(jobIds).map((jobId) => {
         this.jobEntityService.getByKey(jobId).subscribe((job) => {
+          console.log('job', job)
           this.form.patchValue({
             jobs: [...this.form.value.jobs, job],
           });
         });
       });
     }
-
-    this.autoSave();
   }
 
   createMode() {
@@ -174,7 +173,7 @@ export class EventComponent implements OnInit {
       (calendarEvent) => {
         this.patchForm(calendarEvent);
 
-        this.autoSave();
+        this.autoSave(true);
       },
 
       (err) => {}
