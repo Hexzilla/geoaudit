@@ -347,11 +347,11 @@ export class HomeComponent implements OnInit, AfterViewInit {
           if(!a.footer || !a.footer['approved']) continue;
 
           // if no condition data, skip it
-          if(!a.condition || !a.condition.name) continue;
+          if(!a.actions || !a.actions.status || !a.actions.status.name) continue;
 
           // seperate icons and layers for condition
           var icon_name = "tv";
-          switch(a.condition.name)
+          switch(a.actions.status.name)
           {
             case "WORKING":
               if(flag1 == 0)
@@ -493,11 +493,11 @@ export class HomeComponent implements OnInit, AfterViewInit {
             if(!a.footer.approved) continue;
   
             // if no condition data, skip it
-            if(!a.condition || !a.condition.name) continue;
+            if(!a.actions || !a.actions.status || !a.actions.status.name) continue;
   
             // seperate icons and layers for condition
             var icon_name = "signal_wifi_0_bar";
-            switch(a.condition.name)
+            switch(a.actions.status.name)
             {
               case "WORKING":
                 if(flag1 == 0)
@@ -664,6 +664,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
       );
 
       //fetch survey
+            console.log(this.authService.authValue.user);
       var survey_complete_layer = new L.markerClusterGroup();
       var survey_not_complete_layer = new L.markerClusterGroup();
       var survey_ongoing_layer = new L.markerClusterGroup();
@@ -679,11 +680,12 @@ export class HomeComponent implements OnInit, AfterViewInit {
             // if no geometry data, skip it
             if(!a || !a.geometry) continue;
             // if against Layer rule, skip it
-            if(!a.footer || !a.footer.approved) continue;
+            // if(!a.footer || !a.footer.approved) continue;
   
             // if no status data, skip it
             if(!a.status || !a.status.name) continue;
-  
+            
+            if(!a.job || a.job.id != this.authService.authValue.user.id) continue;
             // seperate icons and layers for condition
             var icon_name = "flag";
             switch(a.status.name)

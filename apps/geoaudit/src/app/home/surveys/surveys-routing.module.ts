@@ -30,9 +30,9 @@ const routes: Routes = [
     path: ':id/notes',
     component: NotesComponent,
   },
-  // {
-  //     path: ':id/drive', component: SearchComponent
-  // },
+  {
+      path: ':id/drive', component: NotesComponent
+  },
 
   // otherwise redirect to home
   { path: '**', redirectTo: '' },
