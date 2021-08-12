@@ -24,6 +24,7 @@
     color="accent"
     aria-label="assignement icon button"
     (click)="calendar()"
+    [disabled]="this.selection.selected.length === 0"
   >
     <mat-icon>event_available</mat-icon>
   </button>
