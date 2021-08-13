@@ -8,6 +8,9 @@ import * as fromApp from '../../../store';
 import * as moment from 'moment';
 import { TestpostEntityService } from '../../../entity-services/testpost-entity.service';
 import { Testpost } from '../../../models';
+import { debounceTime, tap, distinctUntilChanged, takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { AlertService } from '../../../services';
 
 @Component({
   selector: 'geoaudit-testpost',
@@ -44,12 +47,15 @@ export class TestpostComponent implements OnInit, AfterViewInit {
   public disableMinute = false;
   public hideTime = false;
 
+  private unsubscribe = new Subject<void>();
+
   constructor(
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private testpostEntityService: TestpostEntityService,
     private store: Store<fromApp.State>,
-    private router: Router
+    private router: Router,
+    private alertService: AlertService,
   ) { }
 
   ngOnInit(): void {
@@ -134,11 +140,70 @@ export class TestpostComponent implements OnInit, AfterViewInit {
       (testpost) => {
         this.patchForm(testpost);
 
-        // this.autoSave(true);
+        this.autoSave(this.id ? false : true);
       },
 
       (err) => {}
     )
+  }
+
+  autoSave(reload = false) {
+    this.form.valueChanges
+      .pipe(
+        debounceTime(500),
+        tap(() => {
+          this.submit(false);
+        }),
+        distinctUntilChanged(),
+        takeUntil(this.unsubscribe)
+      )
+      .subscribe(() => {
+        /**
+         * Workaround.
+         *
+         * When we navigate to the create a note component. We may have
+         * provided a jobs query parameter. However the jobs selector is not
+         * updated with that and therefore we're reloading such that it
+         * goes into edit mode.
+         */
+        if (reload) {
+          this.router
+            .navigate([`/home/testposts/${this.form.value.id}`])
+            .then(() => {
+              window.location.reload();
+            });
+        }
+      });
+  }
+
+  submit(navigate = true) {
+    // reset alerts on submit
+    this.alertService.clear();
+
+    if (this.form.invalid) {
+      this.alertService.error('Invalid');
+      return;
+    }
+
+    /**
+     * Invoke the backend with a PUT request to update
+     * the job with the form values.
+     *
+     * If create then navigate to the job id.
+     */
+    this.testpostEntityService.update(this.form.value).subscribe(
+      (update) => {
+        this.alertService.info('Saved Changes');
+
+        if (navigate) this.router.navigate([`/home/testposts`]);
+      },
+
+      (err) => {
+        this.alertService.error('Something went wrong');
+      },
+
+      () => {}
+    );
   }
 
   patchForm(testpost: Testpost) {

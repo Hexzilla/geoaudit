@@ -41,7 +41,7 @@
         }}</mat-label>
         <input
           matInput
-          [ngxMatDatetimePicker]="dateAssignedDateTimePicker"
+          [ngxMatDatetimePicker]="dateInstallationDateTimePicker"
           [placeholder]="'CONTAINERS.home.testposts.testpost.date_installation' | translate"
           formControlName="date_installation"
           [min]="minDate"
@@ -51,11 +51,11 @@
 
         <mat-datepicker-toggle
           matSuffix
-          [for]="dateAssignedDateTimePicker"
+          [for]="dateInstallationDateTimePicker"
         ></mat-datepicker-toggle>
 
         <ngx-mat-datetime-picker
-          #dateAssignedDateTimePicker
+          #dateInstallationDateTimePicker
           [showSpinners]="showSpinners"
           [showSeconds]="showSeconds"
           [stepHour]="stepHour"
