@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ThemePalette } from '@angular/material/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import * as MapActions from '../../../store/map/map.actions';
 import * as fromApp from '../../../store';
@@ -334,5 +334,14 @@ export class TestpostComponent implements OnInit, AfterViewInit {
     this.submit(false);
   }
 
+  abriox() {
+    
+    const navigationExtras: NavigationExtras = {
+      queryParams: {
+        testpost: this.form.value.id
+      }
+    }
 
+    this.router.navigate(["/home/abrioxes/create"], navigationExtras)
+  }
 }

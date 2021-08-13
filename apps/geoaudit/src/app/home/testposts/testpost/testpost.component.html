@@ -157,7 +157,16 @@
 
   <!-- Abriox -->
   <mat-step [label]="'CONTAINERS.home.testposts.testpost.abriox' | translate">
-    <form [formGroup]="form"></form>
+    <div fxLayout="row-reverse">
+      <button
+        mat-flat-button
+        fxFlexFill
+        color="primary"
+        (click)="abriox()"
+        >
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
   </mat-step>
 
   <!-- Attachments -->
