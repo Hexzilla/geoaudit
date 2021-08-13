@@ -45,9 +45,13 @@ export class ItemSelectorComponent implements OnInit {
 
   @Input() placeholder: string;
 
-  @Input() items: Array<any> = [];
+  @Input() items?: Array<any> = [];
+
+  @Input() item?;
 
   @Input() attribute: string;
+
+  @Input() multiple? = true;
 
   selectedItems: Array<any> = [];
   allItems: Array<any> = [];
@@ -165,13 +169,18 @@ export class ItemSelectorComponent implements OnInit {
   }
 
   mapItmsAndPushAsSelected() {
-    this.items.map((item) => {
-      if (
-        !this.selectedItems.find((selectedItem) => selectedItem.id === item.id)
-      ) {
-        this.selectedItems.push(item);
-      }
-    });
+
+    if (this.multiple) {
+      this.items.map((item) => {
+        if (
+          !this.selectedItems.find((selectedItem) => selectedItem.id === item.id)
+        ) {
+          this.selectedItems.push(item);
+        }
+      });
+    } else {
+      if (this.item) this.selectedItems.push(this.item);
+    }
   }
 
   // Users (Assignees)
@@ -183,6 +192,7 @@ export class ItemSelectorComponent implements OnInit {
       const filterAllItemsOnValue = this.filter(value);
 
       if (filterAllItemsOnValue.length >= 1) {
+        if (!this.multiple) this.selectedItems.pop(); 
         this.selectedItems.push(filterAllItemsOnValue[0]);
       }
     }
@@ -195,8 +205,8 @@ export class ItemSelectorComponent implements OnInit {
     this.itemsChange.emit(this.selectedItems);
   }
 
-  remove(user: User): void {
-    const exists = this.selectedItems.find((item) => item.id === user.id);
+  remove(event: any): void {
+    const exists = this.selectedItems.find((item) => item.id === event.id);
     if (exists) {
       this.selectedItems = this.selectedItems.filter(
         (item) => item.id !== exists.id
@@ -207,6 +217,7 @@ export class ItemSelectorComponent implements OnInit {
   }
 
   onSelected(event: MatAutocompleteSelectedEvent) {
+    if (!this.multiple) this.selectedItems.pop(); 
     this.selectedItems.push(event.option.value);
     this.itemInput.nativeElement.value = '';
     this.itemControl.setValue(null);

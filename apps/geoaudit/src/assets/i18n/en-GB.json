@@ -13,6 +13,18 @@
 			"geoaudit": "Geoaudit"
 		},
 		"home": {
+			"abrioxes": {
+				"abriox": {
+					"title": "Abriox {{placeholder}}",
+					"details": "Details",
+					"attachments": "Attachments",
+					"notes": "Notes",
+					"new_testpost": "New testpost",
+					"testpost": "Testpost",
+					"tr": "Tr",
+					"new_tr": "New tr"
+				}
+			},
 			"approval": {
 				"title": "Approval List"
 			},

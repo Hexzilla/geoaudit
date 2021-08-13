@@ -46,6 +46,7 @@ export class AbrioxComponent implements OnInit {
 
   initForm() {
     this.form = this.formBuilder.group({
+      name: null,
       testpost: null,
       tr: null,
       serial_number: null,
@@ -87,6 +88,7 @@ export class AbrioxComponent implements OnInit {
     const {
       id,
 
+      name,
       testpost,
       tr,
       serial_number,
@@ -99,6 +101,7 @@ export class AbrioxComponent implements OnInit {
     this.form.patchValue({
       id,
 
+      name,
       testpost,
       tr,
       serial_number,
@@ -118,7 +121,6 @@ export class AbrioxComponent implements OnInit {
 
     if (testpostId) {
       this.testpostEntityService.getByKey(testpostId).subscribe(item => {
-        console.log('item', item)
         this.form.patchValue({
           testpost: item
         })
@@ -185,5 +187,11 @@ export class AbrioxComponent implements OnInit {
 
       () => {}
     );
+  }
+
+  onItemsChange(items: Array<any>, attribute: string): void {
+    this.form.patchValue({
+      [attribute]: items.length > 0 ? items[0].id : null,
+    });
   }
 }

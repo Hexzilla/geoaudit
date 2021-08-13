@@ -1,1 +1,36 @@
-<p>abriox works!</p>
+<geoaudit-sidebar-header
+  title="CONTAINERS.home.abrioxes.abriox.title"
+  [placeholder]="form.value.name"
+></geoaudit-sidebar-header>
+
+<mat-horizontal-stepper>
+    <mat-step [label]="'CONTAINERS.home.abrioxes.abriox.details' | translate">
+        <geoaudit-item-selector
+        selector="tp"
+        label="CONTAINERS.home.abrioxes.abriox.testpost"
+        placeholder="CONTAINERS.home.abrioxes.abriox.new_testpost"
+        [item]="form.value.testpost"
+        (itemsChange)="onItemsChange($event, 'testpost')"
+        attribute="name"
+        [multiple]="false"
+      ></geoaudit-item-selector>
+
+      <geoaudit-item-selector
+      selector="tr"
+      label="CONTAINERS.home.abrioxes.abriox.tr"
+      placeholder="CONTAINERS.home.abrioxes.abriox.new_tr"
+      [item]="form.value.tr"
+      (itemsChange)="onItemsChange($event, 'tr')"
+      attribute="name"
+      [multiple]="false"
+    ></geoaudit-item-selector>
+    </mat-step>
+
+    <mat-step [label]="'CONTAINERS.home.abrioxes.abriox.attachments' | translate">
+
+    </mat-step>
+
+    <mat-step [label]="'CONTAINERS.home.abrioxes.abriox.notes' | translate">
+
+    </mat-step>
+</mat-horizontal-stepper>
