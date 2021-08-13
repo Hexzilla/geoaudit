@@ -199,7 +199,7 @@
 			},
 			"testposts": {
 				"testpost": {
-					"title": "Testpost",
+					"title": "Testpost {{placeholder}}",
 					"details": "Details",
 					"attachments": "Attachments",
 					"actions": "Actions",
@@ -209,7 +209,8 @@
 					"date_installation": "Date Installation",
 					"manufacture": "Manufacture",
 					"model": "Model",
-					"serial_number": "Serial Number"
+					"serial_number": "Serial Number",
+					"abriox": "Abriox"
 				}
 			}
 		},

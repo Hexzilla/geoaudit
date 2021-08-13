@@ -1,5 +1,6 @@
 <geoaudit-sidebar-header
   title="CONTAINERS.home.testposts.testpost.title"
+  [placeholder]="form?.value?.reference"
 ></geoaudit-sidebar-header>
 
 <mat-horizontal-stepper>
@@ -42,7 +43,9 @@
         <input
           matInput
           [ngxMatDatetimePicker]="dateInstallationDateTimePicker"
-          [placeholder]="'CONTAINERS.home.testposts.testpost.date_installation' | translate"
+          [placeholder]="
+            'CONTAINERS.home.testposts.testpost.date_installation' | translate
+          "
           formControlName="date_installation"
           [min]="minDate"
           [max]="maxDate"
@@ -77,7 +80,9 @@
         }}</mat-label>
         <input
           matInput
-          [placeholder]="'CONTAINERS.home.testposts.testpost.manufacture' | translate"
+          [placeholder]="
+            'CONTAINERS.home.testposts.testpost.manufacture' | translate
+          "
           formControlName="manufacture"
           class="form-control"
         />
@@ -103,7 +108,9 @@
         }}</mat-label>
         <input
           matInput
-          [placeholder]="'CONTAINERS.home.testposts.testpost.serial_number' | translate"
+          [placeholder]="
+            'CONTAINERS.home.testposts.testpost.serial_number' | translate
+          "
           formControlName="serial_number"
           class="form-control"
         />
@@ -145,14 +152,33 @@
           </button>
         </div>
       </div>
-
     </form>
+  </mat-step>
+
+  <!-- Abriox -->
+  <mat-step [label]="'CONTAINERS.home.testposts.testpost.abriox' | translate">
+    <form [formGroup]="form"></form>
   </mat-step>
 
   <!-- Attachments -->
   <mat-step
     [label]="'CONTAINERS.home.testposts.testpost.attachments' | translate"
   >
+    <geoaudit-file-upload
+      label="CONTAINERS.home.jobs.job.attachments.images"
+      (preview)="onPreview($event)"
+      (upload)="onImageUpload($event)"
+      fileType="IMAGE"
+      [multiple]="true"
+    ></geoaudit-file-upload>
+
+    <geoaudit-file-upload
+      label="CONTAINERS.home.jobs.job.attachments.documents"
+      (preview)="onPreview($event)"
+      (upload)="onDocumentUpload($event)"
+      fileType="DOCUMENT"
+      [multiple]="true"
+    ></geoaudit-file-upload>
   </mat-step>
 
   <!-- Actions -->

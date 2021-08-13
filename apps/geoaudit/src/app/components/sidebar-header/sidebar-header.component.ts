@@ -7,7 +7,9 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class SidebarHeaderComponent implements OnInit {
 
-  @Input() title;
+  @Input() title: string;
+
+  @Input() placeholder?: string;
 
   constructor() { }
 

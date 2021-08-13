@@ -1,6 +1,7 @@
 <div fxLayout="row" fxLayoutAlign="space-between">
     <div fxLayout="column">
-        <h2>{{ title | translate }}</h2>
+        <h2 *ngIf="!placeholder">{{ title | translate }}</h2>
+        <h2 *ngIf="placeholder">{{ title | translate: { placeholder: placeholder } }}</h2>
     </div>
     <ng-content></ng-content>
 </div>

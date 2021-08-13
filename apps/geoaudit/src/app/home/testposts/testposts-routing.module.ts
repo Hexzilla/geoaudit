@@ -30,6 +30,10 @@ const routes: Routes = [
     // },
 
     {
+        path: 'create', component: TestpostComponent
+    },
+
+    {
         path: ':id', component: TestpostComponent
     },
 
