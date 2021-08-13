@@ -196,6 +196,21 @@
 				"status": "Status",
 				"new_job": "New Job",
 				"job": "Job"
+			},
+			"testposts": {
+				"testpost": {
+					"title": "Testpost",
+					"details": "Details",
+					"attachments": "Attachments",
+					"actions": "Actions",
+					"notes": "Notes",
+					"reference": "Reference",
+					"name": "Name",
+					"date_installation": "Date Installation",
+					"manufacture": "Manufacture",
+					"model": "Model",
+					"serial_number": "Serial Number"
+				}
 			}
 		},
 		"survey": {

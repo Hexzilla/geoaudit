@@ -8,9 +8,12 @@ import { ErrorInterceptor, JwtInterceptor } from '../../helpers';
 // Declarations
 import { SharedModule } from '../shared.module';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { TestpostComponent } from './testpost/testpost.component';
 
 @NgModule({
   declarations: [
+  
+    TestpostComponent
   ],
   imports: [
     TestpostsRoutingModule,
