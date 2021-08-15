@@ -1,7 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ThemePalette } from '@angular/material/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
+import { environment } from 'apps/geoaudit/src/environments/environment';
+import { IAlbum, Lightbox } from 'ngx-lightbox';
 import { Subject } from 'rxjs';
 import {
   debounceTime,
@@ -9,10 +12,12 @@ import {
   distinctUntilChanged,
   takeUntil,
 } from 'rxjs/operators';
+import { FileTypes } from '../../../components/file-upload/file-upload.component';
 import { AbrioxEntityService } from '../../../entity-services/abriox-entity.service';
 import { TestpostEntityService } from '../../../entity-services/testpost-entity.service';
 import { TrEntityService } from '../../../entity-services/tr-entity.service';
-import { Abriox } from '../../../models';
+import { AttachmentModalComponent } from '../../../modals/attachment-modal/attachment-modal.component';
+import { Abriox, Image } from '../../../models';
 import { AlertService, AuthService, UploadService } from '../../../services';
 
 @Component({
@@ -53,7 +58,9 @@ export class AbrioxComponent implements OnInit {
     private alertService: AlertService,
     private router: Router,
     private uploadService: UploadService,
-    private authService: AuthService
+    private authService: AuthService,
+    private _lightbox: Lightbox,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -232,6 +239,69 @@ export class AbrioxComponent implements OnInit {
 
       () => {}
     );
+  }
+
+  onPreview(fileType: FileTypes): void {
+    const { images, documents } = this.form.value.footer;
+
+    switch (fileType) {
+      case FileTypes.IMAGE:
+        let _album: Array<IAlbum> = [];
+
+        images.map((image: Image) => {
+          const album = {
+            src: `${environment.API_URL}${image.url}`,
+            caption: image.name,
+            thumb: `${environment.API_URL}${image.formats.thumbnail.url}`,
+          };
+
+          _album.push(album);
+        });
+
+        if (_album.length >= 1) this._lightbox.open(_album, 0);
+        break;
+
+      case FileTypes.DOCUMENT:
+        const dialogRef = this.dialog.open(AttachmentModalComponent, {
+          data: {
+            fileType,
+            documents,
+          },
+        });
+
+        dialogRef.afterClosed().subscribe((result) => {});
+        break;
+    }
+  }
+
+  onImageUpload(event): void {
+    const { images } = this.form.value.footer;
+
+    // this.images.push(event)
+
+    // May be multiple so just preserving the previous object on the array of images
+
+    this.form.patchValue({
+      footer: {
+        ...this.form.value.footer,
+        images: [...images, event],
+      },
+    });
+
+    this.submit(false);
+  }
+
+  onDocumentUpload(event): void {
+    const { documents } = this.form.value.footer;
+
+    this.form.patchValue({
+      footer: {
+        ...this.form.value.footer,
+        documents: [...documents, event],
+      },
+    });
+
+    this.submit(false);
   }
 
   onItemChange(item: any, attribute: string): void {

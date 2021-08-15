@@ -126,8 +126,24 @@
   </mat-step>
 
   <mat-step [label]="'CONTAINERS.home.abrioxes.abriox.attachments' | translate">
+    <geoaudit-file-upload
+      label="CONTAINERS.home.jobs.job.attachments.images"
+      (preview)="onPreview($event)"
+      (upload)="onImageUpload($event)"
+      fileType="IMAGE"
+      [multiple]="true"
+    ></geoaudit-file-upload>
+
+    <geoaudit-file-upload
+      label="CONTAINERS.home.jobs.job.attachments.documents"
+      (preview)="onPreview($event)"
+      (upload)="onDocumentUpload($event)"
+      fileType="DOCUMENT"
+      [multiple]="true"
+    ></geoaudit-file-upload>
   </mat-step>
 
   <mat-step [label]="'CONTAINERS.home.abrioxes.abriox.notes' | translate">
+    <geoaudit-notes></geoaudit-notes>
   </mat-step>
 </mat-horizontal-stepper>
