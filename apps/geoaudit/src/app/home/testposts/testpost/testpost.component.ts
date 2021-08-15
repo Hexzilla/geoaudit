@@ -7,7 +7,7 @@ import * as MapActions from '../../../store/map/map.actions';
 import * as fromApp from '../../../store';
 import * as moment from 'moment';
 import { TestpostEntityService } from '../../../entity-services/testpost-entity.service';
-import { Image, Testpost } from '../../../models';
+import { Abriox, Image, Testpost } from '../../../models';
 import { debounceTime, tap, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { AlertService } from '../../../services';
@@ -55,6 +55,8 @@ export class TestpostComponent implements OnInit, AfterViewInit {
   private unsubscribe = new Subject<void>();
 
   API_URL: string;
+
+  abriox: Abriox;
 
   constructor(
     private route: ActivatedRoute,
@@ -124,8 +126,6 @@ export class TestpostComponent implements OnInit, AfterViewInit {
 
       geometry: [null],
 
-      abrioxes: [[]],
-
       footer: [{
         images: [],
         documents: []
@@ -155,6 +155,8 @@ export class TestpostComponent implements OnInit, AfterViewInit {
     this.testpostEntityService.getByKey(id).subscribe(
       (testpost) => {
         this.patchForm(testpost);
+
+        this.abriox = testpost.abriox;
 
         this.autoSave(this.id ? false : true);
       },
@@ -334,7 +336,7 @@ export class TestpostComponent implements OnInit, AfterViewInit {
     this.submit(false);
   }
 
-  abriox() {
+  addAbriox() {
     
     const navigationExtras: NavigationExtras = {
       queryParams: {

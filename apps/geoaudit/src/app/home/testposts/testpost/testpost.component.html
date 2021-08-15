@@ -157,12 +157,32 @@
 
   <!-- Abriox -->
   <mat-step [label]="'CONTAINERS.home.testposts.testpost.abriox' | translate">
+    <mat-card *ngIf="abriox" style="cursor: pointer; margin-top: 20px" fxLayout="row" fxLayoutAlign="space-between" [routerLink]="'/home/abrioxes/' + abriox.id">
+    <!-- <mat-card-header> -->
+      <div fxLayout="column">
+        <p>{{ abriox.date_installation | date: 'HH:mm dd/MM/yyyy' }}</p>
+        <p *ngIf="abriox.name">
+          <em>{{ abriox.name | slice: 0:100 }} </em
+          ><span *ngIf="abriox.name?.length >= 10">...</span>
+        </p>
+  
+        <div fxLayout="row"></div>
+      </div>
+  
+      <button
+        mat-icon-button
+        color="accent"
+        aria-label="Example icon button with a plus one icon"
+      >
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </mat-card>
     <div fxLayout="row-reverse">
       <button
         mat-flat-button
         fxFlexFill
         color="primary"
-        (click)="abriox()"
+        (click)="addAbriox()"
         >
         <mat-icon>add</mat-icon>
       </button>
