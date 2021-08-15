@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ItemSelectorComponent } from './item-selector.component';
+import { SingleItemSelectorComponent } from './single-item-selector.component';
 
-describe('ItemSelectorComponent', () => {
-  let component: ItemSelectorComponent;
-  let fixture: ComponentFixture<ItemSelectorComponent>;
+describe('SingleItemSelectorComponent', () => {
+  let component: SingleItemSelectorComponent;
+  let fixture: ComponentFixture<SingleItemSelectorComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ItemSelectorComponent ]
+      declarations: [ SingleItemSelectorComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ItemSelectorComponent);
+    fixture = TestBed.createComponent(SingleItemSelectorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

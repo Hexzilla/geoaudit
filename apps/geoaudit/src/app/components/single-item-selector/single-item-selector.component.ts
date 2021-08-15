@@ -1,19 +1,10 @@
-import { ENTER, COMMA } from '@angular/cdk/keycodes';
-import {
-  Component,
-  ElementRef,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
-  ViewChild,
-} from '@angular/core';
+import { Component, EventEmitter, ElementRef, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { MatChipInputEvent } from '@angular/material/chips';
 import { fromEvent } from 'rxjs';
 import { map, filter, distinctUntilChanged } from 'rxjs/operators';
 import { AbrioxEntityService } from '../../entity-services/abriox-entity.service';
+import { ConditionEntityService } from '../../entity-services/condition-entity.service';
 import { JobEntityService } from '../../entity-services/job-entity.service';
 import { ResistivityEntityService } from '../../entity-services/resistivity-entity.service';
 import { SiteEntityService } from '../../entity-services/site-entity.service';
@@ -21,10 +12,10 @@ import { SurveyEntityService } from '../../entity-services/survey-entity.service
 import { TestpostEntityService } from '../../entity-services/testpost-entity.service';
 import { TrEntityService } from '../../entity-services/tr-entity.service';
 import { UserEntityService } from '../../entity-services/user-entity.service';
-import { Abriox, User } from '../../models';
 
 type Selectors =
   | 'abriox'
+  | 'condition'
   | 'job'
   | 'resistivity'
   | 'site'
@@ -34,38 +25,34 @@ type Selectors =
   | 'user';
 
 @Component({
-  selector: 'geoaudit-item-selector',
-  templateUrl: './item-selector.component.html',
-  styleUrls: ['./item-selector.component.scss'],
+  selector: 'geoaudit-single-item-selector',
+  templateUrl: './single-item-selector.component.html',
+  styleUrls: ['./single-item-selector.component.scss']
 })
-export class ItemSelectorComponent implements OnInit {
+export class SingleItemSelectorComponent implements OnInit {
+
   @Input() selector: Selectors;
 
   @Input() label: string;
 
   @Input() placeholder: string;
 
-  @Input() items?: Array<any> = [];
-
-  @Input() item?;
+  @Input() item;
 
   @Input() attribute: string;
 
-  @Input() multiple? = true;
-
-  selectedItems: Array<any> = [];
-  allItems: Array<any> = [];
   itemControl = new FormControl();
-  separatorKeysCodes: number[] = [ENTER, COMMA];
-  filteredItems: Array<Abriox> = [];
+
+  allItems: Array<any> = [];
+
+  filteredItems: Array<any> = [];
+
   @ViewChild('itemInput') itemInput: ElementRef<HTMLInputElement>;
-  selectable = true;
-  removable = true;
 
-  @Output() itemsChange: EventEmitter<Array<any>> = new EventEmitter();
-
+  @Output() itemChange: EventEmitter<any> = new EventEmitter();
   constructor(
     private abrioxEntityService: AbrioxEntityService,
+    private conditionEntityService: ConditionEntityService,
     private userEntityService: UserEntityService,
     private jobEntityService: JobEntityService,
     private resistivityEntityService: ResistivityEntityService,
@@ -73,7 +60,7 @@ export class ItemSelectorComponent implements OnInit {
     private surveyEntityService: SurveyEntityService,
     private testpostEntityService: TestpostEntityService,
     private trEntityService: TrEntityService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     switch (this.selector) {
@@ -81,17 +68,27 @@ export class ItemSelectorComponent implements OnInit {
         this.abrioxEntityService.getAll().subscribe(
           (abrioxes) => {
             this.allItems = abrioxes;
-            this.mapItmsAndPushAsSelected()
+            this.setSelectedItem()
           },
           (err) => {}
         );
         break;
 
+      case 'condition':
+        this.conditionEntityService.getAll().subscribe(
+          (conditions) => {
+            this.allItems = conditions;
+            this.setSelectedItem()
+          },
+          (err) => {}
+        );
+      break;
+
       case 'job':
         this.jobEntityService.getAll().subscribe(
           (jobs) => {
             this.allItems = jobs;
-            this.mapItmsAndPushAsSelected()
+            this.setSelectedItem()
           }
         )
         break;
@@ -100,7 +97,7 @@ export class ItemSelectorComponent implements OnInit {
         this.resistivityEntityService.getAll().subscribe(
           (resistivities) => {
             this.allItems = resistivities;
-            this.mapItmsAndPushAsSelected()
+            this.setSelectedItem()
           }
         )
         break;
@@ -109,7 +106,7 @@ export class ItemSelectorComponent implements OnInit {
         this.siteEntityService.getAll().subscribe(
           (sites) => {
             this.allItems = sites;
-            this.mapItmsAndPushAsSelected()
+            this.setSelectedItem()
           }
         )
         break;
@@ -118,7 +115,7 @@ export class ItemSelectorComponent implements OnInit {
         this.surveyEntityService.getAll().subscribe(
           (surveys) => {
             this.allItems = surveys;
-            this.mapItmsAndPushAsSelected()
+            this.setSelectedItem()
           }
         )
         break;
@@ -127,7 +124,7 @@ export class ItemSelectorComponent implements OnInit {
         this.testpostEntityService.getAll().subscribe(
           (testposts) => {
             this.allItems = testposts;
-            this.mapItmsAndPushAsSelected()
+            this.setSelectedItem()
           }
         )
         break;
@@ -136,7 +133,7 @@ export class ItemSelectorComponent implements OnInit {
         this.trEntityService.getAll().subscribe(
           (trs) => {
             this.allItems = trs;
-            this.mapItmsAndPushAsSelected()
+            this.setSelectedItem()
           }
         )
         break;
@@ -145,7 +142,7 @@ export class ItemSelectorComponent implements OnInit {
         this.userEntityService.getAll().subscribe(
           (users) => {
             this.allItems = users;
-            this.mapItmsAndPushAsSelected()
+            this.setSelectedItem()
           },
           (err) => {}
         );
@@ -167,62 +164,18 @@ export class ItemSelectorComponent implements OnInit {
         this.filteredItems = this.filter(text);
       });
   }
-
-  mapItmsAndPushAsSelected() {
-
-    if (this.multiple) {
-      this.items.map((item) => {
-        if (
-          !this.selectedItems.find((selectedItem) => selectedItem.id === item.id)
-        ) {
-          this.selectedItems.push(item);
-        }
-      });
-    } else {
-      if (this.item) this.selectedItems.push(this.item);
+  
+  setSelectedItem() {
+    if (this.item) {
+      const find = this.allItems.find(item => item.id === this.item);
+      console.log('find', find, this.item)
+      if (find) this.itemControl.setValue(find[this.attribute]);
     }
-  }
-
-  // Users (Assignees)
-  add(event: MatChipInputEvent) {
-    const value = (event.value || '').trim();
-
-    // Add our user
-    if (value) {
-      const filterAllItemsOnValue = this.filter(value);
-
-      if (filterAllItemsOnValue.length >= 1) {
-        if (!this.multiple) this.selectedItems.pop(); 
-        this.selectedItems.push(filterAllItemsOnValue[0]);
-      }
-    }
-
-    // Clear the input value
-    this.itemInput.nativeElement.value = '';
-
-    this.itemControl.setValue(null);
-
-    this.itemsChange.emit(this.selectedItems);
-  }
-
-  remove(event: any): void {
-    const exists = this.selectedItems.find((item) => item.id === event.id);
-    if (exists) {
-      this.selectedItems = this.selectedItems.filter(
-        (item) => item.id !== exists.id
-      );
-    }
-
-    this.itemsChange.emit(this.selectedItems);
   }
 
   onSelected(event: MatAutocompleteSelectedEvent) {
-    if (!this.multiple) this.selectedItems.pop(); 
-    this.selectedItems.push(event.option.value);
-    this.itemInput.nativeElement.value = '';
-    this.itemControl.setValue(null);
-
-    this.itemsChange.emit(this.selectedItems);
+    this.itemControl.setValue(event.option.value[this.attribute]);
+    this.itemChange.emit(event.option.value);
   }
 
   filter(value: string): Array<any> {

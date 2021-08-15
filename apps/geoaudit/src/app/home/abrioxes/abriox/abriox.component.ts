@@ -1,23 +1,46 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { ThemePalette } from '@angular/material/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
-import { debounceTime, tap, distinctUntilChanged, takeUntil } from 'rxjs/operators';
+import {
+  debounceTime,
+  tap,
+  distinctUntilChanged,
+  takeUntil,
+} from 'rxjs/operators';
 import { AbrioxEntityService } from '../../../entity-services/abriox-entity.service';
 import { TestpostEntityService } from '../../../entity-services/testpost-entity.service';
+import { TrEntityService } from '../../../entity-services/tr-entity.service';
 import { Abriox } from '../../../models';
 import { AlertService, AuthService, UploadService } from '../../../services';
 
 @Component({
   selector: 'geoaudit-abriox',
   templateUrl: './abriox.component.html',
-  styleUrls: ['./abriox.component.scss']
+  styleUrls: ['./abriox.component.scss'],
 })
 export class AbrioxComponent implements OnInit {
-
   id: string;
 
   form: FormGroup;
+
+  color: ThemePalette = 'primary';
+
+  @ViewChild('dateInstallationDateTimePicker') dateInstallationDateTimePicker: any;
+
+  public disabled = false;
+  public showSpinners = true;
+  public showSeconds = false;
+  public touchUi = false;
+  public enableMeridian = false;
+  public minDate: Date;
+  public maxDate: Date;
+  public stepHour = 1;
+  public stepMinute = 1;
+  public stepSecond = 1;
+  public disableMinute = false;
+  public hideTime = false;
 
   private unsubscribe = new Subject<void>();
 
@@ -25,12 +48,13 @@ export class AbrioxComponent implements OnInit {
     private route: ActivatedRoute,
     private abrioxEntityService: AbrioxEntityService,
     private testpostEntityService: TestpostEntityService,
+    private trEntityService: TrEntityService,
     private formBuilder: FormBuilder,
     private alertService: AlertService,
     private router: Router,
     private uploadService: UploadService,
     private authService: AuthService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id');
@@ -47,26 +71,30 @@ export class AbrioxComponent implements OnInit {
   initForm() {
     this.form = this.formBuilder.group({
       name: null,
+
       testpost: null,
       tr: null,
+
       serial_number: null,
       telephone: null,
       date_installation: null,
       condition: null,
 
-      footer: [{
-        images: [],
-        documents: []
-      }],
+      footer: [
+        {
+          images: [],
+          documents: [],
+        },
+      ],
 
-      id: null
-    })
+      id: null,
+    });
   }
 
   getAbrioxAndPatchForm(id: string) {
     this.abrioxEntityService.getByKey(id).subscribe(
-      (note) => {
-        this.patchForm(note);
+      (abriox) => {
+        this.patchForm(abriox);
       },
 
       (err) => {}
@@ -76,12 +104,12 @@ export class AbrioxComponent implements OnInit {
   createMode() {
     this.abrioxEntityService.add(this.form.value).subscribe(
       (abriox) => {
-        console.log('t', abriox)
+        console.log('t', abriox);
         this.patchForm(abriox);
       },
 
       (err) => {}
-    )
+    );
   }
 
   patchForm(abriox: Abriox) {
@@ -89,8 +117,10 @@ export class AbrioxComponent implements OnInit {
       id,
 
       name,
+
       testpost,
       tr,
+
       serial_number,
       telephone,
       date_installation,
@@ -102,29 +132,41 @@ export class AbrioxComponent implements OnInit {
       id,
 
       name,
-      testpost,
-      tr,
+
+      testpost: testpost?.id,
+      tr: tr?.id,
+
       serial_number,
       telephone,
       date_installation,
-      condition,
-      
+      condition: condition?.id,
+
       footer: footer
-      ? footer
-      : {
-          images: [],
-          documents: [],
-        },
-    })
+        ? footer
+        : {
+            images: [],
+            documents: [],
+          },
+    });
 
     const testpostId = this.route.snapshot.queryParamMap.get('testpost');
 
     if (testpostId) {
-      this.testpostEntityService.getByKey(testpostId).subscribe(item => {
+      this.testpostEntityService.getByKey(testpostId).subscribe((item) => {
         this.form.patchValue({
-          testpost: item
-        })
-      })
+          testpost: item,
+        });
+      });
+    }
+
+    const trId = this.route.snapshot.queryParamMap.get('tr');
+
+    if (trId) {
+      this.trEntityService.getByKey(trId).subscribe((item) => {
+        this.form.patchValue({
+          tr: item,
+        });
+      });
     }
 
     this.autoSave(this.id ? false : true);
@@ -189,9 +231,9 @@ export class AbrioxComponent implements OnInit {
     );
   }
 
-  onItemsChange(items: Array<any>, attribute: string): void {
+  onItemChange(item: any, attribute: string): void {
     this.form.patchValue({
-      [attribute]: items.length > 0 ? items[0].id : null,
+      [attribute]: item ? item.id : null
     });
   }
 }

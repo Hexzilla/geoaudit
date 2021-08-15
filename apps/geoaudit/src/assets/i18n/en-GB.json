@@ -22,7 +22,13 @@
 					"new_testpost": "New testpost",
 					"testpost": "Testpost",
 					"tr": "Tr",
-					"new_tr": "New tr"
+					"new_tr": "New tr",
+					"name": "Name",
+					"serial_number": "Serial Number",
+					"telephone": "Telephone",
+					"date_installation":"Date Installation",
+					"condition": "Condition",
+					"new_condition": "New condition"
 				}
 			},
 			"approval": {

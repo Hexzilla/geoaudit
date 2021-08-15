@@ -39,7 +39,7 @@
         (usersChange)="onUsersChange($event)"
       ></geoaudit-user-selector> -->
 
-      <geoaudit-item-selector
+      <geoaudit-multi-item-selector
       *ngIf="form.value.assignees"
       selector="user"
       label="CONTAINERS.home.notes.assignees"
@@ -47,7 +47,7 @@
       [items]="form.value.assignees"
       (itemsChange)="onItemsChange($event, 'assignees')"
       attribute="username"
-    ></geoaudit-item-selector>
+    ></geoaudit-multi-item-selector>
 
       <!-- Description -->
       <mat-form-field appearance="outline">
@@ -80,7 +80,7 @@
 
   <!-- Link note to other items i.e. abriox, job, etc -->
   <mat-step>
-    <geoaudit-item-selector
+    <geoaudit-multi-item-selector
       *ngIf="form.value.abrioxes"
       selector="abriox"
       label="CONTAINERS.home.notes.abrioxes"
@@ -88,9 +88,9 @@
       [items]="form.value.abrioxes"
       (itemsChange)="onItemsChange($event, 'abrioxes')"
       attribute="name"
-    ></geoaudit-item-selector>
+    ></geoaudit-multi-item-selector>
 
-    <geoaudit-item-selector
+    <geoaudit-multi-item-selector
       *ngIf="form.value.jobs"
       selector="job"
       label="CONTAINERS.home.notes.jobs"
@@ -98,9 +98,9 @@
       [items]="form.value.jobs"
       (itemsChange)="onItemsChange($event, 'jobs')"
       attribute="name"
-    ></geoaudit-item-selector>
+    ></geoaudit-multi-item-selector>
 
-    <geoaudit-item-selector
+    <geoaudit-multi-item-selector
       *ngIf="form.value.resistivities"
       selector="resistivity"
       label="CONTAINERS.home.notes.resistivities"
@@ -108,9 +108,9 @@
       [items]="form.value.resistivities"
       (itemsChange)="onItemsChange($event, 'resistivities')"
       attribute="reference"
-    ></geoaudit-item-selector>
+    ></geoaudit-multi-item-selector>
 
-    <geoaudit-item-selector
+    <geoaudit-multi-item-selector
       *ngIf="form.value.sites"
       selector="site"
       label="CONTAINERS.home.notes.sites"
@@ -118,9 +118,9 @@
       [items]="form.value.sites"
       (itemsChange)="onItemsChange($event, 'sites')"
       attribute="name"
-    ></geoaudit-item-selector>
+    ></geoaudit-multi-item-selector>
 
-    <geoaudit-item-selector
+    <geoaudit-multi-item-selector
       *ngIf="form.value.surveys"
       selector="survey"
       label="CONTAINERS.home.notes.surveys"
@@ -128,9 +128,9 @@
       [items]="form.value.surveys"
       (itemsChange)="onItemsChange($event, 'surveys')"
       attribute="name"
-    ></geoaudit-item-selector>
+    ></geoaudit-multi-item-selector>
 
-    <geoaudit-item-selector
+    <geoaudit-multi-item-selector
       *ngIf="form.value.testposts"
       selector="testpost"
       label="CONTAINERS.home.notes.testposts"
@@ -138,9 +138,9 @@
       [items]="form.value.testposts"
       (itemsChange)="onItemsChange($event, 'testposts')"
       attribute="name"
-    ></geoaudit-item-selector>
+    ></geoaudit-multi-item-selector>
 
-    <geoaudit-item-selector
+    <geoaudit-multi-item-selector
       *ngIf="form.value.trs"
       selector="tr"
       label="CONTAINERS.home.notes.trs"
@@ -148,6 +148,6 @@
       [items]="form.value.trs"
       (itemsChange)="onItemsChange($event, 'trs')"
       attribute="name"
-    ></geoaudit-item-selector>
+    ></geoaudit-multi-item-selector>
   </mat-step>
 </mat-horizontal-stepper>
