@@ -95,7 +95,7 @@
       <textarea matInput formControlName="notes"></textarea>
     </mat-form-field>
 
-    <geoaudit-item-selector
+    <geoaudit-multi-item-selector
       *ngIf="form.value.surveys"
       selector="survey"
       label="CONTAINERS.home.notes.surveys"
@@ -103,9 +103,9 @@
       [items]="form.value.surveys"
       (itemsChange)="onItemsChange($event, 'surveys')"
       attribute="name"
-    ></geoaudit-item-selector>
+    ></geoaudit-multi-item-selector>
     
-    <geoaudit-item-selector
+    <geoaudit-multi-item-selector
       *ngIf="form.value.jobs"
       selector="job"
       label="CONTAINERS.home.notes.jobs"
@@ -113,7 +113,7 @@
       [items]="form.value.jobs"
       (itemsChange)="onItemsChange($event, 'jobs')"
       attribute="name"
-    ></geoaudit-item-selector>
+    ></geoaudit-multi-item-selector>
 
     <div fxLayout="row-reverse">
       <button

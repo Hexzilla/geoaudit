@@ -73,11 +73,14 @@ import { ToDoListDataService } from '../data-services/to-do-list-data.service';
 import { NotificationService } from '../services/notification.service';
 import { NoteEntityService } from '../entity-services/note-entity.service';
 import { NoteDataService } from '../data-services/note-data.service';
-import { ItemSelectorComponent } from '../components/item-selector/item-selector.component';
+import { MultiItemSelectorComponent } from '../components/multi-item-selector/multi-item-selector.component';
 import { SiteEntityService } from '../entity-services/site-entity.service';
 import { SiteDataService } from '../data-services/site-data.service';
 import { EventDataService } from '../data-services/event-data.service';
 import { EventEntityService } from '../entity-services/event-entity.service';
+import { SingleItemSelectorComponent } from '../components/single-item-selector/single-item-selector.component';
+import { ConditionEntityService } from '../entity-services/condition-entity.service';
+import { ConditionDataService } from '../data-services/condition-data.service';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient) {
@@ -98,6 +101,8 @@ const CUSTOM_MOMENT_FORMATS: NgxMatDateFormats = {
 };
 
 const entityMetadataMap: EntityMetadataMap = {
+
+  Condition: {},
 
   Event: {},
 
@@ -182,9 +187,14 @@ const entityMetadataMap: EntityMetadataMap = {
     NavigationModalComponent,
     RefusalModalComponent,
     SurveyTableComponent,
-    ItemSelectorComponent,
+    MultiItemSelectorComponent,
+    SingleItemSelectorComponent
   ],
   providers: [
+
+    ConditionEntityService,
+    ConditionDataService,
+    
     EventEntityService,
     EventDataService,
     
@@ -252,7 +262,8 @@ const entityMetadataMap: EntityMetadataMap = {
     AttachmentModalComponent,
     RefusalModalComponent,
     SurveyTableComponent,
-    ItemSelectorComponent,
+    MultiItemSelectorComponent,
+    SingleItemSelectorComponent,
     
     // Material
     MatAutocompleteModule,
@@ -291,6 +302,7 @@ export class SharedModule {
   constructor(
     private entityDefinitionService: EntityDefinitionService,
     private entityDataService: EntityDataService,
+    private conditionDataService: ConditionDataService,
     private eventDataService: EventDataService,
     private jobDataService: JobDataService,
     private jobTypeDataService: JobTypeDataService,
@@ -311,6 +323,7 @@ export class SharedModule {
     // entityDataService.registerService('Status', statusDataService);
     entityDataService.registerServices(
       { 
+        Condition: conditionDataService,
         Event: eventDataService,
         Status: statusDataService,
         Survey: surveyDataService,

@@ -1,6 +1,7 @@
 import { Abriox } from "./abriox.model";
 import { Condition } from "./condition.model";
 import { Footer } from "./footer.model";
+import { GeoJson } from "./geo-json.model";
 import { Note } from "./note.model";
 import { Status } from "./status.model";
 import { TpAction } from "./tp-action.model";
@@ -16,7 +17,7 @@ export interface Testpost {
     manufacture?: string;
     model?: string;
     serial_number?: string;
-    geometry: object;
+    geometry: GeoJson;
     footer?: Array<Footer>;
     notes?: Array<Note>;
     status?: Status;

@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ItemSelectorComponent } from './item-selector.component';
+import { AbrioxComponent } from './abriox.component';
 
-describe('ItemSelectorComponent', () => {
-  let component: ItemSelectorComponent;
-  let fixture: ComponentFixture<ItemSelectorComponent>;
+describe('AbrioxComponent', () => {
+  let component: AbrioxComponent;
+  let fixture: ComponentFixture<AbrioxComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ItemSelectorComponent ]
+      declarations: [ AbrioxComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ItemSelectorComponent);
+    fixture = TestBed.createComponent(AbrioxComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

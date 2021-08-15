@@ -21,10 +21,10 @@ import { SurveyEntityService } from '../../entity-services/survey-entity.service
 import { TestpostEntityService } from '../../entity-services/testpost-entity.service';
 import { TrEntityService } from '../../entity-services/tr-entity.service';
 import { UserEntityService } from '../../entity-services/user-entity.service';
-import { Abriox, User } from '../../models';
 
 type Selectors =
   | 'abriox'
+  | 'condition'
   | 'job'
   | 'resistivity'
   | 'site'
@@ -34,11 +34,12 @@ type Selectors =
   | 'user';
 
 @Component({
-  selector: 'geoaudit-item-selector',
-  templateUrl: './item-selector.component.html',
-  styleUrls: ['./item-selector.component.scss'],
+  selector: 'geoaudit-multi-item-selector',
+  templateUrl: './multi-item-selector.component.html',
+  styleUrls: ['./multi-item-selector.component.scss'],
 })
-export class ItemSelectorComponent implements OnInit {
+export class MultiItemSelectorComponent implements OnInit {
+
   @Input() selector: Selectors;
 
   @Input() label: string;
@@ -53,7 +54,7 @@ export class ItemSelectorComponent implements OnInit {
   allItems: Array<any> = [];
   itemControl = new FormControl();
   separatorKeysCodes: number[] = [ENTER, COMMA];
-  filteredItems: Array<Abriox> = [];
+  filteredItems: Array<any> = [];
   @ViewChild('itemInput') itemInput: ElementRef<HTMLInputElement>;
   selectable = true;
   removable = true;
@@ -165,13 +166,13 @@ export class ItemSelectorComponent implements OnInit {
   }
 
   mapItmsAndPushAsSelected() {
-    this.items.map((item) => {
-      if (
-        !this.selectedItems.find((selectedItem) => selectedItem.id === item.id)
-      ) {
-        this.selectedItems.push(item);
-      }
-    });
+      this.items.map((item) => {
+        if (
+          !this.selectedItems.find((selectedItem) => selectedItem.id === item.id)
+        ) {
+          this.selectedItems.push(item);
+        }
+      });
   }
 
   // Users (Assignees)
@@ -195,8 +196,8 @@ export class ItemSelectorComponent implements OnInit {
     this.itemsChange.emit(this.selectedItems);
   }
 
-  remove(user: User): void {
-    const exists = this.selectedItems.find((item) => item.id === user.id);
+  remove(event: any): void {
+    const exists = this.selectedItems.find((item) => item.id === event.id);
     if (exists) {
       this.selectedItems = this.selectedItems.filter(
         (item) => item.id !== exists.id

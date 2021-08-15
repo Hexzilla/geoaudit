@@ -4,6 +4,7 @@ import { Note } from "./note.model";
 import { Status } from "./status.model";
 import { Survey } from "./survey.model";
 import { Testpost } from "./testpost.model";
+import { Tr } from "./tr.model";
 
 export interface Abriox {
     id? :number;
@@ -12,7 +13,7 @@ export interface Abriox {
     serial_number?: string;
     date_installation?: string;
     footer?: Footer;
-    tr?: TrackEvent;
+    tr?: Tr;
     testpost: Testpost;
     surveys?: Array<Survey>;
     status?: Status;

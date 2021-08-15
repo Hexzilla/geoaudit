@@ -13,6 +13,26 @@
 			"geoaudit": "Geoaudit"
 		},
 		"home": {
+			"abrioxes": {
+				"abriox": {
+					"title": "Abriox {{placeholder}}",
+					"details": "Details",
+					"attachments": "Attachments",
+					"notes": "Notes",
+					"new_testpost": "New testpost",
+					"testpost": "Testpost",
+					"tr": "Tr",
+					"new_tr": "New tr",
+					"name": "Name",
+					"serial_number": "Serial Number",
+					"telephone": "Telephone",
+					"date_installation":"Date Installation",
+					"condition": "Condition",
+					"new_condition": "New condition",
+					"status": "Status",
+					"new_status": "New status"
+				}
+			},
 			"approval": {
 				"title": "Approval List"
 			},
@@ -196,6 +216,22 @@
 				"status": "Status",
 				"new_job": "New Job",
 				"job": "Job"
+			},
+			"testposts": {
+				"testpost": {
+					"title": "Testpost {{placeholder}}",
+					"details": "Details",
+					"attachments": "Attachments",
+					"actions": "Actions",
+					"notes": "Notes",
+					"reference": "Reference",
+					"name": "Name",
+					"date_installation": "Date Installation",
+					"manufacture": "Manufacture",
+					"model": "Model",
+					"serial_number": "Serial Number",
+					"abriox": "Abriox"
+				}
 			}
 		},
 		"survey": {

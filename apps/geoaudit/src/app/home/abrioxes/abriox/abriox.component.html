@@ -1,0 +1,149 @@
+<geoaudit-sidebar-header
+  title="CONTAINERS.home.abrioxes.abriox.title"
+  [placeholder]="form.value.name"
+></geoaudit-sidebar-header>
+
+<mat-horizontal-stepper>
+  <mat-step [label]="'CONTAINERS.home.abrioxes.abriox.details' | translate">
+    <geoaudit-single-item-selector
+      selector="status"
+      label="CONTAINERS.home.abrioxes.abriox.status"
+      placeholder="CONTAINERS.home.abrioxes.abriox.new_status"
+      [item]="form.value.status"
+      (itemChange)="onItemChange($event, 'status')"
+      attribute="name"
+    ></geoaudit-single-item-selector>
+
+    <geoaudit-single-item-selector
+      selector="tp"
+      label="CONTAINERS.home.abrioxes.abriox.testpost"
+      placeholder="CONTAINERS.home.abrioxes.abriox.new_testpost"
+      [item]="form.value.testpost"
+      (itemChange)="onItemChange($event, 'testpost')"
+      attribute="name"
+    ></geoaudit-single-item-selector>
+
+    <geoaudit-single-item-selector
+      selector="tr"
+      label="CONTAINERS.home.abrioxes.abriox.tr"
+      placeholder="CONTAINERS.home.abrioxes.abriox.new_tr"
+      [item]="form.value.tr"
+      (itemChange)="onItemChange($event, 'tr')"
+      attribute="name"
+    ></geoaudit-single-item-selector>
+
+    <form [formGroup]="form">
+      <!-- Name -->
+      <mat-form-field appearance="outline">
+        <mat-label>{{
+          'CONTAINERS.home.abrioxes.abriox.name' | translate
+        }}</mat-label>
+        <input
+          matInput
+          [placeholder]="'CONTAINERS.home.abrioxes.abriox.name' | translate"
+          formControlName="name"
+          class="form-control"
+        />
+      </mat-form-field>
+
+      <!-- Serial Number -->
+      <mat-form-field appearance="outline">
+        <mat-label>{{
+          'CONTAINERS.home.abrioxes.abriox.serial_number' | translate
+        }}</mat-label>
+        <input
+          matInput
+          [placeholder]="
+            'CONTAINERS.home.abrioxes.abriox.serial_number' | translate
+          "
+          formControlName="serial_number"
+          class="form-control"
+        />
+      </mat-form-field>
+
+      <!-- Telephone -->
+      <mat-form-field appearance="outline">
+        <mat-label>{{
+          'CONTAINERS.home.abrioxes.abriox.telephone' | translate
+        }}</mat-label>
+        <input
+          matInput
+          [placeholder]="
+            'CONTAINERS.home.abrioxes.abriox.telephone' | translate
+          "
+          formControlName="telephone"
+          class="form-control"
+        />
+      </mat-form-field>
+
+      <!-- Date Installation -->
+      <mat-form-field appearance="outline">
+        <mat-label>{{
+          'CONTAINERS.home.testposts.testpost.date_installation' | translate
+        }}</mat-label>
+        <input
+          matInput
+          [ngxMatDatetimePicker]="dateInstallationDateTimePicker"
+          [placeholder]="
+            'CONTAINERS.home.abrioxes.abriox.date_installation' | translate
+          "
+          formControlName="date_installation"
+          [min]="minDate"
+          [max]="maxDate"
+          [disabled]="disabled"
+        />
+
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="dateInstallationDateTimePicker"
+        ></mat-datepicker-toggle>
+
+        <ngx-mat-datetime-picker
+          #dateInstallationDateTimePicker
+          [showSpinners]="showSpinners"
+          [showSeconds]="showSeconds"
+          [stepHour]="stepHour"
+          [stepMinute]="stepMinute"
+          [stepSecond]="stepSecond"
+          [touchUi]="touchUi"
+          [color]="color"
+          [enableMeridian]="enableMeridian"
+          [disableMinute]="disableMinute"
+          [hideTime]="hideTime"
+        >
+        </ngx-mat-datetime-picker>
+      </mat-form-field>
+    </form>
+
+    <geoaudit-single-item-selector
+      selector="condition"
+      label="CONTAINERS.home.abrioxes.abriox.condition"
+      placeholder="CONTAINERS.home.abrioxes.abriox.new_condition"
+      [item]="form.value.condition"
+      (itemChange)="onItemChange($event, 'condition')"
+      attribute="name"
+    ></geoaudit-single-item-selector>
+  </mat-step>
+
+  <mat-step [label]="'CONTAINERS.home.abrioxes.abriox.attachments' | translate">
+    <geoaudit-file-upload
+      label="CONTAINERS.home.jobs.job.attachments.images"
+      (preview)="onPreview($event)"
+      (upload)="onImageUpload($event)"
+      fileType="IMAGE"
+      [multiple]="true"
+    ></geoaudit-file-upload>
+
+    <geoaudit-file-upload
+      label="CONTAINERS.home.jobs.job.attachments.documents"
+      (preview)="onPreview($event)"
+      (upload)="onDocumentUpload($event)"
+      fileType="DOCUMENT"
+      [multiple]="true"
+    ></geoaudit-file-upload>
+  </mat-step>
+
+  <mat-step [label]="'CONTAINERS.home.abrioxes.abriox.notes' | translate">
+    <geoaudit-notes></geoaudit-notes>
+  </mat-step>
+</mat-horizontal-stepper>
