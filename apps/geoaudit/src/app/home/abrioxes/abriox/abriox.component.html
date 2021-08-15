@@ -6,6 +6,15 @@
 <mat-horizontal-stepper>
   <mat-step [label]="'CONTAINERS.home.abrioxes.abriox.details' | translate">
     <geoaudit-single-item-selector
+      selector="status"
+      label="CONTAINERS.home.abrioxes.abriox.status"
+      placeholder="CONTAINERS.home.abrioxes.abriox.new_status"
+      [item]="form.value.status"
+      (itemChange)="onItemChange($event, 'status')"
+      attribute="name"
+    ></geoaudit-single-item-selector>
+
+    <geoaudit-single-item-selector
       selector="tp"
       label="CONTAINERS.home.abrioxes.abriox.testpost"
       placeholder="CONTAINERS.home.abrioxes.abriox.new_testpost"

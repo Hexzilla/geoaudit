@@ -28,7 +28,9 @@
 					"telephone": "Telephone",
 					"date_installation":"Date Installation",
 					"condition": "Condition",
-					"new_condition": "New condition"
+					"new_condition": "New condition",
+					"status": "Status",
+					"new_status": "New status"
 				}
 			},
 			"approval": {

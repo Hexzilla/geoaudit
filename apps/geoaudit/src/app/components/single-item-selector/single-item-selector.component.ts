@@ -8,6 +8,7 @@ import { ConditionEntityService } from '../../entity-services/condition-entity.s
 import { JobEntityService } from '../../entity-services/job-entity.service';
 import { ResistivityEntityService } from '../../entity-services/resistivity-entity.service';
 import { SiteEntityService } from '../../entity-services/site-entity.service';
+import { StatusEntityService } from '../../entity-services/status-entity.service';
 import { SurveyEntityService } from '../../entity-services/survey-entity.service';
 import { TestpostEntityService } from '../../entity-services/testpost-entity.service';
 import { TrEntityService } from '../../entity-services/tr-entity.service';
@@ -19,6 +20,7 @@ type Selectors =
   | 'job'
   | 'resistivity'
   | 'site'
+  | 'status'
   | 'survey'
   | 'tp'
   | 'tr'
@@ -57,6 +59,7 @@ export class SingleItemSelectorComponent implements OnInit {
     private jobEntityService: JobEntityService,
     private resistivityEntityService: ResistivityEntityService,
     private siteEntityService: SiteEntityService,
+    private statusEntityService: StatusEntityService,
     private surveyEntityService: SurveyEntityService,
     private testpostEntityService: TestpostEntityService,
     private trEntityService: TrEntityService
@@ -106,6 +109,15 @@ export class SingleItemSelectorComponent implements OnInit {
         this.siteEntityService.getAll().subscribe(
           (sites) => {
             this.allItems = sites;
+            this.setSelectedItem()
+          }
+        )
+        break;
+
+      case 'status':
+        this.statusEntityService.getAll().subscribe(
+          (statuses) => {
+            this.allItems = statuses;
             this.setSelectedItem()
           }
         )

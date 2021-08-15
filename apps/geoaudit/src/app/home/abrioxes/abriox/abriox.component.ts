@@ -79,6 +79,7 @@ export class AbrioxComponent implements OnInit {
       telephone: null,
       date_installation: null,
       condition: null,
+      status: null,
 
       footer: [
         {
@@ -126,6 +127,7 @@ export class AbrioxComponent implements OnInit {
       date_installation,
       condition,
       footer,
+      status
     } = abriox;
 
     this.form.patchValue({
@@ -140,6 +142,7 @@ export class AbrioxComponent implements OnInit {
       telephone,
       date_installation,
       condition: condition?.id,
+      status: status?.id,
 
       footer: footer
         ? footer
