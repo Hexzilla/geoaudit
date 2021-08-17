@@ -7,7 +7,7 @@ import * as MapActions from '../../../store/map/map.actions';
 import * as fromApp from '../../../store';
 import * as moment from 'moment';
 import { TestpostEntityService } from '../../../entity-services/testpost-entity.service';
-import { Abriox, Image, Testpost } from '../../../models';
+import { Abriox, Conditions, Image, MarkerColours, Survey, Testpost, TpAction } from '../../../models';
 import { debounceTime, tap, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { AlertService } from '../../../services';
@@ -16,6 +16,8 @@ import { IAlbum, Lightbox } from 'ngx-lightbox';
 import { AttachmentModalComponent } from '../../../modals/attachment-modal/attachment-modal.component';
 import { MatDialog } from '@angular/material/dialog';
 import { environment } from 'apps/geoaudit/src/environments/environment';
+import { TpActionEntityService } from '../../../entity-services/tp-action-entity.service';
+import { SurveyEntityService } from '../../../entity-services/survey-entity.service';
 
 @Component({
   selector: 'geoaudit-testpost',
@@ -58,10 +60,18 @@ export class TestpostComponent implements OnInit, AfterViewInit {
 
   abriox: Abriox;
 
+  testpost: Testpost;
+
+  tp_actions: Array<TpAction> = [];
+
+  surveys: Array<Survey> = [];
+
   constructor(
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
+    private surveyEntityService: SurveyEntityService,
     private testpostEntityService: TestpostEntityService,
+    private tpActionEntityService: TpActionEntityService,
     private store: Store<fromApp.State>,
     private router: Router,
     private alertService: AlertService,
@@ -158,6 +168,19 @@ export class TestpostComponent implements OnInit, AfterViewInit {
 
         this.abriox = testpost.abriox;
 
+        testpost.tp_actions.map(tp_action => {
+          this.tpActionEntityService.getByKey(tp_action.id).subscribe(item => {
+            this.tp_actions.push(item);
+            
+            this.surveyEntityService.getByKey(item.survey.id).subscribe(survey => {
+              this.surveys.push(survey);
+            })
+          })
+        })
+
+        this.testpost = testpost;
+
+
         this.autoSave(this.id ? false : true);
       },
 
@@ -239,7 +262,7 @@ export class TestpostComponent implements OnInit, AfterViewInit {
       footer
     } = testpost;
 
-    console.log('geometry', geometry)
+    console.log('testpost', testpost)
 
     this.form.patchValue({
       id,
@@ -347,7 +370,41 @@ export class TestpostComponent implements OnInit, AfterViewInit {
     this.router.navigate(["/home/abrioxes/create"], navigationExtras)
   }
 
-  getConditionColour() {
-    // Dot in the title corresponds to the condition of most recent record in tp_actions
+  getConditionColour(id?: number) {
+
+    let color = "00FFFFFF";
+    // Dot in the title corresponds to the condition of most recent record in tp_actions    
+
+
+    if (id) {
+        // console.log('getConditionColour', condition)
+
+        if (this.tp_actions) {
+          // const condition = this.tp_actions.find(tp_action => tp_action.condition.id = id); 
+          const tp_action = this.tp_actions.find(tp_action => tp_action.condition.id === id);
+
+          if (tp_action) {
+            color = MarkerColours[tp_action.condition.name];
+          }
+        }
+        
+    }
+    // switch (condition)
+
+    return color;
+  }
+
+  getSurvey(id?: number) {
+
+    let survey: Survey;
+    // console.log('get survey', id)
+
+    if (id) {
+      if (this.surveys) {
+        survey = this.surveys.find(item => item.id === id);
+      }
+    }
+
+    return survey;
   }
 }
