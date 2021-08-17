@@ -1,7 +1,14 @@
 <geoaudit-sidebar-header
   title="CONTAINERS.home.testposts.testpost.title"
   [placeholder]="form?.value?.reference"
-></geoaudit-sidebar-header>
+>
+  <!-- <mat-icon
+    *ngIf="true"
+    style="background-color: #0074d9; color: #0074d9; border-radius: 15px"
+    >radio_button_unchecked</mat-icon
+  > -->
+  <geoaudit-icon [visible]="true" [color]="getConditionColour()" icon="radio_button_unchecked"></geoaudit-icon>
+</geoaudit-sidebar-header>
 
 <mat-horizontal-stepper>
   <!-- Details -->
@@ -157,18 +164,24 @@
 
   <!-- Abriox -->
   <mat-step [label]="'CONTAINERS.home.testposts.testpost.abriox' | translate">
-    <mat-card *ngIf="abriox" style="cursor: pointer; margin-top: 20px" fxLayout="row" fxLayoutAlign="space-between" [routerLink]="'/home/abrioxes/' + abriox.id">
-    <!-- <mat-card-header> -->
+    <mat-card
+      *ngIf="abriox"
+      style="cursor: pointer; margin-top: 20px"
+      fxLayout="row"
+      fxLayoutAlign="space-between"
+      [routerLink]="'/home/abrioxes/' + abriox.id"
+    >
+      <!-- <mat-card-header> -->
       <div fxLayout="column">
         <p>{{ abriox.date_installation | date: 'HH:mm dd/MM/yyyy' }}</p>
         <p *ngIf="abriox.name">
           <em>{{ abriox.name | slice: 0:100 }} </em
           ><span *ngIf="abriox.name?.length >= 10">...</span>
         </p>
-  
+
         <div fxLayout="row"></div>
       </div>
-  
+
       <button
         mat-icon-button
         color="accent"
@@ -178,12 +191,7 @@
       </button>
     </mat-card>
     <div fxLayout="row-reverse">
-      <button
-        mat-flat-button
-        fxFlexFill
-        color="primary"
-        (click)="addAbriox()"
-        >
+      <button mat-flat-button fxFlexFill color="primary" (click)="addAbriox()">
         <mat-icon>add</mat-icon>
       </button>
     </div>

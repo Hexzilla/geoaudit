@@ -1,5 +1,4 @@
 import { Abriox } from "./abriox.model";
-import { Condition } from "./condition.model";
 import { Footer } from "./footer.model";
 import { GeoJson } from "./geo-json.model";
 import { Note } from "./note.model";

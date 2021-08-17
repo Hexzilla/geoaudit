@@ -346,4 +346,8 @@ export class TestpostComponent implements OnInit, AfterViewInit {
 
     this.router.navigate(["/home/abrioxes/create"], navigationExtras)
   }
+
+  getConditionColour() {
+    // Dot in the title corresponds to the condition of most recent record in tp_actions
+  }
 }
