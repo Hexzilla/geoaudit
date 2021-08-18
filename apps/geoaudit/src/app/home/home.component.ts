@@ -1271,6 +1271,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.router.navigate(['/home/approvals']);
   }
 
+  back(): void {
+  }
+
   home(): void {
     this.router.navigate(['/home']);
   }
