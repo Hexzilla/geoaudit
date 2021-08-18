@@ -4,6 +4,7 @@ export * from './anode.model';
 export * from './api.model';
 export * from './auth.model';
 export * from './event.model';
+export * from './color.model';
 export * from './common.model';
 export * from './condition.model';
 export * from './coupon.model';

@@ -47,6 +47,8 @@ import { SidebarHeaderComponent } from '../components/sidebar-header/sidebar-hea
 import { SidebarActionsComponent } from '../components/sidebar-actions/sidebar-actions.component';
 import { SurveyTableComponent } from '../components/survey-table/survey-table.component';
 
+import { IconComponent } from '../components/icon/icon.component';
+
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { EntityDataService, EntityDefinitionService, EntityMetadataMap } from '@ngrx/data';
@@ -81,6 +83,8 @@ import { EventEntityService } from '../entity-services/event-entity.service';
 import { SingleItemSelectorComponent } from '../components/single-item-selector/single-item-selector.component';
 import { ConditionEntityService } from '../entity-services/condition-entity.service';
 import { ConditionDataService } from '../data-services/condition-data.service';
+import { TpActionDataService } from '../data-services/tp-action-data.service';
+import { TpActionEntityService } from '../entity-services/tp-action-entity.service';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient) {
@@ -127,7 +131,9 @@ const entityMetadataMap: EntityMetadataMap = {
 
   Notification: {},
 
-  ToDoList:{}
+  ToDoList:{},
+
+  TpAction: {}
 }
 
 @NgModule({
@@ -188,7 +194,8 @@ const entityMetadataMap: EntityMetadataMap = {
     RefusalModalComponent,
     SurveyTableComponent,
     MultiItemSelectorComponent,
-    SingleItemSelectorComponent
+    SingleItemSelectorComponent,
+    IconComponent
   ],
   providers: [
 
@@ -224,6 +231,9 @@ const entityMetadataMap: EntityMetadataMap = {
     AbrioxDataService,
 
     TestpostDataService,
+
+    TpActionDataService,
+    TpActionEntityService,
     
     TrDataService,
     
@@ -264,7 +274,8 @@ const entityMetadataMap: EntityMetadataMap = {
     SurveyTableComponent,
     MultiItemSelectorComponent,
     SingleItemSelectorComponent,
-    
+    IconComponent,
+
     // Material
     MatAutocompleteModule,
     MatBadgeModule,
@@ -313,6 +324,7 @@ export class SharedModule {
     private userDataService: UserDataService,
     private abrioxDataService: AbrioxDataService,
     private testpostDataService: TestpostDataService,
+    private tpActionDataService: TpActionDataService,
     private trDataService: TrDataService,
     private resistivityDataService: ResistivityDataService,
     private toDoListDataService: ToDoListDataService,
@@ -332,6 +344,7 @@ export class SharedModule {
         User: userDataService,
         Abriox: abrioxDataService,
         Testpost: testpostDataService,
+        TpAction: tpActionDataService,
         Tr: trDataService,
         Resistivity: resistivityDataService,
         Note: noteDataService,

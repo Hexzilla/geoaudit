@@ -8,6 +8,7 @@ import { Testpost } from "./testpost.model";
 import { TpInformation } from "./tp-information.model";
 
 export interface TpAction {
+    id: string;
     date: string;
     testpost: Testpost;
     tp_information: TpInformation;
