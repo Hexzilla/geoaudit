@@ -41,7 +41,7 @@
   background-color: white;
   border:1px solid #333;
   color:black;
-  z-index: 10000;
+  z-index: 500;
   left:15px;
 }
 
@@ -63,9 +63,9 @@
   bottom:115px;
 }
 
-// .leaflet-sidebar.leaflet-sidebar-right.collapsed{
-//   border-radius: 50%;
-// }
+.leaflet-sidebar.leaflet-sidebar-right.collapsed{
+  border-radius: 50%;
+}
 
 .leaflet-sidebar {
   top: 0px;
