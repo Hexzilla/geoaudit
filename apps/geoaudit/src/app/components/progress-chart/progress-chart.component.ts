@@ -42,7 +42,7 @@ export class ProgressChartComponent implements OnInit {
     series: [],
     chart: {
       type: 'bar',
-      height: 100,
+      height: 70,
       stacked: true,
       stackType: '100%',
       dropShadow: {
@@ -57,9 +57,11 @@ export class ProgressChartComponent implements OnInit {
     plotOptions: {
       bar: {
         horizontal: true,
+        barHeight: "100%"
       },
     },
     stroke: {
+      show: false,
       width: 0,
       colors: ['#fff'],
     },
@@ -92,7 +94,6 @@ export class ProgressChartComponent implements OnInit {
       },
     },
     fill: {
-      colors:['#F44336', '#E91E63', '#9C27B0'],
       opacity: 1,
     },
     legend: {

@@ -1,10 +1,18 @@
-.mat-card-content {
-    padding-top: 26px!important;
-    padding-bottom: 26px!important;
-}
+// .mat-card-content {
+//     padding-top: 26px!important;
+//     padding-bottom: 26px!important;
+// }
 
+.mt-26 {
+    margin-top: 26px;
+}
 
 .save-button{
     position: absolute;
     bottom: 40px;
+}
+
+.progress-chart {
+    margin-left: -20px;
+    margin-top: -28px!important;    
 }

@@ -6,10 +6,10 @@
   (selectedIndexChange)="selectedIndexChange($event)"
   >
   <!-- Details -->
-  <mat-tab class="job-detail-card"
+  <mat-tab
     [label]="'CONTAINERS.home.jobs.job.steps.details' | translate"
   >
-    <mat-card-content>
+    <mat-card-content class="mt-26">
       <form fxLayout="column" [formGroup]="form" (ngSubmit)="submit()">
         <mat-form-field appearance="outline">
           <mat-label>{{
@@ -99,7 +99,7 @@
   </mat-tab>
 
   <!-- Attachments -->
-  <mat-tab class="job-detail-card"
+  <mat-tab
     [label]="'CONTAINERS.home.jobs.job.steps.attachments' | translate"
   >
     <mat-card-content>
@@ -128,7 +128,7 @@
   </mat-tab>
 
   <!-- Surveys -->
-  <mat-tab class="job-detail-card"
+  <mat-tab
     [label]="'CONTAINERS.home.jobs.job.steps.surveys' | translate"
   >
      <mat-card-content>
@@ -179,7 +179,7 @@
     </mat-card-content>
   </mat-tab>
 
-  <mat-tab class="job-detail-card"
+  <mat-tab
     [label]="'CONTAINERS.home.jobs.job.steps.notes' | translate">
     <mat-card-content>
       <geoaudit-notes></geoaudit-notes>
