@@ -386,18 +386,30 @@ export class TestpostComponent implements OnInit, AfterViewInit {
           if (tp_action) {
             color = MarkerColours[tp_action.condition.name];
           }
-        }
-        
+        }   
     }
     // switch (condition)
 
     return color;
   }
 
-  getSurvey(id?: number) {
+  getLatestConditionColour() {
+    let color = "00FFFFFF";
 
+    if (this.tp_actions) {
+      // const condition = this.tp_actions.find(tp_action => tp_action.condition.id = id); 
+      const tp_action = this.tp_actions.sort((a: any, b: any) => b.date - a.date);
+
+      if (tp_action) {
+        color = MarkerColours[tp_action[tp_action.length - 1].condition.name];
+      }
+    }  
+
+    return color;
+  }
+
+  getSurvey(id?: number) {
     let survey: Survey;
-    // console.log('get survey', id)
 
     if (id) {
       if (this.surveys) {
