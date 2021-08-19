@@ -1290,12 +1290,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
   showMySurveysOnly(surveys) : void{
     //console.log("refreshed surveys length = " + surveys.length);
     console.log(surveys);
-    // if(surveys.length==0)
-    // {
-    //   this.map.invalidateSize();  //
-    //   this.map._onResize(); 
-    //   return;
-    // }
     this.map.eachLayer(function(layer) {
       if(layer.options && layer.options.pane === "markerPane") {
           layer.remove();
@@ -1305,21 +1299,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
     {
       this.drawSurveyMarker(surveys[i]);
     }
-    // var noDelete = false;
-    // if(layer.options.surveyid!=undefined)
-    // for(var i=0; i<surveys.length; i++)
-    // {
-    //   if(surveys[i].id==layer.options.surveyid)
-    //   {
-    //     noDelete = true; break;
-    //   }
-    // }
-    // if(!noDelete) 
-    // {
-    //   console.log("Deleted survey Marker Layer : "),console.log(layer);
-    //   layer.remove();
-    // }
-
   }
 
   //iconColor : survey marker color
