@@ -2,7 +2,9 @@
   title="CONTAINERS.home.jobs.job.overview.title"
 ></geoaudit-sidebar-header>
 
-<mat-tab-group mat-align-tabs="start">
+<mat-tab-group mat-align-tabs="start"
+  (selectedIndexChange)="selectedIndexChange($event)"
+  >
   <!-- Details -->
   <mat-tab class="job-detail-card"
     [label]="'CONTAINERS.home.jobs.job.steps.details' | translate"
@@ -129,29 +131,19 @@
   <mat-tab class="job-detail-card"
     [label]="'CONTAINERS.home.jobs.job.steps.surveys' | translate"
   >
-    <mat-card-content>
+     <mat-card-content>
+      <div class="progress-chart" *ngIf="selectedTabIndex == 2 && chartSeries">
+        <geoaudit-progress-chart 
+          [series]="chartSeries"
+        >
+        </geoaudit-progress-chart>
+      </div>
       <div fxLayout="row" fxLayoutAlign="space-between center">
         <div fxLayout="column">
           <h3>Surveys</h3>
           <p>Progress</p>
         </div>
-        <!-- Progress -->
-        <apx-chart
-          [series]="chartOptions.series"
-          [chart]="chartOptions.chart"
-          [dataLabels]="chartOptions.dataLabels"
-          [plotOptions]="chartOptions.plotOptions"
-          [xaxis]="chartOptions.xaxis"
-          [yaxis]="chartOptions.yaxis"
-          [stroke]="chartOptions.stroke"
-          [fill]="chartOptions.fill"
-          [title]="chartOptions.title"
-          [tooltip]="chartOptions.tooltip"
-          [legend]="chartOptions.legend"
-        ></apx-chart>
       </div>
-
-      <div id="chart"></div>
 
       <mat-form-field appearance="outline">
         <mat-label>Survey</mat-label>

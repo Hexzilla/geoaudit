@@ -89,6 +89,11 @@ h1.leaflet-sidebar-header {
   padding-right: 40px;
 }
 
+.leaflet-sidebar {
+  width: 768px;
+  max-width: 768px;
+}
+
 @media (min-width: 1920px) {
   .leaflet-sidebar {
     width: 768px;

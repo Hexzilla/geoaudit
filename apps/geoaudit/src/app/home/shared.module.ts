@@ -29,7 +29,7 @@ import {MatStepperModule} from '@angular/material/stepper';
 import {MatTabsModule} from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTableModule } from '@angular/material/table';
-
+import { NgApexchartsModule } from "ng-apexcharts";
 
 // Modals
 import { AttachmentModalComponent } from '../modals/attachment-modal/attachment-modal.component';
@@ -44,6 +44,7 @@ import { LightboxModule } from 'ngx-lightbox';
 import { CardButtonComponent } from '../components/card-button/card-button.component';
 import { FileUploadComponent } from '../components/file-upload/file-upload.component';
 import { SidebarHeaderComponent } from '../components/sidebar-header/sidebar-header.component';
+import { ProgressChartComponent } from '../components/progress-chart/progress-chart.component';
 import { SidebarActionsComponent } from '../components/sidebar-actions/sidebar-actions.component';
 import { SurveyTableComponent } from '../components/survey-table/survey-table.component';
 
@@ -183,11 +184,13 @@ const entityMetadataMap: EntityMetadataMap = {
     NgxMatDatetimePickerModule,
     NgxMatMomentModule,
     LightboxModule,
+    NgApexchartsModule,
   ],
   declarations: [
     CardButtonComponent,
     FileUploadComponent,
     SidebarHeaderComponent,
+    ProgressChartComponent,
     SidebarActionsComponent,
     AttachmentModalComponent,
     NavigationModalComponent,
@@ -268,6 +271,7 @@ const entityMetadataMap: EntityMetadataMap = {
     CardButtonComponent,
     FileUploadComponent,
     SidebarHeaderComponent,
+    ProgressChartComponent,
     SidebarActionsComponent,
     AttachmentModalComponent,
     RefusalModalComponent,
