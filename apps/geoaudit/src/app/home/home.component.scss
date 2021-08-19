@@ -41,7 +41,7 @@
   background-color: white;
   border:1px solid #333;
   color:black;
-  z-index: 500;
+  z-index: 10000;
   left:15px;
 }
 
@@ -65,40 +65,4 @@
 
 .leaflet-sidebar.leaflet-sidebar-right.collapsed{
   border-radius: 50%;
-}
-
-.leaflet-sidebar {
-  top: 0px;
-  bottom: 0px;
-  right: 0px;
-  border: 0px;
-}
-
-.leaflet-sidebar-tabs{
-  position: absolute;
-  background: transparent;
-  z-index: 1000;
-}
-
-.leaflet-sidebar-content {
-  position: relative;
-  height: 100%;
-}
-
-h1.leaflet-sidebar-header {
-  padding-right: 40px;
-}
-
-@media (min-width: 1920px) {
-  .leaflet-sidebar {
-    width: 768px;
-    max-width: 768px;
-  }
-}
-
-@media only screen and (max-width: 1024px) {
-  .leaflet-sidebar {
-    width: 100%;
-    max-width: 100%;
-  }
 }

@@ -27,6 +27,7 @@ import {
   filter,
   map,
 } from 'rxjs/operators';
+import { HomeComponent } from '../../home/home.component';
 
 import { DeleteModalComponent } from '../../modals/delete-modal/delete-modal.component';
 import { NavigationModalComponent } from '../../modals/navigation-modal/navigation-modal.component';
@@ -80,7 +81,8 @@ export class SurveyTableComponent implements OnInit, AfterViewInit {
     private formBuilder: FormBuilder,
     private store: Store<fromApp.State>,
     private dialog: MatDialog,
-    private router: Router
+    private router: Router,
+    private home : HomeComponent
   ) {}
 
   ngOnInit(): void {
@@ -330,5 +332,16 @@ export class SurveyTableComponent implements OnInit, AfterViewInit {
 
   isManager() {
     return this.authService.authValue.user.role.name === Roles.MANAGER
+  }
+
+  onCheckedRow(event, selections) {
+    //event.preventDefault();
+    //console.log(this.job);
+    console.log(selections.selected);
+    if(selections.selected.length!=0)
+       this.home.showMySurveysOnly(selections.selected);
+     else
+       this.home.showMySurveysOnly(this.job.surveys);
+
   }
 }

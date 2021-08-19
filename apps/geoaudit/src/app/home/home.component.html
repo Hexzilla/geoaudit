@@ -44,9 +44,9 @@
             </li> -->
         </ul>
 
-        <!-- bottom aligned tabs -->
-        <!-- <ul role="tablist">
-          <li>
+        <ul role="tablist">
+          <!-- bottom aligned tabs -->
+          <!-- <li>
               <a href="#settings" role="tab">
                   <fa-icon [icon]="faCalendar"></fa-icon>
               </a>
@@ -65,8 +65,8 @@
               <a href="#settings" role="tab">
                   <fa-icon [icon]="faCog"></fa-icon>
               </a>
-            </li>
-        </ul> -->
+            </li> -->
+        </ul>
       </div>
 
       <!-- Tab panes -->
@@ -74,19 +74,15 @@
         <div class="leaflet-sidebar-pane" id="home">
           <h1 class="leaflet-sidebar-header">
             <div fxLayout="row" fxLayoutAlign="space-between">
-              <!-- <a routerLink="/home" class="leaflet-sidebar-header-a">
+              <a routerLink="/home" class="leaflet-sidebar-header-a">
+                <!-- <fa-icon routerLink="/home" [icon]="faHome"></fa-icon> -->
                 {{ 'CONTAINERS.home.geoaudit' | translate }}
-              </a> -->
+              </a>
+
               <div>
-                <button mat-icon-button color="accent" aria-label="search icon button" (click)="back()">
-                  <mat-icon>arrow_back_ios_new</mat-icon>
-                </button>
                 <button mat-icon-button color="accent" aria-label="search icon button" (click)="home()">
                   <mat-icon>home</mat-icon>
                 </button>
-              </div>
-
-              <div>
                 <button mat-icon-button color="accent" aria-label="search icon button" (click)="search()">
                   <mat-icon>search</mat-icon>
                 </button>

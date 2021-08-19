@@ -68,6 +68,9 @@ import { AlertService, AuthService, UploadService } from '../../../services';
 
 import * as fromApp from '../../../store';
 
+import L from 'leaflet';
+import { HomeComponent } from '../../home.component';
+
 export type ChartOptions = {
   series: ApexAxisChartSeries;
   chart: ApexChart;
@@ -175,6 +178,8 @@ export class JobComponent implements OnInit, AfterViewInit {
 
   @ViewChild('chart') chart: ChartComponent;
 
+  map: L.Map;
+
   public chartOptions: Partial<ChartOptions>;
 
   constructor(
@@ -186,6 +191,7 @@ export class JobComponent implements OnInit, AfterViewInit {
     private userEntityService: UserEntityService,
     private route: ActivatedRoute,
     private router: Router,
+    private home: HomeComponent,
     private store: Store<fromApp.State>,
     private alertService: AlertService,
     private dialog: MatDialog,
@@ -585,6 +591,8 @@ export class JobComponent implements OnInit, AfterViewInit {
     this.form.patchValue({
       surveys: [...this.form.value.surveys, event.option.value.id],
     });
+
+    //console.log(event);
   }
 
   // convenience getter for easy access to form fields
@@ -674,8 +682,13 @@ export class JobComponent implements OnInit, AfterViewInit {
   // }
 
   selectionChange(event: StepperSelectionEvent) {
+    console.log("job tab clicked : " + event.selectedIndex);
     switch (event.selectedIndex) {
       case 0:
+        break;
+      case 2:   //for survey step clicked
+        console.log("this.surveys : "),console.log(this.surveys);
+        this.map = this.home.showMySurveysOnly([]);
         break;
     }
   }
@@ -689,6 +702,7 @@ export class JobComponent implements OnInit, AfterViewInit {
   }
 
   isSurveysStepCompleted() {
+    //console.log("survey selected");
     return false;
   }
 
@@ -735,11 +749,11 @@ export class JobComponent implements OnInit, AfterViewInit {
     });
 
     this.surveys = newSurveys;
-
+    console.log(this.surveys);
     this.dataSource.data = newSurveys;
 
     const ids = newSurveys.map((survey) => survey.id);
-
+    
     this.form.patchValue({
       surveys: ids,
     });

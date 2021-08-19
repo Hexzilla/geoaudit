@@ -22,3 +22,10 @@ export interface Survey {
     tp_actions?: []
     tr_actions?: []   
 }
+
+export const SurveyMarkerColor = {
+    COMPLETED: '#8AC926',
+    NOT_STARTED: '#E71D36',
+    ONGOING: '#FFBE0B',
+    REFUSED: '#3A86FF'
+}

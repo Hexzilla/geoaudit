@@ -1,7 +1,6 @@
 <ng-container *ngIf="user$ | async as user">
-  <div fxLayout="column" fxLayoutAlign="center center" class="profile-wapper">
+  <div fxLayout="column" fxLayoutAlign="center center">
     <geoaudit-file-upload
-      class="profile-image"
       label="CONTAINERS.home.jobs.job.attachments.images"
       (upload)="onImageUpload($event)"
       fileType="IMAGE"
@@ -17,17 +16,15 @@
       <p style="text-align: center">{{ user.role.name }}</p>
     </h3>
 
-    <div class="profile-menu">
-      <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
-        <mat-icon>more_vert</mat-icon>
+    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item (click)="logout()">
+        <mat-icon>logout</mat-icon>
+        <span>{{ 'CONTAINERS.home.profile.logout' | translate }}</span>
       </button>
-      <mat-menu #menu="matMenu">
-        <button mat-menu-item (click)="logout()">
-          <mat-icon>logout</mat-icon>
-          <span>{{ 'CONTAINERS.home.profile.logout' | translate }}</span>
-        </button>
-      </mat-menu>
-    </div>
+    </mat-menu>
     
   </div>
 

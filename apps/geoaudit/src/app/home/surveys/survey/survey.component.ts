@@ -42,6 +42,7 @@ import { environment } from 'apps/geoaudit/src/environments/environment';
 import { MatDialog } from '@angular/material/dialog';
 import { AttachmentModalComponent } from '../../../modals/attachment-modal/attachment-modal.component';
 import { JobEntityService } from '../../../entity-services/job-entity.service';
+import { HomeComponent } from '../../home.component';
 
 @Component({
   selector: 'geoaudit-survey',
@@ -134,7 +135,8 @@ export class SurveyComponent implements OnInit {
     private userEntityService: UserEntityService,
     private alertService: AlertService,
     private _lightbox: Lightbox,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private home: HomeComponent
   ) {}
 
   ngOnInit(): void {
@@ -441,6 +443,7 @@ export class SurveyComponent implements OnInit {
       return;
     }
 
+    this.home.drawSurveyMarker(this.form.value);
     /**
      * Invoke the backend with a PUT request to update
      * the job with the form values.
