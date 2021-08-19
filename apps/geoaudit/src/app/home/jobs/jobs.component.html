@@ -2,21 +2,14 @@
   <geoaudit-sidebar-header
     title="CONTAINERS.home.jobs.title"
   >
-  <apx-chart
-  [series]="chartOptions.series"
-  [chart]="chartOptions.chart"
-  [dataLabels]="chartOptions.dataLabels"
-  [plotOptions]="chartOptions.plotOptions"
-  [xaxis]="chartOptions.xaxis"
-  [yaxis]="chartOptions.yaxis"
-  [stroke]="chartOptions.stroke"
-  [fill]="chartOptions.fill"
-  [title]="chartOptions.title"
-  [tooltip]="chartOptions.tooltip"
-  [legend]="chartOptions.legend"
-></apx-chart>
+  </geoaudit-sidebar-header>
 
-</geoaudit-sidebar-header>
+  <div class="progress-chart" *ngIf="chartSeries">
+    <geoaudit-progress-chart 
+      [series]="chartSeries"
+    >
+    </geoaudit-progress-chart>
+  </div>
 
   <geoaudit-sidebar-actions>
     <button
