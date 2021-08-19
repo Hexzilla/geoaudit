@@ -680,17 +680,17 @@ export class JobComponent implements OnInit, AfterViewInit {
     }
   }
 
-  isDetailsStepCompleted() {
-    return false;
-  }
+  // isDetailsStepCompleted() {
+  //   return false;
+  // }
 
-  isAttachmentStepCompleted() {
-    return false;
-  }
+  // isAttachmentStepCompleted() {
+  //   return false;
+  // }
 
-  isSurveysStepCompleted() {
-    return false;
-  }
+  // isSurveysStepCompleted() {
+  //   return false;
+  // }
 
   onImageUpload(event): void {
     const { images } = this.form.value.footer;
