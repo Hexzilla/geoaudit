@@ -86,6 +86,7 @@
         <th mat-header-cell *matHeaderCellDef>
           <mat-checkbox
             (change)="$event ? masterToggle() : null"
+            (change)="onCheckedRow($event, selection)"
             [checked]="selection.hasValue() && isAllSelected()"
             [indeterminate]="selection.hasValue() && !isAllSelected()"
             [aria-label]="checkboxLabel()"
@@ -97,6 +98,7 @@
           <mat-checkbox
             (click)="$event.stopPropagation()"
             (change)="$event ? selection.toggle(row) : null"
+            (change)="onCheckedRow($event, selection)"
             [checked]="selection.isSelected(row)"
             [aria-label]="checkboxLabel(row)"
             color="primary"

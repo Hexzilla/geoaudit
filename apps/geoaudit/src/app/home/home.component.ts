@@ -1289,7 +1289,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   showMySurveysOnly(surveys) : void{
     //console.log("refreshed surveys length = " + surveys.length);
-    console.log(surveys);
+    //console.log(surveys);
+    if(this.map)
     this.map.eachLayer(function(layer) {
       if(layer.options && layer.options.pane === "markerPane") {
           layer.remove();
@@ -1314,6 +1315,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
       outlineWidth: linewidth,                   // Marker outline width 
       iconSize: [31, 42]                 // Width and height of the icon
     })
+    if(a.geometry==null) return null;
     var marker_i:L.marker = L.marker(new L.LatLng(a.geometry['lat'], a.geometry['lng']), 
               {
                 surveyid:a.id, 
@@ -1361,6 +1363,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
           
         
       var marker_new = this.addSurveyMarker(icon_color, 2,survey);
+
+      if(marker_new)
       this.map.addLayer(marker_new);
     }
   }

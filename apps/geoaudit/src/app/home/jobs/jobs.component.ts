@@ -274,7 +274,10 @@ export class JobsComponent implements OnInit {
         this.dataSource.sort = this.sort;
       }
     )
-    //this.home.showMySurveysOnly([]);
+    var homeMap = this.home;
+    setTimeout(function(){
+      homeMap.showMySurveysOnly([]);
+    }, 3000); //homeMap.map initalize after 2s
   }
 
   calendar(): void {
@@ -421,5 +424,34 @@ export class JobsComponent implements OnInit {
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${
       row.id + 1
     }`;
+  }
+
+  onCheckedRow(event, selections) {
+    //event.preventDefault();
+    var surveys = [];
+    //console.log(selections.selected);
+    if(selections.selected.length==0)
+    {
+      this.jobs$.subscribe(
+        (jobs) => {
+          //console.log(jobs);
+          for(var i=0; i<jobs.length; i++)
+          {
+            var job = jobs[i];
+            surveys = surveys.concat(job.surveys);
+          };
+          this.home.showMySurveysOnly(surveys);
+        }
+      )
+    }
+    else
+    {
+      for(var i=0; i<selections.selected.length; i++)
+      {
+        var job = selections.selected[i];
+        surveys = surveys.concat(job.surveys);
+      };
+      this.home.showMySurveysOnly(surveys);
+    }
   }
 }
