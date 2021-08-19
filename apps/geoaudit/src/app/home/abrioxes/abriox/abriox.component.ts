@@ -85,7 +85,6 @@ export class AbrioxComponent implements OnInit {
       serial_number: null,
       telephone: null,
       date_installation: null,
-      condition: null,
       status: null,
 
       footer: [
@@ -132,7 +131,6 @@ export class AbrioxComponent implements OnInit {
       serial_number,
       telephone,
       date_installation,
-      condition,
       footer,
       status
     } = abriox;
@@ -148,7 +146,6 @@ export class AbrioxComponent implements OnInit {
       serial_number,
       telephone,
       date_installation,
-      condition: condition?.id,
       status: status?.id,
 
       footer: footer
