@@ -1362,7 +1362,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
         icon_color = '#3A86FF';
           
         
-      var marker_new = this.addSurveyMarker(icon_color, 2,survey);
+      var marker_new = this.addSurveyMarker(icon_color, 1, survey);
 
       if(marker_new)
       this.map.addLayer(marker_new);
