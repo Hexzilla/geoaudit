@@ -12,3 +12,32 @@ table {
   margin-left: -20px;
   margin-top: -28px!important;    
 }
+
+.mat-column-select {
+  padding-left: 2px!important;
+  text-align: left;
+}
+
+.mat-column-reference {
+  padding-left: 2px!important;
+  text-align: left;
+}
+
+.mat-column-name {
+  padding-left: 8px!important;
+  padding-right: 164px;
+}
+
+.mat-column-status {
+  text-align: center;
+}
+
+.mat-column-job_type {
+  text-align: center;
+}
+
+.mat-column-actions {
+  width: 32px;
+  text-align: center;
+  font-weight: bold;
+}
