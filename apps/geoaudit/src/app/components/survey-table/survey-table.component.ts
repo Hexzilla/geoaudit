@@ -91,7 +91,6 @@ export class SurveyTableComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.data = this.dataSource.data;
-    console.log("~~~~~~~~~~~~", this.data)
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
 
