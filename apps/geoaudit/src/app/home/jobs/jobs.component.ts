@@ -43,7 +43,7 @@ import { AuthService } from '../../services';
 export class JobsComponent implements OnInit {
   displayedColumns: string[] = [
     'select',
-    'reference',
+    //'reference',
     'name',
     'status',
     'job_type',
