@@ -103,7 +103,6 @@ export class JobsComponent implements OnInit {
 
     this.jobs$.subscribe(
       (jobs) => {
-        console.log("jobs-1", jobs);
         this.length = jobs.length;
         this.dataSource = new MatTableDataSource(jobs);
         this.dataSource.paginator = this.paginator;
