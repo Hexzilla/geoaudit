@@ -66,3 +66,48 @@
 .leaflet-sidebar.leaflet-sidebar-right.collapsed{
   border-radius: 50%;
 }
+
+.leaflet-sidebar {
+  top: 0px;
+  bottom: 0px;
+  right: 0px;
+  border: 0px;
+}
+
+.leaflet-sidebar-tabs{
+  position: absolute;
+  background: white;
+  z-index: 1000;
+}
+
+.leaflet-sidebar-content {
+  position: relative;
+  height: 100%;
+}
+
+h1.leaflet-sidebar-header {
+  padding-right: 40px;
+}
+
+.leaflet-sidebar.collapsed {
+  width: 40px; 
+}
+
+.leaflet-sidebar {
+  width: 568px;
+  max-width: 568px;
+}
+
+@media (min-width: 1920px) {
+  .leaflet-sidebar {
+    width: 568px;
+    max-width: 568px;
+  }
+}
+
+@media only screen and (max-width: 1024px) {
+  .leaflet-sidebar {
+    width: 100%;
+    max-width: 100%;
+  }
+}
