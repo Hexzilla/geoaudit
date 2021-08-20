@@ -161,14 +161,14 @@ export class JobComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.API_URL = environment.API_URL;
-
     // Fetch job types
     this.jobTypeEntityervice.getAll().subscribe(
       (jobTypes) => {
         this.jobTypes = jobTypes;
+        console.log("jobTypeEntityervice = ", jobTypes);
       },
       (err) => {
-        console.log(err);
+        console.log("jobTypeEntityervice = ", err);
       }
     );
 
@@ -178,7 +178,7 @@ export class JobComponent implements OnInit, AfterViewInit {
         this.allUsers = users;
       },
       (err) => {
-        console.log(err);
+        console.log("userEntityService = ", err);
       }
     );
 
@@ -188,7 +188,7 @@ export class JobComponent implements OnInit, AfterViewInit {
         this.statuses = statuses;
       },
       (err) => {
-        console.log(err);
+        console.log("statusEntityService = ", err);
       }
     );
 
@@ -200,7 +200,7 @@ export class JobComponent implements OnInit, AfterViewInit {
         this.updateSurveyChartSeries(jobServeys)
       },
       (err) => {
-        console.log(err);
+        console.log("surveyEntityService = ", err);
       }
     );
 
@@ -624,5 +624,11 @@ export class JobComponent implements OnInit, AfterViewInit {
   selectedIndexChange(selectedTabIndex) {
     console.log("selectedIndexChange", selectedTabIndex);
     this.selectedTabIndex = selectedTabIndex;
+  }
+  selectedNextIndex() {
+    this.selectedTabIndex = this.selectedTabIndex + 1;
+  }
+  selectedPrevIndex() {
+    this.selectedTabIndex = this.selectedTabIndex - 1;
   }
 }

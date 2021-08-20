@@ -1,9 +1,22 @@
 <geoaudit-sidebar-header
   title="CONTAINERS.home.jobs.job.overview.title"
-></geoaudit-sidebar-header>
+  reference="reference"
+>
+  <mat-form-field appearance="outline">
+    <mat-label>{{
+      'CONTAINERS.home.jobs.job.status' | translate
+    }}</mat-label>
+    <mat-select statusControlName="status" name="status">
+      <mat-option *ngFor="let status of statuses" [value]="status.id">
+        {{ 'STATUSES.' + status.name | translate }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</geoaudit-sidebar-header>
 
 <mat-tab-group mat-align-tabs="start"
   (selectedIndexChange)="selectedIndexChange($event)"
+  [(selectedIndex)]="selectedTabIndex"
   >
   <!-- Details -->
   <mat-tab
@@ -11,7 +24,7 @@
   >
     <mat-card-content class="mt-26">
       <form fxLayout="column" [formGroup]="form" (ngSubmit)="submit()">
-        <mat-form-field appearance="outline">
+        <!-- <mat-form-field appearance="outline">
           <mat-label>{{
             'CONTAINERS.home.jobs.job.status' | translate
           }}</mat-label>
@@ -20,7 +33,7 @@
               {{ 'STATUSES.' + status.name | translate }}
             </mat-option>
           </mat-select>
-        </mat-form-field>
+        </mat-form-field> -->
 
         <mat-form-field appearance="outline">
           <mat-label>{{
@@ -187,14 +200,20 @@
   </mat-tab>
 </mat-tab-group>
 
-<div fxLayout="row-reverse">
+<div fxLayout="row-reverse" fxLayoutAlign="center" class="button-area">
+  <button *ngIf="selectedTabIndex != 3" mat-icon-button color="accent" class="btn-next" (click)="selectedNextIndex()">
+    <mat-icon>chevron_right</mat-icon>
+</button>
   <button
     mat-flat-button
     color="primary"
     (click)="submit()"
-    fxFlexFill
     type="submit"
+    class="btn-submit"
   >
     {{ 'CONTAINERS.home.jobs.job.form.save' | translate }}
   </button>
+  <button *ngIf="selectedTabIndex != 0" mat-icon-button color="accent" class="btn-prev" (click)="selectedPrevIndex()">
+    <mat-icon>chevron_left</mat-icon>
+</button>
 </div>

@@ -2,11 +2,35 @@
     margin-top: 26px;
 }
 
-.save-button{
+.button-area{
     position: absolute;
     bottom: 40px;
+    width: 100%;
 }
 
+.btn-submit{
+    width: 60%;
+}
+
+.btn-prev{
+    margin-right: 30px;
+    display: flex;
+    justify-content: left;
+}
+
+.btn-next{
+    margin-left: 30px;
+    display: flex;
+    justify-content: left;
+}
+
+.btn-prev .mat-icon{
+    font-size: 42px;
+
+}
+.btn-next .mat-icon{
+    font-size: 42px;
+}
 .progress-chart {
     margin-left: -20px;
     margin-top: -28px!important;    
