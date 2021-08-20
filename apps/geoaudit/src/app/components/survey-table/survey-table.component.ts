@@ -339,9 +339,9 @@ export class SurveyTableComponent implements OnInit, AfterViewInit {
     //console.log(this.job);
     console.log(selections.selected);
     if(selections.selected.length!=0)
-       this.home.showMySurveysOnly(selections.selected);
+       this.home.showMySurveysOnly(selections.selected).subscribe(() =>{});
      else
-       this.home.showMySurveysOnly(this.job.surveys);
+       this.home.showMySurveysOnly(this.job.surveys).subscribe(() =>{});
 
   }
 }

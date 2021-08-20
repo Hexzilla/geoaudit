@@ -443,7 +443,7 @@ export class SurveyComponent implements OnInit {
       return;
     }
 
-    this.home.drawSurveyMarker(this.form.value);
+    this.home.drawSurveyMarker(this.form.value).subscribe(() =>{});
     /**
      * Invoke the backend with a PUT request to update
      * the job with the form values.

@@ -60,7 +60,7 @@ import * as SurveyActions from '../store/survey/survey.actions';
 import * as SurveySelector from '../store/survey/survey.selectors';
 import { AlertService } from '../services';
 import { NotificationEntityService } from '../entity-services/notification-entity.service';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { JobEntityService } from '../entity-services/job-entity.service';
 
@@ -1287,9 +1287,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
 
-  showMySurveysOnly(surveys) : void{
+  showMySurveysOnly(surveys) : Observable<boolean>{
     //console.log("refreshed surveys length = " + surveys.length);
-    console.log(surveys);
+    //console.log(surveys);
+    if(this.map)
     this.map.eachLayer(function(layer) {
       if(layer.options && layer.options.pane === "markerPane") {
           layer.remove();
@@ -1299,6 +1300,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     {
       this.drawSurveyMarker(surveys[i]);
     }
+    return of(true);
   }
 
   //iconColor : survey marker color
@@ -1314,6 +1316,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
       outlineWidth: linewidth,                   // Marker outline width 
       iconSize: [31, 42]                 // Width and height of the icon
     })
+    if(a.geometry==null) return null;
     var marker_i:L.marker = L.marker(new L.LatLng(a.geometry['lat'], a.geometry['lng']), 
               {
                 surveyid:a.id, 
@@ -1332,7 +1335,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
 
-  drawSurveyMarker(survey) : void{
+  drawSurveyMarker(survey) : Observable<boolean>{
     console.log(survey);
     var bExist = false;
     this.map.eachLayer(function(layer) {
@@ -1360,8 +1363,12 @@ export class HomeComponent implements OnInit, AfterViewInit {
         icon_color = '#3A86FF';
           
         
-      var marker_new = this.addSurveyMarker(icon_color, 2,survey);
+      var marker_new = this.addSurveyMarker(icon_color, 1, survey);
+
+      if(marker_new)
       this.map.addLayer(marker_new);
     }
+
+    return of(true);
   }
 }

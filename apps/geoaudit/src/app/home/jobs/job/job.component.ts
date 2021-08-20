@@ -688,7 +688,7 @@ export class JobComponent implements OnInit, AfterViewInit {
         break;
       case 2:   //for survey step clicked
         console.log("this.surveys : "),console.log(this.surveys);
-        this.map = this.home.showMySurveysOnly([]);
+        this.map = this.home.showMySurveysOnly([]).subscribe(() =>{});
         break;
     }
   }
