@@ -440,7 +440,7 @@ export class JobsComponent implements OnInit {
             var job = jobs[i];
             surveys = surveys.concat(job.surveys);
           };
-          this.home.showMySurveysOnly(surveys);
+          this.home.showMySurveysOnly(surveys).subscribe(() =>{});
         }
       )
     }
@@ -451,7 +451,7 @@ export class JobsComponent implements OnInit {
         var job = selections.selected[i];
         surveys = surveys.concat(job.surveys);
       };
-      this.home.showMySurveysOnly(surveys);
+      this.home.showMySurveysOnly(surveys).subscribe(() =>{});
     }
   }
 }

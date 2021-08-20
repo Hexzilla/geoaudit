@@ -60,7 +60,7 @@ import * as SurveyActions from '../store/survey/survey.actions';
 import * as SurveySelector from '../store/survey/survey.selectors';
 import { AlertService } from '../services';
 import { NotificationEntityService } from '../entity-services/notification-entity.service';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { JobEntityService } from '../entity-services/job-entity.service';
 
@@ -1287,7 +1287,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
 
-  showMySurveysOnly(surveys) : void{
+  showMySurveysOnly(surveys) : Observable<boolean>{
     //console.log("refreshed surveys length = " + surveys.length);
     //console.log(surveys);
     if(this.map)
@@ -1300,6 +1300,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     {
       this.drawSurveyMarker(surveys[i]);
     }
+    return of(true);
   }
 
   //iconColor : survey marker color
@@ -1334,7 +1335,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
 
-  drawSurveyMarker(survey) : void{
+  drawSurveyMarker(survey) : Observable<boolean>{
     console.log(survey);
     var bExist = false;
     this.map.eachLayer(function(layer) {
@@ -1367,5 +1368,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
       if(marker_new)
       this.map.addLayer(marker_new);
     }
+
+    return of(true);
   }
 }
