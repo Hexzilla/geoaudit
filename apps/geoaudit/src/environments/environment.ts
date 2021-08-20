@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  // API_URL: 'http://localhost:1337',
+  //API_URL: 'http://localhost:1337',
   API_URL: 'https://qa-strapitoheroku-7th9x.ondigitalocean.app',
   mapbox: {
     accessToken: 'pk.eyJ1IjoibWljaGFlbHN0b2tlczkzIiwiYSI6ImNrb3Vjdml5MzA1bmIyd3BmMWp6ajIzZjAifQ.pN69oXSyuv632xMknLYQpw'
