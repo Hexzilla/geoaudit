@@ -140,9 +140,18 @@
         <p>{{ abriox_action.created_at | date: 'HH:mm dd/MM/yyyy' }}</p>
         <geoaudit-icon [visible]="true" [color]="getConditionColour(abriox_action)" icon="radio_button_unchecked"></geoaudit-icon>
 
-        <!-- Avatar Image -->
+        <img
+        *ngIf="getSurvey(abriox_action.survey)?.conducted_by?.avatar"
+        mat-card-avatar
+        [src]="API_URL + getSurvey(abriox_action.survey).conducted_by?.avatar.url"
+      />
+      <img
+        *ngIf="!getSurvey(abriox_action.survey)?.conducted_by?.avatar"
+        mat-card-avatar
+        src="https://bestoked.ams3.digitaloceanspaces.com/geoaudit/static/assets/Avatar%20-%20Geoaudit.png"
+      />
 
-        <p>{{ abriox_action.reference }}</p>
+      <p>{{ getSurvey(abriox_action.survey.id)?.reference }}</p>
 
         <button
         mat-icon-button
