@@ -168,7 +168,6 @@ export class JobComponent implements OnInit, AfterViewInit {
         this.jobTypes = jobTypes;
       },
       (err) => {
-        console.log(err);
       }
     );
 
@@ -178,7 +177,6 @@ export class JobComponent implements OnInit, AfterViewInit {
         this.allUsers = users;
       },
       (err) => {
-        console.log(err);
       }
     );
 
@@ -188,7 +186,6 @@ export class JobComponent implements OnInit, AfterViewInit {
         this.statuses = statuses;
       },
       (err) => {
-        console.log(err);
       }
     );
 
@@ -200,7 +197,6 @@ export class JobComponent implements OnInit, AfterViewInit {
         this.updateSurveyChartSeries(jobServeys)
       },
       (err) => {
-        console.log(err);
       }
     );
 
@@ -309,11 +305,9 @@ export class JobComponent implements OnInit, AfterViewInit {
           }
         });
 
-        console.log("data-1", surveys);
         this.dataSource = new MatTableDataSource(surveys);
       },
       (err) => {
-        console.log(err);
       }
     );
   }
@@ -588,7 +582,6 @@ export class JobComponent implements OnInit, AfterViewInit {
     const completedSurveys = validServeys.filter(it => it.status.name === Statuses.COMPLETED)
     const refusedSurveys = validServeys.filter(it => it.status.name === Statuses.REFUSED)
 
-    console.log("updateSurveyChartSeries", surveys);
     this.chartSeries = []
     if (notStartedSurveys.length > 0) {
       this.chartSeries.push({
@@ -618,11 +611,9 @@ export class JobComponent implements OnInit, AfterViewInit {
         color: '#3A86FF',
       })
     }
-    console.log("updateSurveyChartSeries", this.chartSeries);
   }
 
   selectedIndexChange(selectedTabIndex) {
-    console.log("selectedIndexChange", selectedTabIndex);
     this.selectedTabIndex = selectedTabIndex;
   }
 }

@@ -64,7 +64,6 @@ export class ArchiveComponent implements OnInit {
     this.jobEntityService.getWithQuery(parameters).subscribe(
       (jobs) => {
         this.dataSource = new MatTableDataSource(jobs);
-        console.log('jobs', jobs);
       },
 
       (err) => {}

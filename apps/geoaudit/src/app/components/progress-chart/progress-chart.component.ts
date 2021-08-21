@@ -104,11 +104,9 @@ export class ProgressChartComponent implements OnInit {
     },
   };
   constructor() {
-    console.log("progress-chart", this.series);
   }
 
   ngOnInit(): void {
-    console.log("progress-chart-ngOnInit", this.series);
     this.chartOptions.series = this.series;
   }
 }

@@ -210,7 +210,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.abrioxEntityService.getAll().subscribe(
       (marker_data) => {
         this.abrioxes = marker_data;
-        console.log("abriox",marker_data);
         for( var i=0 ;i < this.abrioxes.length ;i ++)
         {
           var a = this.abrioxes[i];
@@ -335,7 +334,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
             return -1;
           return 1;
         });
-        console.log("testpost",marker_data);
         this.testposts = marker_data;
         
         var flag1 = 0 ,flag2 = 0 , flag3 = 0 , flag4 = 0;
@@ -481,7 +479,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
               return -1;
             return 1;
           });
-          console.log("tr",marker_data);
           this.trs = marker_data;
           
           var flag1 = 0 ,flag2 = 0 , flag3 = 0 , flag4 = 0;
@@ -621,7 +618,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
       var resistivity_layer = new L.markerClusterGroup();
       this.resistivityEntityService.getAll().subscribe(
         (marker_data) => {
-         console.log(marker_data);
           this.resistivities = marker_data;
           for( var i=0 ;i < this.resistivities.length ;i ++)
           {
@@ -666,7 +662,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
       );
 
       //fetch survey
-            console.log(this.authService.authValue.user);
       var survey_complete_layer = new L.markerClusterGroup();
       var survey_not_started_layer = new L.markerClusterGroup();
       var survey_ongoing_layer = new L.markerClusterGroup();
@@ -674,7 +669,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
       this.surveyEntityService.getAll().subscribe(
         (marker_data) => {
           this.surveys = marker_data;
-          console.log("surveys",marker_data);
           for( var i=0 ;i < this.surveys.length ;i ++)
           {
             var a = this.surveys[i];
@@ -689,7 +683,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
             
             //if(!a.job || a.job.id != this.authService.authValue.user.id) continue;
             // This condition should allow surveys which have the current user in the array this.survey.job.assignees
-            console.log(this.authService.authValue.user.id);
             // seperate icons and layers for condition
             var icon_name = "flag";
             switch(a.status.name)

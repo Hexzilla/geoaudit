@@ -136,7 +136,6 @@ export class AbrioxComponent implements OnInit {
   createMode() {
     this.abrioxEntityService.add(this.form.value).subscribe(
       (abriox) => {
-        console.log('t', abriox);
         this.patchForm(abriox);
       },
 
@@ -159,8 +158,6 @@ export class AbrioxComponent implements OnInit {
       footer,
       status
     } = abriox;
-
-    console.log('patch', abriox)
 
     this.form.patchValue({
       id,

@@ -97,7 +97,6 @@ export class JobsComponent implements OnInit {
         this.updateJobChartSeries(jobs);
       },
       (err) => {
-        console.log(err);
       }
     );
 
@@ -264,7 +263,6 @@ export class JobsComponent implements OnInit {
     const completedJobs = validJobs.filter(it => it.status.name === Statuses.COMPLETED)
     const refusedJobs = validJobs.filter(it => it.status.name === Statuses.REFUSED)
 
-    console.log("updateJobChartSeries", jobs);
     this.chartSeries = []
     if (notStartedJobs.length > 0) {
       this.chartSeries.push({
@@ -294,6 +292,5 @@ export class JobsComponent implements OnInit {
         color: '#3A86FF',
       })
     }
-    console.log("updateJobChartSeries", this.chartSeries);
   }
 }

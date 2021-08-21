@@ -124,8 +124,6 @@ export class EventComponent implements OnInit {
       users_permissions_users,
     } = event;
 
-    console.log('event', event.surveys);
-
     this.form.patchValue({
       id,
       title,
@@ -155,7 +153,6 @@ export class EventComponent implements OnInit {
     if (jobIds) {
       JSON.parse(jobIds).map((jobId) => {
         this.jobEntityService.getByKey(jobId).subscribe((job) => {
-          console.log('job', job)
           this.form.patchValue({
             jobs: [...this.form.value.jobs, job],
           });
