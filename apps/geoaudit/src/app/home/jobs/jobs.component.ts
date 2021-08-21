@@ -271,7 +271,12 @@ export class JobsComponent implements OnInit {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       }
-    )
+    );
+    var jES = this.jobEntityService;
+    setTimeout(function(){
+      jES.CheckedJobRow.emit([]);
+    }, 3000); //map surveys has initalized after 2s
+
   }
 
   calendar(): void {
