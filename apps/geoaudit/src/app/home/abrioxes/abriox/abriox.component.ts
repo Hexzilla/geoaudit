@@ -39,6 +39,8 @@ export class AbrioxComponent implements OnInit {
 
   abriox: Abriox;
 
+  ready = false;
+
   public disabled = false;
   public showSpinners = true;
   public showSeconds = false;
@@ -150,6 +152,8 @@ export class AbrioxComponent implements OnInit {
       status
     } = abriox;
 
+    console.log('patch', abriox)
+
     this.form.patchValue({
       id,
 
@@ -192,6 +196,8 @@ export class AbrioxComponent implements OnInit {
     }
 
     this.autoSave(this.id ? false : true);
+
+    this.ready = true;
   }
 
   autoSave(reload = false) {
