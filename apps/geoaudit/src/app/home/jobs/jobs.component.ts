@@ -274,8 +274,9 @@ export class JobsComponent implements OnInit {
         this.dataSource.sort = this.sort;
       }
     )
+    var jES = this.jobEntityService;
     setTimeout(function(){
-      this.jobEntityService.CheckedJobRow.emit([]);
+      jES.CheckedJobRow.emit([]);
     }, 3000); //map surveys has initalized after 2s
   }
 
