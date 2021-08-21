@@ -50,7 +50,6 @@ import * as JobActions from '../../store/job/job.actions';
 import { ShareModalComponent } from '../../modals/share-modal/share-modal.component';
 import { JobEntityService } from '../../entity-services/job-entity.service';
 import { AuthService } from '../../services';
-import { HomeComponent } from '../home.component';
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
@@ -112,7 +111,6 @@ export class JobsComponent implements OnInit {
     private router: Router,
     private jobEntityService: JobEntityService,
     private authService: AuthService,
-    private home: HomeComponent
   ) {
     this.form = this.formBuilder.group({
       filter: [''],
@@ -274,7 +272,6 @@ export class JobsComponent implements OnInit {
         this.dataSource.sort = this.sort;
       }
     )
-    //this.home.showMySurveysOnly([]);
   }
 
   calendar(): void {

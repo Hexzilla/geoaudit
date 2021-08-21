@@ -687,8 +687,8 @@ export class JobComponent implements OnInit, AfterViewInit {
       case 0:
         break;
       case 2:   //for survey step clicked
-        console.log("this.surveys : "),console.log(this.surveys);
-        this.map = this.home.showMySurveysOnly([]).subscribe(() =>{});
+        //clear all survey markers
+        this.jobEntityService.CheckedJobRow.emit([]);
         break;
     }
   }

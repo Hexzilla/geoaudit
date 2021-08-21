@@ -27,12 +27,13 @@ import {
   filter,
   map,
 } from 'rxjs/operators';
-import { HomeComponent } from '../../home/home.component';
 
 import { DeleteModalComponent } from '../../modals/delete-modal/delete-modal.component';
 import { NavigationModalComponent } from '../../modals/navigation-modal/navigation-modal.component';
 import { Job, Survey, Roles } from '../../models';
 import { AuthService } from '../../services';
+
+import { JobEntityService } from '../../entity-services/job-entity.service';
 
 import * as fromApp from '../../store';
 import * as SurveyActions from '../../store/survey/survey.actions';
@@ -82,7 +83,7 @@ export class SurveyTableComponent implements OnInit, AfterViewInit {
     private store: Store<fromApp.State>,
     private dialog: MatDialog,
     private router: Router,
-    private home : HomeComponent
+    private jobEntityService: JobEntityService
   ) {}
 
   ngOnInit(): void {
@@ -331,17 +332,14 @@ export class SurveyTableComponent implements OnInit, AfterViewInit {
   }
 
   isManager() {
-    return this.authService.authValue.user.role.name === Roles.MANAGER
+    return this.authService.authValue.user.role.name === Roles.MANAGER;
   }
 
   onCheckedRow(event, selections) {
-    //event.preventDefault();
-    //console.log(this.job);
     console.log(selections.selected);
-    if(selections.selected.length!=0)
-       this.home.showMySurveysOnly(selections.selected).subscribe(() =>{});
-     else
-       this.home.showMySurveysOnly(this.job.surveys).subscribe(() =>{});
-
+    var view_surveys;
+    if (selections.selected.length != 0) view_surveys = selections.selected;
+    else view_surveys = this.job.surveys;
+    this.jobEntityService.CheckedJobRow.emit(view_surveys);
   }
 }
