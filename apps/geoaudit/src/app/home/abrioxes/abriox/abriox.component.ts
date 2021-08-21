@@ -13,11 +13,12 @@ import {
   takeUntil,
 } from 'rxjs/operators';
 import { FileTypes } from '../../../components/file-upload/file-upload.component';
+import { AbrioxActionEntityService } from '../../../entity-services/abriox-action-entity.service';
 import { AbrioxEntityService } from '../../../entity-services/abriox-entity.service';
 import { TestpostEntityService } from '../../../entity-services/testpost-entity.service';
 import { TrEntityService } from '../../../entity-services/tr-entity.service';
 import { AttachmentModalComponent } from '../../../modals/attachment-modal/attachment-modal.component';
-import { Abriox, Image } from '../../../models';
+import { Abriox, AbrioxAction, Image, MarkerColours } from '../../../models';
 import { AlertService, AuthService, UploadService } from '../../../services';
 
 @Component({
@@ -33,6 +34,10 @@ export class AbrioxComponent implements OnInit {
   color: ThemePalette = 'primary';
 
   @ViewChild('dateInstallationDateTimePicker') dateInstallationDateTimePicker: any;
+
+  abriox_actions: Array<AbrioxAction> = [];
+
+  abriox: Abriox;
 
   public disabled = false;
   public showSpinners = true;
@@ -52,6 +57,7 @@ export class AbrioxComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private abrioxEntityService: AbrioxEntityService,
+    private abrioxActionEntityService: AbrioxActionEntityService,
     private testpostEntityService: TestpostEntityService,
     private trEntityService: TrEntityService,
     private formBuilder: FormBuilder,
@@ -102,6 +108,15 @@ export class AbrioxComponent implements OnInit {
     this.abrioxEntityService.getByKey(id).subscribe(
       (abriox) => {
         this.patchForm(abriox);
+        abriox.abriox_actions.map(abriox_action => {
+          this.abrioxActionEntityService.getByKey(abriox_action.id).subscribe(item => {
+            this.abriox_actions.push(item);
+          })
+        })
+
+        this.abriox = abriox;
+
+        this.autoSave(this.id ? false : true);
       },
 
       (err) => {}
@@ -305,5 +320,15 @@ export class AbrioxComponent implements OnInit {
     this.form.patchValue({
       [attribute]: item ? item.id : null
     });
+  }
+
+  getConditionColour(abrioxAction?: AbrioxAction) {
+    let color = "00FFFFFF";
+
+    if (abrioxAction) {
+        color = MarkerColours[abrioxAction.condition.name];
+    }
+
+    return color;
   }
 }
