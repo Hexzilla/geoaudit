@@ -69,7 +69,6 @@ import { AlertService, AuthService, UploadService } from '../../../services';
 import * as fromApp from '../../../store';
 
 import L from 'leaflet';
-import { HomeComponent } from '../../home.component';
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
@@ -191,7 +190,6 @@ export class JobComponent implements OnInit, AfterViewInit {
     private userEntityService: UserEntityService,
     private route: ActivatedRoute,
     private router: Router,
-    private home: HomeComponent,
     private store: Store<fromApp.State>,
     private alertService: AlertService,
     private dialog: MatDialog,
