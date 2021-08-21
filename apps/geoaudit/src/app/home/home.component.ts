@@ -1,4 +1,5 @@
 import { Component, AfterViewInit, OnInit } from '@angular/core';
+import { Location } from '@angular/common'
 import { Router } from '@angular/router';
 import L from 'leaflet';
 import qs from 'qs';
@@ -137,7 +138,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
     private alertService: AlertService,
     private notificationEntityService: NotificationEntityService,
     private toDoListEntityService: ToDoListEntityService,
-    private jobEntityService: JobEntityService
+    private jobEntityService: JobEntityService,
+    private location: Location
   ) {
     this.auth = this.authService.authValue;
   }
@@ -1271,6 +1273,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   approve(): void {
     this.router.navigate(['/home/approvals']);
+  }
+
+  back(): void {
+    this.location.back()
   }
 
   home(): void {
