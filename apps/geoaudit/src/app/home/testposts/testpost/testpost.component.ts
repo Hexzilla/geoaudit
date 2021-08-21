@@ -401,7 +401,7 @@ export class TestpostComponent implements OnInit, AfterViewInit {
       const tp_action = this.tp_actions.sort((a: any, b: any) => b.date - a.date);
 
       if (tp_action) {
-        color = MarkerColours[tp_action[tp_action.length - 1].condition.name];
+        color = MarkerColours[tp_action[tp_action.length - 1]?.condition.name];
       }
     }  
 

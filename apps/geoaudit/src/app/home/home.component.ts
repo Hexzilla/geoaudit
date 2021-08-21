@@ -1,4 +1,5 @@
 import { Component, AfterViewInit, OnInit } from '@angular/core';
+import { Location } from '@angular/common'
 import { Router } from '@angular/router';
 import L from 'leaflet';
 import qs from 'qs';
@@ -137,7 +138,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
     private alertService: AlertService,
     private notificationEntityService: NotificationEntityService,
     private toDoListEntityService: ToDoListEntityService,
-    private jobEntityService: JobEntityService
+    private jobEntityService: JobEntityService,
+    private location: Location
   ) {
     this.auth = this.authService.authValue;
   }
@@ -1195,7 +1197,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
     this.sidebar.on('closing', (e) => {
       // e.id contains the id of the opened panel      
-      this.router.navigate(['/home']);
+      //this.router.navigate(['/home/jobs']);
     })
 
     this.sidebar.on('content', function(e) {
@@ -1274,6 +1276,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   back(): void {
+    this.location.back()
   }
 
   home(): void {

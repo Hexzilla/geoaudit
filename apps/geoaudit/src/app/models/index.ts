@@ -1,4 +1,5 @@
 export * from './abriox.model';
+export * from './abriox-action.model';
 export * from './alert.model';
 export * from './anode.model';
 export * from './api.model';
