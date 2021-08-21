@@ -21,35 +21,17 @@ import {
 import { MatChipInputEvent } from '@angular/material/chips';
 import { ThemePalette } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 
-import {
-  ApexAxisChartSeries,
-  ApexChart,
-  ChartComponent,
-  ApexDataLabels,
-  ApexXAxis,
-  ApexPlotOptions,
-  ApexStroke,
-  ApexTitleSubtitle,
-  ApexTooltip,
-  ApexFill,
-  ApexLegend,
-  ApexYAxis,
-  ApexGrid,
-} from 'ng-apexcharts';
-
 import { environment } from 'apps/geoaudit/src/environments/environment';
-import { Lightbox, IAlbum } from 'ngx-lightbox';
+import { Lightbox } from 'ngx-lightbox';
 import { fromEvent, Subject } from 'rxjs';
 import {
   map,
   filter,
   distinctUntilChanged,
-  switchMap,
   debounceTime,
   takeUntil,
   tap,
@@ -60,28 +42,11 @@ import { JobTypeEntityService } from '../../../entity-services/job-type-entity.s
 import { StatusEntityService } from '../../../entity-services/status-entity.service';
 import { SurveyEntityService } from '../../../entity-services/survey-entity.service';
 import { UserEntityService } from '../../../entity-services/user-entity.service';
-import { AttachmentModalComponent } from '../../../modals/attachment-modal/attachment-modal.component';
 import { Job, Status, Statuses, Survey, User } from '../../../models';
-import { Image } from '../../../models/image.model';
 import { JobType } from '../../../models/job-type.model';
 import { AlertService, AuthService, UploadService } from '../../../services';
 
 import * as fromApp from '../../../store';
-
-export type ChartOptions = {
-  series: ApexAxisChartSeries;
-  chart: ApexChart;
-  dataLabels: ApexDataLabels;
-  plotOptions: ApexPlotOptions;
-  xaxis: ApexXAxis;
-  yaxis: ApexYAxis;
-  stroke: ApexStroke;
-  title: ApexTitleSubtitle;
-  tooltip: ApexTooltip;
-  fill: ApexFill;
-  legend: ApexLegend;
-  grid: ApexGrid;
-};
 
 @Component({
   selector: 'geoaudit-job',
@@ -173,9 +138,8 @@ export class JobComponent implements OnInit, AfterViewInit {
 
   filteredSurveys: Array<Survey>;
 
-  @ViewChild('chart') chart: ChartComponent;
-
-  public chartOptions: Partial<ChartOptions>;
+  public chartSeries = null;
+  public selectedTabIndex = 0;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -193,102 +157,6 @@ export class JobComponent implements OnInit, AfterViewInit {
     private authService: AuthService,
     private uploadService: UploadService
   ) {
-    this.chartOptions = {
-      series: [
-        {
-          name: Statuses.NOT_STARTED,
-          data: [44],
-          color: '#FF0000',
-        },
-        {
-          name: Statuses.ONGOING,
-          data: [53],
-          color: '#FFA500',
-        },
-        {
-          name: Statuses.COMPLETED,
-          data: [12],
-          color: '#90EE90',
-        },
-        {
-          name: Statuses.REFUSED,
-          data: [9],
-          color: '#000000',
-        },
-      ],
-      chart: {
-        type: 'bar',
-        height: 100,
-        stacked: true,
-        stackType: '100%',
-
-        dropShadow: {
-          enabled: false,
-        },
-
-        toolbar: {
-          show: false,
-        },
-
-        sparkline: {
-          // enabled: true
-        },
-      },
-      plotOptions: {
-        bar: {
-          horizontal: true,
-          // borderRadius: 15
-        },
-      },
-      stroke: {
-        width: 0,
-        colors: ['#fff'],
-      },
-      title: {
-        // text: "100% Stacked Bar"
-        text: '',
-      },
-      xaxis: {
-        // categories: [2008, 2009, 2010, 2011, 2012, 2013, 2014]
-        categories: [],
-        labels: {
-          show: false,
-        },
-        axisBorder: {
-          show: false,
-        },
-        axisTicks: {
-          show: false,
-        },
-      },
-      yaxis: {
-        labels: {
-          show: false,
-        },
-        axisBorder: {
-          show: false,
-        },
-      },
-      tooltip: {
-        // y: {
-        //   formatter: function(val) {
-        //     return val + "K";
-        //   }
-        // }
-        x: {
-          show: false,
-        },
-      },
-      fill: {
-        opacity: 1,
-      },
-      legend: {
-        show: false,
-        position: 'bottom',
-        horizontalAlign: 'left',
-        offsetX: 40,
-      },
-    };
   }
 
   ngOnInit(): void {
@@ -299,8 +167,9 @@ export class JobComponent implements OnInit, AfterViewInit {
       (jobTypes) => {
         this.jobTypes = jobTypes;
       },
-
-      (err) => {}
+      (err) => {
+        console.log(err);
+      }
     );
 
     // Fetch users for assignees
@@ -308,8 +177,9 @@ export class JobComponent implements OnInit, AfterViewInit {
       (users) => {
         this.allUsers = users;
       },
-
-      (err) => {}
+      (err) => {
+        console.log(err);
+      }
     );
 
     // Fetch statuses
@@ -317,55 +187,21 @@ export class JobComponent implements OnInit, AfterViewInit {
       (statuses) => {
         this.statuses = statuses;
       },
-
-      (err) => {}
+      (err) => {
+        console.log(err);
+      }
     );
 
     this.surveyEntityService.getAll().subscribe(
       (surveys) => {
         this.allSurveys = surveys;
-
-        let notStartedSurveys = [];
-        let onGoingSurveys = [];
-        let completedSurveys = [];
-        let refusedSurveys = [];
-
-        surveys.map((survey) => {
-          if (survey?.status?.name === Statuses.NOT_STARTED)
-            notStartedSurveys.push(survey);
-          if (survey?.status?.name === Statuses.ONGOING)
-            onGoingSurveys.push(survey);
-          if (survey?.status?.name === Statuses.COMPLETED)
-            completedSurveys.push(survey);
-          if (survey?.status?.name === Statuses.REFUSED)
-            refusedSurveys.push(survey);
-        });
-
-        this.chartOptions.series = [
-          {
-            name: Statuses.NOT_STARTED,
-            data: [notStartedSurveys.length],
-            color: '#FF0000',
-          },
-          {
-            name: Statuses.ONGOING,
-            data: [onGoingSurveys.length],
-            color: '#FFA500',
-          },
-          {
-            name: Statuses.COMPLETED,
-            data: [completedSurveys.length],
-            color: '#90EE90',
-          },
-          {
-            name: Statuses.REFUSED,
-            data: [refusedSurveys.length],
-            color: '#000000',
-          },
-        ];
+        const jobId = parseInt(this.id)
+        const jobServeys = surveys.filter(it => it.job && it.job.id === jobId);
+        this.updateSurveyChartSeries(jobServeys)
       },
-
-      (err) => {}
+      (err) => {
+        console.log(err);
+      }
     );
 
     /**
@@ -473,10 +309,12 @@ export class JobComponent implements OnInit, AfterViewInit {
           }
         });
 
+        console.log("data-1", surveys);
         this.dataSource = new MatTableDataSource(surveys);
       },
-
-      (err) => {}
+      (err) => {
+        console.log(err);
+      }
     );
   }
 
@@ -572,9 +410,7 @@ export class JobComponent implements OnInit, AfterViewInit {
 
       (err) => {
         this.alertService.error('Something went wrong');
-      },
-
-      () => {}
+      }
     );
   }
 
@@ -680,17 +516,17 @@ export class JobComponent implements OnInit, AfterViewInit {
     }
   }
 
-  isDetailsStepCompleted() {
-    return false;
-  }
+  // isDetailsStepCompleted() {
+  //   return false;
+  // }
 
-  isAttachmentStepCompleted() {
-    return false;
-  }
+  // isAttachmentStepCompleted() {
+  //   return false;
+  // }
 
-  isSurveysStepCompleted() {
-    return false;
-  }
+  // isSurveysStepCompleted() {
+  //   return false;
+  // }
 
   onImageUpload(event): void {
     const { images } = this.form.value.footer;
@@ -743,5 +579,50 @@ export class JobComponent implements OnInit, AfterViewInit {
     this.form.patchValue({
       surveys: ids,
     });
+  }
+
+  private updateSurveyChartSeries(surveys) {
+    const validServeys = surveys.filter(it => it.status != null);
+    const notStartedSurveys = validServeys.filter(it => it.status.name === Statuses.NOT_STARTED)
+    const onGoingSurveys = validServeys.filter(it => it.status.name === Statuses.ONGOING)
+    const completedSurveys = validServeys.filter(it => it.status.name === Statuses.COMPLETED)
+    const refusedSurveys = validServeys.filter(it => it.status.name === Statuses.REFUSED)
+
+    console.log("updateSurveyChartSeries", surveys);
+    this.chartSeries = []
+    if (notStartedSurveys.length > 0) {
+      this.chartSeries.push({
+        name: Statuses.NOT_STARTED,
+        data: [notStartedSurveys.length],
+        color: '#E71D36',
+      })
+    }
+    if (onGoingSurveys.length > 0) {
+      this.chartSeries.push({
+        name: Statuses.ONGOING,
+        data: [onGoingSurveys.length],
+        color: '#FFBE0B',
+      })
+    }
+    if (completedSurveys.length > 0) {
+      this.chartSeries.push({
+        name: Statuses.COMPLETED,
+        data: [completedSurveys.length],
+        color: '#8AC926',
+      })
+    }
+    if (refusedSurveys.length > 0) {
+      this.chartSeries.push({
+        name: Statuses.REFUSED,
+        data: [refusedSurveys.length],
+        color: '#3A86FF',
+      })
+    }
+    console.log("updateSurveyChartSeries", this.chartSeries);
+  }
+
+  selectedIndexChange(selectedTabIndex) {
+    console.log("selectedIndexChange", selectedTabIndex);
+    this.selectedTabIndex = selectedTabIndex;
   }
 }
