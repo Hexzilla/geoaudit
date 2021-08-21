@@ -274,10 +274,9 @@ export class JobsComponent implements OnInit {
         this.dataSource.sort = this.sort;
       }
     )
-    var homeMap = this.home;
     setTimeout(function(){
-      homeMap.showMySurveysOnly([]);
-    }, 3000); //homeMap.map initalize after 2s
+      this.jobEntityService.CheckedJobRow.emit([]);
+    }, 3000); //map surveys has initalized after 2s
   }
 
   calendar(): void {
@@ -440,7 +439,7 @@ export class JobsComponent implements OnInit {
             var job = jobs[i];
             surveys = surveys.concat(job.surveys);
           };
-          this.home.showMySurveysOnly(surveys).subscribe(() =>{});
+          this.jobEntityService.CheckedJobRow.emit(surveys);
         }
       )
     }
@@ -451,7 +450,7 @@ export class JobsComponent implements OnInit {
         var job = selections.selected[i];
         surveys = surveys.concat(job.surveys);
       };
-      this.home.showMySurveysOnly(surveys).subscribe(() =>{});
+      this.jobEntityService.CheckedJobRow.emit(surveys);
     }
   }
 }

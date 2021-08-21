@@ -155,6 +155,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
     });
 
     this.myJobsCount$ = this.jobEntityService.count(parameters);
+
+    this.jobEntityService.CheckedJobRow.subscribe((surveydata) => {
+      this.showMySurveysOnly(surveydata);
+     });
   }
 
   ngAfterViewInit(): void {
@@ -1287,9 +1291,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
 
-  showMySurveysOnly(surveys) : Observable<boolean>{
-    //console.log("refreshed surveys length = " + surveys.length);
-    //console.log(surveys);
+  showMySurveysOnly(surveys) : void{
     if(this.map)
     this.map.eachLayer(function(layer) {
       if(layer.options && layer.options.pane === "markerPane") {
@@ -1300,7 +1302,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
     {
       this.drawSurveyMarker(surveys[i]);
     }
-    return of(true);
   }
 
   //iconColor : survey marker color
