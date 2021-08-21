@@ -1197,7 +1197,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
     this.sidebar.on('closing', (e) => {
       // e.id contains the id of the opened panel      
-      this.router.navigate(['/home']);
+      //this.router.navigate(['/home/jobs']);
     })
 
     this.sidebar.on('content', function(e) {
