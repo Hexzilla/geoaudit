@@ -29,7 +29,7 @@ import {MatStepperModule} from '@angular/material/stepper';
 import {MatTabsModule} from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTableModule } from '@angular/material/table';
-
+import { NgApexchartsModule } from "ng-apexcharts";
 
 // Modals
 import { AttachmentModalComponent } from '../modals/attachment-modal/attachment-modal.component';
@@ -44,6 +44,7 @@ import { LightboxModule } from 'ngx-lightbox';
 import { CardButtonComponent } from '../components/card-button/card-button.component';
 import { FileUploadComponent } from '../components/file-upload/file-upload.component';
 import { SidebarHeaderComponent } from '../components/sidebar-header/sidebar-header.component';
+import { ProgressChartComponent } from '../components/progress-chart/progress-chart.component';
 import { SidebarActionsComponent } from '../components/sidebar-actions/sidebar-actions.component';
 import { SurveyTableComponent } from '../components/survey-table/survey-table.component';
 
@@ -85,6 +86,8 @@ import { ConditionEntityService } from '../entity-services/condition-entity.serv
 import { ConditionDataService } from '../data-services/condition-data.service';
 import { TpActionDataService } from '../data-services/tp-action-data.service';
 import { TpActionEntityService } from '../entity-services/tp-action-entity.service';
+import { AbrioxActionEntityService } from '../entity-services/abriox-action-entity.service';
+import { AbrioxActionDataService } from '../data-services/abriox-action-data.service';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient) {
@@ -105,6 +108,8 @@ const CUSTOM_MOMENT_FORMATS: NgxMatDateFormats = {
 };
 
 const entityMetadataMap: EntityMetadataMap = {
+
+  AbrioxAction: {},
 
   Condition: {},
 
@@ -183,11 +188,13 @@ const entityMetadataMap: EntityMetadataMap = {
     NgxMatDatetimePickerModule,
     NgxMatMomentModule,
     LightboxModule,
+    NgApexchartsModule,
   ],
   declarations: [
     CardButtonComponent,
     FileUploadComponent,
     SidebarHeaderComponent,
+    ProgressChartComponent,
     SidebarActionsComponent,
     AttachmentModalComponent,
     NavigationModalComponent,
@@ -198,6 +205,9 @@ const entityMetadataMap: EntityMetadataMap = {
     IconComponent
   ],
   providers: [
+
+    AbrioxActionEntityService,
+    AbrioxActionDataService,
 
     ConditionEntityService,
     ConditionDataService,
@@ -268,6 +278,7 @@ const entityMetadataMap: EntityMetadataMap = {
     CardButtonComponent,
     FileUploadComponent,
     SidebarHeaderComponent,
+    ProgressChartComponent,
     SidebarActionsComponent,
     AttachmentModalComponent,
     RefusalModalComponent,
@@ -313,6 +324,8 @@ export class SharedModule {
   constructor(
     private entityDefinitionService: EntityDefinitionService,
     private entityDataService: EntityDataService,
+
+    private abrioxActionDataService: AbrioxActionDataService,
     private conditionDataService: ConditionDataService,
     private eventDataService: EventDataService,
     private jobDataService: JobDataService,
@@ -335,6 +348,7 @@ export class SharedModule {
     // entityDataService.registerService('Status', statusDataService);
     entityDataService.registerServices(
       { 
+        AbrioxAction: abrioxActionDataService,
         Condition: conditionDataService,
         Event: eventDataService,
         Status: statusDataService,

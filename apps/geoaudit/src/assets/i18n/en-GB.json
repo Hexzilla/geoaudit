@@ -30,7 +30,8 @@
 					"condition": "Condition",
 					"new_condition": "New condition",
 					"status": "Status",
-					"new_status": "New status"
+					"new_status": "New status",
+					"actions": "Actions"
 				}
 			},
 			"approval": {

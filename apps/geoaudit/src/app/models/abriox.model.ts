@@ -1,3 +1,4 @@
+import { AbrioxAction } from "./abriox-action.model";
 import { Condition } from "./condition.model";
 import { Footer } from "./footer.model";
 import { Note } from "./note.model";
@@ -19,4 +20,5 @@ export interface Abriox {
     status?: Status;
     condition?: Condition;
     notes?: Array<Note>;
+    abriox_actions?: Array<AbrioxAction>;
 }

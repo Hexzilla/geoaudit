@@ -3,7 +3,7 @@
   [placeholder]="form.value.name"
 ></geoaudit-sidebar-header>
 
-<mat-horizontal-stepper>
+<mat-horizontal-stepper *ngIf="ready">
   <mat-step [label]="'CONTAINERS.home.abrioxes.abriox.details' | translate">
     <geoaudit-single-item-selector
       selector="status"
@@ -114,15 +114,6 @@
         </ngx-mat-datetime-picker>
       </mat-form-field>
     </form>
-
-    <geoaudit-single-item-selector
-      selector="condition"
-      label="CONTAINERS.home.abrioxes.abriox.condition"
-      placeholder="CONTAINERS.home.abrioxes.abriox.new_condition"
-      [item]="form.value.condition"
-      (itemChange)="onItemChange($event, 'condition')"
-      attribute="name"
-    ></geoaudit-single-item-selector>
   </mat-step>
 
   <mat-step [label]="'CONTAINERS.home.abrioxes.abriox.attachments' | translate">
@@ -141,6 +132,27 @@
       fileType="DOCUMENT"
       [multiple]="true"
     ></geoaudit-file-upload>
+  </mat-step>
+
+  <mat-step [label]="'CONTAINERS.home.abrioxes.abriox.actions' | translate">
+    <mat-card *ngFor="let abriox_action of abriox_actions" style="cursor: pointer; margin-top: 20px" [routerLink]="'/home/abriox_actions/' + abriox_action.id">
+      <div fxLayout="row" fxLayoutAlign="space-between">
+        <p>{{ abriox_action.created_at | date: 'HH:mm dd/MM/yyyy' }}</p>
+        <geoaudit-icon [visible]="true" [color]="getConditionColour(abriox_action)" icon="radio_button_unchecked"></geoaudit-icon>
+
+        <!-- Avatar Image -->
+
+        <p>{{ abriox_action.reference }}</p>
+
+        <button
+        mat-icon-button
+        color="accent"
+        aria-label="Example icon button with a plus one icon"
+      >
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+      </div>
+    </mat-card>
   </mat-step>
 
   <mat-step [label]="'CONTAINERS.home.abrioxes.abriox.notes' | translate">
