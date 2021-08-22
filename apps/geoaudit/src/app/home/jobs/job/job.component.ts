@@ -138,6 +138,9 @@ export class JobComponent implements OnInit, AfterViewInit {
 
   filteredSurveys: Array<Survey>;
 
+  Images: Array<any>;
+  Documents: Array<any>;
+
   public chartSeries = null;
   public selectedTabIndex = 0;
 
@@ -310,6 +313,7 @@ export class JobComponent implements OnInit, AfterViewInit {
         });
 
         console.log("data-1", surveys);
+        this.getUploadFiles();
         this.dataSource = new MatTableDataSource(surveys);
       },
       (err) => {
@@ -542,6 +546,8 @@ export class JobComponent implements OnInit, AfterViewInit {
       },
     });
 
+    this.getUploadFiles();
+
     this.submit(false);
   }
 
@@ -555,12 +561,27 @@ export class JobComponent implements OnInit, AfterViewInit {
       },
     });
 
+    this.getUploadFiles();
+
     this.submit(false);
   }
 
   onPreview(fileType: FileTypes): void {
     const { images, documents } = this.form.value.footer;
     this.uploadService.onPreview(fileType, images, documents);
+  }
+
+  onItemPreview(param: any): void {
+    const { images, documents } = this.form.value.footer;
+    this.uploadService.onItemPreview(param.fileType, images, documents, param.index);
+  }
+
+  getUploadFiles(): void {
+    
+    const { images, documents } = this.form.value.footer;
+    console.log("getJobItems->document",documents);
+    this.Images = this.uploadService.getUploadFiles(FileTypes.IMAGE, images, documents);
+    this.Documents = this.uploadService.getUploadFiles(FileTypes.DOCUMENT, images, documents);
   }
 
   delete(surveys: Array<Survey>): void {

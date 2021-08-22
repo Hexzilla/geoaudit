@@ -1,7 +1,7 @@
 <geoaudit-sidebar-header
   title="CONTAINERS.home.jobs.job.overview.title"
-  reference="reference"
->
+  reference="www"
+> 
   <mat-form-field appearance="outline">
     <mat-label>{{
       'CONTAINERS.home.jobs.job.status' | translate
@@ -122,22 +122,40 @@
       </geoaudit-attachment-card>
       <geoaudit-attachment-card title="CONTAINERS.home.jobs.job.attachments.documents" icon="upload_file" type="DOCUMENT" [multiple]="true">
       </geoaudit-attachment-card> -->
+<!--       
+    <geoaudit-file-upload
+      label="CONTAINERS.home.jobs.job.attachments.images"
+      (preview)="onPreview($event)"
+      (upload)="onImageUpload($event)"
+      fileType="IMAGE"
+      [multiple]="true"
+    ></geoaudit-file-upload>
 
-      <geoaudit-file-upload
+    <geoaudit-file-upload
+      label="CONTAINERS.home.jobs.job.attachments.documents"
+      (preview)="onPreview($event)"
+      (upload)="onDocumentUpload($event)"
+      fileType="DOCUMENT"
+      [multiple]="true"
+    ></geoaudit-file-upload> -->
+
+      <attachment-file-upload
         label="CONTAINERS.home.jobs.job.attachments.images"
-        (preview)="onPreview($event)"
+        (preview)="onItemPreview($event)"
         (upload)="onImageUpload($event)"
         fileType="IMAGE"
+        [items] = "Images"
         [multiple]="true"
-      ></geoaudit-file-upload>
+      ></attachment-file-upload>
 
-      <geoaudit-file-upload
+      <attachment-file-upload
         label="CONTAINERS.home.jobs.job.attachments.documents"
-        (preview)="onPreview($event)"
+        (preview)="onItemPreview($event)"
         (upload)="onDocumentUpload($event)"
         fileType="DOCUMENT"
+        [items] = "Documents"
         [multiple]="true"
-      ></geoaudit-file-upload>
+      ></attachment-file-upload>
     </mat-card-content>
   </mat-tab>
 
@@ -155,11 +173,21 @@
       <div fxLayout="row" fxLayoutAlign="space-between center">
         <div fxLayout="column">
           <h3>Surveys</h3>
-          <p>Progress</p>
         </div>
       </div>
-
-      <mat-form-field appearance="outline">
+      <!-- Reusable survey table component -->
+      <geoaudit-survey-table
+        *ngIf="dataSource"
+        [filterMode]="'LOCAL'"
+        [dataSource]="dataSource"
+        [length]="length"
+        [pageSize]="pageSize"
+        [pageSizeOptions]="pageSizeOptions"
+        (onDelete)="delete($event)"
+        [job]="job"
+      ></geoaudit-survey-table>
+         
+      <mat-form-field appearance="outline" class="full-width">
         <mat-label>Survey</mat-label>
         <input
           matInput
@@ -178,19 +206,6 @@
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>
-
-      <!-- Reusable survey table component -->
-      <geoaudit-survey-table
-        *ngIf="dataSource"
-        [filterMode]="'LOCAL'"
-        [dataSource]="dataSource"
-        [length]="length"
-        [pageSize]="pageSize"
-        [pageSizeOptions]="pageSizeOptions"
-        (onDelete)="delete($event)"
-        [job]="job"
-      ></geoaudit-survey-table>
-      
     </mat-card-content>
   </mat-tab>
 
