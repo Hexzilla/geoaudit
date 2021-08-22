@@ -72,7 +72,8 @@ import { JobEntityService } from '../entity-services/job-entity.service';
     AbrioxEntityService,
     TestpostEntityService,
     TrEntityService,
-    ResistivityEntityService
+    ResistivityEntityService,
+    JobEntityService
   ]
 })
 export class HomeComponent implements OnInit, AfterViewInit {
