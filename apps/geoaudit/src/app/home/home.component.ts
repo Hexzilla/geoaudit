@@ -64,6 +64,8 @@ import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { JobEntityService } from '../entity-services/job-entity.service';
 
+import { Subscription } from "rxjs";
+
 @Component({
   selector: 'geoaudit-home',
   templateUrl: './home.component.html',
@@ -72,7 +74,8 @@ import { JobEntityService } from '../entity-services/job-entity.service';
     AbrioxEntityService,
     TestpostEntityService,
     TrEntityService,
-    ResistivityEntityService
+    ResistivityEntityService,
+    JobEntityService
   ]
 })
 export class HomeComponent implements OnInit, AfterViewInit {
@@ -121,8 +124,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
   )
 
   myJobsCount$: Observable<number>;
-
+  private SurveySelectedEventRef: Subscription = null;
   toDoList$ = this.toDoListEntityService.entities$;
+
 
   constructor(
     private authService: AuthService,
@@ -159,8 +163,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.jobEntityService.CheckedJobRow.subscribe((surveydata) => {
       this.showMySurveysOnly(surveydata);
      });
-  }
 
+  }
   ngAfterViewInit(): void {
     this.initMap();
     this.initialiseControls();

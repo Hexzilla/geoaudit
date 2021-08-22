@@ -4,6 +4,7 @@ import { EntityCollectionServiceBase, EntityCollectionServiceElementsFactory, Qu
 import { environment } from "../../environments/environment";
 
 import { Job } from "../models";
+import { BehaviorSubject, Subject } from "rxjs";
 
 @Injectable()
 export class JobEntityService extends EntityCollectionServiceBase<Job> {
@@ -19,5 +20,15 @@ export class JobEntityService extends EntityCollectionServiceBase<Job> {
         return this.http.get<any>(`${environment.API_URL}/jobs/count?${queryParams}`);
     }
 
-    CheckedJobRow = new EventEmitter();
+
+    CheckedJobRow = new EventEmitter();     //defiend but no working
+
+    // private SurveySelectedEventSource:BehaviorSubject<Array<any>> = new BehaviorSubject([]);
+    // public SurveySelectedEvent$ = this.SurveySelectedEventSource.asObservable();
+    // raiseSelectedSurveyChanged(surveys)
+    // {
+    //     this.SurveySelectedEventSource.next(surveys);
+    //     console.log("raiseSelectedSurveyChanged");
+    //     console.log(surveys);
+    // }
 }

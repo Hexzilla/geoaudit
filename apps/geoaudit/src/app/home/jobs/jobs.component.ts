@@ -428,6 +428,8 @@ export class JobsComponent implements OnInit {
 
   onCheckedRow(event, selections) {
     //event.preventDefault();
+    console.log("onCheckedRow");
+
     var surveys = [];
     //console.log(selections.selected);
     if(selections.selected.length==0)
@@ -440,7 +442,9 @@ export class JobsComponent implements OnInit {
             var job = jobs[i];
             surveys = surveys.concat(job.surveys);
           };
+    
           this.jobEntityService.CheckedJobRow.emit(surveys);
+          //this.jobEntityService.raiseSelectedSurveyChanged(surveys);
         }
       )
     }
@@ -452,6 +456,7 @@ export class JobsComponent implements OnInit {
         surveys = surveys.concat(job.surveys);
       };
       this.jobEntityService.CheckedJobRow.emit(surveys);
+      //this.jobEntityService.raiseSelectedSurveyChanged(surveys);
     }
   }
 }
