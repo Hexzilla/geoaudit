@@ -110,7 +110,14 @@ export class JobsComponent implements OnInit {
         this.dataSource.sort = this.sort;
       }
     )
+
+    this.selectionService.jobSelectionChangedEvent.emit([]);
+    
   }
+
+  ngOnDestroy(): void{
+    this.selectionService.jobSelectionChangedEvent.emit(['jobsdestory']);
+  } 
 
   calendar(): void {
     const jobs = this.selection.isEmpty()
@@ -305,7 +312,7 @@ export class JobsComponent implements OnInit {
           const surveys = jobs.reduce((_surveys, job) => {
             return _surveys.concat(job.surveys)
           }, [])
-          this.selectionService.jobSelectionChangedEvent.emit(surveys);
+          this.selectionService.jobSelectionChangedEvent.emit([]);
         }
       )
     }
