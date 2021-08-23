@@ -33,6 +33,7 @@ import * as fromApp from '../../store';
 import * as JobActions from '../../store/job/job.actions';
 import { ShareModalComponent } from '../../modals/share-modal/share-modal.component';
 import { JobEntityService } from '../../entity-services/job-entity.service';
+import { SelectionService } from '../../services/selection.service';
 import { AuthService } from '../../services';
 
 @Component({
@@ -77,6 +78,7 @@ export class JobsComponent implements OnInit {
     private formBuilder: FormBuilder,
     private router: Router,
     private jobEntityService: JobEntityService,
+    private selectionService: SelectionService,
     private authService: AuthService
   ) {
     this.form = this.formBuilder.group({
@@ -108,7 +110,14 @@ export class JobsComponent implements OnInit {
         this.dataSource.sort = this.sort;
       }
     )
+
+    this.selectionService.jobSelectionChangedEvent.emit([]);
+    
   }
+
+  ngOnDestroy(): void{
+    this.selectionService.jobSelectionChangedEvent.emit(['jobsdestory']);
+  } 
 
   calendar(): void {
     const jobs = this.selection.isEmpty()
@@ -291,6 +300,27 @@ export class JobsComponent implements OnInit {
         data: [refusedJobs.length],
         color: '#3A86FF',
       })
+    }
+  }
+
+  onCheckedRow(event, selections) {
+    console.log("onCheckedRow", selections.selected);
+
+    if (selections.selected.length == 0) {
+      this.jobs$.subscribe(
+        (jobs) => {
+          const surveys = jobs.reduce((_surveys, job) => {
+            return _surveys.concat(job.surveys)
+          }, [])
+          this.selectionService.jobSelectionChangedEvent.emit([]);
+        }
+      )
+    }
+    else {
+      const surveys = selections.selected.reduce((_surveys, job) => {
+        return _surveys.concat(job.surveys)
+      }, [])
+      this.selectionService.jobSelectionChangedEvent.emit(surveys);
     }
   }
 }

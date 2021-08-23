@@ -63,12 +63,13 @@ import { NotificationEntityService } from '../entity-services/notification-entit
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { JobEntityService } from '../entity-services/job-entity.service';
+import { SelectionService } from '../services/selection.service';
 
 @Component({
   selector: 'geoaudit-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
-  providers:[
+  providers: [
     AbrioxEntityService,
     TestpostEntityService,
     TrEntityService,
@@ -76,7 +77,6 @@ import { JobEntityService } from '../entity-services/job-entity.service';
   ]
 })
 export class HomeComponent implements OnInit, AfterViewInit {
-
   // Icons
   faBars = faBars;
   faBell = faBell;
@@ -105,9 +105,14 @@ export class HomeComponent implements OnInit, AfterViewInit {
   resistivities: Array<Resistivity>;
   surveys: Array<Survey>;
 
-
   private map;
   private states;
+
+  startwithjobs = false;
+  survey_complete_layer = new L.markerClusterGroup();
+  survey_not_started_layer = new L.markerClusterGroup();
+  survey_ongoing_layer = new L.markerClusterGroup();
+  survey_refused_layer = new L.markerClusterGroup();
 
   clickMarker;
   url: string;
@@ -139,10 +144,49 @@ export class HomeComponent implements OnInit, AfterViewInit {
     private notificationEntityService: NotificationEntityService,
     private toDoListEntityService: ToDoListEntityService,
     private jobEntityService: JobEntityService,
+    private selectionService: SelectionService,
     private location: Location
   ) {
     this.auth = this.authService.authValue;
   }
+
+  inJobSurveys(surveys, jobSurveys) {
+    var length = jobSurveys.length;
+    for(var i = 0; i < length; i++) {
+        if(surveys.id == jobSurveys[i].id) return true;
+    }
+    return false;
+  }
+
+  createMarker(busIcon, jobsurvey){
+      let marker_i = L.marker(
+        new L.LatLng(jobsurvey.geometry['lat'], jobsurvey.geometry['lng']),
+        { icon: busIcon, title: jobsurvey.name }
+      );
+      var select_popup =
+        '<h2> survey ' + jobsurvey.name + '</h2><hr>';
+      select_popup +=
+        '<button data-btn="detail" data-type="surveys" data-id="' +
+        jobsurvey.id +
+        '" class="sp_button">Details<span class="detail_button_icon">></span></button></a>';
+      select_popup +=
+        '<button data-btn="notes" data-type="surveys" data-id="' +
+        jobsurvey.id +
+        '" class="sp_button">Notes<span class="detail_button_icon">></span></button>';
+      select_popup +=
+        '<button data-btn="drive" data-type="surveys" data-id="' +
+        jobsurvey.id +
+        '" class="sp_button">DriveTo<span class="detail_button_icon">></span></button>';
+
+      var popup = L.popup({
+        className: 'select_marker_popup',
+        closeButton: false,
+      }).setContent(select_popup);
+      marker_i.bindPopup(popup);
+      // marker_i.addTo(survey_complete_layer);
+      return marker_i;
+  }
+
 
   ngOnInit(): void {
     this.notificationEntityService.getAll();
@@ -156,6 +200,97 @@ export class HomeComponent implements OnInit, AfterViewInit {
     });
 
     this.myJobsCount$ = this.jobEntityService.count(parameters);
+
+    this.selectionService.jobSelectionChangedEvent.subscribe((surveys) => {
+      this.survey_complete_layer.clearLayers();
+      this.survey_not_started_layer.clearLayers();
+      this.survey_ongoing_layer.clearLayers();
+      this.survey_refused_layer.clearLayers();
+      this.startwithjobs = true
+      
+      let jobSurveys = [];
+      if(surveys[0] == "jobsdestory"){
+        jobSurveys = this.surveys;
+      }else{
+        if(this.surveys){
+          jobSurveys = this.surveys.filter(it => this.inJobSurveys(it, surveys));
+        }
+      }
+
+      for (var i = 0; i < jobSurveys.length; i++) {
+        var a = jobSurveys[i];
+
+        // if no geometry data, skip it
+        if (!a || !a.geometry) continue;
+        // if against Layer rule, skip it
+        //if(!a.footer || !a.footer.approved) continue;
+
+        // if no status data, skip it
+        if (!a.status || !a.status.name) continue;
+
+        //if(!a.job || a.job.id != this.authService.authValue.user.id) continue;
+        // This condition should allow surveys which have the current user in the array this.survey.job.assignees
+        // seperate icons and layers for condition
+        let icon_name = 'flag';
+        let busIcon;
+        let marker_i;
+        switch (a.status.name) {
+          case 'COMPLETED':
+            icon_name = 'flag';
+            busIcon = L.IconMaterial.icon({
+              icon: icon_name, // Name of Material icon
+              iconColor: '#8AC926', // Material icon color (could be rgba, hex, html name...)
+              markerColor: 'rgba(255,255,255,0.8)', // Marker fill color
+              outlineColor: 'black', // Marker outline color
+              outlineWidth: 1, // Marker outline width
+              iconSize: [31, 42], // Width and height of the icon
+            });
+
+            marker_i = this.createMarker(busIcon, a);
+            this.survey_complete_layer.addLayer(marker_i);
+            break;
+          case 'NOT_STARTED':
+            icon_name = 'flag';
+            busIcon = L.IconMaterial.icon({
+              icon: icon_name, // Name of Material icon
+              iconColor: '#E71D36', // Material icon color (could be rgba, hex, html name...)
+              markerColor: 'rgba(255,255,255,0.8)', // Marker fill color
+              outlineColor: 'black', // Marker outline color
+              outlineWidth: 1, // Marker outline width
+              iconSize: [31, 42], // Width and height of the icon
+            });
+            marker_i = this.createMarker(busIcon, a);
+            this.survey_not_started_layer.addLayer(marker_i);
+            break;
+          case 'ONGOING':
+            icon_name = 'flag';
+            busIcon = L.IconMaterial.icon({
+              icon: icon_name, // Name of Material icon
+              iconColor: '#FFBE0B', // Material icon color (could be rgba, hex, html name...)
+              markerColor: 'rgba(255,255,255,0.8)', // Marker fill color
+              outlineColor: 'black', // Marker outline color
+              outlineWidth: 1, // Marker outline width
+              iconSize: [31, 42], // Width and height of the icon
+            });
+            marker_i = this.createMarker(busIcon, a);
+            this.survey_ongoing_layer.addLayer(marker_i);
+            break;
+          case 'REFUSED':
+            icon_name = 'flag';
+            busIcon = L.IconMaterial.icon({
+              icon: icon_name, // Name of Material icon
+              iconColor: '#3A86FF', // Material icon color (could be rgba, hex, html name...)
+              markerColor: 'rgba(255,255,255,0.8)', // Marker fill color
+              outlineColor: 'black', // Marker outline color
+              outlineWidth: 1, // Marker outline width
+              iconSize: [31, 42], // Width and height of the icon
+            });
+            marker_i = this.createMarker(busIcon, a);
+            this.survey_refused_layer.addLayer(marker_i);
+            break;
+        }
+      }
+    });
   }
 
   ngAfterViewInit(): void {
@@ -179,9 +314,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   private initMap(): void {
-    
     var Basemaps = {
-      OpenStreetMap : L.tileLayer(
+      OpenStreetMap: L.tileLayer(
         'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
         {
           maxZoom: 18,
@@ -661,14 +795,15 @@ export class HomeComponent implements OnInit, AfterViewInit {
         }
       );
 
-      //fetch survey
-      var survey_complete_layer = new L.markerClusterGroup();
-      var survey_not_started_layer = new L.markerClusterGroup();
-      var survey_ongoing_layer = new L.markerClusterGroup();
-      var survey_refused_layer = new L.markerClusterGroup();
-      this.surveyEntityService.getAll().subscribe(
-        (marker_data) => {
-          this.surveys = marker_data;
+    //fetch survey
+    this.survey_complete_layer = new L.markerClusterGroup();
+    this.survey_not_started_layer = new L.markerClusterGroup();
+    this.survey_ongoing_layer = new L.markerClusterGroup();
+    this.survey_refused_layer = new L.markerClusterGroup();
+    this.surveyEntityService.getAll().subscribe(
+      (marker_data) => {
+        this.surveys = marker_data;
+        if(!this.startwithjobs)
           for( var i=0 ;i < this.surveys.length ;i ++)
           {
             var a = this.surveys[i];
@@ -707,7 +842,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
                       .setContent(select_popup);
                   marker_i.bindPopup(popup);
                   // marker_i.addTo(survey_complete_layer);
-                  survey_complete_layer.addLayer(marker_i);
+                  this.survey_complete_layer.addLayer(marker_i);
                 break;
               case "NOT_STARTED":
                   icon_name = "flag";
@@ -729,7 +864,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
                       .setContent(select_popup);
                   marker_i.bindPopup(popup);
                   // marker_i.addTo(survey_not_started_layer);
-                  survey_not_started_layer.addLayer(marker_i);
+                  this.survey_not_started_layer.addLayer(marker_i);
                 break;
               case "ONGOING":
                   icon_name = "flag";
@@ -750,7 +885,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
                   var popup = L.popup({className: 'select_marker_popup' , 'closeButton' : false})
                       .setContent(select_popup);
                   marker_i.bindPopup(popup);
-                  survey_ongoing_layer.addLayer(marker_i);
+                  this.survey_ongoing_layer.addLayer(marker_i);
                 break;
               case "REFUSED":
                   icon_name = "flag";
@@ -771,7 +906,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
                   var popup = L.popup({className: 'select_marker_popup' , 'closeButton' : false})
                       .setContent(select_popup);
                   marker_i.bindPopup(popup);
-                  survey_refused_layer.addLayer(marker_i);
+                  this.survey_refused_layer.addLayer(marker_i);
                 break;
             }
           }
@@ -806,10 +941,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
         "Resistivity":resistivity_layer
       },
       "Surveys": {
-        "COMPLETED": survey_complete_layer,
-        "NOT_STARTED": survey_not_started_layer,
-        "ONGOING": survey_ongoing_layer,
-        "REFUSED": survey_refused_layer
+        "COMPLETED": this.survey_complete_layer,
+        "NOT_STARTED": this.survey_not_started_layer,
+        "ONGOING": this.survey_ongoing_layer,
+        "REFUSED": this.survey_refused_layer
       },
       "Uploads":{
         
@@ -818,7 +953,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
     this.map = L.map('map', {
       center: [environment.coordinates.lat, environment.coordinates.lng],
-      layers: [Basemaps.OpenStreetMap,testpost_working_layer,testpost_not_working_layer,testpost_repairing_layer,testpost_replacing_layer,survey_complete_layer,survey_not_started_layer,survey_ongoing_layer,survey_refused_layer],
+      layers: [Basemaps.OpenStreetMap,testpost_working_layer,testpost_not_working_layer,testpost_repairing_layer,testpost_replacing_layer,this.survey_complete_layer,this.survey_not_started_layer,this.survey_ongoing_layer,this.survey_refused_layer],
       zoom: 8,
       zoomControl : false // remove +/- Zoom Control.
     });
@@ -1292,5 +1427,19 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   get isRoot(): boolean {
     return this.router.url === '/home';
+  }
+  
+
+  showMySurveysOnly(surveys) : void{
+    /*if (this.map) {
+      this.map.eachLayer((layer) => {
+        if (layer.options && layer.options.pane === "markerPane") {
+          layer.remove();
+        }
+      });
+    }
+    for(var i=0; i<surveys.length; i++) {
+      this.drawSurveyMarker(surveys[i]);
+    }*/
   }
 }
