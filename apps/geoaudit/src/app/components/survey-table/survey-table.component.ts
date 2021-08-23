@@ -36,6 +36,8 @@ import { AuthService } from '../../services';
 import * as fromApp from '../../store';
 import * as SurveyActions from '../../store/survey/survey.actions';
 
+import { SelectionService } from '../../services/selection.service';
+
 @Component({
   selector: 'geoaudit-survey-table',
   templateUrl: './survey-table.component.html',
@@ -80,14 +82,20 @@ export class SurveyTableComponent implements OnInit, AfterViewInit {
     private formBuilder: FormBuilder,
     private store: Store<fromApp.State>,
     private dialog: MatDialog,
-    private router: Router
+    private router: Router,
+    private selectionService: SelectionService
   ) {}
 
   ngOnInit(): void {
     this.form = this.formBuilder.group({
       filter: [''],
     });
+    this.selectionService.jobSelectionChangedEvent.emit([]);
   }
+
+  ngOnDestroy(): void{
+    this.selectionService.jobSelectionChangedEvent.emit(['jobsdestory']);
+  } 
 
   ngAfterViewInit() {
     this.data = this.dataSource.data;
@@ -330,5 +338,17 @@ export class SurveyTableComponent implements OnInit, AfterViewInit {
 
   isManager() {
     return this.authService.authValue.user.role.name === Roles.MANAGER
+  }
+
+  onCheckedRow(event, selections) {
+    console.log("surveyonCheckedRow", selections.selected);
+
+    if (selections.selected.length == 0) {
+        this.selectionService.jobSelectionChangedEvent.emit([]);
+    }
+    else {
+      const surveys = selections.selected;
+      this.selectionService.jobSelectionChangedEvent.emit(surveys);
+    }
   }
 }
