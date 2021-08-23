@@ -56,8 +56,8 @@ export class NoteComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit(): void {
-    this.id = this.route.snapshot.paramMap.get('id');
-
+    if(this.route.snapshot.paramMap.get('notes'))
+      this.id = this.route.snapshot.paramMap.get('id');
     this.initForm();
 
     if (this.id) {
@@ -75,7 +75,8 @@ export class NoteComponent implements OnInit, AfterViewInit {
         this.patchForm(note);
       },
 
-      (err) => {}
+      (err) => {
+      }
     );
   }
 
@@ -241,11 +242,11 @@ export class NoteComponent implements OnInit, AfterViewInit {
       (note) => {
         this.patchForm(note);
 
-        this.autoSave(true);
+        this.autoSave(false);
 
-        this.router.navigate([`/home/notes/${this.form.value.id}`], {
-          replaceUrl: true,
-        });
+        // this.router.navigate([`/home/notes/${this.form.value.id}`], {
+        //   replaceUrl: true,
+        // });
       },
 
       (err) => {}
@@ -271,13 +272,13 @@ export class NoteComponent implements OnInit, AfterViewInit {
          * updated with that and therefore we're reloading such that it
          * goes into edit mode.
          */
-        if (reload) {
-          this.router
-            .navigate([`/home/notes/${this.form.value.id}`])
-            .then(() => {
-              window.location.reload();
-            });
-        }
+        // if (reload) {
+        //   this.router
+        //     .navigate([`/home/notes/${this.form.value.id}`])
+        //     .then(() => {
+        //       window.location.reload();
+        //     });
+        // }
       });
   }
 
@@ -300,7 +301,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
       (update) => {
         this.alertService.info('Saved Changes');
 
-        if (navigate) this.router.navigate([`/home/notes`]);
+        // if (navigate) this.router.navigate([`/home/notes`]);
       },
 
       (err) => {

@@ -120,6 +120,9 @@ export class JobComponent implements OnInit, AfterViewInit {
   users: Array<User> = [];
   allUsers: Array<User> = [];
 
+
+  isNoteList = false;
+
   /**
    * The user input for the autocomplete.
    */
@@ -143,6 +146,7 @@ export class JobComponent implements OnInit, AfterViewInit {
 
   public chartSeries = null;
   public selectedTabIndex = 0;
+  public selectedReference = "";
 
   constructor(
     private formBuilder: FormBuilder,
@@ -168,7 +172,6 @@ export class JobComponent implements OnInit, AfterViewInit {
     this.jobTypeEntityervice.getAll().subscribe(
       (jobTypes) => {
         this.jobTypes = jobTypes;
-        console.log("jobTypeEntityervice = ", jobTypes);
       },
       (err) => {
         console.log("jobTypeEntityervice = ", err);
@@ -212,6 +215,7 @@ export class JobComponent implements OnInit, AfterViewInit {
      * constraints.
      */
     this.initialiseForm();
+
 
     /**
      * Capture the param id if any to determine
@@ -293,6 +297,8 @@ export class JobComponent implements OnInit, AfterViewInit {
           id,
           published: true,
         });
+
+        this.selectedReference = job.reference;
 
         //  After patch value so isn't triggered before.
         this.autoSave();
@@ -643,13 +649,7 @@ export class JobComponent implements OnInit, AfterViewInit {
   }
 
   selectedIndexChange(selectedTabIndex) {
-    console.log("selectedIndexChange", selectedTabIndex);
     this.selectedTabIndex = selectedTabIndex;
-  }
-  selectedNextIndex() {
-    this.selectedTabIndex = this.selectedTabIndex + 1;
-  }
-  selectedPrevIndex() {
-    this.selectedTabIndex = this.selectedTabIndex - 1;
+    this.isNoteList = !this.isNoteList;
   }
 }

@@ -1,6 +1,6 @@
 <geoaudit-sidebar-header
   title="CONTAINERS.home.jobs.job.overview.title"
-  reference="www"
+  [(reference)]= selectedReference
 > 
   <mat-form-field appearance="outline">
     <mat-label>{{
@@ -209,36 +209,36 @@
     </mat-card-content>
   </mat-tab>
 
-  <mat-tab
-    [label]="'CONTAINERS.home.jobs.job.steps.notes' | translate">
+  <mat-tab [label]="'CONTAINERS.home.jobs.job.steps.notes' | translate">
     <mat-card-content>
-      <geoaudit-notes></geoaudit-notes>
-      
+      <geoaudit-notes
+      [isNoteList]="isNoteList"
+      ></geoaudit-notes>
     </mat-card-content>
   </mat-tab>
 </mat-tab-group>
 
-    <div fxLayout="row-reverse" fxLayoutAlign="space-between" class="button-area">
-      <div style="width: 50px">
-      <button *ngIf="selectedTabIndex != 3" mat-icon-button color="accent" (click)="selectedNextIndex()" class="btn-next">
-        <mat-icon>chevron_right</mat-icon>
-      </button>
-      </div>
-      
-      <button
-        mat-flat-button
-        color="primary"
-        (click)="submit()"
-        type="submit"
-        class="btn-submit"
-      >
-        {{ 'CONTAINERS.home.jobs.job.form.save' | translate }}
-      </button>
-      <div style="width: 50px">
-        <button  *ngIf="selectedTabIndex != 0" mat-icon-button color="accent" (click)="selectedPrevIndex()" class="btn-prev">
-        <mat-icon>chevron_left</mat-icon>
-      </button>
-      </div>
-    </div>
+<div fxLayout="row-reverse" fxLayoutAlign="space-between" class="button-area">
+  <div style="width: 50px">
+  <button *ngIf="selectedTabIndex != 3" mat-icon-button color="accent" (click)="selectedIndexChange(selectedTabIndex + 1)" class="btn-next">
+    <mat-icon>chevron_right</mat-icon>
+  </button>
+  </div>
+  
+  <button
+    mat-flat-button
+    color="primary"
+    (click)="submit()"
+    type="submit"
+    class="btn-submit"
+  >
+    {{ 'CONTAINERS.home.jobs.job.form.save' | translate }}
+  </button>
+  <div style="width: 50px">
+    <button  *ngIf="selectedTabIndex != 0" mat-icon-button color="accent" (click)="selectedIndexChange(selectedTabIndex - 1)" class="btn-prev">
+    <mat-icon>chevron_left</mat-icon>
+  </button>
+  </div>
+</div>
   
 

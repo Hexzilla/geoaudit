@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnChanges,SimpleChanges } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import qs from 'qs';
 import { NoteEntityService } from '../../entity-services/note-entity.service';
@@ -10,8 +10,12 @@ import { AuthService } from '../../services';
   templateUrl: './notes.component.html',
   styleUrls: ['./notes.component.scss'],
 })
-export class NotesComponent implements OnInit {
+export class NotesComponent implements OnInit, OnChanges {
+
+  @Input() isNoteList: boolean;
+
   id: string;
+  isAdd: boolean = false;
 
   filter: NoteFilter;
 
@@ -21,15 +25,14 @@ export class NotesComponent implements OnInit {
     private route: ActivatedRoute,
     public router: Router,
     private noteEntityService: NoteEntityService,
-    private authService: AuthService
+    private authService: AuthService,
   ) {}
 
   ngOnInit(): void {
     this.filter = this.route.snapshot.queryParamMap.get('filter') as NoteFilter;
     this.id = this.route.snapshot.paramMap.get('id');
-
     const { url } = this.router;
-
+    
     if (this.filter) {
       this.query(this.filter);
     } else if (
@@ -43,7 +46,8 @@ export class NotesComponent implements OnInit {
     ) {
       const includes = url.split('/');
 
-      if (url.includes(`${includes[2]}/${this.id}/notes`)) {
+      // if (url.includes(`${includes[2]}/${this.id}/notes`)) {
+      if (url.includes(`${includes[2]}/${this.id}`)) {
         this.query(includes[2], Number(this.id));
       } else {
         this.query(includes[2]);
@@ -51,6 +55,10 @@ export class NotesComponent implements OnInit {
     } else {
       this.noteEntityService.getAll();
     }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void{
+      this.isAdd = false;
   }
 
   isRoot() {
@@ -105,34 +113,36 @@ export class NotesComponent implements OnInit {
    * populate the fields for jobs for example.
    */
   add() {
+    this.isAdd = true;
+
     // this.router.navigate(['/home/notes/create'])
 
-    const { url } = this.router;
+    // const { url } = this.router;
 
-    if (
-      (
-      url.includes('abrioxes') ||
-      url.includes('jobs') ||
-      url.includes('resistivities') ||
-      url.includes('sites') ||
-      url.includes('surveys') ||
-      url.includes('testposts') ||
-      url.includes('trs')
-      ) &&
-      this.id
-    ) {
-      const includes = url.split('/');
+    // if (
+    //   (
+    //   url.includes('abrioxes') ||
+    //   url.includes('jobs') ||
+    //   url.includes('resistivities') ||
+    //   url.includes('sites') ||
+    //   url.includes('surveys') ||
+    //   url.includes('testposts') ||
+    //   url.includes('trs')
+    //   ) &&
+    //   this.id
+    // ) {
+    //   const includes = url.split('/');
 
-      const navigationExtras: NavigationExtras = {
-        queryParams: {
-          [includes[2]]: JSON.stringify([this.id])
-        }
-      }
+    //   const navigationExtras: NavigationExtras = {
+    //     queryParams: {
+    //       [includes[2]]: JSON.stringify([this.id])
+    //     }
+    //   }
 
-      this.router.navigate([`/home/notes/create`], navigationExtras);
+    //   this.router.navigate([`/home/notes/create`], navigationExtras);
 
-    } else {
-      this.router.navigate(['/home/notes/create'])
-    }
+    // } else {
+    //   this.router.navigate(['/home/notes/create'])
+    // }
   }
 }
