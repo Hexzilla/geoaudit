@@ -14,12 +14,7 @@
     "default": {
       "runner": "@nrwl/nx-cloud",
       "options": {
-        "cacheableOperations": [
-          "build",
-          "lint",
-          "test",
-          "e2e"
-        ],
+        "cacheableOperations": ["build", "lint", "test", "e2e"],
         "accessToken": "OGFhOWJjODItZTI2MC00MThlLTgzMzEtNjYyMzk5MTU0OGI5fHJlYWQtd3JpdGU=",
         "canTrackAnalytics": false,
         "showUsageWarnings": true
@@ -32,9 +27,15 @@
     },
     "geoaudit-e2e": {
       "tags": [],
-      "implicitDependencies": [
-        "geoaudit"
-      ]
+      "implicitDependencies": ["geoaudit"]
     }
+  },
+  "targetDependencies": {
+    "build": [
+      {
+        "target": "build",
+        "projects": "dependencies"
+      }
+    ]
   }
 }

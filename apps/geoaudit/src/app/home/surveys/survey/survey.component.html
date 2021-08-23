@@ -234,6 +234,16 @@
       fileType="DOCUMENT"
       [multiple]="true"
     ></geoaudit-file-upload>
+
+    <form fxLayout="column" [formGroup]="form" (ngSubmit)="submit()">
+
+    <mat-form-field class="example-full-width" appearance="outline" style="margin-top: 20px; width: 100%;" >
+      <mat-label>{{
+        'CONTAINERS.home.survey.comments' | translate
+      }}</mat-label>
+      <textarea matInput formControlName="comments"></textarea>
+    </mat-form-field>
+    </form>
   </mat-step>
 
   <mat-step>
