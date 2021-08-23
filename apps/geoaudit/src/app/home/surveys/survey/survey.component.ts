@@ -407,6 +407,8 @@ export class SurveyComponent implements OnInit {
       //   },
       // ],
 
+      comments: [null],
+
       id: [null],
       reference: [null],
       // published: false,
