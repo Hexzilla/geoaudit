@@ -293,4 +293,25 @@ export class JobsComponent implements OnInit {
       })
     }
   }
+
+  onCheckedRow(event, selections) {
+    console.log("onCheckedRow", selections.selected);
+
+    if (selections.selected.length == 0) {
+      this.jobs$.subscribe(
+        (jobs) => {
+          const surveys = jobs.reduce((_surveys, job) => {
+            return _surveys.concat(job.surveys)
+          }, [])
+          this.jobEntityService.emitJobSelectionChanged(surveys);
+        }
+      )
+    }
+    else {
+      const surveys = selections.selected.reduce((_surveys, job) => {
+        return _surveys.concat(job.surveys)
+      }, [])
+      this.jobEntityService.emitJobSelectionChanged(surveys);
+    }
+  }
 }
