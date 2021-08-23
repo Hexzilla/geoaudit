@@ -63,6 +63,7 @@ import { NotificationEntityService } from '../entity-services/notification-entit
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { JobEntityService } from '../entity-services/job-entity.service';
+import { SelectionService } from '../services/selection.service';
 
 @Component({
   selector: 'geoaudit-home',
@@ -139,6 +140,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     private notificationEntityService: NotificationEntityService,
     private toDoListEntityService: ToDoListEntityService,
     private jobEntityService: JobEntityService,
+    private selectionService: SelectionService,
     private location: Location
   ) {
     this.auth = this.authService.authValue;
@@ -156,6 +158,11 @@ export class HomeComponent implements OnInit, AfterViewInit {
     });
 
     this.myJobsCount$ = this.jobEntityService.count(parameters);
+
+    this.selectionService.jobSelectionChangedEvent.subscribe((surveys) => {
+      //this.showMySurveysOnly(surveys);
+      console.log("subscribe", surveys);
+    });
   }
 
   ngAfterViewInit(): void {

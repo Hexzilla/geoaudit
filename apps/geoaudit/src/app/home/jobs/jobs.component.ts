@@ -33,6 +33,7 @@ import * as fromApp from '../../store';
 import * as JobActions from '../../store/job/job.actions';
 import { ShareModalComponent } from '../../modals/share-modal/share-modal.component';
 import { JobEntityService } from '../../entity-services/job-entity.service';
+import { SelectionService } from '../../services/selection.service';
 import { AuthService } from '../../services';
 
 @Component({
@@ -77,6 +78,7 @@ export class JobsComponent implements OnInit {
     private formBuilder: FormBuilder,
     private router: Router,
     private jobEntityService: JobEntityService,
+    private selectionService: SelectionService,
     private authService: AuthService
   ) {
     this.form = this.formBuilder.group({
@@ -303,7 +305,7 @@ export class JobsComponent implements OnInit {
           const surveys = jobs.reduce((_surveys, job) => {
             return _surveys.concat(job.surveys)
           }, [])
-          //this.jobEntityService.emitJobSelectionChanged(surveys);
+          this.selectionService.jobSelectionChangedEvent.emit(surveys);
         }
       )
     }
@@ -311,7 +313,7 @@ export class JobsComponent implements OnInit {
       const surveys = selections.selected.reduce((_surveys, job) => {
         return _surveys.concat(job.surveys)
       }, [])
-      //this.jobEntityService.emitJobSelectionChanged(surveys);
+      this.selectionService.jobSelectionChangedEvent.emit(surveys);
     }
   }
 }
