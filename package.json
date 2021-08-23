@@ -106,7 +106,7 @@
     "@nrwl/jest": "12.1.1",
     "@nrwl/linter": "12.1.1",
     "@nrwl/nx-cloud": "^12.3.5",
-    "@nrwl/tao": "12.1.1",
+    "@nrwl/tao": "^12.1.1",
     "@nrwl/workspace": "12.1.1",
     "@types/googlemaps": "^3.43.3",
     "@types/jest": "26.0.8",
