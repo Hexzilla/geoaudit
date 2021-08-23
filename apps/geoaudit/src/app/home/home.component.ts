@@ -1300,4 +1300,18 @@ export class HomeComponent implements OnInit, AfterViewInit {
   get isRoot(): boolean {
     return this.router.url === '/home';
   }
+  
+
+  showMySurveysOnly(surveys) : void{
+    /*if (this.map) {
+      this.map.eachLayer((layer) => {
+        if (layer.options && layer.options.pane === "markerPane") {
+          layer.remove();
+        }
+      });
+    }
+    for(var i=0; i<surveys.length; i++) {
+      this.drawSurveyMarker(surveys[i]);
+    }*/
+  }
 }
