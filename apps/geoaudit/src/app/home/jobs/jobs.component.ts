@@ -303,7 +303,7 @@ export class JobsComponent implements OnInit {
           const surveys = jobs.reduce((_surveys, job) => {
             return _surveys.concat(job.surveys)
           }, [])
-          this.jobEntityService.emitJobSelectionChanged(surveys);
+          //this.jobEntityService.emitJobSelectionChanged(surveys);
         }
       )
     }
@@ -311,7 +311,7 @@ export class JobsComponent implements OnInit {
       const surveys = selections.selected.reduce((_surveys, job) => {
         return _surveys.concat(job.surveys)
       }, [])
-      this.jobEntityService.emitJobSelectionChanged(surveys);
+      //this.jobEntityService.emitJobSelectionChanged(surveys);
     }
   }
 }
