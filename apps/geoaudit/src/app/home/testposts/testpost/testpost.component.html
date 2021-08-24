@@ -221,23 +221,23 @@
   <!-- Actions -->
   <mat-step [label]="'CONTAINERS.home.testposts.testpost.actions' | translate">
 
-    <mat-card *ngFor="let tp_action of testpost?.tp_actions" style="cursor: pointer; margin-top: 20px" [routerLink]="'/home/tp_actions/' + tp_action.id">
+    <mat-card *ngFor="let tp_action of tp_actions" style="cursor: pointer; margin-top: 20px" [routerLink]="'/home/tp_actions/' + tp_action.id">
       <div fxLayout="row" fxLayoutAlign="space-between">
         <p>{{ tp_action.created_at | date: 'HH:mm dd/MM/yyyy' }}</p>
-        <geoaudit-icon [visible]="true" [color]="getConditionColour(tp_action.condition)" icon="radio_button_unchecked"></geoaudit-icon>
+        <geoaudit-icon [visible]="true" [color]="getConditionColour(tp_action.condition.id)" icon="radio_button_unchecked"></geoaudit-icon>
 
         <img
-        *ngIf="getSurvey(tp_action.survey)?.conducted_by?.avatar"
+        *ngIf="getSurvey(tp_action.survey.id)?.conducted_by?.avatar"
         mat-card-avatar
-        [src]="API_URL + getSurvey(tp_action.survey).conducted_by?.avatar.url"
+        [src]="API_URL + getSurvey(tp_action.survey.id).conducted_by?.avatar.url"
       />
       <img
-        *ngIf="!getSurvey(tp_action.survey)?.conducted_by?.avatar"
+        *ngIf="!getSurvey(tp_action.survey.id)?.conducted_by?.avatar"
         mat-card-avatar
         src="https://bestoked.ams3.digitaloceanspaces.com/geoaudit/static/assets/Avatar%20-%20Geoaudit.png"
       />
 
-      <p>{{ getSurvey(tp_action.survey)?.reference }}</p>
+      <p>{{ getSurvey(tp_action.survey.id)?.reference }}</p>
 
       <button
         mat-icon-button

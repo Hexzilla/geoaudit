@@ -89,6 +89,8 @@ import { TpActionEntityService } from '../entity-services/tp-action-entity.servi
 import { AbrioxActionEntityService } from '../entity-services/abriox-action-entity.service';
 import { AbrioxActionDataService } from '../data-services/abriox-action-data.service';
 
+import { SurveyActionButtonComponent } from '../components/survey-action-button/survey-action-button.component';
+
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -202,7 +204,8 @@ const entityMetadataMap: EntityMetadataMap = {
     SurveyTableComponent,
     MultiItemSelectorComponent,
     SingleItemSelectorComponent,
-    IconComponent
+    IconComponent,
+    SurveyActionButtonComponent
   ],
   providers: [
 
@@ -286,6 +289,7 @@ const entityMetadataMap: EntityMetadataMap = {
     MultiItemSelectorComponent,
     SingleItemSelectorComponent,
     IconComponent,
+    SurveyActionButtonComponent,
 
     // Material
     MatAutocompleteModule,

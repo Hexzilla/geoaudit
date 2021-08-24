@@ -188,23 +188,6 @@ export class SurveyComponent implements OnInit {
       this.mode = 'CREATE';
       this.createMode();
     }
-
-    // this.jobId = this.route.snapshot.queryParamMap.get('job');
-
-    // if (this.jobId) {
-    //   this.jobEntityService.getByKey(this.jobId).subscribe(
-    //     (job) => {
-    //       console.log('job', job);
-    //       this.form.patchValue({
-    //         job,
-    //       });
-
-    //       console.log('this', this.form.value);
-    //     },
-
-    //     (err) => {}
-    //   );
-    // }
   }
 
   ngAfterViewInit() {
@@ -423,6 +406,8 @@ export class SurveyComponent implements OnInit {
       //     documents: [[]],
       //   },
       // ],
+
+      comments: [null],
 
       id: [null],
       reference: [null],

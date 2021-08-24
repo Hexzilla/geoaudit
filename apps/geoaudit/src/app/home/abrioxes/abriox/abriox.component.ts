@@ -15,10 +15,11 @@ import {
 import { FileTypes } from '../../../components/file-upload/file-upload.component';
 import { AbrioxActionEntityService } from '../../../entity-services/abriox-action-entity.service';
 import { AbrioxEntityService } from '../../../entity-services/abriox-entity.service';
+import { SurveyEntityService } from '../../../entity-services/survey-entity.service';
 import { TestpostEntityService } from '../../../entity-services/testpost-entity.service';
 import { TrEntityService } from '../../../entity-services/tr-entity.service';
 import { AttachmentModalComponent } from '../../../modals/attachment-modal/attachment-modal.component';
-import { Abriox, AbrioxAction, Image, MarkerColours } from '../../../models';
+import { Abriox, AbrioxAction, Image, MarkerColours, Survey } from '../../../models';
 import { AlertService, AuthService, UploadService } from '../../../services';
 
 @Component({
@@ -41,6 +42,8 @@ export class AbrioxComponent implements OnInit {
 
   ready = false;
 
+  surveys: Array<Survey> = [];
+
   public disabled = false;
   public showSpinners = true;
   public showSeconds = false;
@@ -60,6 +63,7 @@ export class AbrioxComponent implements OnInit {
     private route: ActivatedRoute,
     private abrioxEntityService: AbrioxEntityService,
     private abrioxActionEntityService: AbrioxActionEntityService,
+    private surveyEntityService: SurveyEntityService,
     private testpostEntityService: TestpostEntityService,
     private trEntityService: TrEntityService,
     private formBuilder: FormBuilder,
@@ -113,6 +117,10 @@ export class AbrioxComponent implements OnInit {
         abriox.abriox_actions.map(abriox_action => {
           this.abrioxActionEntityService.getByKey(abriox_action.id).subscribe(item => {
             this.abriox_actions.push(item);
+
+            this.surveyEntityService.getByKey(item.survey.id).subscribe(survey => {
+              this.surveys.push(survey);
+            })
           })
         })
 
@@ -128,7 +136,6 @@ export class AbrioxComponent implements OnInit {
   createMode() {
     this.abrioxEntityService.add(this.form.value).subscribe(
       (abriox) => {
-        console.log('t', abriox);
         this.patchForm(abriox);
       },
 
@@ -151,8 +158,6 @@ export class AbrioxComponent implements OnInit {
       footer,
       status
     } = abriox;
-
-    console.log('patch', abriox)
 
     this.form.patchValue({
       id,
@@ -336,5 +341,17 @@ export class AbrioxComponent implements OnInit {
     }
 
     return color;
+  }
+
+  getSurvey(id?: number) {
+    let survey: Survey;
+
+    if (id) {
+      if (this.surveys) {
+        survey = this.surveys.find(item => item.id === id);
+      }
+    }
+
+    return survey;
   }
 }

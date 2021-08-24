@@ -262,8 +262,6 @@ export class TestpostComponent implements OnInit, AfterViewInit {
       footer
     } = testpost;
 
-    console.log('testpost', testpost)
-
     this.form.patchValue({
       id,
 
@@ -373,14 +371,9 @@ export class TestpostComponent implements OnInit, AfterViewInit {
   getConditionColour(id?: number) {
 
     let color = "00FFFFFF";
-    // Dot in the title corresponds to the condition of most recent record in tp_actions    
-
 
     if (id) {
-        // console.log('getConditionColour', condition)
-
         if (this.tp_actions) {
-          // const condition = this.tp_actions.find(tp_action => tp_action.condition.id = id); 
           const tp_action = this.tp_actions.find(tp_action => tp_action.condition.id === id);
 
           if (tp_action) {
@@ -388,7 +381,6 @@ export class TestpostComponent implements OnInit, AfterViewInit {
           }
         }   
     }
-    // switch (condition)
 
     return color;
   }
@@ -397,7 +389,6 @@ export class TestpostComponent implements OnInit, AfterViewInit {
     let color = "00FFFFFF";
 
     if (this.tp_actions) {
-      // const condition = this.tp_actions.find(tp_action => tp_action.condition.id = id); 
       const tp_action = this.tp_actions.sort((a: any, b: any) => b.date - a.date);
 
       if (tp_action) {
@@ -410,6 +401,7 @@ export class TestpostComponent implements OnInit, AfterViewInit {
 
   getSurvey(id?: number) {
     let survey: Survey;
+
 
     if (id) {
       if (this.surveys) {
