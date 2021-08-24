@@ -41,3 +41,17 @@ table {
   text-align: center;
   font-weight: bold;
 }
+
+@media only screen and (max-width: 280px) {
+  .mat-column-name {
+    padding-left: 2px!important;
+    padding-right: 20px;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .mat-column-name {
+    padding-left: 4px!important;
+    padding-right: 42px;
+  }
+}

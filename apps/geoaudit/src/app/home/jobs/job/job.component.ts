@@ -305,6 +305,7 @@ export class JobComponent implements OnInit, AfterViewInit {
           }
         });
 
+        console.log("data-1", surveys);
         this.dataSource = new MatTableDataSource(surveys);
       },
       (err) => {
