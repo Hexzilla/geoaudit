@@ -1100,6 +1100,12 @@ export class HomeComponent implements OnInit, AfterViewInit {
         const marker = this.createMarker(busIcon, a);
         this.survey_complete_layer.addLayer(marker);
       })
+
+    if (selected && selected.length === 1) {
+      const geometry = selected[0].geometry;
+      this.map.setZoom(9);
+      this.map.panTo(new L.LatLng(geometry.lat, geometry.lng))
+    }
   }
 
   private getMarkerIconColor(statusName) {
