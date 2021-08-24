@@ -6,7 +6,7 @@
     <mat-label>{{
       'CONTAINERS.home.jobs.job.status' | translate
     }}</mat-label>
-    <mat-select statusControlName="status" name="status">
+    <mat-select statusControlName="status" name="status" [(value)]="currentState">
       <mat-option *ngFor="let status of statuses" [value]="status.id">
         {{ 'STATUSES.' + status.name | translate }}
       </mat-option>
@@ -219,10 +219,10 @@
 </mat-tab-group>
 
 <div fxLayout="row-reverse" fxLayoutAlign="space-between" class="button-area">
-  <div style="width: 50px">
-  <button *ngIf="selectedTabIndex != 3" mat-icon-button color="accent" (click)="selectedIndexChange(selectedTabIndex + 1)" class="btn-next">
-    <mat-icon>chevron_right</mat-icon>
-  </button>
+  <div class="button-wrapper">
+    <button *ngIf="selectedTabIndex != 3" mat-icon-button color="accent" (click)="selectedIndexChange(selectedTabIndex + 1)" class="btn-arrow">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
   </div>
   
   <button
@@ -234,10 +234,10 @@
   >
     {{ 'CONTAINERS.home.jobs.job.form.save' | translate }}
   </button>
-  <div style="width: 50px">
-    <button  *ngIf="selectedTabIndex != 0" mat-icon-button color="accent" (click)="selectedIndexChange(selectedTabIndex - 1)" class="btn-prev">
-    <mat-icon>chevron_left</mat-icon>
-  </button>
+  <div class="button-wrapper">
+    <button *ngIf="selectedTabIndex != 0" mat-icon-button color="accent" (click)="selectedIndexChange(selectedTabIndex - 1)" class="btn-arrow">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
   </div>
 </div>
   

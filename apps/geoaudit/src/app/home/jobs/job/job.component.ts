@@ -102,6 +102,11 @@ export class JobComponent implements OnInit, AfterViewInit {
   statuses: Array<Status>;
 
   /**
+   * The current job state.
+   */
+  currentState = 0;
+
+  /**
    * Whether the form has been submitted.
    */
   submitted = false;
@@ -269,6 +274,7 @@ export class JobComponent implements OnInit, AfterViewInit {
     this.jobEntityService.getByKey(this.id).subscribe(
       (job) => {
         this.job = job;
+        this.currentState = this.job?.status.id
 
         const {
           status,
@@ -318,7 +324,6 @@ export class JobComponent implements OnInit, AfterViewInit {
           }
         });
 
-        console.log("data-1", surveys);
         this.getUploadFiles();
         this.dataSource = new MatTableDataSource(surveys);
       },

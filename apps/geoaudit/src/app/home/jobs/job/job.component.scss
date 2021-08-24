@@ -5,31 +5,28 @@
 .button-area{
     position: absolute;
     width: 92%;
-    bottom: 5px;
+    bottom: 8px;
     z-index:1;
+}
+
+.button-wrapper {
+    min-width: 50px;
+    text-align: center;
 }
 
 .btn-submit{
     width: 60%;
 }
 
-.btn-prev{
-    display: flex;
-    justify-content: left;
+.btn-arrow{
+    justify-content: center;
+
+    .mat-icon{
+        font-size: 32px;
+        color: #464646;
+    }
 }
 
-.btn-next{
-    display: flex;
-    justify-content: right;
-}
-
-.btn-prev .mat-icon{
-    font-size: 42px;
-
-}
-.btn-next .mat-icon{
-    font-size: 42px;
-}
 .progress-chart {
     margin-left: -20px;
     margin-top: -28px!important;    
