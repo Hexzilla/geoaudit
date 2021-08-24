@@ -91,7 +91,6 @@ export class ApprovalsComponent implements OnInit {
         })
         .subscribe(
           (update) => {
-            console.log('update', update);
             this.query();
           },
 
@@ -120,7 +119,6 @@ export class ApprovalsComponent implements OnInit {
           })
           .subscribe(
             (update) => {
-              console.log('update', update);
               this.query();
             },
 

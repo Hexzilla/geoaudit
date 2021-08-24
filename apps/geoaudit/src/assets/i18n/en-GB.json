@@ -30,7 +30,8 @@
 					"condition": "Condition",
 					"new_condition": "New condition",
 					"status": "Status",
-					"new_status": "New status"
+					"new_status": "New status",
+					"actions": "Actions"
 				}
 			},
 			"approval": {
@@ -215,7 +216,13 @@
 				},
 				"status": "Status",
 				"new_job": "New Job",
-				"job": "Job"
+				"job": "Job",
+				"site_details": "Site Details",
+				"testpost": "Testpost",
+				"tr": "Transformer Rectifier",
+				"abriox": "Abriox",
+				"resistivity": "Resistivity",
+				"comments": "Comments"
 			},
 			"testposts": {
 				"testpost": {

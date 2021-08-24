@@ -93,6 +93,10 @@ h1.leaflet-sidebar-header {
   padding-right: 40px;
 }
 
+.leaflet-sidebar.collapsed {
+  width: 40px; 
+}
+
 .leaflet-sidebar {
   width: 40%;
   max-width: 568px;

@@ -4,7 +4,6 @@
 
 export const environment = {
   production: false,
-  // API_URL: 'http://localhost:1337',
   API_URL: 'https://qa-strapitoheroku-7th9x.ondigitalocean.app',
   mapbox: {
     accessToken: 'pk.eyJ1IjoibWljaGFlbHN0b2tlczkzIiwiYSI6ImNrb3Vjdml5MzA1bmIyd3BmMWp6ajIzZjAifQ.pN69oXSyuv632xMknLYQpw'
@@ -28,4 +27,4 @@ export const environment = {
  * This import should be commented out in production mode because it will have a negative impact
  * on performance if an error is thrown.
  */
-// import 'zone.js/dist/zone-error';  // Included with Angular CLI.
+// import 'zone.js/plugins/zone-error';  // Included with Angular CLI.

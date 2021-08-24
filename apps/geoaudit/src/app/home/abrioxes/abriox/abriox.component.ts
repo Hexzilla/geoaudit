@@ -13,11 +13,13 @@ import {
   takeUntil,
 } from 'rxjs/operators';
 import { FileTypes } from '../../../components/file-upload/file-upload.component';
+import { AbrioxActionEntityService } from '../../../entity-services/abriox-action-entity.service';
 import { AbrioxEntityService } from '../../../entity-services/abriox-entity.service';
+import { SurveyEntityService } from '../../../entity-services/survey-entity.service';
 import { TestpostEntityService } from '../../../entity-services/testpost-entity.service';
 import { TrEntityService } from '../../../entity-services/tr-entity.service';
 import { AttachmentModalComponent } from '../../../modals/attachment-modal/attachment-modal.component';
-import { Abriox, Image } from '../../../models';
+import { Abriox, AbrioxAction, Image, MarkerColours, Survey } from '../../../models';
 import { AlertService, AuthService, UploadService } from '../../../services';
 
 @Component({
@@ -33,6 +35,14 @@ export class AbrioxComponent implements OnInit {
   color: ThemePalette = 'primary';
 
   @ViewChild('dateInstallationDateTimePicker') dateInstallationDateTimePicker: any;
+
+  abriox_actions: Array<AbrioxAction> = [];
+
+  abriox: Abriox;
+
+  ready = false;
+
+  surveys: Array<Survey> = [];
 
   public disabled = false;
   public showSpinners = true;
@@ -52,6 +62,8 @@ export class AbrioxComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private abrioxEntityService: AbrioxEntityService,
+    private abrioxActionEntityService: AbrioxActionEntityService,
+    private surveyEntityService: SurveyEntityService,
     private testpostEntityService: TestpostEntityService,
     private trEntityService: TrEntityService,
     private formBuilder: FormBuilder,
@@ -85,7 +97,6 @@ export class AbrioxComponent implements OnInit {
       serial_number: null,
       telephone: null,
       date_installation: null,
-      condition: null,
       status: null,
 
       footer: [
@@ -103,6 +114,19 @@ export class AbrioxComponent implements OnInit {
     this.abrioxEntityService.getByKey(id).subscribe(
       (abriox) => {
         this.patchForm(abriox);
+        abriox.abriox_actions.map(abriox_action => {
+          this.abrioxActionEntityService.getByKey(abriox_action.id).subscribe(item => {
+            this.abriox_actions.push(item);
+
+            this.surveyEntityService.getByKey(item.survey.id).subscribe(survey => {
+              this.surveys.push(survey);
+            })
+          })
+        })
+
+        this.abriox = abriox;
+
+        this.autoSave(this.id ? false : true);
       },
 
       (err) => {}
@@ -112,7 +136,6 @@ export class AbrioxComponent implements OnInit {
   createMode() {
     this.abrioxEntityService.add(this.form.value).subscribe(
       (abriox) => {
-        console.log('t', abriox);
         this.patchForm(abriox);
       },
 
@@ -132,7 +155,6 @@ export class AbrioxComponent implements OnInit {
       serial_number,
       telephone,
       date_installation,
-      condition,
       footer,
       status
     } = abriox;
@@ -148,7 +170,6 @@ export class AbrioxComponent implements OnInit {
       serial_number,
       telephone,
       date_installation,
-      condition: condition?.id,
       status: status?.id,
 
       footer: footer
@@ -180,6 +201,8 @@ export class AbrioxComponent implements OnInit {
     }
 
     this.autoSave(this.id ? false : true);
+
+    this.ready = true;
   }
 
   autoSave(reload = false) {
@@ -308,5 +331,27 @@ export class AbrioxComponent implements OnInit {
     this.form.patchValue({
       [attribute]: item ? item.id : null
     });
+  }
+
+  getConditionColour(abrioxAction?: AbrioxAction) {
+    let color = "00FFFFFF";
+
+    if (abrioxAction) {
+        color = MarkerColours[abrioxAction.condition.name];
+    }
+
+    return color;
+  }
+
+  getSurvey(id?: number) {
+    let survey: Survey;
+
+    if (id) {
+      if (this.surveys) {
+        survey = this.surveys.find(item => item.id === id);
+      }
+    }
+
+    return survey;
   }
 }
