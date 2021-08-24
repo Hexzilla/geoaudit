@@ -111,12 +111,12 @@ export class JobsComponent implements OnInit {
       }
     )
 
-    this.selectionService.setSurveyFilter.emit([]);
+    this.selectionService.setSurveyMarkerFilter.emit([]);
   }
 
   // eslint-disable-next-line @angular-eslint/use-lifecycle-interface
   ngOnDestroy(): void{
-    this.selectionService.setSurveyFilter.emit(null);
+    this.selectionService.setSurveyMarkerFilter.emit(null);
   } 
 
   calendar(): void {
@@ -310,7 +310,7 @@ export class JobsComponent implements OnInit {
           /*const surveys = jobs.reduce((_surveys, job) => {
             return _surveys.concat(job.surveys)
           }, [])*/
-          this.selectionService.setSurveyFilter.emit([]);
+          this.selectionService.setSurveyMarkerFilter.emit([]);
         }
       )
     }
@@ -318,7 +318,7 @@ export class JobsComponent implements OnInit {
       const surveys = selections.selected.reduce((_surveys, job) => {
         return _surveys.concat(job.surveys)
       }, [])
-      this.selectionService.setSurveyFilter.emit(surveys);
+      this.selectionService.setSurveyMarkerFilter.emit(surveys);
     }
   }
 }

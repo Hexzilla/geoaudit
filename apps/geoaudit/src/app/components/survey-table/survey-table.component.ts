@@ -90,18 +90,19 @@ export class SurveyTableComponent implements OnInit, AfterViewInit {
     this.form = this.formBuilder.group({
       filter: [''],
     });
-    this.selectionService.setSurveyFilter.emit([]);
+    this.selectionService.setSurveyMarkerFilter.emit([]);
   }
 
   // eslint-disable-next-line @angular-eslint/use-lifecycle-interface
   ngOnDestroy(): void{
-    this.selectionService.setSurveyFilter.emit(null);
+    this.selectionService.setSurveyMarkerFilter.emit(null);
   } 
 
   ngAfterViewInit() {
     this.data = this.dataSource.data;
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+    this.selectionService.setSurveyMarkerFilter.emit(this.data);
 
     /**
      * Uses rxjs to delay and cancel requests made to the backend
@@ -343,11 +344,11 @@ export class SurveyTableComponent implements OnInit, AfterViewInit {
 
   onCheckedRow(event, selections) {
     if (selections.selected.length == 0) {
-      this.selectionService.setSurveyFilter.emit([]);
+      this.selectionService.setSurveyMarkerFilter.emit([]);
     }
     else {
       const surveys = selections.selected;
-      this.selectionService.setSurveyFilter.emit(surveys);
+      this.selectionService.setSurveyMarkerFilter.emit(surveys);
     }
   }
 }

@@ -163,7 +163,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
     this.myJobsCount$ = this.jobEntityService.count(parameters);
 
-    this.selectionService.setSurveyFilter.subscribe((selected) => {
+    this.selectionService.setSurveyMarkerFilter.subscribe((selected) => {
       this.surveyFilters = selected
 
       this.survey_complete_layer.clearLayers();

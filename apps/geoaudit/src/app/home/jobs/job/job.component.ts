@@ -223,7 +223,7 @@ export class JobComponent implements OnInit, AfterViewInit {
       this.createMode();
     }
 
-    this.selectionService.setSurveyFilter.emit([]);
+    this.selectionService.setSurveyMarkerFilter.emit([]);
   }
 
   ngAfterViewInit(): void {
