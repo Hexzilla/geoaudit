@@ -15,7 +15,7 @@ export class NotesComponent implements OnInit, OnChanges {
   @Input() isNoteList: boolean;
 
   id: string;
-  isAdd: boolean = false;
+  isAdd = false;
 
   filter: NoteFilter;
 
