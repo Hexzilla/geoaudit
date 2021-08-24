@@ -102,7 +102,7 @@ export class SurveyTableComponent implements OnInit, AfterViewInit {
     this.data = this.dataSource.data;
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-    this.selectionService.setSurveyMarkerFilter.emit(this.data);
+    //this.selectionService.setSurveyMarkerFilter.emit(this.data);
 
     /**
      * Uses rxjs to delay and cancel requests made to the backend
