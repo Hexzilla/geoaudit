@@ -111,12 +111,12 @@ export class JobsComponent implements OnInit {
       }
     )
 
-    this.selectionService.jobSelectionChangedEvent.emit([]);
-    
+    this.selectionService.setSurveyFilter.emit([]);
   }
 
+  // eslint-disable-next-line @angular-eslint/use-lifecycle-interface
   ngOnDestroy(): void{
-    this.selectionService.jobSelectionChangedEvent.emit(['jobsdestory']);
+    this.selectionService.setSurveyFilter.emit(null);
   } 
 
   calendar(): void {
@@ -304,15 +304,13 @@ export class JobsComponent implements OnInit {
   }
 
   onCheckedRow(event, selections) {
-    console.log("onCheckedRow", selections.selected);
-
     if (selections.selected.length == 0) {
       this.jobs$.subscribe(
-        (jobs) => {
-          const surveys = jobs.reduce((_surveys, job) => {
+        () => {
+          /*const surveys = jobs.reduce((_surveys, job) => {
             return _surveys.concat(job.surveys)
-          }, [])
-          this.selectionService.jobSelectionChangedEvent.emit([]);
+          }, [])*/
+          this.selectionService.setSurveyFilter.emit([]);
         }
       )
     }
@@ -320,7 +318,7 @@ export class JobsComponent implements OnInit {
       const surveys = selections.selected.reduce((_surveys, job) => {
         return _surveys.concat(job.surveys)
       }, [])
-      this.selectionService.jobSelectionChangedEvent.emit(surveys);
+      this.selectionService.setSurveyFilter.emit(surveys);
     }
   }
 }

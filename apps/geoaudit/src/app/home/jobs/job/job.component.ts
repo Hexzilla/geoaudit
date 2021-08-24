@@ -48,6 +48,8 @@ import { AlertService, AuthService, UploadService } from '../../../services';
 
 import * as fromApp from '../../../store';
 
+import { SelectionService } from '../../../services/selection.service';
+
 @Component({
   selector: 'geoaudit-job',
   templateUrl: './job.component.html',
@@ -155,7 +157,8 @@ export class JobComponent implements OnInit, AfterViewInit {
     private dialog: MatDialog,
     private _lightbox: Lightbox,
     private authService: AuthService,
-    private uploadService: UploadService
+    private uploadService: UploadService,
+    private selectionService: SelectionService
   ) {
   }
 
@@ -219,6 +222,8 @@ export class JobComponent implements OnInit, AfterViewInit {
       this.mode = 'CREATE';
       this.createMode();
     }
+
+    this.selectionService.setSurveyFilter.emit([]);
   }
 
   ngAfterViewInit(): void {

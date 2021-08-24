@@ -108,11 +108,11 @@ export class HomeComponent implements OnInit, AfterViewInit {
   private map;
   private states;
 
-  startwithjobs = false;
   survey_complete_layer = new L.markerClusterGroup();
   survey_not_started_layer = new L.markerClusterGroup();
   survey_ongoing_layer = new L.markerClusterGroup();
   survey_refused_layer = new L.markerClusterGroup();
+  private surveyFilters = null;
 
   clickMarker;
   url: string;
@@ -150,44 +150,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.auth = this.authService.authValue;
   }
 
-  inJobSurveys(surveys, jobSurveys) {
-    var length = jobSurveys.length;
-    for(var i = 0; i < length; i++) {
-        if(surveys.id == jobSurveys[i].id) return true;
-    }
-    return false;
-  }
-
-  createMarker(busIcon, jobsurvey){
-      let marker_i = L.marker(
-        new L.LatLng(jobsurvey.geometry['lat'], jobsurvey.geometry['lng']),
-        { icon: busIcon, title: jobsurvey.name }
-      );
-      var select_popup =
-        '<h2> survey ' + jobsurvey.name + '</h2><hr>';
-      select_popup +=
-        '<button data-btn="detail" data-type="surveys" data-id="' +
-        jobsurvey.id +
-        '" class="sp_button">Details<span class="detail_button_icon">></span></button></a>';
-      select_popup +=
-        '<button data-btn="notes" data-type="surveys" data-id="' +
-        jobsurvey.id +
-        '" class="sp_button">Notes<span class="detail_button_icon">></span></button>';
-      select_popup +=
-        '<button data-btn="drive" data-type="surveys" data-id="' +
-        jobsurvey.id +
-        '" class="sp_button">DriveTo<span class="detail_button_icon">></span></button>';
-
-      var popup = L.popup({
-        className: 'select_marker_popup',
-        closeButton: false,
-      }).setContent(select_popup);
-      marker_i.bindPopup(popup);
-      // marker_i.addTo(survey_complete_layer);
-      return marker_i;
-  }
-
-
   ngOnInit(): void {
     this.notificationEntityService.getAll();
     this.toDoListEntityService.getAll();
@@ -201,94 +163,16 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
     this.myJobsCount$ = this.jobEntityService.count(parameters);
 
-    this.selectionService.jobSelectionChangedEvent.subscribe((surveys) => {
+    this.selectionService.setSurveyFilter.subscribe((selected) => {
+      this.surveyFilters = selected
+
       this.survey_complete_layer.clearLayers();
       this.survey_not_started_layer.clearLayers();
       this.survey_ongoing_layer.clearLayers();
       this.survey_refused_layer.clearLayers();
-      this.startwithjobs = true
       
-      let jobSurveys = [];
-      if(surveys[0] == "jobsdestory"){
-        jobSurveys = this.surveys;
-      }else{
-        if(this.surveys){
-          jobSurveys = this.surveys.filter(it => this.inJobSurveys(it, surveys));
-        }
-      }
-
-      for (var i = 0; i < jobSurveys.length; i++) {
-        var a = jobSurveys[i];
-
-        // if no geometry data, skip it
-        if (!a || !a.geometry) continue;
-        // if against Layer rule, skip it
-        //if(!a.footer || !a.footer.approved) continue;
-
-        // if no status data, skip it
-        if (!a.status || !a.status.name) continue;
-
-        //if(!a.job || a.job.id != this.authService.authValue.user.id) continue;
-        // This condition should allow surveys which have the current user in the array this.survey.job.assignees
-        // seperate icons and layers for condition
-        let icon_name = 'flag';
-        let busIcon;
-        let marker_i;
-        switch (a.status.name) {
-          case 'COMPLETED':
-            icon_name = 'flag';
-            busIcon = L.IconMaterial.icon({
-              icon: icon_name, // Name of Material icon
-              iconColor: '#8AC926', // Material icon color (could be rgba, hex, html name...)
-              markerColor: 'rgba(255,255,255,0.8)', // Marker fill color
-              outlineColor: 'black', // Marker outline color
-              outlineWidth: 1, // Marker outline width
-              iconSize: [31, 42], // Width and height of the icon
-            });
-
-            marker_i = this.createMarker(busIcon, a);
-            this.survey_complete_layer.addLayer(marker_i);
-            break;
-          case 'NOT_STARTED':
-            icon_name = 'flag';
-            busIcon = L.IconMaterial.icon({
-              icon: icon_name, // Name of Material icon
-              iconColor: '#E71D36', // Material icon color (could be rgba, hex, html name...)
-              markerColor: 'rgba(255,255,255,0.8)', // Marker fill color
-              outlineColor: 'black', // Marker outline color
-              outlineWidth: 1, // Marker outline width
-              iconSize: [31, 42], // Width and height of the icon
-            });
-            marker_i = this.createMarker(busIcon, a);
-            this.survey_not_started_layer.addLayer(marker_i);
-            break;
-          case 'ONGOING':
-            icon_name = 'flag';
-            busIcon = L.IconMaterial.icon({
-              icon: icon_name, // Name of Material icon
-              iconColor: '#FFBE0B', // Material icon color (could be rgba, hex, html name...)
-              markerColor: 'rgba(255,255,255,0.8)', // Marker fill color
-              outlineColor: 'black', // Marker outline color
-              outlineWidth: 1, // Marker outline width
-              iconSize: [31, 42], // Width and height of the icon
-            });
-            marker_i = this.createMarker(busIcon, a);
-            this.survey_ongoing_layer.addLayer(marker_i);
-            break;
-          case 'REFUSED':
-            icon_name = 'flag';
-            busIcon = L.IconMaterial.icon({
-              icon: icon_name, // Name of Material icon
-              iconColor: '#3A86FF', // Material icon color (could be rgba, hex, html name...)
-              markerColor: 'rgba(255,255,255,0.8)', // Marker fill color
-              outlineColor: 'black', // Marker outline color
-              outlineWidth: 1, // Marker outline width
-              iconSize: [31, 42], // Width and height of the icon
-            });
-            marker_i = this.createMarker(busIcon, a);
-            this.survey_refused_layer.addLayer(marker_i);
-            break;
-        }
+      if (this.surveys) {
+        this.drawSurveyMarkers(this.surveys, selected);
       }
     });
   }
@@ -803,118 +687,12 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.surveyEntityService.getAll().subscribe(
       (marker_data) => {
         this.surveys = marker_data;
-        if(!this.startwithjobs)
-          for( var i=0 ;i < this.surveys.length ;i ++)
-          {
-            var a = this.surveys[i];
-  
-            // if no geometry data, skip it
-            if(!a || !a.geometry) continue;
-            // if against Layer rule, skip it
-            //if(!a.footer || !a.footer.approved) continue;
-  
-            // if no status data, skip it
-            if(!a.status || !a.status.name) continue;
-            
-            //if(!a.job || a.job.id != this.authService.authValue.user.id) continue;
-            // This condition should allow surveys which have the current user in the array this.survey.job.assignees
-            // seperate icons and layers for condition
-            var icon_name = "flag";
-            switch(a.status.name)
-            {
-              case "COMPLETED":
-                  icon_name = "flag";
-                  var busIcon = L.IconMaterial.icon({
-                    icon: icon_name,            // Name of Material icon
-                    iconColor: '#8AC926',              // Material icon color (could be rgba, hex, html name...)
-                    markerColor: 'rgba(255,255,255,0.8)',  // Marker fill color
-                    outlineColor: 'black',            // Marker outline color
-                    outlineWidth: 1,                   // Marker outline width 
-                    iconSize: [31, 42]                 // Width and height of the icon
-                  })
-                  var marker_i = L.marker(new L.LatLng(a.geometry['lat'], a.geometry['lng']), {icon:busIcon , title: this.surveys[i].name });
-                  var select_popup = '<h2> survey ' + this.surveys[i].name + "</h2><hr>";
-                  select_popup += '<button data-btn="detail" data-type="surveys" data-id="'+this.surveys[i].id+'" class="sp_button">Details<span class="detail_button_icon">></span></button></a>';
-                  select_popup += '<button data-btn="notes" data-type="surveys" data-id="'+this.surveys[i].id+'" class="sp_button">Notes<span class="detail_button_icon">></span></button>';
-                  select_popup += '<button data-btn="drive" data-type="surveys" data-id="'+this.surveys[i].id+'" class="sp_button">DriveTo<span class="detail_button_icon">></span></button>';
-  
-                  var popup = L.popup({className: 'select_marker_popup' , 'closeButton' : false})
-                      .setContent(select_popup);
-                  marker_i.bindPopup(popup);
-                  // marker_i.addTo(survey_complete_layer);
-                  this.survey_complete_layer.addLayer(marker_i);
-                break;
-              case "NOT_STARTED":
-                  icon_name = "flag";
-                  var busIcon = L.IconMaterial.icon({
-                    icon: icon_name,            // Name of Material icon
-                    iconColor: '#E71D36',              // Material icon color (could be rgba, hex, html name...)
-                    markerColor: 'rgba(255,255,255,0.8)',  // Marker fill color
-                    outlineColor: 'black',            // Marker outline color
-                    outlineWidth: 1,                   // Marker outline width 
-                    iconSize: [31, 42]                 // Width and height of the icon
-                  })
-                  var marker_i = L.marker(new L.LatLng(a.geometry['lat'], a.geometry['lng']), {icon:busIcon , title: this.surveys[i].name });
-                  var select_popup = '<h2> survey ' + this.surveys[i].name + "</h2><hr>";
-                  select_popup += '<button data-btn="detail" data-type="surveys" data-id="'+this.surveys[i].id+'" class="sp_button">Details<span class="detail_button_icon">></span></button></a>';
-                  select_popup += '<button data-btn="notes" data-type="surveys" data-id="'+this.surveys[i].id+'" class="sp_button">Notes<span class="detail_button_icon">></span></button>';
-                  select_popup += '<button data-btn="drive" data-type="surveys" data-id="'+this.surveys[i].id+'" class="sp_button">DriveTo<span class="detail_button_icon">></span></button>';
-  
-                  var popup = L.popup({className: 'select_marker_popup' , 'closeButton' : false})
-                      .setContent(select_popup);
-                  marker_i.bindPopup(popup);
-                  // marker_i.addTo(survey_not_started_layer);
-                  this.survey_not_started_layer.addLayer(marker_i);
-                break;
-              case "ONGOING":
-                  icon_name = "flag";
-                  var busIcon = L.IconMaterial.icon({
-                    icon: icon_name,            // Name of Material icon
-                    iconColor: '#FFBE0B',              // Material icon color (could be rgba, hex, html name...)
-                    markerColor: 'rgba(255,255,255,0.8)',  // Marker fill color
-                    outlineColor: 'black',            // Marker outline color
-                    outlineWidth: 1,                   // Marker outline width 
-                    iconSize: [31, 42]                 // Width and height of the icon
-                  })
-                  var marker_i = L.marker(new L.LatLng(a.geometry['lat'], a.geometry['lng']), {icon:busIcon , title: this.surveys[i].name });
-                  var select_popup = '<h2> survey ' + this.surveys[i].name + "</h2><hr>";
-                  select_popup += '<button data-btn="detail" data-type="surveys" data-id="'+this.surveys[i].id+'" class="sp_button">Details<span class="detail_button_icon">></span></button></a>';
-                  select_popup += '<button data-btn="notes" data-type="surveys" data-id="'+this.surveys[i].id+'" class="sp_button">Notes<span class="detail_button_icon">></span></button>';
-                  select_popup += '<button data-btn="drive" data-type="surveys" data-id="'+this.surveys[i].id+'" class="sp_button">DriveTo<span class="detail_button_icon">></span></button>';
-  
-                  var popup = L.popup({className: 'select_marker_popup' , 'closeButton' : false})
-                      .setContent(select_popup);
-                  marker_i.bindPopup(popup);
-                  this.survey_ongoing_layer.addLayer(marker_i);
-                break;
-              case "REFUSED":
-                  icon_name = "flag";
-                  var busIcon = L.IconMaterial.icon({
-                    icon: icon_name,            // Name of Material icon
-                    iconColor: '#3A86FF',              // Material icon color (could be rgba, hex, html name...)
-                    markerColor: 'rgba(255,255,255,0.8)',  // Marker fill color
-                    outlineColor: 'black',            // Marker outline color
-                    outlineWidth: 1,                   // Marker outline width 
-                    iconSize: [31, 42]                 // Width and height of the icon
-                  })
-                  var marker_i = L.marker(new L.LatLng(a.geometry['lat'], a.geometry['lng']), {icon:busIcon , title: this.surveys[i].name });
-                  var select_popup = '<h2> survey ' + this.surveys[i].name + "</h2><hr>";
-                  select_popup += '<button data-btn="detail" data-type="surveys" data-id="'+this.surveys[i].id+'" class="sp_button">Details<span class="detail_button_icon">></span></button></a>';
-                  select_popup += '<button data-btn="notes" data-type="surveys" data-id="'+this.surveys[i].id+'" class="sp_button">Notes<span class="detail_button_icon">></span></button>';
-                  select_popup += '<button data-btn="drive" data-type="surveys" data-id="'+this.surveys[i].id+'" class="sp_button">DriveTo<span class="detail_button_icon">></span></button>';
-  
-                  var popup = L.popup({className: 'select_marker_popup' , 'closeButton' : false})
-                      .setContent(select_popup);
-                  marker_i.bindPopup(popup);
-                  this.survey_refused_layer.addLayer(marker_i);
-                break;
-            }
-          }
-        },
-  
-        (err) => {
-          this.alertService.error(err.error);
-        }
+        this.drawSurveyMarkers(this.surveys, this.surveyFilters)
+      },
+
+      (err) => {
+        this.alertService.error(err.error);
+      }
       );
     
     //Show Layers on LayerControl
@@ -1305,6 +1083,79 @@ export class HomeComponent implements OnInit, AfterViewInit {
     })
   }
 
+  private drawSurveyMarkers(items, selected) {
+    items.filter(it => it && it.geometry && it.status && it.status.name)
+      .map(a => {
+        let iconColor = this.getMarkerIconColor(a.status.name);
+        let markerColor = 'rgba(255,255,255,0.8)'
+        let outlineColor = 'black'
+
+        if (selected && !selected.find(it => it.id === a.id)) {
+          iconColor = '#E0E0E0'
+          markerColor = 'rgba(140,140,140,1)'
+          outlineColor = 'rgba(140,140,140)'
+        }
+
+        const busIcon = this.createIconMaterial(iconColor, markerColor, outlineColor)
+        const marker = this.createMarker(busIcon, a);
+        this.survey_complete_layer.addLayer(marker);
+      })
+  }
+
+  private getMarkerIconColor(statusName) {
+    switch (statusName) {
+      case 'COMPLETED':
+        return '#8AC926'
+      case 'NOT_STARTED':
+        return '#E71D36'
+      case 'ONGOING':
+        return '#FFBE0B'
+      case 'REFUSED':
+        return '#3A86FF'
+    }
+    return '#FF0000'
+  }
+
+  private createIconMaterial(iconColor, markerColor, outlineColor) {
+    return L.IconMaterial.icon({
+      icon: 'flag',
+      iconColor: iconColor,
+      markerColor: markerColor,
+      outlineColor: outlineColor,
+      outlineWidth: 1,
+      iconSize: [31, 42],
+    });
+  }
+
+  createMarker(busIcon, jobsurvey){
+      const marker_i = L.marker(
+        new L.LatLng(jobsurvey.geometry['lat'], jobsurvey.geometry['lng']),
+        { icon: busIcon, title: jobsurvey.name }
+      );
+      let select_popup ='<h2> survey ' + jobsurvey.name + '</h2><hr>';
+      select_popup += 
+        '<button data-btn="detail" data-type="surveys" data-id="' +
+        jobsurvey.id +
+        '" class="sp_button">Details<span class="detail_button_icon">></span></button></a>';
+      select_popup +=
+        '<button data-btn="notes" data-type="surveys" data-id="' +
+        jobsurvey.id +
+        '" class="sp_button">Notes<span class="detail_button_icon">></span></button>';
+      select_popup +=
+        '<button data-btn="drive" data-type="surveys" data-id="' +
+        jobsurvey.id +
+        '" class="sp_button">DriveTo<span class="detail_button_icon">></span></button>';
+
+      const popup = L.popup({
+        className: 'select_marker_popup',
+        closeButton: false,
+      }).setContent(select_popup);
+      marker_i.bindPopup(popup);
+      // marker_i.addTo(survey_complete_layer);
+      return marker_i;
+  }
+
+
   private initialiseControls(): void {
     this.initializeSidebarControl();
   }
@@ -1427,19 +1278,5 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   get isRoot(): boolean {
     return this.router.url === '/home';
-  }
-  
-
-  showMySurveysOnly(surveys) : void{
-    /*if (this.map) {
-      this.map.eachLayer((layer) => {
-        if (layer.options && layer.options.pane === "markerPane") {
-          layer.remove();
-        }
-      });
-    }
-    for(var i=0; i<surveys.length; i++) {
-      this.drawSurveyMarker(surveys[i]);
-    }*/
   }
 }

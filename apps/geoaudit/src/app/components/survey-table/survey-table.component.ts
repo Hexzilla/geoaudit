@@ -90,11 +90,12 @@ export class SurveyTableComponent implements OnInit, AfterViewInit {
     this.form = this.formBuilder.group({
       filter: [''],
     });
-    this.selectionService.jobSelectionChangedEvent.emit([]);
+    this.selectionService.setSurveyFilter.emit([]);
   }
 
+  // eslint-disable-next-line @angular-eslint/use-lifecycle-interface
   ngOnDestroy(): void{
-    this.selectionService.jobSelectionChangedEvent.emit(['jobsdestory']);
+    this.selectionService.setSurveyFilter.emit(null);
   } 
 
   ngAfterViewInit() {
@@ -341,14 +342,12 @@ export class SurveyTableComponent implements OnInit, AfterViewInit {
   }
 
   onCheckedRow(event, selections) {
-    console.log("surveyonCheckedRow", selections.selected);
-
     if (selections.selected.length == 0) {
-        this.selectionService.jobSelectionChangedEvent.emit([]);
+      this.selectionService.setSurveyFilter.emit([]);
     }
     else {
       const surveys = selections.selected;
-      this.selectionService.jobSelectionChangedEvent.emit(surveys);
+      this.selectionService.setSurveyFilter.emit(surveys);
     }
   }
 }
