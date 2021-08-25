@@ -117,34 +117,12 @@
     [label]="'CONTAINERS.home.jobs.job.steps.attachments' | translate"
   >
     <mat-card-content>
-      <!-- 
-      <geoaudit-attachment-card title="CONTAINERS.home.jobs.job.attachments.images" icon="add_a_photo" type="IMAGE" [multiple]="true">
-      </geoaudit-attachment-card>
-      <geoaudit-attachment-card title="CONTAINERS.home.jobs.job.attachments.documents" icon="upload_file" type="DOCUMENT" [multiple]="true">
-      </geoaudit-attachment-card> -->
-<!--       
-    <geoaudit-file-upload
-      label="CONTAINERS.home.jobs.job.attachments.images"
-      (preview)="onPreview($event)"
-      (upload)="onImageUpload($event)"
-      fileType="IMAGE"
-      [multiple]="true"
-    ></geoaudit-file-upload>
-
-    <geoaudit-file-upload
-      label="CONTAINERS.home.jobs.job.attachments.documents"
-      (preview)="onPreview($event)"
-      (upload)="onDocumentUpload($event)"
-      fileType="DOCUMENT"
-      [multiple]="true"
-    ></geoaudit-file-upload> -->
-
       <attachment-file-upload
         label="CONTAINERS.home.jobs.job.attachments.images"
         (preview)="onItemPreview($event)"
         (upload)="onImageUpload($event)"
         fileType="IMAGE"
-        [items] = "Images"
+        [items] = "attachedImages"
         [multiple]="true"
       ></attachment-file-upload>
 
@@ -180,9 +158,7 @@
         *ngIf="dataSource"
         [filterMode]="'LOCAL'"
         [dataSource]="dataSource"
-        [length]="length"
         [pageSize]="pageSize"
-        [pageSizeOptions]="pageSizeOptions"
         (onDelete)="delete($event)"
         [job]="job"
       ></geoaudit-survey-table>

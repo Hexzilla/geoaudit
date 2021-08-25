@@ -146,7 +146,7 @@ export class JobComponent implements OnInit, AfterViewInit {
 
   filteredSurveys: Array<Survey>;
 
-  Images: Array<any>;
+  attachedImages: Array<any>;
   Documents: Array<any>;
 
   public chartSeries = null;
@@ -270,7 +270,7 @@ export class JobComponent implements OnInit, AfterViewInit {
     this.jobEntityService.getByKey(this.id).subscribe(
       (job) => {
         this.job = job;
-        this.currentState = this.job?.status.id
+        this.currentState = this.job?.status?.id
 
         const {
           status,
@@ -585,8 +585,8 @@ export class JobComponent implements OnInit, AfterViewInit {
   getUploadFiles(): void {
     
     const { images, documents } = this.form.value.footer;
-    console.log("getJobItems->document",documents);
-    this.Images = this.uploadService.getUploadFiles(FileTypes.IMAGE, images, documents);
+    console.log("getJobItems->document", images, documents);
+    this.attachedImages = this.uploadService.getUploadFiles(FileTypes.IMAGE, images, documents);
     this.Documents = this.uploadService.getUploadFiles(FileTypes.DOCUMENT, images, documents);
   }
 

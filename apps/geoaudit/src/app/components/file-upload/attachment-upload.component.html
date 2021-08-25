@@ -1,36 +1,64 @@
-<mat-card *ngIf="template === 'GENERAL'" style="cursor: pointer; margin-top: 20px">
-    <div fxLayout="row" class="file-upload-container">
-
-        <div fxLayout="column" fxFlex>
-            <div class="title">{{ label | translate }}</div>
-            <div fxLayout="column" fxFlex fxLayoutAlign="center">
-                <div fxLayout fxLayoutAlign="center">
-                    <span [ngSwitch]="fileType">
-                        <mat-icon *ngSwitchCase="'IMAGE'" class="icon" (click)="fileInput.click()">add_a_photo
-                        </mat-icon>
-                        <mat-icon *ngSwitchCase="'DOCUMENT'" class="icon" (click)="fileInput.click()">upload_file
-                        </mat-icon>
-                    </span>
-                </div>
-            </div>
+<mat-card
+  *ngIf="template === 'GENERAL'"
+  style="cursor: pointer; margin-top: 20px"
+>
+  <div fxLayout="row" class="file-upload-container">
+    <div fxLayout="column" fxFlex>
+      <div class="title">{{ label | translate }}</div>
+      <div fxLayout="column" fxFlex fxLayoutAlign="center">
+        <div fxLayout fxLayoutAlign="center">
+          <span [ngSwitch]="fileType">
+            <mat-icon
+              *ngSwitchCase="'IMAGE'"
+              class="icon"
+              (click)="fileInput.click()"
+            >
+              add_a_photo
+            </mat-icon>
+            <mat-icon
+              *ngSwitchCase="'DOCUMENT'"
+              class="icon"
+              (click)="fileInput.click()"
+            >
+              upload_file
+            </mat-icon>
+          </span>
         </div>
-        <span [ngSwitch]="fileType">
-        <div *ngSwitchCase="'IMAGE'" style="width: 200px; height: 200px;">
-            
-            <img [src]="item.thumb" *ngFor="let item of items" width="50px" style="margin-left: 10px;margin-top: 10px;" height="50px" (click)="preview.emit({fileType:fileType,index:item.index})"/>
-            
-        </div>
-        <div *ngSwitchCase="'DOCUMENT'" style="width: 200px; height: 200px;">
-            <mat-icon class="icon" *ngFor="let item of items" width="50px" (click)="preview.emit({fileType:fileType,index:item.index})">insert_drive_file</mat-icon>
-        </div>
-        </span>
+      </div>
     </div>
+    <span [ngSwitch]="fileType">
+      <div *ngSwitchCase="'IMAGE'" style="width: 200px; height: 200px">
+        <img
+          [src]="item.thumb"
+          *ngFor="let item of items"
+          width="50px"
+          style="margin-left: 10px; margin-top: 10px"
+          height="50px"
+          (click)="preview.emit({ fileType: fileType, index: item.index })"
+        />
+      </div>
+      <div *ngSwitchCase="'DOCUMENT'" style="width: 200px; height: 200px">
+        <mat-icon
+          class="icon"
+          *ngFor="let item of items"
+          width="50px"
+          (click)="preview.emit({ fileType: fileType, index: item.index })"
+          >insert_drive_file</mat-icon
+        >
+      </div>
+    </span>
+  </div>
 </mat-card>
 
-
 <div>
-    <input #fileInput type="file" [accept]="getAcceptedInput()" (change)="process(fileInput)" [multiple]="multiple"
-        style="display: none" />
+  <input
+    #fileInput
+    type="file"
+    [accept]="getAcceptedInput()"
+    (change)="process(fileInput)"
+    [multiple]="multiple"
+    style="display: none"
+  />
 </div>
 
 <!-- Display progress indication -->
