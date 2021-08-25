@@ -125,8 +125,6 @@ export class JobComponent implements OnInit, AfterViewInit {
   users: Array<User> = [];
   allUsers: Array<User> = [];
 
-  noteViewMode = 0
-
   /**
    * The user input for the autocomplete.
    */
@@ -392,10 +390,6 @@ export class JobComponent implements OnInit, AfterViewInit {
   }
 
   submit(navigate = true) {
-    if (this.selectedTabIndex === 3 && this.noteViewMode === 1) {
-      this.noteViewMode = 0;
-      return;
-    }
     this.submitted = true;
 
     // reset alerts on submit
@@ -651,10 +645,5 @@ export class JobComponent implements OnInit, AfterViewInit {
 
   selectedIndexChange(selectedTabIndex) {
     this.selectedTabIndex = selectedTabIndex;
-  }
-
-  onNotesViewModeChange(viewMode) {
-    console.log("onNotesViewModeChange", viewMode)
-    this.noteViewMode = viewMode
   }
 }

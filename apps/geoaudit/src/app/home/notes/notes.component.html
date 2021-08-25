@@ -1,5 +1,5 @@
 <!-- <ng-container *ngIf="isRoot()"> -->
-<ng-container *ngIf="isListViewMode()">
+<ng-container *ngIf="viewMode !== 1">
   <ng-container *ngIf="isCoreNotesComponent()">
     <geoaudit-sidebar-header
       title="CONTAINERS.home.notes.title"
@@ -14,7 +14,7 @@
 
   <mat-card
     *ngFor="let note of notes$ | async"
-    [routerLink]="'/home/notes/' + note.id"
+    (click)="showNoteDetails(note)"
     style="cursor: pointer; margin-top: 20px"
     fxLayout="row"
     fxLayoutAlign="space-between"
@@ -52,7 +52,8 @@
   </div>
 </ng-container>
 <geoaudit-note
-  *ngIf="!isListViewMode()"
+  *ngIf="viewMode === 1"
+  (closeNote)="onCloseNoteAddPage($event)"
   ></geoaudit-note>
 
 <router-outlet></router-outlet>

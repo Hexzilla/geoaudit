@@ -12,8 +12,7 @@ import { AuthService } from '../../services';
 })
 export class NotesComponent implements OnInit, OnChanges {
 
-  @Input() viewMode;
-  @Output() viewModeChange = new EventEmitter();
+  viewMode = 0;
 
   id: string;
 
@@ -114,10 +113,14 @@ export class NotesComponent implements OnInit, OnChanges {
    */
   add() {
     this.viewMode = 1;
-    this.viewModeChange.emit(1);
   }
 
-  isListViewMode() {
-    return this.viewMode === 0;
+  onCloseNoteAddPage(e) {
+    console.log("onCloseNote")
+    this.viewMode = 0;
+  }
+
+  showNoteDetails(note) {
+    console.log("showNoteDetails", note);
   }
 }

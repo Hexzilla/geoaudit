@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ThemePalette } from '@angular/material/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -37,6 +37,8 @@ export class NoteComponent implements OnInit, AfterViewInit {
   color: ThemePalette = 'primary';
 
   private unsubscribe = new Subject<void>();
+
+  @Output() closeNote = new EventEmitter();
 
   constructor(
     private route: ActivatedRoute,
@@ -337,5 +339,9 @@ export class NoteComponent implements OnInit, AfterViewInit {
     this.form.patchValue({
       [attribute]: items.length > 0 ? items.map((item) => item.id) : [],
     });
+  }
+
+  save() {
+    this.closeNote.emit();
   }
 }
