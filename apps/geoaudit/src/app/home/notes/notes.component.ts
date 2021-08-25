@@ -20,6 +20,8 @@ export class NotesComponent implements OnInit, OnChanges {
 
   notes$ = this.noteEntityService.entities$;
 
+  selectedNote = null;
+
   constructor(
     private route: ActivatedRoute,
     public router: Router,
@@ -116,11 +118,12 @@ export class NotesComponent implements OnInit, OnChanges {
   }
 
   onCloseNoteAddPage(e) {
-    console.log("onCloseNote")
     this.viewMode = 0;
   }
 
   showNoteDetails(note) {
     console.log("showNoteDetails", note);
+    this.selectedNote = note;
+    this.viewMode = 2;
   }
 }

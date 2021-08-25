@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { AfterViewInit, Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ThemePalette } from '@angular/material/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -28,7 +28,7 @@ import { TrEntityService } from '../../../entity-services/tr-entity.service';
   styleUrls: ['./note.component.scss'],
 })
 export class NoteComponent implements OnInit, AfterViewInit {
-  id: string;
+  @Input() id: string;
 
   form: FormGroup;
 
@@ -341,7 +341,11 @@ export class NoteComponent implements OnInit, AfterViewInit {
     });
   }
 
-  save() {
+  saveNote() {
     this.closeNote.emit();
+  }
+
+  deleteNote() {
+
   }
 }

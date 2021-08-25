@@ -152,13 +152,21 @@
   </mat-step>
 </mat-horizontal-stepper>
 
-<div fxLayout="row-reverse">
+<div fxLayout="row" fxLayoutAlign="space-between" class="notes-button-wrapper">
   <button
     mat-flat-button
-    fxFlexFill
     color="primary"
-    (click)="save()"
+    class="btn-save"
+    (click)="saveNote()"
     >
       Save
+  </button>
+  <button
+    mat-flat-button
+    color="warn"
+    class="btn-delete"
+    (click)="deleteNote()"
+    >
+      Delete
   </button>
 </div>

@@ -1,5 +1,5 @@
 <!-- <ng-container *ngIf="isRoot()"> -->
-<ng-container *ngIf="viewMode !== 1">
+<ng-container *ngIf="viewMode === 0">
   <ng-container *ngIf="isCoreNotesComponent()">
     <geoaudit-sidebar-header
       title="CONTAINERS.home.notes.title"
@@ -51,9 +51,18 @@
     </button>
   </div>
 </ng-container>
+
 <geoaudit-note
   *ngIf="viewMode === 1"
   (closeNote)="onCloseNoteAddPage($event)"
-  ></geoaudit-note>
+>
+</geoaudit-note>
+
+<geoaudit-note
+  *ngIf="viewMode === 2"
+  [id]="selectedNote.id"
+  (closeNote)="onCloseNoteAddPage($event)"
+>
+</geoaudit-note>
 
 <router-outlet></router-outlet>
