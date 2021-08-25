@@ -54,6 +54,29 @@ export class UploadService {
     }
   }
 
+  getImageUploadFiles(images: Array<Image>): Array<any> {
+    return images.map((image: Image, index) => {
+      const src = `${environment.API_URL}${image.url}`
+      const thumb = image.formats?.thumbnail?.url || src
+      return {
+        index: index,
+        src: src,
+        caption: image.name,
+        thumb: thumb,
+      };
+    });
+  }
+
+  getDocumentUploadFiles(documents: Array<Image>): Array<any> {
+    return documents.map((document: Image, index) => {
+      return {
+        index: index,
+        src: `${environment.API_URL}${document.url}`,
+        caption: document.name,
+      };
+    });
+  }
+
   getUploadFiles(fileType: FileTypes, images: Array<Image>, documents: Array<Image>): Array<any> {
     switch (fileType) {
       case FileTypes.IMAGE:
@@ -64,7 +87,7 @@ export class UploadService {
             index: index,
             src: `${environment.API_URL}${image.url}`,
             caption: image.name,
-            thumb: `${environment.API_URL}${image.formats.thumbnail.url}`,
+            thumb: `${environment.API_URL}${image.formats?.thumbnail.url}`,
           };
 
           _album.push(album);
