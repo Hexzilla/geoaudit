@@ -1,5 +1,5 @@
 <!-- <ng-container *ngIf="isRoot()"> -->
-<ng-container *ngIf="!isAdd">
+<ng-container *ngIf="isListViewMode()">
   <ng-container *ngIf="isCoreNotesComponent()">
     <geoaudit-sidebar-header
       title="CONTAINERS.home.notes.title"
@@ -52,7 +52,7 @@
   </div>
 </ng-container>
 <geoaudit-note
-  *ngIf="isAdd"
+  *ngIf="!isListViewMode()"
   ></geoaudit-note>
 
 <router-outlet></router-outlet>

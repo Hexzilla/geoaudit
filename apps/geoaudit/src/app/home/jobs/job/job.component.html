@@ -188,7 +188,8 @@
   <mat-tab [label]="'CONTAINERS.home.jobs.job.steps.notes' | translate">
     <mat-card-content>
       <geoaudit-notes
-      [isNoteList]="isNoteList"
+        [viewMode]="noteViewMode"
+        (viewModeChange)="onNotesViewModeChange($event)"
       ></geoaudit-notes>
     </mat-card-content>
   </mat-tab>

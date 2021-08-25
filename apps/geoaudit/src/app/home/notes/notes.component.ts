@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnChanges,SimpleChanges } from '@angular/core';
+import { Component, Input, Output, OnInit, OnChanges, SimpleChanges, EventEmitter } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import qs from 'qs';
 import { NoteEntityService } from '../../entity-services/note-entity.service';
@@ -12,10 +12,10 @@ import { AuthService } from '../../services';
 })
 export class NotesComponent implements OnInit, OnChanges {
 
-  @Input() isNoteList: boolean;
+  @Input() viewMode;
+  @Output() viewModeChange = new EventEmitter();
 
   id: string;
-  isAdd = false;
 
   filter: NoteFilter;
 
@@ -58,7 +58,7 @@ export class NotesComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void{
-      this.isAdd = false;
+    
   }
 
   isRoot() {
@@ -113,36 +113,11 @@ export class NotesComponent implements OnInit, OnChanges {
    * populate the fields for jobs for example.
    */
   add() {
-    this.isAdd = true;
+    this.viewMode = 1;
+    this.viewModeChange.emit(1);
+  }
 
-    // this.router.navigate(['/home/notes/create'])
-
-    // const { url } = this.router;
-
-    // if (
-    //   (
-    //   url.includes('abrioxes') ||
-    //   url.includes('jobs') ||
-    //   url.includes('resistivities') ||
-    //   url.includes('sites') ||
-    //   url.includes('surveys') ||
-    //   url.includes('testposts') ||
-    //   url.includes('trs')
-    //   ) &&
-    //   this.id
-    // ) {
-    //   const includes = url.split('/');
-
-    //   const navigationExtras: NavigationExtras = {
-    //     queryParams: {
-    //       [includes[2]]: JSON.stringify([this.id])
-    //     }
-    //   }
-
-    //   this.router.navigate([`/home/notes/create`], navigationExtras);
-
-    // } else {
-    //   this.router.navigate(['/home/notes/create'])
-    // }
+  isListViewMode() {
+    return this.viewMode === 0;
   }
 }

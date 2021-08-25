@@ -11,7 +11,7 @@
 <mat-horizontal-stepper>
   <!-- Datetime, Assignees, and Description -->
   <mat-step>
-    <form [formGroup]="form">
+    <form fxLayout="column" [formGroup]="form">
       <!-- Datetime -->
       <mat-form-field appearance="outline">
         <mat-label>{{ 'CONTAINERS.home.notes.date' | translate }}</mat-label>
@@ -40,14 +40,14 @@
       ></geoaudit-user-selector> -->
 
       <geoaudit-multi-item-selector
-      *ngIf="form.value.assignees"
-      selector="user"
-      label="CONTAINERS.home.notes.assignees"
-      placeholder="CONTAINERS.home.notes.new_assignee"
-      [items]="form.value.assignees"
-      (itemsChange)="onItemsChange($event, 'assignees')"
-      attribute="username"
-    ></geoaudit-multi-item-selector>
+        *ngIf="form.value.assignees"
+        selector="user"
+        label="CONTAINERS.home.notes.assignees"
+        placeholder="CONTAINERS.home.notes.new_assignee"
+        [items]="form.value.assignees"
+        (itemsChange)="onItemsChange($event, 'assignees')"
+        attribute="username"
+      ></geoaudit-multi-item-selector>
 
       <!-- Description -->
       <mat-form-field appearance="outline">
@@ -151,3 +151,13 @@
     ></geoaudit-multi-item-selector>
   </mat-step>
 </mat-horizontal-stepper>
+
+<!-- <div fxLayout="row-reverse">
+  <button
+    mat-flat-button
+    fxFlexFill
+    color="primary"
+    >
+    <mat-icon>add</mat-icon>
+  </button>
+</div> -->
