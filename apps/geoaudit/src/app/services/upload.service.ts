@@ -57,12 +57,12 @@ export class UploadService {
   getImageUploadFiles(images: Array<Image>): Array<any> {
     return images.map((image: Image, index) => {
       const src = `${environment.API_URL}${image.url}`
-      const thumb = image.formats?.thumbnail?.url || src
+      const thumb = image.formats?.thumbnail?.url
       return {
         index: index,
         src: src,
         caption: image.name,
-        thumb: thumb,
+        thumb: thumb ? `${environment.API_URL}${thumb}` : src,
       };
     });
   }

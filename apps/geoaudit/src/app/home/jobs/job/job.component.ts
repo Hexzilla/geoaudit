@@ -584,8 +584,10 @@ export class JobComponent implements OnInit, AfterViewInit {
 
   getUploadFiles(): void {
     const { images, documents } = this.form.value.footer;
+    console.log("getJobItems->document", images, documents);
     this.attachedImages = this.uploadService.getImageUploadFiles(images);
     this.Documents = this.uploadService.getDocumentUploadFiles(documents);
+    console.log("this.attachedImages", this.attachedImages);
   }
 
   delete(surveys: Array<Survey>): void {
