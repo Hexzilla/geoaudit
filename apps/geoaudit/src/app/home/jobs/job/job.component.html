@@ -182,6 +182,16 @@
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>
+
+      <!-- Reusable survey table component -->
+      <geoaudit-survey-table
+        *ngIf="dataSource"
+        [filterMode]="'LOCAL'"
+        [dataSource]="dataSource"
+        [pageSize]="pageSize"
+        (onDelete)="delete($event)"
+        [job]="job"
+      ></geoaudit-survey-table>
     </mat-card-content>
   </mat-tab>
 
