@@ -4,8 +4,8 @@
         <h2 *ngIf="placeholder">{{ title | translate: { placeholder: placeholder } }}</h2>
     </div>
     <div *ngIf="reference" fxLayout="column">
-        <h2 *ngIf="!placeholder">{{ title | translate }} [ {{reference}} ]</h2>
-        <h2 *ngIf="placeholder">{{ title | translate: { placeholder: placeholder } }} [ {{reference}} ]</h2>
+        <h2 *ngIf="!placeholder">{{ title | translate }} {{reference}}</h2>
+        <h2 *ngIf="placeholder">{{ title | translate: { placeholder: placeholder } }} {{reference}}</h2>
     </div>
     <ng-content></ng-content>
 </div>
