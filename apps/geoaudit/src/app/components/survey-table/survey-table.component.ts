@@ -36,6 +36,8 @@ import { AuthService } from '../../services';
 import * as fromApp from '../../store';
 import * as SurveyActions from '../../store/survey/survey.actions';
 
+import { SelectionService } from '../../services/selection.service';
+
 @Component({
   selector: 'geoaudit-survey-table',
   templateUrl: './survey-table.component.html',
@@ -80,19 +82,27 @@ export class SurveyTableComponent implements OnInit, AfterViewInit {
     private formBuilder: FormBuilder,
     private store: Store<fromApp.State>,
     private dialog: MatDialog,
-    private router: Router
+    private router: Router,
+    private selectionService: SelectionService
   ) {}
 
   ngOnInit(): void {
     this.form = this.formBuilder.group({
       filter: [''],
     });
+    this.selectionService.setSurveyMarkerFilter.emit([]);
   }
+
+  // eslint-disable-next-line @angular-eslint/use-lifecycle-interface
+  ngOnDestroy(): void{
+    this.selectionService.setSurveyMarkerFilter.emit(null);
+  } 
 
   ngAfterViewInit() {
     this.data = this.dataSource.data;
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+    //this.selectionService.setSurveyMarkerFilter.emit(this.data);
 
     /**
      * Uses rxjs to delay and cancel requests made to the backend
@@ -330,5 +340,15 @@ export class SurveyTableComponent implements OnInit, AfterViewInit {
 
   isManager() {
     return this.authService.authValue.user.role.name === Roles.MANAGER
+  }
+
+  onCheckedRow(event, selections) {
+    if (selections.selected.length == 0) {
+      this.selectionService.setSurveyMarkerFilter.emit([]);
+    }
+    else {
+      const surveys = selections.selected;
+      this.selectionService.setSurveyMarkerFilter.emit(surveys);
+    }
   }
 }
