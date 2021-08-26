@@ -60,11 +60,7 @@
     "@nrwl/angular": "12.8.0",
     "@types/mapbox-gl": "^2.1.2",
     "angular-calendar": "^0.28.26",
-<<<<<<< HEAD
-    "apexcharts": "^3.27.2",
-=======
     "apexcharts": "^3.28.1",
->>>>>>> upstream/main
     "bounds": "^2.0.0",
     "date-fns": "^2.22.1",
     "flatpickr": "^4.6.9",
