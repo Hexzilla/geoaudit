@@ -104,6 +104,11 @@ export class JobComponent implements OnInit, AfterViewInit {
   statuses: Array<Status>;
 
   /**
+   * The current job state.
+   */
+  currentState = 0;
+
+  /**
    * Whether the form has been submitted.
    */
   submitted = false;
@@ -140,8 +145,12 @@ export class JobComponent implements OnInit, AfterViewInit {
 
   filteredSurveys: Array<Survey>;
 
+  attachedImages: Array<any>;
+  Documents: Array<any>;
+
   public chartSeries = null;
   public selectedTabIndex = 0;
+  public selectedReference = "";
 
   constructor(
     private formBuilder: FormBuilder,
@@ -164,7 +173,6 @@ export class JobComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.API_URL = environment.API_URL;
-
     // Fetch job types
     this.jobTypeEntityervice.getAll().subscribe(
       (jobTypes) => {
@@ -208,6 +216,7 @@ export class JobComponent implements OnInit, AfterViewInit {
      * constraints.
      */
     this.initialiseForm();
+
 
     /**
      * Capture the param id if any to determine
@@ -263,6 +272,7 @@ export class JobComponent implements OnInit, AfterViewInit {
     this.jobEntityService.getByKey(this.id).subscribe(
       (job) => {
         this.job = job;
+        this.currentState = this.job?.status?.id
 
         const {
           status,
@@ -292,6 +302,8 @@ export class JobComponent implements OnInit, AfterViewInit {
           published: true,
         });
 
+        this.selectedReference = job.reference;
+
         //  After patch value so isn't triggered before.
         this.autoSave();
 
@@ -310,7 +322,7 @@ export class JobComponent implements OnInit, AfterViewInit {
           }
         });
 
-        console.log("data-1", surveys);
+        this.getUploadFiles();
         this.dataSource = new MatTableDataSource(surveys);
       },
       (err) => {
@@ -542,6 +554,8 @@ export class JobComponent implements OnInit, AfterViewInit {
       },
     });
 
+    this.getUploadFiles();
+
     this.submit(false);
   }
 
@@ -555,12 +569,27 @@ export class JobComponent implements OnInit, AfterViewInit {
       },
     });
 
+    this.getUploadFiles();
+
     this.submit(false);
   }
 
   onPreview(fileType: FileTypes): void {
     const { images, documents } = this.form.value.footer;
     this.uploadService.onPreview(fileType, images, documents);
+  }
+
+  onItemPreview(param: any): void {
+    const { images, documents } = this.form.value.footer;
+    this.uploadService.onItemPreview(param.fileType, images, documents, param.index);
+  }
+
+  getUploadFiles(): void {
+    const { images, documents } = this.form.value.footer;
+    console.log("getJobItems->document", images, documents);
+    this.attachedImages = this.uploadService.getImageUploadFiles(images);
+    this.Documents = this.uploadService.getDocumentUploadFiles(documents);
+    console.log("this.attachedImages", this.attachedImages);
   }
 
   delete(surveys: Array<Survey>): void {
