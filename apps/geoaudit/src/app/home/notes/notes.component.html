@@ -1,5 +1,4 @@
-<!-- <ng-container *ngIf="isRoot()"> -->
-<ng-container *ngIf="viewMode === 0">
+<ng-container *ngIf="isRoot()">
   <ng-container *ngIf="isCoreNotesComponent()">
     <geoaudit-sidebar-header
       title="CONTAINERS.home.notes.title"
@@ -14,7 +13,7 @@
 
   <mat-card
     *ngFor="let note of notes$ | async"
-    (click)="showNoteDetails(note)"
+    [routerLink]="'/home/notes/' + note.id"
     style="cursor: pointer; margin-top: 20px"
     fxLayout="row"
     fxLayoutAlign="space-between"
@@ -40,6 +39,7 @@
 
     <!-- <mat-icon style="background-color: #0074d9; border-radius: 15px;">radio_button_unchecked</mat-icon> -->
   </mat-card>
+
   <div fxLayout="row-reverse">
     <button
       mat-flat-button
@@ -51,18 +51,5 @@
     </button>
   </div>
 </ng-container>
-
-<geoaudit-note
-  *ngIf="viewMode === 1"
-  (closeNote)="onCloseNoteAddPage($event)"
->
-</geoaudit-note>
-
-<geoaudit-note
-  *ngIf="viewMode === 2"
-  [id]="selectedNote.id"
-  (closeNote)="onCloseNoteAddPage($event)"
->
-</geoaudit-note>
 
 <router-outlet></router-outlet>

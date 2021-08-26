@@ -43,8 +43,6 @@ import { LightboxModule } from 'ngx-lightbox';
 // Declarations
 import { CardButtonComponent } from '../components/card-button/card-button.component';
 import { FileUploadComponent } from '../components/file-upload/file-upload.component';
-import { AttachmentUploadComponent } from '../components/file-upload/attachment-upload.component';
-
 import { SidebarHeaderComponent } from '../components/sidebar-header/sidebar-header.component';
 import { ProgressChartComponent } from '../components/progress-chart/progress-chart.component';
 import { SidebarActionsComponent } from '../components/sidebar-actions/sidebar-actions.component';
@@ -197,7 +195,6 @@ const entityMetadataMap: EntityMetadataMap = {
   declarations: [
     CardButtonComponent,
     FileUploadComponent,
-    AttachmentUploadComponent,
     SidebarHeaderComponent,
     ProgressChartComponent,
     SidebarActionsComponent,
@@ -283,7 +280,6 @@ const entityMetadataMap: EntityMetadataMap = {
     // Declarations
     CardButtonComponent,
     FileUploadComponent,
-    AttachmentUploadComponent,
     SidebarHeaderComponent,
     ProgressChartComponent,
     SidebarActionsComponent,

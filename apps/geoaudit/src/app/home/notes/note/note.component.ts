@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ThemePalette } from '@angular/material/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -28,7 +28,7 @@ import { TrEntityService } from '../../../entity-services/tr-entity.service';
   styleUrls: ['./note.component.scss'],
 })
 export class NoteComponent implements OnInit, AfterViewInit {
-  @Input() id: string;
+  id: string;
 
   form: FormGroup;
 
@@ -37,8 +37,6 @@ export class NoteComponent implements OnInit, AfterViewInit {
   color: ThemePalette = 'primary';
 
   private unsubscribe = new Subject<void>();
-
-  @Output() closeNote = new EventEmitter();
 
   constructor(
     private route: ActivatedRoute,
@@ -58,8 +56,8 @@ export class NoteComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit(): void {
-    if(this.route.snapshot.paramMap.get('notes'))
-      this.id = this.route.snapshot.paramMap.get('id');
+    this.id = this.route.snapshot.paramMap.get('id');
+
     this.initForm();
 
     if (this.id) {
@@ -77,8 +75,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
         this.patchForm(note);
       },
 
-      (err) => {
-      }
+      (err) => {}
     );
   }
 
@@ -244,11 +241,11 @@ export class NoteComponent implements OnInit, AfterViewInit {
       (note) => {
         this.patchForm(note);
 
-        this.autoSave(false);
+        this.autoSave(true);
 
-        // this.router.navigate([`/home/notes/${this.form.value.id}`], {
-        //   replaceUrl: true,
-        // });
+        this.router.navigate([`/home/notes/${this.form.value.id}`], {
+          replaceUrl: true,
+        });
       },
 
       (err) => {}
@@ -274,13 +271,13 @@ export class NoteComponent implements OnInit, AfterViewInit {
          * updated with that and therefore we're reloading such that it
          * goes into edit mode.
          */
-        // if (reload) {
-        //   this.router
-        //     .navigate([`/home/notes/${this.form.value.id}`])
-        //     .then(() => {
-        //       window.location.reload();
-        //     });
-        // }
+        if (reload) {
+          this.router
+            .navigate([`/home/notes/${this.form.value.id}`])
+            .then(() => {
+              window.location.reload();
+            });
+        }
       });
   }
 
@@ -303,7 +300,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
       (update) => {
         this.alertService.info('Saved Changes');
 
-        // if (navigate) this.router.navigate([`/home/notes`]);
+        if (navigate) this.router.navigate([`/home/notes`]);
       },
 
       (err) => {
@@ -339,13 +336,5 @@ export class NoteComponent implements OnInit, AfterViewInit {
     this.form.patchValue({
       [attribute]: items.length > 0 ? items.map((item) => item.id) : [],
     });
-  }
-
-  saveNote() {
-    this.closeNote.emit();
-  }
-
-  deleteNote() {
-
   }
 }

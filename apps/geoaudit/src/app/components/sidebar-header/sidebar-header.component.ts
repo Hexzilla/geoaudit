@@ -11,8 +11,6 @@ export class SidebarHeaderComponent implements OnInit {
 
   @Input() placeholder?: string;
 
-  @Input() reference?: string;
-
   constructor() { }
 
   ngOnInit(): void {

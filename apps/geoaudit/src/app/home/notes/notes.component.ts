@@ -1,4 +1,4 @@
-import { Component, Input, Output, OnInit, OnChanges, SimpleChanges, EventEmitter } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import qs from 'qs';
 import { NoteEntityService } from '../../entity-services/note-entity.service';
@@ -10,30 +10,26 @@ import { AuthService } from '../../services';
   templateUrl: './notes.component.html',
   styleUrls: ['./notes.component.scss'],
 })
-export class NotesComponent implements OnInit, OnChanges {
-
-  viewMode = 0;
-
+export class NotesComponent implements OnInit {
   id: string;
 
   filter: NoteFilter;
 
   notes$ = this.noteEntityService.entities$;
 
-  selectedNote = null;
-
   constructor(
     private route: ActivatedRoute,
     public router: Router,
     private noteEntityService: NoteEntityService,
-    private authService: AuthService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
     this.filter = this.route.snapshot.queryParamMap.get('filter') as NoteFilter;
     this.id = this.route.snapshot.paramMap.get('id');
+
     const { url } = this.router;
-    
+
     if (this.filter) {
       this.query(this.filter);
     } else if (
@@ -47,8 +43,7 @@ export class NotesComponent implements OnInit, OnChanges {
     ) {
       const includes = url.split('/');
 
-      // if (url.includes(`${includes[2]}/${this.id}/notes`)) {
-      if (url.includes(`${includes[2]}/${this.id}`)) {
+      if (url.includes(`${includes[2]}/${this.id}/notes`)) {
         this.query(includes[2], Number(this.id));
       } else {
         this.query(includes[2]);
@@ -56,10 +51,6 @@ export class NotesComponent implements OnInit, OnChanges {
     } else {
       this.noteEntityService.getAll();
     }
-  }
-
-  ngOnChanges(changes: SimpleChanges): void{
-    
   }
 
   isRoot() {
@@ -114,16 +105,34 @@ export class NotesComponent implements OnInit, OnChanges {
    * populate the fields for jobs for example.
    */
   add() {
-    this.viewMode = 1;
-  }
+    // this.router.navigate(['/home/notes/create'])
 
-  onCloseNoteAddPage(e) {
-    this.viewMode = 0;
-  }
+    const { url } = this.router;
 
-  showNoteDetails(note) {
-    console.log("showNoteDetails", note);
-    this.selectedNote = note;
-    this.viewMode = 2;
+    if (
+      (
+      url.includes('abrioxes') ||
+      url.includes('jobs') ||
+      url.includes('resistivities') ||
+      url.includes('sites') ||
+      url.includes('surveys') ||
+      url.includes('testposts') ||
+      url.includes('trs')
+      ) &&
+      this.id
+    ) {
+      const includes = url.split('/');
+
+      const navigationExtras: NavigationExtras = {
+        queryParams: {
+          [includes[2]]: JSON.stringify([this.id])
+        }
+      }
+
+      this.router.navigate([`/home/notes/create`], navigationExtras);
+
+    } else {
+      this.router.navigate(['/home/notes/create'])
+    }
   }
 }

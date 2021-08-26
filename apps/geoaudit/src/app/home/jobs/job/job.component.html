@@ -1,23 +1,9 @@
 <geoaudit-sidebar-header
   title="CONTAINERS.home.jobs.job.overview.title"
-  [(reference)]= selectedReference
-> 
-  <mat-form-field appearance="outline">
-    <mat-label>{{
-      'CONTAINERS.home.jobs.job.status' | translate
-    }}</mat-label>
-    <mat-select statusControlName="status" name="status" [(value)]="currentState">
-      <mat-option *ngFor="let status of statuses" [value]="status.id">
-        {{ 'STATUSES.' + status.name | translate }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-</geoaudit-sidebar-header>
+></geoaudit-sidebar-header>
 
 <mat-tab-group mat-align-tabs="start"
   (selectedIndexChange)="selectedIndexChange($event)"
-  [(selectedIndex)]="selectedTabIndex"
-  class="tab-body-height"
   >
   <!-- Details -->
   <mat-tab
@@ -25,7 +11,7 @@
   >
     <mat-card-content class="mt-26">
       <form fxLayout="column" [formGroup]="form" (ngSubmit)="submit()">
-        <!-- <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline">
           <mat-label>{{
             'CONTAINERS.home.jobs.job.status' | translate
           }}</mat-label>
@@ -34,7 +20,7 @@
               {{ 'STATUSES.' + status.name | translate }}
             </mat-option>
           </mat-select>
-        </mat-form-field> -->
+        </mat-form-field>
 
         <mat-form-field appearance="outline">
           <mat-label>{{
@@ -117,23 +103,27 @@
     [label]="'CONTAINERS.home.jobs.job.steps.attachments' | translate"
   >
     <mat-card-content>
-      <attachment-file-upload
+      <!-- 
+      <geoaudit-attachment-card title="CONTAINERS.home.jobs.job.attachments.images" icon="add_a_photo" type="IMAGE" [multiple]="true">
+      </geoaudit-attachment-card>
+      <geoaudit-attachment-card title="CONTAINERS.home.jobs.job.attachments.documents" icon="upload_file" type="DOCUMENT" [multiple]="true">
+      </geoaudit-attachment-card> -->
+
+      <geoaudit-file-upload
         label="CONTAINERS.home.jobs.job.attachments.images"
-        (preview)="onItemPreview($event)"
+        (preview)="onPreview($event)"
         (upload)="onImageUpload($event)"
         fileType="IMAGE"
-        [items] = "attachedImages"
         [multiple]="true"
-      ></attachment-file-upload>
+      ></geoaudit-file-upload>
 
-      <attachment-file-upload
+      <geoaudit-file-upload
         label="CONTAINERS.home.jobs.job.attachments.documents"
-        (preview)="onItemPreview($event)"
+        (preview)="onPreview($event)"
         (upload)="onDocumentUpload($event)"
         fileType="DOCUMENT"
-        [items] = "Documents"
         [multiple]="true"
-      ></attachment-file-upload>
+      ></geoaudit-file-upload>
     </mat-card-content>
   </mat-tab>
 
@@ -153,17 +143,8 @@
           <h3>Surveys</h3>
         </div>
       </div>
-      <!-- Reusable survey table component -->
-      <geoaudit-survey-table
-        *ngIf="dataSource"
-        [filterMode]="'LOCAL'"
-        [dataSource]="dataSource"
-        [pageSize]="pageSize"
-        (onDelete)="delete($event)"
-        [job]="job"
-      ></geoaudit-survey-table>
-         
-      <mat-form-field appearance="outline" class="full-width">
+
+      <mat-form-field appearance="outline">
         <mat-label>Survey</mat-label>
         <input
           matInput
@@ -195,34 +176,22 @@
     </mat-card-content>
   </mat-tab>
 
-  <mat-tab [label]="'CONTAINERS.home.jobs.job.steps.notes' | translate">
+  <mat-tab
+    [label]="'CONTAINERS.home.jobs.job.steps.notes' | translate">
     <mat-card-content>
       <geoaudit-notes></geoaudit-notes>
     </mat-card-content>
   </mat-tab>
 </mat-tab-group>
 
-<div fxLayout="row-reverse" fxLayoutAlign="space-between" class="button-area">
-  <div class="button-wrapper">
-    <button *ngIf="selectedTabIndex != 3" mat-icon-button color="accent" (click)="selectedIndexChange(selectedTabIndex + 1)" class="btn-arrow">
-      <mat-icon>chevron_right</mat-icon>
-    </button>
-  </div>
-  
+<div fxLayout="row-reverse">
   <button
     mat-flat-button
     color="primary"
     (click)="submit()"
+    fxFlexFill
     type="submit"
-    class="btn-submit"
   >
     {{ 'CONTAINERS.home.jobs.job.form.save' | translate }}
   </button>
-  <div class="button-wrapper">
-    <button *ngIf="selectedTabIndex != 0" mat-icon-button color="accent" (click)="selectedIndexChange(selectedTabIndex - 1)" class="btn-arrow">
-      <mat-icon>chevron_left</mat-icon>
-    </button>
-  </div>
 </div>
-  
-
