@@ -346,6 +346,6 @@ export class NoteComponent implements OnInit, AfterViewInit {
   }
 
   deleteNote() {
-
+    this.closeNote.emit();
   }
 }
