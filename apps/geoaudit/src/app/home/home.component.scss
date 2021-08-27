@@ -27,10 +27,14 @@
 
 .leaflet-sidebar-pane {
   padding: 0px;
+  height: 100%;
 }
 
 .leaflet-sidebar-router-outlet {
   padding: 0px 20px;
+  height: 85%;
+  margin-top: -15px;
+  overflow: auto;
 }
 
 // Map Buttons' Style

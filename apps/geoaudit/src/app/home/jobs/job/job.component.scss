@@ -2,12 +2,36 @@
     margin-top: 26px;
 }
 
-.save-button{
+.button-area{
     position: absolute;
-    bottom: 40px;
+    width: 92%;
+    bottom: 8px;
+    z-index:1;
+}
+
+.button-wrapper {
+    min-width: 50px;
+    text-align: center;
+}
+
+.btn-submit{
+    width: 60%;
+}
+
+.btn-arrow{
+    justify-content: center;
+
+    .mat-icon{
+        font-size: 32px;
+        color: #464646;
+    }
 }
 
 .progress-chart {
     margin-left: -20px;
     margin-top: -28px!important;    
+}
+
+.full-width{
+    width: 100%;
 }

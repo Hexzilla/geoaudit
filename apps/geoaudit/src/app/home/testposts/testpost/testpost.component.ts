@@ -64,7 +64,7 @@ export class TestpostComponent implements OnInit, AfterViewInit {
 
   tp_actions: Array<TpAction> = [];
 
-  surveys: Array<Survey> = [];
+  // surveys: Array<Survey> = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -172,9 +172,9 @@ export class TestpostComponent implements OnInit, AfterViewInit {
           this.tpActionEntityService.getByKey(tp_action.id).subscribe(item => {
             this.tp_actions.push(item);
             
-            this.surveyEntityService.getByKey(item.survey.id).subscribe(survey => {
-              this.surveys.push(survey);
-            })
+            // this.surveyEntityService.getByKey(item.survey.id).subscribe(survey => {
+            //   this.surveys.push(survey);
+            // })
           })
         })
 
@@ -399,16 +399,16 @@ export class TestpostComponent implements OnInit, AfterViewInit {
     return color;
   }
 
-  getSurvey(id?: number) {
-    let survey: Survey;
+  // getSurvey(id?: number) {
+  //   let survey: Survey;
 
 
-    if (id) {
-      if (this.surveys) {
-        survey = this.surveys.find(item => item.id === id);
-      }
-    }
+  //   if (id) {
+  //     if (this.surveys) {
+  //       survey = this.surveys.find(item => item.id === id);
+  //     }
+  //   }
 
-    return survey;
-  }
+  //   return survey;
+  // }
 }
