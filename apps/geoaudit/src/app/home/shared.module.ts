@@ -44,6 +44,7 @@ import { LightboxModule } from 'ngx-lightbox';
 import { CardButtonComponent } from '../components/card-button/card-button.component';
 import { FileUploadComponent } from '../components/file-upload/file-upload.component';
 import { AttachmentUploadComponent } from '../components/file-upload/attachment-upload.component';
+import { ActionListItemComponent } from '../components/action-list-item/action-list-item.component';
 
 import { SidebarHeaderComponent } from '../components/sidebar-header/sidebar-header.component';
 import { ProgressChartComponent } from '../components/progress-chart/progress-chart.component';
@@ -208,7 +209,8 @@ const entityMetadataMap: EntityMetadataMap = {
     MultiItemSelectorComponent,
     SingleItemSelectorComponent,
     IconComponent,
-    SurveyActionButtonComponent
+    SurveyActionButtonComponent,
+    ActionListItemComponent
   ],
   providers: [
 
@@ -294,6 +296,7 @@ const entityMetadataMap: EntityMetadataMap = {
     SingleItemSelectorComponent,
     IconComponent,
     SurveyActionButtonComponent,
+    ActionListItemComponent,
 
     // Material
     MatAutocompleteModule,
