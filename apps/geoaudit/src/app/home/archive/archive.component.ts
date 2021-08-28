@@ -20,7 +20,6 @@ export class ArchiveComponent implements OnInit {
 
   displayedColumns: Array<String> = [
     'select',
-    'reference',
     'name',
     'job_type',
     'approved_by',
