@@ -90,6 +90,7 @@ export class JobsComponent implements OnInit {
     const parameters = qs.stringify({
       _where: {
         assignees: this.authService.authValue.user.id,
+        archived: false
       },
       _sort: 'created_at:DESC',
     });
