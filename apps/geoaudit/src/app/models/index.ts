@@ -15,7 +15,6 @@ export * from './deletion-type.model';
 export * from './deletion.model';
 export * from './fault-detail.model';
 export * from './fault-type.model';
-export * from './footer.model';
 export * from './geo-json.model';
 export * from './groundbed.model';
 export * from './hazard.model';

@@ -99,12 +99,8 @@ export class AbrioxComponent implements OnInit {
       date_installation: null,
       status: null,
 
-      footer: [
-        {
-          images: [],
-          documents: [],
-        },
-      ],
+      images: [],
+      documents: [],
 
       id: null,
     });
@@ -155,8 +151,10 @@ export class AbrioxComponent implements OnInit {
       serial_number,
       telephone,
       date_installation,
-      footer,
-      status
+      status,
+
+      images,
+      documents
     } = abriox;
 
     this.form.patchValue({
@@ -172,12 +170,8 @@ export class AbrioxComponent implements OnInit {
       date_installation,
       status: status?.id,
 
-      footer: footer
-        ? footer
-        : {
-            images: [],
-            documents: [],
-          },
+      images,
+      documents
     });
 
     const testpostId = this.route.snapshot.queryParamMap.get('testpost');
@@ -265,7 +259,7 @@ export class AbrioxComponent implements OnInit {
   }
 
   onPreview(fileType: FileTypes): void {
-    const { images, documents } = this.form.value.footer;
+    const { images, documents } = this.form.value;
 
     switch (fileType) {
       case FileTypes.IMAGE:
@@ -298,30 +292,24 @@ export class AbrioxComponent implements OnInit {
   }
 
   onImageUpload(event): void {
-    const { images } = this.form.value.footer;
+    const { images } = this.form.value;
 
     // this.images.push(event)
 
     // May be multiple so just preserving the previous object on the array of images
 
     this.form.patchValue({
-      footer: {
-        ...this.form.value.footer,
-        images: [...images, event],
-      },
+      images: [...images, event],
     });
 
     this.submit(false);
   }
 
   onDocumentUpload(event): void {
-    const { documents } = this.form.value.footer;
+    const { documents } = this.form.value;
 
     this.form.patchValue({
-      footer: {
-        ...this.form.value.footer,
         documents: [...documents, event],
-      },
     });
 
     this.submit(false);

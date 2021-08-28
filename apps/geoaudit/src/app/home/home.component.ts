@@ -235,7 +235,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
           // if no geometry data, skip it
           if(!a.testpost || !a.testpost.geometry || !this.abrioxes[i].name) continue;
           // if against Layer rule, skip it
-          if(!a.footer?.approved ) continue;
+          if(!a.approved ) continue;
 
           // if no condition data, skip it
           if(!a.condition || !a.condition.name) continue;
@@ -362,7 +362,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
           // if no geometry data, skip it
           if(!a || !a.geometry || !this.testposts[i].name) continue;
           // if against Layer rule, skip it
-          if(!a.footer || !a.footer['approved']) continue;
+          if(!a['approved']) continue;
 
           // if no condition data, skip it
           if(!a.actions || !a.actions.condition || !a.actions.condition.name) continue;
@@ -507,7 +507,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
             // if no geometry data, skip it
             if(!a || !a.geometry || !this.trs[i].name) continue;
             // if against Layer rule, skip it
-            if(!a.footer.approved) continue;
+            if(!a.approved) continue;
   
             // if no condition data, skip it
             if(!a.actions || !a.actions.condition || !a.actions.condition.name) continue;
@@ -644,7 +644,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
             // if no geometry data and name, skip it
             if(!a || !a.geometry || !a.geometry['lat'] || !a.geometry['lng'] ) continue;
             // if against Layer rule, skip it
-            if(!a.footer || !a.footer.approved) continue;
+            if(!a.approved) continue;
 
             if(!a.status || a.status.name != "COMPLETED") continue;
   

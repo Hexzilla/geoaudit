@@ -116,7 +116,7 @@ export class ArchiveComponent implements OnInit {
         job.reference ? job.reference : '',
         job.name ? job.name : '',
         job.job_type ? job.job_type.name : '',
-        job.footer.approved_by ? job.footer.approved_by.username : '',
+        job.approved_by ? job.approved_by.username : '',
         job.surveys ? job.surveys.length : '',
       ];
     });

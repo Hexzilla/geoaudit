@@ -281,8 +281,10 @@ export class JobComponent implements OnInit, AfterViewInit {
           job_type,
           assignees,
           id,
-          footer,
           surveys,
+
+          images,
+          documents
         } = job;
 
         /**
@@ -295,11 +297,13 @@ export class JobComponent implements OnInit, AfterViewInit {
           reference,
           job_type: job_type?.id,
           assignees,
-          footer,
           surveys,
 
           id,
           published: true,
+
+          images,
+          documents
         });
 
         this.selectedReference = job.reference;
@@ -371,10 +375,8 @@ export class JobComponent implements OnInit, AfterViewInit {
       assignees: [],
       surveys: [[]],
 
-      footer: {
-        images: [],
-        documents: [],
-      },
+      images: [],
+      documents: [],
 
       id: null,
       published: false,
@@ -541,17 +543,14 @@ export class JobComponent implements OnInit, AfterViewInit {
   // }
 
   onImageUpload(event): void {
-    const { images } = this.form.value.footer;
+    const { images } = this.form.value;
 
     // this.images.push(event)
 
     // May be multiple so just preserving the previous object on the array of images
 
     this.form.patchValue({
-      footer: {
-        ...this.form.value.footer,
-        images: [...images, event],
-      },
+      images: [...images, event],
     });
 
     this.getUploadFiles();
@@ -560,13 +559,10 @@ export class JobComponent implements OnInit, AfterViewInit {
   }
 
   onDocumentUpload(event): void {
-    const { documents } = this.form.value.footer;
+    const { documents } = this.form.value;
 
     this.form.patchValue({
-      footer: {
-        ...this.form.value.footer,
-        documents: [...documents, event],
-      },
+      documents: [...documents, event],
     });
 
     this.getUploadFiles();
@@ -575,21 +571,19 @@ export class JobComponent implements OnInit, AfterViewInit {
   }
 
   onPreview(fileType: FileTypes): void {
-    const { images, documents } = this.form.value.footer;
+    const { images, documents } = this.form.value;
     this.uploadService.onPreview(fileType, images, documents);
   }
 
   onItemPreview(param: any): void {
-    const { images, documents } = this.form.value.footer;
+    const { images, documents } = this.form.value;
     this.uploadService.onItemPreview(param.fileType, images, documents, param.index);
   }
 
   getUploadFiles(): void {
-    if (this.form.value.footer) {
-      const { images, documents } = this.form.value.footer;
+      const { images, documents } = this.form.value;
       this.attachedImages = this.uploadService.getImageUploadFiles(images);
       this.Documents = this.uploadService.getDocumentUploadFiles(documents);
-    }
   }
 
   delete(surveys: Array<Survey>): void {
