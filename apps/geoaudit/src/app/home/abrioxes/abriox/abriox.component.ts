@@ -112,7 +112,9 @@ export class AbrioxComponent implements OnInit {
         this.patchForm(abriox);
         abriox.abriox_actions.map(abriox_action => {
           this.abrioxActionEntityService.getByKey(abriox_action.id).subscribe(item => {
-            this.abriox_actions.push(item);
+            if (item.approved) {
+              this.abriox_actions.push(item);
+            }
 
             this.surveyEntityService.getByKey(item.survey.id).subscribe(survey => {
               this.surveys.push(survey);
