@@ -1,6 +1,7 @@
 <ng-container>
     <geoaudit-sidebar-header
         title="CONTAINERS.home.search.title"
+        reference={{selectedCategory}}
         >
     </geoaudit-sidebar-header>
     <div>
@@ -86,9 +87,8 @@
             <tr
                 mat-row
                 *matRowDef="let row; columns: displayedColumns"
-                (click)="selection.toggle(row)"
             ></tr>
-
+            <!-- (click)="selection.toggle(row)" -->
             <!-- Row shown when there is no matching data. -->
             <tr class="mat-row" *matNoDataRow>
                 <td class="mat-cell" colspan="4">
@@ -101,8 +101,20 @@
         [length]="length"
         [pageSize]="pageSize"
         [pageSizeOptions]="pageSizeOptions"
-        (page)="pageEvent = onPageEvent($event)"
         [hidePageSize]="true"
         ></mat-paginator>
     </div>
 </ng-container>
+
+<div fxLayoutAlign="center" class="button-area" *ngIf= "isShowSelectBtn()">
+    <button
+      mat-flat-button
+      color="primary"
+      (click)="selectItem()"
+      type="submit"
+      class="btn-submit"
+    >
+      {{ 'CONTAINERS.home.search.select' | translate }}
+    </button>
+</div>
+  

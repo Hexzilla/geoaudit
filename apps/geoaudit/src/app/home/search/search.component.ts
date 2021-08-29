@@ -26,12 +26,12 @@ export class SearchComponent implements OnInit {
   categories = CATEGORIES;
   selectedCategory?: Categories;
 
-  @ViewChild('latCtrlInput') latCtrlInput: ElementRef;
-  @ViewChild('lngCtrlInput') lngCtrlInput: ElementRef;
+  // @ViewChild('latCtrlInput') latCtrlInput: ElementRef;
+  // @ViewChild('lngCtrlInput') lngCtrlInput: ElementRef;
 
-  latCtrl = new FormControl();
+  // latCtrl = new FormControl();
 
-  lngCtrl = new FormControl();
+  // lngCtrl = new FormControl();
 
   isSelectedCategory: boolean = false;
 
@@ -44,12 +44,12 @@ export class SearchComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.store.select('map').subscribe((map) => {
-      if (map.clickMarker) {
-        this.latCtrl.setValue(map.clickMarker.lat);
-        this.lngCtrl.setValue(map.clickMarker.lng);
-      }
-    });
+    // this.store.select('map').subscribe((map) => {
+    //   if (map.clickMarker) {
+    //     this.latCtrl.setValue(map.clickMarker.lat);
+    //     this.lngCtrl.setValue(map.clickMarker.lng);
+    //   }
+    // });
     this.initialiseForm();
   }
 
@@ -62,6 +62,8 @@ export class SearchComponent implements OnInit {
       name: [null, Validators.required],
       reference:[null, Validators.required],
       address: null,
+      latCtrl: null,
+      lngCtrl: null,
     });
   }
 
@@ -88,7 +90,11 @@ export class SearchComponent implements OnInit {
       this.alertService.error('Invalid');
       return;
     }
-    console.log("form value = ", this.form.value);
-    this.router.navigate([`/home/search/`+this.form.value]);
+    const queryParams = {
+      condition: this.form.value,
+    };
+    console.log("condition = ", queryParams);
+    const navigationExtras: NavigationExtras = { state: queryParams};
+    this.router.navigate([`/home/search/`+this.form.value.category], navigationExtras);
   }
 }

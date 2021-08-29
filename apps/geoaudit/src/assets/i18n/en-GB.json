@@ -74,6 +74,7 @@
 			"search": {
 				"title": "Search",
 				"categories": "Categories",
+				"select": "Select",
 				"form": {
 					"mylocation": "Near My Location",
 					"address": "address"

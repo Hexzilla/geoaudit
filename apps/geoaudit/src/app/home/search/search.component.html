@@ -49,10 +49,10 @@
                     'CONTAINERS.home.search.form.address' | translate
                     }}</mat-label>
                     <input
-                    matInput
-                    [placeholder]="'CONTAINERS.home.search.form.address' | translate"
-                    class="form-control"
-                    formControlName="address"
+                        matInput
+                        [placeholder]="'CONTAINERS.home.search.form.address' | translate"
+                        class="form-control"
+                        formControlName="address"
                     />
                 </mat-form-field>
     
@@ -62,9 +62,10 @@
                         <input
                             matInput
                             aria-label="Latitude"
-                            [formControl]="latCtrl"
-                            #latCtrlInput
+                            formControlName="latCtrl"
                         />
+                        <!-- [formControl]="latCtrl"
+                        #latCtrlInput -->
                     </mat-form-field>
     
                     <mat-form-field class="half-width" appearance="outline">
@@ -72,9 +73,10 @@
                         <input
                             matInput
                             aria-label="Longtitude"
-                            [formControl]="lngCtrl"
-                            #lngCtrlInput
+                            formControlName="lngCtrl"
                         />
+                       <!--  [formControl]="lngCtrl"
+                        #lngCtrlInput -->
                     </mat-form-field>
                 </div>
                 <mat-slide-toggle
