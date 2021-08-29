@@ -123,6 +123,8 @@ export class SurveyComponent implements OnInit {
   public disableMinute = false;
   public hideTime = false;
 
+  public selectedTabIndex = 0;
+
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
@@ -594,5 +596,9 @@ export class SurveyComponent implements OnInit {
 
       (err) => {}
     );
+  }
+
+  selectedIndexChange(selectedTabIndex) {
+    this.selectedTabIndex = selectedTabIndex;
   }
 }

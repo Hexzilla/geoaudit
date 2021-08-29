@@ -1,8 +1,16 @@
 <geoaudit-sidebar-header title="CONTAINERS.home.survey.add_survey.title">
 </geoaudit-sidebar-header>
 
-<mat-horizontal-stepper (selectionChange)="selectionChange($event)">
-  <mat-step>
+
+<mat-tab-group mat-align-tabs="start"
+  (selectedIndexChange)="selectedIndexChange($event)"
+  [(selectedIndex)]="selectedTabIndex"
+  class="tab-body-height"
+  >
+  <!-- Details -->
+  <mat-tab
+    [label]="'CONTAINERS.home.survey.steps.overview' | translate"
+  >
     <mat-card-content>
       <form fxLayout="column" [formGroup]="form" (ngSubmit)="submit()">
         <mat-form-field appearance="outline">
@@ -99,9 +107,11 @@
         </div>
       </form>
     </mat-card-content>
-  </mat-step>
+  </mat-tab>
 
-  <mat-step>
+  <mat-tab
+    [label]="'CONTAINERS.home.survey.steps.delivery' | translate"
+  >
     <mat-card-content>
       <form fxLayout="column" [formGroup]="form" (ngSubmit)="submit()">
         <mat-form-field appearance="outline">
@@ -215,9 +225,12 @@
         </mat-form-field>
       </form>
     </mat-card-content>
-  </mat-step>
+  </mat-tab>
 
-  <mat-step>
+  <!-- Attachments -->
+  <mat-tab
+    [label]="'CONTAINERS.home.survey.steps.attachments' | translate"
+  >
     <geoaudit-file-upload
       label="CONTAINERS.home.jobs.job.attachments.images"
       (preview)="onPreview($event)"
@@ -235,24 +248,33 @@
     ></geoaudit-file-upload>
 
     <form fxLayout="column" [formGroup]="form" (ngSubmit)="submit()">
-
-    <mat-form-field class="example-full-width" appearance="outline" style="margin-top: 20px; width: 100%;" >
-      <mat-label>{{
-        'CONTAINERS.home.survey.comments' | translate
-      }}</mat-label>
-      <textarea matInput formControlName="comments"></textarea>
-    </mat-form-field>
+      <mat-form-field class="example-full-width" appearance="outline" style="margin-top: 20px; width: 100%;" >
+        <mat-label>{{
+          'CONTAINERS.home.survey.comments' | translate
+        }}</mat-label>
+        <textarea matInput formControlName="comments"></textarea>
+      </mat-form-field>
     </form>
-  </mat-step>
+  </mat-tab>
 
-  <mat-step>
+  <mat-tab
+    [label]="'CONTAINERS.home.survey.steps.inspection' | translate"
+  >
     <geoaudit-survey-action-button label="site_details" [routerLink]="'/home/surveys/' + id + '/search/sites'"></geoaudit-survey-action-button>
     <geoaudit-survey-action-button label="testpost" [routerLink]="'/home/surveys/' + id + '/tp_action_list'"></geoaudit-survey-action-button>
     <geoaudit-survey-action-button label="tr" [routerLink]="'/home/surveys/' + id + '/tr_action_list'"></geoaudit-survey-action-button>
     <geoaudit-survey-action-button label="abriox" [routerLink]="'/home/surveys/' + id + '/abriox_list'"></geoaudit-survey-action-button>
     <geoaudit-survey-action-button label="resistivity" [routerLink]="'/home/surveys/' + id + '/resistivity_list'"></geoaudit-survey-action-button>
-  </mat-step>
-</mat-horizontal-stepper>
+  </mat-tab>
+
+  <mat-tab
+    [label]="'CONTAINERS.home.survey.steps.notes' | translate"
+  >
+    <mat-card-content>
+      <geoaudit-notes></geoaudit-notes>
+    </mat-card-content>
+  </mat-tab>
+</mat-tab-group>
 
 <div fxLayout="row-reverse">
   <button

@@ -8,6 +8,7 @@ import { SurveysComponent } from './surveys.component';
 
 import { SharedModule } from '../shared.module';
 import { SurveyComponent } from './survey/survey.component';
+import { NotesModule } from '../notes/notes.module';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { SurveyComponent } from './survey/survey.component';
   imports: [
     SurveysRoutingModule,
 
-    SharedModule
+    SharedModule,
+    NotesModule
   ],
 })
 export class SurveysModule {}
