@@ -138,7 +138,7 @@
   </mat-tab>
 
   <!-- Surveys -->
-  <mat-tab
+  <mat-tab fxFlexFill
     [label]="'CONTAINERS.home.jobs.job.steps.surveys' | translate"
   >
      <mat-card-content>
@@ -155,7 +155,6 @@
       </div>
       <!-- Reusable survey table component -->
       <geoaudit-survey-table
-        *ngIf="dataSource"
         [filterMode]="'LOCAL'"
         [dataSource]="dataSource"
         [pageSize]="pageSize"
@@ -182,7 +181,7 @@
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>
-
+      
       <!-- Reusable survey table component -->
       <geoaudit-survey-table
         *ngIf="dataSource"
@@ -193,6 +192,11 @@
         [job]="job"
       ></geoaudit-survey-table>
     </mat-card-content>
+    <geoaudit-status-buttons
+      [completed] = "completed"
+      [approved] = "false"
+      (onComplete)="complete($event)"
+    ></geoaudit-status-buttons>
   </mat-tab>
 
   <mat-tab [label]="'CONTAINERS.home.jobs.job.steps.notes' | translate">
