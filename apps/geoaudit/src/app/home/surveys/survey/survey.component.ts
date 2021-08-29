@@ -251,8 +251,10 @@ export class SurveyComponent implements OnInit {
           prepared_by,
           conducted_by,
           geometry,
-          footer,
           reference,
+
+          images,
+          documents
         } = survey;
 
         this.form.patchValue({
@@ -268,12 +270,8 @@ export class SurveyComponent implements OnInit {
 
           geometry,
 
-          footer: footer
-            ? footer
-            : {
-                images: [],
-                documents: [],
-              },
+          images,
+          documents,
 
           id,
         });
@@ -375,10 +373,8 @@ export class SurveyComponent implements OnInit {
       date_assigned: [moment().toISOString(), Validators.required],
       date_delivery: [moment().toISOString(), Validators.required],
 
-      // footer: [{
       //   images: [[]],
       //   documents: [[]],
-      // }],
 
       geometry: [null],
 
@@ -400,12 +396,8 @@ export class SurveyComponent implements OnInit {
 
       // // calendar_events: [],
 
-      // footer: [
-      //   {
       //     images: [[]],
       //     documents: [[]],
-      //   },
-      // ],
 
       comments: [null],
 
@@ -503,37 +495,31 @@ export class SurveyComponent implements OnInit {
   }
 
   onImageUpload(event): void {
-    const { images } = this.form.value.footer;
+    const { images } = this.form.value;
 
     // this.images.push(event)
 
     // May be multiple so just preserving the previous object on the array of images
 
     this.form.patchValue({
-      footer: {
-        ...this.form.value.footer,
-        images: [...images, event],
-      },
+      images: [...images, event],
     });
 
     this.submit(false);
   }
 
   onDocumentUpload(event): void {
-    const { documents } = this.form.value.footer;
+    const { documents } = this.form.value;
 
     this.form.patchValue({
-      footer: {
-        ...this.form.value.footer,
-        documents: [...documents, event],
-      },
+      documents: [...documents, event],
     });
 
     this.submit(false);
   }
 
   onPreview(fileType: FileTypes): void {
-    const { images, documents } = this.form.value.footer;
+    const { images, documents } = this.form.value;
 
     switch (fileType) {
       case FileTypes.IMAGE:

@@ -32,9 +32,9 @@ import { Job, Statuses } from '../../models';
 import * as fromApp from '../../store';
 import * as JobActions from '../../store/job/job.actions';
 import { ShareModalComponent } from '../../modals/share-modal/share-modal.component';
-import { JobEntityService } from '../../entity-services/job-entity.service';
 import { SelectionService } from '../../services/selection.service';
 import { AuthService } from '../../services';
+import { MyJobEntityService } from '../../entity-services/my-job-entity.service';
 
 @Component({
   selector: 'geoaudit-jobs',
@@ -69,7 +69,7 @@ export class JobsComponent implements OnInit {
   // MatPaginator Output
   pageEvent: PageEvent;
 
-  jobs$ = this.jobEntityService.entities$;
+  jobs$ = this.myJobEntityService.entities$;
 
   public chartSeries = null;
 
@@ -77,7 +77,7 @@ export class JobsComponent implements OnInit {
     public dialog: MatDialog,
     private formBuilder: FormBuilder,
     private router: Router,
-    private jobEntityService: JobEntityService,
+    private myJobEntityService: MyJobEntityService,
     private selectionService: SelectionService,
     private authService: AuthService
   ) {
@@ -90,11 +90,19 @@ export class JobsComponent implements OnInit {
     const parameters = qs.stringify({
       _where: {
         assignees: this.authService.authValue.user.id,
+        _or: [
+          {
+            archived: false
+          },
+          {
+            archived_null: true
+          }
+        ]
       },
       _sort: 'created_at:DESC',
     });
 
-    this.jobEntityService.getWithQuery(parameters).subscribe(
+    this.myJobEntityService.getWithQuery(parameters).subscribe(
       (jobs) => {
         this.updateJobChartSeries(jobs);
       },
@@ -170,7 +178,7 @@ export class JobsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       this.selection.selected.map((job) => {
-        this.jobEntityService.delete(job).subscribe(
+        this.myJobEntityService.delete(job).subscribe(
           (res) => {},
 
           (err) => {}

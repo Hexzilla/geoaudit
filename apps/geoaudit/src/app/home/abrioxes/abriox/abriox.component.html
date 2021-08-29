@@ -135,33 +135,7 @@
   </mat-step>
 
   <mat-step [label]="'CONTAINERS.home.abrioxes.abriox.actions' | translate">
-    <mat-card *ngFor="let abriox_action of abriox_actions" style="cursor: pointer; margin-top: 20px" [routerLink]="'/home/abriox_actions/' + abriox_action.id">
-      <div fxLayout="row" fxLayoutAlign="space-between">
-        <p>{{ abriox_action.created_at | date: 'HH:mm dd/MM/yyyy' }}</p>
-        <geoaudit-icon [visible]="true" [color]="getConditionColour(abriox_action)" icon="radio_button_unchecked"></geoaudit-icon>
-
-        <img
-        *ngIf="getSurvey(abriox_action.survey.id)?.conducted_by?.avatar"
-        mat-card-avatar
-        [src]="API_URL + getSurvey(abriox_action.survey).conducted_by?.avatar.url"
-      />
-      <img
-        *ngIf="!getSurvey(abriox_action.survey.id)?.conducted_by?.avatar"
-        mat-card-avatar
-        src="https://bestoked.ams3.digitaloceanspaces.com/geoaudit/static/assets/Avatar%20-%20Geoaudit.png"
-      />
-
-      <p>{{ getSurvey(abriox_action.survey.id)?.reference }}</p>
-
-        <button
-        mat-icon-button
-        color="accent"
-        aria-label="Example icon button with a plus one icon"
-      >
-        <mat-icon>chevron_right</mat-icon>
-      </button>
-      </div>
-    </mat-card>
+    <geoaudit-action-list-item [item]="item" *ngFor="let item of abriox_actions" attribute="abriox_actions"></geoaudit-action-list-item>
   </mat-step>
 
   <mat-step [label]="'CONTAINERS.home.abrioxes.abriox.notes' | translate">

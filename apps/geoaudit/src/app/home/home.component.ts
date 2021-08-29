@@ -62,8 +62,8 @@ import { AlertService } from '../services';
 import { NotificationEntityService } from '../entity-services/notification-entity.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { JobEntityService } from '../entity-services/job-entity.service';
 import { SelectionService } from '../services/selection.service';
+import { MyJobEntityService } from '../entity-services/my-job-entity.service';
 
 @Component({
   selector: 'geoaudit-home',
@@ -143,7 +143,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     private alertService: AlertService,
     private notificationEntityService: NotificationEntityService,
     private toDoListEntityService: ToDoListEntityService,
-    private jobEntityService: JobEntityService,
+    private myJobEntityService: MyJobEntityService,
     private selectionService: SelectionService,
     private location: Location
   ) {
@@ -157,11 +157,17 @@ export class HomeComponent implements OnInit, AfterViewInit {
     const parameters = qs.stringify({
       _where: {
         assignees: this.authService.authValue.user.id,
-        archived: false
-      }
+        _or: [
+          {
+            archived: false
+          },
+          {
+            archived_null: true
+          }
+        ]      }
     });
 
-    this.myJobsCount$ = this.jobEntityService.count(parameters);
+    this.myJobsCount$ = this.myJobEntityService.count(parameters);
 
     this.selectionService.setSurveyMarkerFilter.subscribe((selected) => {
       this.surveyFilters = selected
@@ -235,7 +241,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
           // if no geometry data, skip it
           if(!a.testpost || !a.testpost.geometry || !this.abrioxes[i].name) continue;
           // if against Layer rule, skip it
-          if(!a.footer?.approved ) continue;
+          if(!a.approved ) continue;
 
           // if no condition data, skip it
           if(!a.condition || !a.condition.name) continue;
@@ -362,7 +368,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
           // if no geometry data, skip it
           if(!a || !a.geometry || !this.testposts[i].name) continue;
           // if against Layer rule, skip it
-          if(!a.footer || !a.footer['approved']) continue;
+          if(!a['approved']) continue;
 
           // if no condition data, skip it
           if(!a.actions || !a.actions.condition || !a.actions.condition.name) continue;
@@ -507,7 +513,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
             // if no geometry data, skip it
             if(!a || !a.geometry || !this.trs[i].name) continue;
             // if against Layer rule, skip it
-            if(!a.footer.approved) continue;
+            if(!a.approved) continue;
   
             // if no condition data, skip it
             if(!a.actions || !a.actions.condition || !a.actions.condition.name) continue;
@@ -644,7 +650,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
             // if no geometry data and name, skip it
             if(!a || !a.geometry || !a.geometry['lat'] || !a.geometry['lng'] ) continue;
             // if against Layer rule, skip it
-            if(!a.footer || !a.footer.approved) continue;
+            if(!a.approved) continue;
 
             if(!a.status || a.status.name != "COMPLETED") continue;
   
