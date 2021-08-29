@@ -71,6 +71,14 @@
 				"trs": "TRs",
 				"new_tr": "New tr"
 			},
+			"search": {
+				"title": "Search",
+				"categories": "Categories",
+				"form": {
+					"mylocation": "Near My Location",
+					"address": "address"
+				}
+			},
 			"buttons": {
 				"approvals": {
 					"text": "N approvals required",
