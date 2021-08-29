@@ -3,13 +3,15 @@ import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import {
   FormGroup,
   FormControl,
-  FormBuilder
+  FormBuilder,
+  Validators
 } from '@angular/forms';
 import { CATEGORIES } from './mockCategories';
 import { Categories } from './categories';
 import { Store } from '@ngrx/store';
 import * as fromApp from '../../store';
 import * as MapActions from '../../store/map/map.actions';
+import { AlertService } from '../../services';
 
 @Component({
   selector: 'geoaudit-search',
@@ -37,6 +39,7 @@ export class SearchComponent implements OnInit {
     private router: Router,
     private store: Store<fromApp.State>,
     private formBuilder: FormBuilder,
+    private alertService: AlertService,
     ) { }
 
   ngOnInit(): void {
@@ -55,9 +58,9 @@ export class SearchComponent implements OnInit {
    */
    initialiseForm(): void {
     this.form = this.formBuilder.group({
-      category: null,
-      name: null,
-      reference: null,
+      category: [null, Validators.required],
+      name: [null, Validators.required],
+      reference:[null, Validators.required],
       address: null,
     });
   }
@@ -81,6 +84,10 @@ export class SearchComponent implements OnInit {
   }
 
   submit() {
+    if (this.form.invalid) {
+      this.alertService.error('Invalid');
+      return;
+    }
     console.log("form value = ", this.form.value);
     this.router.navigate([`/home/search/`+this.form.value]);
   }
