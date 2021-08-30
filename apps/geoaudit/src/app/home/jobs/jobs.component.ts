@@ -35,6 +35,7 @@ import { ShareModalComponent } from '../../modals/share-modal/share-modal.compon
 import { SelectionService } from '../../services/selection.service';
 import { AuthService } from '../../services';
 import { MyJobEntityService } from '../../entity-services/my-job-entity.service';
+import { ArchiveModalComponent } from '../../modals/archive-modal/archive-modal.component';
 
 @Component({
   selector: 'geoaudit-jobs',
@@ -69,7 +70,13 @@ export class JobsComponent implements OnInit {
   // MatPaginator Output
   pageEvent: PageEvent;
 
-  jobs$ = this.myJobEntityService.entities$;
+  jobs$ = this.myJobEntityService.entities$
+  
+  // .pipe(
+  //   map(jobs => {
+  //     return jobs.filter(job => !job.archived)
+  //   })
+  // )
 
   public chartSeries = null;
 
@@ -177,13 +184,15 @@ export class JobsComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      this.selection.selected.map((job) => {
-        this.myJobEntityService.delete(job).subscribe(
-          (res) => {},
-
-          (err) => {}
-        );
-      });
+      if (result) {
+        this.selection.selected.map((job) => {
+          this.myJobEntityService.delete(job).subscribe(
+            (res) => {},
+  
+            (err) => {}
+          );
+        });
+      }
     });
   }
 
@@ -328,5 +337,42 @@ export class JobsComponent implements OnInit {
       }, [])
       this.selectionService.setSurveyMarkerFilter.emit(surveys);
     }
+  }
+
+  canArchive() {
+    const hasSelected = this.selection.selected.length > 0;
+
+    const areCompleted = this.selection.selected.filter(item => item.status.name === Statuses.COMPLETED);
+
+    // Are all that are selected completed?
+    return hasSelected && areCompleted.length === this.selection.selected.length;
+  }
+
+  archive() {
+    // Change `archived` to be true.
+    const dialogRef = this.dialog.open(ArchiveModalComponent, {
+      data: {
+        length: this.selection.selected.length,
+      },
+      autoFocus: true,
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.selection.selected.map((job) => {
+          this.myJobEntityService.update({
+            ...job,
+            archived: true
+          }).subscribe(
+            (res) => {
+              // Remove locally (not from database) as we only fetch our own jobs and jobs of which are NOT archived.
+              this.myJobEntityService.removeOneFromCache(job);
+            },
+  
+            (err) => {}
+          );
+        });
+      }
+    });
   }
 }

@@ -258,6 +258,11 @@
 		}
 	},
 	"MODALS": {
+		"archive_modal": {
+			"title": "Archive",
+			"archive_surveys": "You're about to archive {{length}} record(s). Do you wish to continue?",
+			"confirm": "Confirm"
+		},
 		"attachment_modal": {
 			"title": "Attachments"
 		},
