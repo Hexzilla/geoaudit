@@ -255,11 +255,31 @@
   <mat-tab
     [label]="'CONTAINERS.home.survey.steps.inspection' | translate"
   >
-    <geoaudit-survey-action-button label="site_details" [routerLink]="'/home/surveys/' + id + '/search/sites'"></geoaudit-survey-action-button>
-    <geoaudit-survey-action-button label="testpost" [routerLink]="'/home/surveys/' + id + '/tp_action_list'"></geoaudit-survey-action-button>
-    <geoaudit-survey-action-button label="tr" [routerLink]="'/home/surveys/' + id + '/tr_action_list'"></geoaudit-survey-action-button>
-    <geoaudit-survey-action-button label="abriox" [routerLink]="'/home/surveys/' + id + '/abriox_list'"></geoaudit-survey-action-button>
-    <geoaudit-survey-action-button label="resistivity" [routerLink]="'/home/surveys/' + id + '/resistivity_list'"></geoaudit-survey-action-button>
+    <geoaudit-survey-action-button
+      label="site_details"
+      [item_list_completed]="true"
+      [routerLink]="'/home/surveys/' + id + '/search/sites'">
+    </geoaudit-survey-action-button>
+    <geoaudit-survey-action-button
+      label="testpost"
+      [item_list_completed]="true"
+      [routerLink]="'/home/surveys/' + id + '/tp_action_list'">
+    </geoaudit-survey-action-button>
+    <geoaudit-survey-action-button
+      label="tr"
+      [item_list_completed]="false"
+      [routerLink]="'/home/surveys/' + id + '/tr_action_list'">
+    </geoaudit-survey-action-button>
+    <geoaudit-survey-action-button
+      label="abriox"
+      [item_list_completed]="true"
+      [routerLink]="'/home/surveys/' + id + '/abriox_list'">
+    </geoaudit-survey-action-button>
+    <geoaudit-survey-action-button
+      label="resistivity"
+      [item_list_completed]="false"
+      [routerLink]="'/home/surveys/' + id + '/resistivity_list'">
+    </geoaudit-survey-action-button>
   </mat-tab>
 
   <mat-tab
