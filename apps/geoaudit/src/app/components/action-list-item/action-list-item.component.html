@@ -3,8 +3,6 @@
       <p>{{ item.date | date: 'HH:mm dd/MM/yyyy' }}</p>
       <geoaudit-icon [visible]="true" [color]="getConditionColour(item)" icon="radio_button_unchecked"></geoaudit-icon>
 
-      <p>{{ item.condition.name }}</p>
-
       <img
       *ngIf="survey?.conducted_by?.avatar"
       mat-card-avatar
