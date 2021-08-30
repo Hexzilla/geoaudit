@@ -1,12 +1,14 @@
 <mat-card style="cursor: pointer; margin-top: 20px">
     <div fxLayout="row" fxLayoutAlign="space-between">
-      <p>{{ item.created_at | date: 'HH:mm dd/MM/yyyy' }}</p>
+      <p>{{ item.date | date: 'HH:mm dd/MM/yyyy' }}</p>
       <geoaudit-icon [visible]="true" [color]="getConditionColour(item)" icon="radio_button_unchecked"></geoaudit-icon>
+
+      <p>{{ item.condition.name }}</p>
 
       <img
       *ngIf="survey?.conducted_by?.avatar"
       mat-card-avatar
-      [src]="API_URL + getSurvey(item.survey).conducted_by?.avatar.url"
+      [src]="API_URL + survey?.conducted_by?.avatar.url"
     />
     <img
       *ngIf="!survey?.conducted_by?.avatar"

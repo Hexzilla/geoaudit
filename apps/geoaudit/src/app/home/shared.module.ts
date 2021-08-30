@@ -93,6 +93,8 @@ import { AbrioxActionEntityService } from '../entity-services/abriox-action-enti
 import { AbrioxActionDataService } from '../data-services/abriox-action-data.service';
 
 import { SurveyActionButtonComponent } from '../components/survey-action-button/survey-action-button.component';
+import { MyJobEntityService } from '../entity-services/my-job-entity.service';
+import { MyJobDataService } from '../data-services/my-job-data.service';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient) {
@@ -143,7 +145,9 @@ const entityMetadataMap: EntityMetadataMap = {
 
   ToDoList:{},
 
-  TpAction: {}
+  TpAction: {},
+
+  MyJob: {}
 }
 
 @NgModule({
@@ -228,6 +232,9 @@ const entityMetadataMap: EntityMetadataMap = {
 
     JobTypeEntityService,
     JobTypeDataService,
+
+    MyJobEntityService,
+    MyJobDataService,
 
     NoteEntityService,
     NoteDataService,
@@ -341,6 +348,7 @@ export class SharedModule {
     private eventDataService: EventDataService,
     private jobDataService: JobDataService,
     private jobTypeDataService: JobTypeDataService,
+    private myJobDataService: MyJobDataService,
     private noteDataService: NoteDataService,
     private notificationDataService: NotificationDataService,
     private statusDataService: StatusDataService,
@@ -366,6 +374,7 @@ export class SharedModule {
         Survey: surveyDataService,
         Job: jobDataService,
         JobType: jobTypeDataService,
+        MyJob: myJobDataService,
         User: userDataService,
         Abriox: abrioxDataService,
         Testpost: testpostDataService,

@@ -40,7 +40,7 @@
 			"archive": {
 				"title": "Archive",
 				"show_all_jobs": "Show all jobs",
-				"show_some_jobs": "Show some jobs"
+				"show_my_jobs": "Show my jobs"
 			},
 			"notes": {
 				"title": "Notes",
