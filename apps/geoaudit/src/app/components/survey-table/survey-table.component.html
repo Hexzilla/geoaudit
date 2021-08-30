@@ -25,7 +25,7 @@
     aria-label="delete icon button"
     (click)="delete()"
     [disabled]="this.selection.selected.length === 0"
-    *ngIf="isManager()"
+    *ngIf="!hideDeleteButton && isManager()"
   >
     <mat-icon>delete</mat-icon>
   </button>
@@ -35,7 +35,7 @@
     color="accent"
     aria-label="add icon button"
     (click)="addSurvey()"
-    *ngIf="isManager()"
+    *ngIf="!hidePlusButton && isManager()"
   >
     <mat-icon>add_circle</mat-icon>
   </button>

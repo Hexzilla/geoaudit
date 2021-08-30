@@ -69,6 +69,10 @@ export class SurveyTableComponent implements OnInit, AfterViewInit {
 
   @Input() pageSize: number;
 
+  @Input() hideDeleteButton: boolean;
+
+  @Input() hidePlusButton: boolean;
+
   @ViewChild('input', { static: true }) input: ElementRef;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
