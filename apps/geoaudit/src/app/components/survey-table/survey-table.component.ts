@@ -355,4 +355,8 @@ export class SurveyTableComponent implements OnInit, AfterViewInit {
       this.selectionService.setSurveyMarkerFilter.emit(surveys);
     }
   }
+
+  getStatus(row) {
+    return row?.status?.id || row?.status
+  }
 }
