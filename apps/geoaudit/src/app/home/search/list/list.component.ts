@@ -75,16 +75,37 @@ export class ListComponent implements  OnInit {
   }
 
   ngOnInit(): void {
+    let where: any = {};
+
+    if (this.formdata.name) {
+      where = {
+        ...where,
+        name: '/'+this.formdata.name+'/',
+      };
+    }
+    if (this.formdata.reference) {
+      where = {
+        ...where,
+        reference: this.formdata.reference,
+      };
+    }
+    if (this.formdata.latCtrl) {
+      where = {
+        ...where,
+        'geometry.lat': this.formdata.latCtrl,
+      };
+    }
+    if (this.formdata.lngCtrl) {
+      where = {
+        ...where,
+        'geometry.lng': this.formdata.lngCtrl,
+      };
+    }
     const parameters = qs.stringify({
-      // Here insert code search condition
-      // _where: {
-      //   'name': this.formdata.name,
-      //   'reference': this.formdata.reference,
-      //   'address': this.formdata.address,
-      // },
+      _where: where,
       _sort: 'created_at:DESC',
     });
-    
+
     if(this.selectedCategory === "surveys"){
       this.surveyEntityService.getWithQuery(parameters).subscribe(surveys => {
         this.dataSource = new MatTableDataSource(surveys);
@@ -167,6 +188,7 @@ export class ListComponent implements  OnInit {
   }
 
   onCheckedRow(event, selections) {
+    console.log(selections.selected)
     this.isShowSelectBtn();
     if(this.selectedCategory === "surveys"){
       const surveys = selections.selected;
