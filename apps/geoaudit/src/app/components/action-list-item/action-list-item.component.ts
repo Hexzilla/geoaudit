@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { environment } from 'apps/geoaudit/src/environments/environment';
 import { SurveyEntityService } from '../../entity-services/survey-entity.service';
 import { MarkerColours, Survey } from '../../models';
 
@@ -18,6 +19,7 @@ export class ActionListItemComponent implements OnInit {
 
   survey: Survey;
 
+  API_URL: string;
 
 
   constructor(
@@ -25,6 +27,9 @@ export class ActionListItemComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+
+    this.API_URL = environment.API_URL;
+
     if (this.item) {
       this.surveyEntityService.getByKey(this.item.survey.id).subscribe(survey => {
         this.survey = survey;

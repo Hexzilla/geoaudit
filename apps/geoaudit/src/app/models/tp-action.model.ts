@@ -1,11 +1,12 @@
 import { Condition } from "./condition.model";
 import { CurrentDrain } from "./current-drain.model";
 import { FaultDetail } from "./fault-detail.model";
-import { Footer } from "./footer.model";
+import { Image } from "./image.model";
 import { Status } from "./status.model";
 import { Survey } from "./survey.model";
 import { Testpost } from "./testpost.model";
 import { TpInformation } from "./tp-information.model";
+import { User } from "./user.model";
 
 export interface TpAction {
     id: string;
@@ -15,9 +16,14 @@ export interface TpAction {
     current_drain: Array<CurrentDrain>;
     pipe_depth: string;
     reinstatement: string;
-    footer: Footer;
     survey: Survey;
     fault_detail: Array<FaultDetail>;
     status: Status;
     condition: Condition;
+
+    images: Array<Image>;
+    documents: Array<any>;
+    comment: Array<any>;
+    approved: boolean;
+    approved_by: User;
 }

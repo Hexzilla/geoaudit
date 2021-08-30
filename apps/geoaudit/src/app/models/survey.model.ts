@@ -1,5 +1,5 @@
 import { Job, User } from '.';
-import { Footer } from './footer.model';
+import { Image } from './image.model';
 import { Note } from './note.model';
 
 export interface Survey {
@@ -8,7 +8,6 @@ export interface Survey {
     created_at?: string;
     date_assigned?: string;
     date_delivery?: string;
-    footer?: Footer;
     geometry: any;
     id?: number;
     reference?: string;
@@ -21,4 +20,10 @@ export interface Survey {
     notes?: Array<Note>;
     tp_actions?: []
     tr_actions?: []   
+
+    images?: Array<Image>;
+    documents?: Array<any>;
+    comment?: Array<any>;
+    approved?: boolean;
+    approved_by?: User;
 }
