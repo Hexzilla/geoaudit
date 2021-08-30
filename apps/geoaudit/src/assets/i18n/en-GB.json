@@ -222,7 +222,8 @@
 				"tr": "Transformer Rectifier",
 				"abriox": "Abriox",
 				"resistivity": "Resistivity",
-				"comments": "Comments"
+				"comments": "Comments",
+				"tp_action_list": "Testpost Action List"
 			},
 			"testposts": {
 				"testpost": {
