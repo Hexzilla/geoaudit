@@ -82,7 +82,8 @@
                 <mat-slide-toggle
                     color="primary"
                     labelPosition="before"
-                    (change)="toggleMyLocation()" 
+                    (change)="toggleMyLocation()"
+                    formControlName="nearLocation" 
                 >
                     {{ 'CONTAINERS.home.search.form.mylocation' | translate }}
                 </mat-slide-toggle>
