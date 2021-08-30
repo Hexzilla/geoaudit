@@ -64,6 +64,7 @@ export class SearchComponent implements OnInit {
       address: null,
       latCtrl: null,
       lngCtrl: null,
+      nearLocation: false,
     });
   }
 
@@ -74,7 +75,7 @@ export class SearchComponent implements OnInit {
   }
 
   toggleMyLocation(): void{
-
+    
   }
 
   clickMarker(): void {
