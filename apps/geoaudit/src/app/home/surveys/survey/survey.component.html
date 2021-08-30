@@ -276,7 +276,7 @@
   </mat-tab>
 </mat-tab-group>
 
-<div fxLayout="row-reverse">
+<!-- <div fxLayout="row-reverse">
   <button
     mat-flat-button
     color="primary"
@@ -286,4 +286,27 @@
   >
     {{ 'CONTAINERS.home.jobs.job.form.save' | translate }}
   </button>
+</div> -->
+
+<div fxLayout="row-reverse" fxLayoutAlign="space-between" class="button-area">
+  <div class="button-wrapper">
+    <button *ngIf="selectedTabIndex != 3" mat-icon-button color="accent" (click)="selectedIndexChange(selectedTabIndex + 1)" class="btn-arrow">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+  </div>
+  
+  <button
+    mat-flat-button
+    color="primary"
+    (click)="submit()"
+    type="submit"
+    class="btn-submit"
+  >
+    {{ 'CONTAINERS.home.jobs.job.form.save' | translate }}
+  </button>
+  <div class="button-wrapper">
+    <button *ngIf="selectedTabIndex != 0" mat-icon-button color="accent" (click)="selectedIndexChange(selectedTabIndex - 1)" class="btn-arrow">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+  </div>
 </div>
