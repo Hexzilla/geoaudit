@@ -8,11 +8,13 @@ import { SurveysComponent } from './surveys.component';
 
 import { SharedModule } from '../shared.module';
 import { SurveyComponent } from './survey/survey.component';
+import { TpActionsComponent } from './tp-actions/tp-actions.component';
 
 @NgModule({
   declarations: [
     SurveysComponent,
-    SurveyComponent
+    SurveyComponent,
+    TpActionsComponent
   ],
   imports: [
     SurveysRoutingModule,

@@ -4,6 +4,7 @@ import { NotesComponent } from '../notes/notes.component';
 import { SurveyComponent } from './survey/survey.component';
 
 import { SurveysComponent } from './surveys.component';
+import { TpActionsComponent } from './tp-actions/tp-actions.component';
 
 const routes: Routes = [
   {
@@ -32,6 +33,9 @@ const routes: Routes = [
   },
   {
       path: ':id/drive', component: NotesComponent
+  },
+  {
+      path: ':id/tp_action_list', component: TpActionsComponent,
   },
 
   // otherwise redirect to home
