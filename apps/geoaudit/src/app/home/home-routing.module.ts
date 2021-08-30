@@ -20,10 +20,13 @@ const testpostsModule = () =>
   import('./testposts/testposts.module').then((x) => x.TestpostsModule);
 const trsModule = () => import('./trs/trs.module').then((x) => x.TrsModule);
 
+const searchModule = () =>
+  import('./search/search.module').then((x) => x.SearchModule);
+
 import { HomeComponent } from './home.component';
 import { AuthGuard } from '../guards';
 import { ToDoListComponent } from './to-do-list/to-do-list.component';
-import { SearchComponent } from './search/search.component';
+// import { SearchComponent } from './search/search.component';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { ProfileComponent } from './profile/profile.component';
 import { ApprovalsComponent } from './approvals/approvals.component';
@@ -37,7 +40,8 @@ const routes: Routes = [
     children: [
       {
         path: 'search',
-        component: SearchComponent,
+        // component: SearchComponent,
+        loadChildren: searchModule,
       },
       {
         path: 'events',

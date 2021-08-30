@@ -221,7 +221,9 @@
   <!-- Actions -->
   <mat-step [label]="'CONTAINERS.home.testposts.testpost.actions' | translate">
 
-    <mat-card *ngFor="let tp_action of tp_actions" style="cursor: pointer; margin-top: 20px" [routerLink]="'/home/tp_actions/' + tp_action.id">
+    <geoaudit-action-list-item [item]="item" *ngFor="let item of tp_actions" attribute="tp_actions"></geoaudit-action-list-item>
+
+    <!-- <mat-card *ngFor="let tp_action of tp_actions" style="cursor: pointer; margin-top: 20px" [routerLink]="'/home/tp_actions/' + tp_action.id">
       <div fxLayout="row" fxLayoutAlign="space-between">
         <p>{{ tp_action.created_at | date: 'HH:mm dd/MM/yyyy' }}</p>
         <geoaudit-icon [visible]="true" [color]="getConditionColour(tp_action.condition.id)" icon="radio_button_unchecked"></geoaudit-icon>
@@ -247,7 +249,7 @@
         <mat-icon>chevron_right</mat-icon>
       </button>
       </div>
-    </mat-card>
+    </mat-card> -->
   </mat-step>
 
   <!-- Notes -->

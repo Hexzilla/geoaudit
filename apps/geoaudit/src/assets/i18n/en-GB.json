@@ -40,7 +40,7 @@
 			"archive": {
 				"title": "Archive",
 				"show_all_jobs": "Show all jobs",
-				"show_some_jobs": "Show some jobs"
+				"show_my_jobs": "Show my jobs"
 			},
 			"notes": {
 				"title": "Notes",
@@ -70,6 +70,15 @@
 				"new_testpost": "New testpost",
 				"trs": "TRs",
 				"new_tr": "New tr"
+			},
+			"search": {
+				"title": "Search",
+				"categories": "Categories",
+				"select": "Select",
+				"form": {
+					"mylocation": "Near My Location",
+					"address": "address"
+				}
 			},
 			"buttons": {
 				"approvals": {
@@ -249,6 +258,11 @@
 		}
 	},
 	"MODALS": {
+		"archive_modal": {
+			"title": "Archive",
+			"archive_surveys": "You're about to archive {{length}} record(s). Do you wish to continue?",
+			"confirm": "Confirm"
+		},
 		"attachment_modal": {
 			"title": "Attachments"
 		},

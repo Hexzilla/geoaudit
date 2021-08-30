@@ -64,7 +64,7 @@ export class TestpostComponent implements OnInit, AfterViewInit {
 
   tp_actions: Array<TpAction> = [];
 
-  surveys: Array<Survey> = [];
+  // surveys: Array<Survey> = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -136,10 +136,8 @@ export class TestpostComponent implements OnInit, AfterViewInit {
 
       geometry: [null],
 
-      footer: [{
-        images: [],
-        documents: []
-      }],
+      images: [],
+      documents: [],
 
 
       // datetime: moment().toISOString(),
@@ -172,9 +170,9 @@ export class TestpostComponent implements OnInit, AfterViewInit {
           this.tpActionEntityService.getByKey(tp_action.id).subscribe(item => {
             this.tp_actions.push(item);
             
-            this.surveyEntityService.getByKey(item.survey.id).subscribe(survey => {
-              this.surveys.push(survey);
-            })
+            // this.surveyEntityService.getByKey(item.survey.id).subscribe(survey => {
+            //   this.surveys.push(survey);
+            // })
           })
         })
 
@@ -258,8 +256,9 @@ export class TestpostComponent implements OnInit, AfterViewInit {
       model,
       serial_number,
       geometry,
-
-      footer
+    
+      images,
+      documents
     } = testpost;
 
     this.form.patchValue({
@@ -273,12 +272,8 @@ export class TestpostComponent implements OnInit, AfterViewInit {
       serial_number,
       geometry,
 
-      footer: footer
-      ? footer
-      : {
-          images: [],
-          documents: [],
-        },
+      images,
+      documents
     })
 
     this.latCtrl.setValue(geometry?.lat);
@@ -295,7 +290,7 @@ export class TestpostComponent implements OnInit, AfterViewInit {
 
 
   onPreview(fileType: FileTypes): void {
-    const { images, documents } = this.form.value.footer;
+    const { images, documents } = this.form.value;
 
     switch (fileType) {
       case FileTypes.IMAGE:
@@ -328,30 +323,24 @@ export class TestpostComponent implements OnInit, AfterViewInit {
   }
 
   onImageUpload(event): void {
-    const { images } = this.form.value.footer;
+    const { images } = this.form.value;
 
     // this.images.push(event)
 
     // May be multiple so just preserving the previous object on the array of images
 
     this.form.patchValue({
-      footer: {
-        ...this.form.value.footer,
-        images: [...images, event],
-      },
+      images: [...images, event],
     });
 
     this.submit(false);
   }
 
   onDocumentUpload(event): void {
-    const { documents } = this.form.value.footer;
+    const { documents } = this.form.value;
 
     this.form.patchValue({
-      footer: {
-        ...this.form.value.footer,
-        documents: [...documents, event],
-      },
+      documents: [...documents, event],
     });
 
     this.submit(false);
@@ -399,16 +388,16 @@ export class TestpostComponent implements OnInit, AfterViewInit {
     return color;
   }
 
-  getSurvey(id?: number) {
-    let survey: Survey;
+  // getSurvey(id?: number) {
+  //   let survey: Survey;
 
 
-    if (id) {
-      if (this.surveys) {
-        survey = this.surveys.find(item => item.id === id);
-      }
-    }
+  //   if (id) {
+  //     if (this.surveys) {
+  //       survey = this.surveys.find(item => item.id === id);
+  //     }
+  //   }
 
-    return survey;
-  }
+  //   return survey;
+  // }
 }
