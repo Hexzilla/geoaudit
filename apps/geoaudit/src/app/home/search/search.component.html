@@ -1,1 +1,105 @@
-<p>search works!</p>
+<ng-container>
+    <geoaudit-sidebar-header
+      title="CONTAINERS.home.search.title"
+    >
+    </geoaudit-sidebar-header>
+    <form fxLayout="column" (ngSubmit)="submit()" [formGroup]="form">
+        <mat-form-field appearance="outline" fullWidth>
+            <mat-label>{{
+            'CONTAINERS.home.search.categories' | translate
+            }}</mat-label>
+            <mat-select [ngModel]="selectedCategory" formControlName="category" (ngModelChange)="onSelect($event)" name="category">
+                <mat-option *ngFor="let category of categories" [value]="category.name">
+                    {{category.name}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <div *ngIf="isSelectedCategory">
+            <div class="top-divider">
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>{{
+                        'CONTAINERS.home.jobs.job.form.reference' | translate
+                    }}</mat-label>
+                    <input
+                        matInput
+                        [placeholder]="
+                        'CONTAINERS.home.jobs.job.form.reference' | translate
+                        "
+                        formControlName="reference"
+                        class="form-control"
+                    />
+                </mat-form-field>
+    
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>{{
+                        'CONTAINERS.home.jobs.job.form.name' | translate
+                    }}</mat-label>
+                    <input
+                        matInput
+                        [placeholder]="'CONTAINERS.home.jobs.job.form.name' | translate"
+                        class="form-control"
+                        formControlName="name"
+                    />
+                </mat-form-field>
+            </div>
+            <div class="top-divider">
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>{{
+                    'CONTAINERS.home.search.form.address' | translate
+                    }}</mat-label>
+                    <input
+                        matInput
+                        [placeholder]="'CONTAINERS.home.search.form.address' | translate"
+                        class="form-control"
+                        formControlName="address"
+                    />
+                </mat-form-field>
+    
+                <div fxLayoutAlign="space-between">
+                    <mat-form-field class="half-width" appearance="outline">
+                        <mat-label>Lat</mat-label>
+                        <input
+                            matInput
+                            aria-label="Latitude"
+                            formControlName="latCtrl"
+                        />
+                        <!-- [formControl]="latCtrl"
+                        #latCtrlInput -->
+                    </mat-form-field>
+    
+                    <mat-form-field class="half-width" appearance="outline">
+                        <mat-label>Lng</mat-label>
+                        <input
+                            matInput
+                            aria-label="Longtitude"
+                            formControlName="lngCtrl"
+                        />
+                       <!--  [formControl]="lngCtrl"
+                        #lngCtrlInput -->
+                    </mat-form-field>
+                </div>
+                <mat-slide-toggle
+                    color="primary"
+                    labelPosition="before"
+                    (change)="toggleMyLocation()" 
+                >
+                    {{ 'CONTAINERS.home.search.form.mylocation' | translate }}
+                </mat-slide-toggle>
+            </div>
+        </div>
+    </form>
+</ng-container>
+
+<div fxLayoutAlign="center" class="button-area">
+    <button
+      mat-flat-button
+      color="primary"
+      (click)="submit()"
+      type="submit"
+      class="btn-submit"
+    >
+      {{ 'CONTAINERS.home.search.title' | translate }}
+    </button>
+</div>
+  

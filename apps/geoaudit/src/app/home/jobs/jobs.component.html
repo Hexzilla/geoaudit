@@ -13,6 +13,16 @@
 
   <geoaudit-sidebar-actions>
     <button
+    mat-icon-button
+    color="accent"
+    aria-label="assignement icon button"
+    (click)="archive()"
+    [disabled]="!canArchive()"
+  >
+    <mat-icon>archive</mat-icon>
+  </button>
+
+    <button
       mat-icon-button
       color="accent"
       aria-label="assignement icon button"

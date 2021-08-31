@@ -1,0 +1,6 @@
+<h1 mat-dialog-title>{{ 'MODALS.archive_modal.title' | translate }}</h1>
+<div mat-dialog-content>{{ 'MODALS.archive_modal.archive_surveys' | translate: { length: data.length } }}</div>
+<div mat-dialog-actions fxLayoutAlign="space-between">
+  <button mat-flat-button color="warn" (click)="onYesClick()">{{ 'MODALS.archive_modal.confirm' | translate }}</button>
+  <button mat-flat-button color="accent" mat-dialog-close>{{ 'MODALS.close' | translate }}</button>
+</div>

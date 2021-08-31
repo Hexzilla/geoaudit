@@ -51,6 +51,8 @@ import { ProgressChartComponent } from '../components/progress-chart/progress-ch
 import { SidebarActionsComponent } from '../components/sidebar-actions/sidebar-actions.component';
 import { SurveyTableComponent } from '../components/survey-table/survey-table.component';
 
+import { ArchiveModalComponent } from '../modals/archive-modal/archive-modal.component';
+
 import { IconComponent } from '../components/icon/icon.component';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -214,7 +216,8 @@ const entityMetadataMap: EntityMetadataMap = {
     SingleItemSelectorComponent,
     IconComponent,
     SurveyActionButtonComponent,
-    ActionListItemComponent
+    ActionListItemComponent,
+    ArchiveModalComponent
   ],
   providers: [
 
@@ -304,7 +307,8 @@ const entityMetadataMap: EntityMetadataMap = {
     IconComponent,
     SurveyActionButtonComponent,
     ActionListItemComponent,
-
+    ArchiveModalComponent,
+    
     // Material
     MatAutocompleteModule,
     MatBadgeModule,
