@@ -148,6 +148,8 @@ export class JobComponent implements OnInit, AfterViewInit {
   attachedImages: Array<any>;
   Documents: Array<any>;
 
+  completed: boolean = false;
+
   public chartSeries = null;
   public selectedTabIndex = 0;
   public selectedReference = "";
@@ -644,5 +646,9 @@ export class JobComponent implements OnInit, AfterViewInit {
 
   selectedIndexChange(selectedTabIndex) {
     this.selectedTabIndex = selectedTabIndex;
+  }
+
+  complete(complete:boolean){
+    this.completed = true;
   }
 }
