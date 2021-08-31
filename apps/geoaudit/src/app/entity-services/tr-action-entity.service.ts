@@ -4,7 +4,7 @@ import { EntityCollectionServiceBase, EntityCollectionServiceElementsFactory } f
 import { TrAction } from"../models";
 
 @Injectable()
-export class TpActionEntityService extends EntityCollectionServiceBase<TrAction> {
+export class TrActionEntityService extends EntityCollectionServiceBase<TrAction> {
 
     constructor(
         serviceElementsFactory: EntityCollectionServiceElementsFactory
