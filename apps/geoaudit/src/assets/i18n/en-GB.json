@@ -232,7 +232,8 @@
 				"abriox": "Abriox",
 				"resistivity": "Resistivity",
 				"comments": "Comments",
-				"tp_action_list": "Testpost Action List"
+				"tp_action_list": "Testpost Action List",
+				"tr_action_list": "Testpost Action List"
 			},
 			"testposts": {
 				"testpost": {

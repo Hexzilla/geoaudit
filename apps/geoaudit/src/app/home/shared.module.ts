@@ -90,7 +90,9 @@ import { SingleItemSelectorComponent } from '../components/single-item-selector/
 import { ConditionEntityService } from '../entity-services/condition-entity.service';
 import { ConditionDataService } from '../data-services/condition-data.service';
 import { TpActionDataService } from '../data-services/tp-action-data.service';
+import { TrActionDataService } from '../data-services/tr-action-data.service';
 import { TpActionEntityService } from '../entity-services/tp-action-entity.service';
+import { TrActionEntityService } from '../entity-services/tr-action-entity.service';
 import { AbrioxActionEntityService } from '../entity-services/abriox-action-entity.service';
 import { AbrioxActionDataService } from '../data-services/abriox-action-data.service';
 
@@ -148,6 +150,7 @@ const entityMetadataMap: EntityMetadataMap = {
   ToDoList:{},
 
   TpAction: {},
+  TrAction: {},
 
   MyJob: {}
 }
@@ -261,7 +264,9 @@ const entityMetadataMap: EntityMetadataMap = {
     TestpostDataService,
 
     TpActionDataService,
+    TrActionDataService,
     TpActionEntityService,
+    TrActionEntityService,
     
     TrDataService,
     
