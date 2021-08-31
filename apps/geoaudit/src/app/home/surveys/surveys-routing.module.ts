@@ -5,6 +5,7 @@ import { SurveyComponent } from './survey/survey.component';
 
 import { SurveysComponent } from './surveys.component';
 import { TpActionsComponent } from './tp-actions/tp-actions.component';
+import { TrActionsComponent } from './tr-actions/tr-actions.component';
 
 const routes: Routes = [
   {
@@ -36,6 +37,9 @@ const routes: Routes = [
   },
   {
       path: ':id/tp_action_list', component: TpActionsComponent,
+  },
+  {
+      path: ':id/tr_action_list', component: TrActionsComponent,
   },
 
   // otherwise redirect to home
