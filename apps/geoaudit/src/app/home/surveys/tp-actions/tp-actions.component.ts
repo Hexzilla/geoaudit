@@ -94,9 +94,21 @@ export class TpActionsComponent implements OnInit {
 
   ngOnInit(): void {
     console.log("onInit");
+    this.tpActionEntityService.getAll().subscribe(
+      (actions) => {
+        this.tp_actions = actions;
+        console.log("actions", actions)
+      },
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      (err) => {}
+    );
   }
 
   delete(): void {
     console.log("delete");
+  }
+
+  getActionDate(action) {
+    return moment(action.date).format('L LT')
   }
 }

@@ -1,0 +1,46 @@
+
+@mixin md-icon-size($size: 24px) {
+    font-size: $size;
+    height: $size;
+    width: $size;
+    line-height: $size;
+}
+
+.tp_action {
+    border: 1px solid #333;
+    padding: 8px;
+    margin: 8px;
+    display: flex;
+}
+
+.tp-title{
+    .main {
+        font-size: 16px;
+        margin: 0!important;
+    }
+    .sub {
+        font-size: 12px;
+        margin: 0!important;
+    }
+}
+
+.tp-mark-button{
+    color: #ffffff;
+    background-color: #8ac926;
+    margin-right: 20px;
+}
+
+.tp-delete-button{
+    color: #ED0000;
+    margin-right: 16px;
+}
+
+.tp-bottom {
+    text-align: center;
+    margin-top: 20px;
+
+    mat-icon {
+        color: #505050;
+        @include md-icon-size(36px);
+    }
+}
