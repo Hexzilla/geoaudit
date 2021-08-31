@@ -23,6 +23,7 @@
 
   <div fxLayout="row">
     <button
+      *ngIf="item.status?.name == 'COMPLETED'"
       mat-icon-button
       color="#8AC926"
       class="tp-mark-button"
@@ -36,7 +37,7 @@
       color="accent"
       aria-label="delete icon button"
       class="tp-delete-button"
-      (click)="delete()"
+      (click)="delete(item)"
     >
       <mat-icon>delete</mat-icon>
     </button>
@@ -45,6 +46,7 @@
       mat-icon-button
       color="accent"
       aria-label="Example icon button with a plus one icon"
+      (click)="navigate(item)"
     >
       <mat-icon>chevron_right</mat-icon>
     </button>
@@ -57,6 +59,7 @@
     color="accent"
     aria-label="add icon button"
     inline="true"
+    (click)="addAction()"
   >
     <mat-icon>add_circle_outline</mat-icon>
   </button>
