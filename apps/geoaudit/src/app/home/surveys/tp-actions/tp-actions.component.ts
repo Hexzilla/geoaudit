@@ -86,6 +86,10 @@ export class TpActionsComponent implements OnInit {
     this.router.navigate([url]);
   }
 
+  submit() {
+    console.log("submit")
+  }
+
   getActionDate(action) {
     return moment(action.date).format('L LT')
   }
