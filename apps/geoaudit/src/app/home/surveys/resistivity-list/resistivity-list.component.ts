@@ -17,7 +17,7 @@ import { Resistivity } from '../../../models';
 import { AlertService } from '../../../services';
 import { MatDialog } from '@angular/material/dialog';
 import { TestpostEntityService } from '../../../entity-services/testpost-entity.service';
-import { TrActionEntityService } from '../../../entity-services/tr-action-entity.service';
+import { ResistivityEntityService } from '../../../entity-services/resistivity-entity.service';
 import { DeleteModalComponent } from '../../../modals/delete-modal/delete-modal.component';
 
 @Component({
@@ -34,7 +34,7 @@ export class ResistivityListComponent implements OnInit {
     private router: Router,
     private store: Store<fromApp.State>,
     private testpostEntityService: TestpostEntityService,
-    private trActionEntityService: TrActionEntityService,
+    private resistivityEntityService: ResistivityEntityService,
     private alertService: AlertService,
     private dialog: MatDialog
   ) {
@@ -45,10 +45,10 @@ export class ResistivityListComponent implements OnInit {
   }
 
   update() {
-    this.trActionEntityService.getAll().subscribe(
+    this.resistivityEntityService.getAll().subscribe(
       (actions) => {
         this.resistivities = actions;
-        console.log("actions", actions)
+        console.log("resistivities", actions)
       },
       (err) => {}
     );
@@ -64,7 +64,7 @@ export class ResistivityListComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.trActionEntityService.delete(item).subscribe(
+        this.resistivityEntityService.delete(item).subscribe(
           (res) => {},
           (err) => {}
         )
@@ -81,7 +81,7 @@ export class ResistivityListComponent implements OnInit {
   }
 
   addAction() {
-    const url = `/home/testpost/1/tr_action`
+    const url = `/home/resistivity`
     this.router.navigate([url]);
   }
 
