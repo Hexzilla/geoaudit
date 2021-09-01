@@ -13,7 +13,7 @@ import { Store } from '@ngrx/store';
 import * as moment from 'moment';
 
 import * as fromApp from '../../../store';
-import { Status, Statuses, Survey, User, Image, Job, TpAction } from '../../../models';
+import { TpAction } from '../../../models';
 import { AlertService } from '../../../services';
 import { MatDialog } from '@angular/material/dialog';
 import { TestpostEntityService } from '../../../entity-services/testpost-entity.service';
@@ -50,7 +50,6 @@ export class TpActionsComponent implements OnInit {
         this.tp_actions = actions;
         console.log("actions", actions)
       },
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
       (err) => {}
     );
   }

@@ -45,10 +45,10 @@
     }
 }
 
-.button-area {
+.button-wrapper {
     position: absolute;
     width: 95%;
-    bottom: 12px;
+    bottom: 16px;
     z-index: 1;
 }
 
@@ -60,7 +60,14 @@
     .button-area {
         position: absolute;
         width: 92%;
-        bottom: 8px;
+        bottom: 16px;
         z-index: 1;
     }
+}
+
+.approve-wrapper {
+    position: absolute;
+    right: 20px;
+    bottom: 62px;
+    z-index: 1;
 }

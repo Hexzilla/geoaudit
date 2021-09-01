@@ -65,7 +65,11 @@
   </button>
 </div>
 
-<div fxLayout="row-reverse" class="button-area">
+<div class="approve-wrapper" *ngIf="tp_actions.length>0">
+  <geoaudit-status-buttons></geoaudit-status-buttons>
+</div>
+
+<div fxLayout="row-reverse" class="button-wrapper">
   <button
     mat-flat-button
     fxFlexFill
