@@ -13,7 +13,7 @@ import { Store } from '@ngrx/store';
 import * as moment from 'moment';
 
 import * as fromApp from '../../../store';
-import { TrAction } from '../../../models';
+import { Resistivity } from '../../../models';
 import { AlertService } from '../../../services';
 import { MatDialog } from '@angular/material/dialog';
 import { TestpostEntityService } from '../../../entity-services/testpost-entity.service';
@@ -21,12 +21,12 @@ import { TrActionEntityService } from '../../../entity-services/tr-action-entity
 import { DeleteModalComponent } from '../../../modals/delete-modal/delete-modal.component';
 
 @Component({
-  selector: 'geoaudit-tr-actions',
-  templateUrl: './tr-actions.component.html',
-  styleUrls: ['./tr-actions.component.scss'],
+  selector: 'geoaudit-resistivity-list',
+  templateUrl: './resistivity-list.component.html',
+  styleUrls: ['./resistivity-list.component.scss'],
 })
-export class TrActionsComponent implements OnInit {
-  tr_actions: Array<TrAction> = [];
+export class ResistivityListComponent implements OnInit {
+  resistivities: Array<Resistivity> = [];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -47,7 +47,7 @@ export class TrActionsComponent implements OnInit {
   update() {
     this.trActionEntityService.getAll().subscribe(
       (actions) => {
-        this.tr_actions = actions;
+        this.resistivities = actions;
         console.log("actions", actions)
       },
       (err) => {}

@@ -10,6 +10,7 @@ import { SharedModule } from '../shared.module';
 import { SurveyComponent } from './survey/survey.component';
 import { TpActionsComponent } from './tp-actions/tp-actions.component';
 import { TrActionsComponent } from './tr-actions/tr-actions.component';
+import { ResistivityListComponent } from './resistivity-list/resistivity-list.component';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { TrActionsComponent } from './tr-actions/tr-actions.component';
     SurveyComponent,
     TpActionsComponent,
     TrActionsComponent,
+    ResistivityListComponent,
   ],
   imports: [
     SurveysRoutingModule,
