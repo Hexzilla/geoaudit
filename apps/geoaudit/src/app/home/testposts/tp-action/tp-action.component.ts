@@ -60,6 +60,11 @@ export class TpActionComponent implements OnInit, AfterViewInit {
    */
   currentState = 0;
 
+  /**
+   * Whether the form has been submitted.
+   */
+  submitted = false;
+
   public selectedTabIndex = 0;
 
   constructor(
@@ -120,8 +125,37 @@ export class TpActionComponent implements OnInit, AfterViewInit {
     });
   }
 
-  submit() {
-    console.log("submit")
+  submit(navigate = true) {
+    console.log("submit");
+    this.submitted = true;
+
+    // reset alerts on submit
+    this.alertService.clear();
+
+    if (this.form.invalid) {
+      this.alertService.error('Invalid');
+      return;
+    }
+
+    /**
+     * Invoke the backend with a PUT request to update
+     * the job with the form values.
+     *
+     * If create then navigate to the job id.
+     */
+    /*this.jobEntityService.update(this.form.value).subscribe(
+      (update) => {
+        this.alertService.info('Saved Changes');
+
+        this.dataSource = new MatTableDataSource(update.surveys);
+
+        if (navigate) this.router.navigate([`/home/jobs`]);
+      },
+
+      (err) => {
+        this.alertService.error('Something went wrong');
+      }
+    );*/
   }
 
   selectedIndexChange(selectedTabIndex) {
