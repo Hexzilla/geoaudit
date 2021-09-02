@@ -9,12 +9,14 @@ import { ErrorInterceptor, JwtInterceptor } from '../../helpers';
 import { SharedModule } from '../shared.module';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TestpostComponent } from './testpost/testpost.component';
+import { TpActionComponent } from './tp-action/tp-action.component';
 import { NotesModule } from '../notes/notes.module';
 
 @NgModule({
   declarations: [
   
-    TestpostComponent
+    TestpostComponent,
+    TpActionComponent
   ],
   imports: [
     TestpostsRoutingModule,

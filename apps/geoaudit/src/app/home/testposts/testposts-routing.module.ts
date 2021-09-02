@@ -6,6 +6,7 @@ import { AuthGuard } from '../../guards';
 import { NotesComponent } from '../notes/notes.component';
 import { SearchComponent } from '../search/search.component';
 import { TestpostComponent } from './testpost/testpost.component';
+import { TpActionComponent } from './tp-action/tp-action.component';
 
 const routes: Routes = [
     { 
@@ -39,6 +40,10 @@ const routes: Routes = [
 
     {
         path: ':id/notes', component: NotesComponent
+    },
+
+    {
+        path: ':id/tp_action/:action_id', component: TpActionComponent
     },
 
     // otherwise redirect to home

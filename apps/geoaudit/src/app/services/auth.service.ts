@@ -16,6 +16,10 @@ export class AuthService {
         private router: Router,
         private http: HttpClient
     ) {
+        /*const auth = {
+            "user": "satham@hexagonsupport.com"
+        }
+        localStorage.setItem('auth', JSON.stringify(auth));*/
         this.authSubject = new BehaviorSubject<Auth>(JSON.parse(localStorage.getItem('auth')));
         this.auth = this.authSubject.asObservable();
     }
