@@ -32,6 +32,9 @@
 					"status": "Status",
 					"new_status": "New status",
 					"actions": "Actions"
+				},
+				"abriox_action": {
+					"title": "Abriox Action"
 				}
 			},
 			"approval": {
