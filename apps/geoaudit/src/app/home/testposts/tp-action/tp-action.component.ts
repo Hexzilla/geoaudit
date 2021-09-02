@@ -66,6 +66,8 @@ export class TpActionComponent implements OnInit, AfterViewInit {
    */
   submitted = false;
 
+  public tp_action: TpAction = null;
+
   public selectedTabIndex = 0;
 
   constructor(

@@ -20,7 +20,7 @@ import {
   MarkerColours,
   Survey,
   Testpost,
-  TpAction,
+  TrAction,
   Status,
 } from '../../../models';
 import {
@@ -65,6 +65,8 @@ export class TrActionComponent implements OnInit, AfterViewInit {
    * Whether the form has been submitted.
    */
   submitted = false;
+
+  public tr_action: TrAction = null;
 
   public selectedTabIndex = 0;
 

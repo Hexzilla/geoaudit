@@ -63,234 +63,236 @@
           </div>
         </mat-expansion-panel>
 
-        <!--Reading-->
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
-            <mat-panel-title>{{
-              'CONTAINERS.home.testposts.tp_action.reading' | translate
-            }}</mat-panel-title>
-          </mat-expansion-panel-header>
-          <div fxLayout="row" fxLayoutAlign="space-between">
-            <mat-form-field appearance="outline" class="fx-col-6">
-              <mat-label>{{
-                'CONTAINERS.home.trs.tr_action.reading.volt' | translate
-              }}</mat-label>
-              <input
-                matInput
-                [placeholder]="
-                  'CONTAINERS.home.trs.tr_action.reading.volt' | translate
-                "
-                type="number"
-                formControlName="reading_volt"
-                class="form-control"
-              />
-            </mat-form-field>
-            <mat-form-field appearance="outline" class="fx-col-6">
-              <mat-label>{{
-                'CONTAINERS.home.trs.tr_action.reading.amps' | translate
-              }}</mat-label>
-              <input
-                matInput
-                [placeholder]="
-                  'CONTAINERS.home.trs.tr_action.reading.amps' | translate
-                "
-                type="number"
-                formControlName="reading_amps"
-                class="form-control"
-              />
-            </mat-form-field>
-          </div>
-          <div fxLayout="column">
-            <mat-form-field appearance="outline">
-              <mat-label>{{
-                'CONTAINERS.home.trs.tr_action.reading.current_setting' | translate
-              }}</mat-label>
-              <input
-                matInput
-                [placeholder]="
-                  'CONTAINERS.home.trs.tr_action.reading.current_setting' | translate
-                "
-                type="number"
-                formControlName="current_setting"
-                class="form-control"
-              />
-            </mat-form-field>
-          </div>
-          <!--Anodes-->
-          <h3>{{'CONTAINERS.home.testposts.tp_action.anodes_title' | translate}}
-          </h3>
-          <div fxLayout="row" fxLayoutAlign="space-between">
-            <mat-form-field appearance="outline" class="fx-col-6">
-              <mat-label>{{
-                'CONTAINERS.home.testposts.tp_action.anodes_off' | translate
-              }}</mat-label>
-              <input
-                matInput
-                [placeholder]="
-                  'CONTAINERS.home.testposts.tp_action.anodes_off' | translate
-                "
-                type="number"
-                formControlName="anodes_off"
-                class="form-control"
-              />
-            </mat-form-field>
-            <mat-form-field appearance="outline" class="fx-col-6">
-              <mat-label>{{
-                'CONTAINERS.home.testposts.tp_action.anodes_current' | translate
-              }}</mat-label>
-              <input
-                matInput
-                [placeholder]="
-                  'CONTAINERS.home.testposts.tp_action.anodes_current'
-                    | translate
-                "
-                type="number"
-                formControlName="anodes_current"
-                class="form-control"
-              />
-            </mat-form-field>
-          </div>
-          <div class="tp-bottom">
-            <button
-              mat-icon-button
-              color="accent"
-              aria-label="add icon button"
-              inline="true"
-            >
-              <mat-icon>add_circle_outline</mat-icon>
-            </button>
-          </div>
-        </mat-expansion-panel>
-
-        <!--Current Drain-->
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
-            <mat-panel-title>{{
-              'CONTAINERS.home.testposts.tp_action.current_drain.title' | translate
-            }}</mat-panel-title>
-          </mat-expansion-panel-header>
-          <h3>{{'CONTAINERS.home.testposts.tp_action.current_drain.title'| translate}}</h3>
-          <div>
+        <div *ngIf="tr_action && tr_action.tr!=null">
+          <!--Reading-->
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>{{
+                'CONTAINERS.home.testposts.tp_action.reading' | translate
+              }}</mat-panel-title>
+            </mat-expansion-panel-header>
             <div fxLayout="row" fxLayoutAlign="space-between">
               <mat-form-field appearance="outline" class="fx-col-6">
                 <mat-label>{{
-                  'CONTAINERS.home.testposts.tp_action.current_drain.input_v'
-                    | translate
+                  'CONTAINERS.home.trs.tr_action.reading.volt' | translate
                 }}</mat-label>
                 <input
                   matInput
                   [placeholder]="
+                    'CONTAINERS.home.trs.tr_action.reading.volt' | translate
+                  "
+                  type="number"
+                  formControlName="reading_volt"
+                  class="form-control"
+                />
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="fx-col-6">
+                <mat-label>{{
+                  'CONTAINERS.home.trs.tr_action.reading.amps' | translate
+                }}</mat-label>
+                <input
+                  matInput
+                  [placeholder]="
+                    'CONTAINERS.home.trs.tr_action.reading.amps' | translate
+                  "
+                  type="number"
+                  formControlName="reading_amps"
+                  class="form-control"
+                />
+              </mat-form-field>
+            </div>
+            <div fxLayout="column">
+              <mat-form-field appearance="outline">
+                <mat-label>{{
+                  'CONTAINERS.home.trs.tr_action.reading.current_setting' | translate
+                }}</mat-label>
+                <input
+                  matInput
+                  [placeholder]="
+                    'CONTAINERS.home.trs.tr_action.reading.current_setting' | translate
+                  "
+                  type="number"
+                  formControlName="current_setting"
+                  class="form-control"
+                />
+              </mat-form-field>
+            </div>
+            <!--Anodes-->
+            <h3>{{'CONTAINERS.home.testposts.tp_action.anodes_title' | translate}}
+            </h3>
+            <div fxLayout="row" fxLayoutAlign="space-between">
+              <mat-form-field appearance="outline" class="fx-col-6">
+                <mat-label>{{
+                  'CONTAINERS.home.testposts.tp_action.anodes_off' | translate
+                }}</mat-label>
+                <input
+                  matInput
+                  [placeholder]="
+                    'CONTAINERS.home.testposts.tp_action.anodes_off' | translate
+                  "
+                  type="number"
+                  formControlName="anodes_off"
+                  class="form-control"
+                />
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="fx-col-6">
+                <mat-label>{{
+                  'CONTAINERS.home.testposts.tp_action.anodes_current' | translate
+                }}</mat-label>
+                <input
+                  matInput
+                  [placeholder]="
+                    'CONTAINERS.home.testposts.tp_action.anodes_current'
+                      | translate
+                  "
+                  type="number"
+                  formControlName="anodes_current"
+                  class="form-control"
+                />
+              </mat-form-field>
+            </div>
+            <div class="tp-bottom">
+              <button
+                mat-icon-button
+                color="accent"
+                aria-label="add icon button"
+                inline="true"
+              >
+                <mat-icon>add_circle_outline</mat-icon>
+              </button>
+            </div>
+          </mat-expansion-panel>
+
+          <!--Current Drain-->
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>{{
+                'CONTAINERS.home.testposts.tp_action.current_drain.title' | translate
+              }}</mat-panel-title>
+            </mat-expansion-panel-header>
+            <h3>{{'CONTAINERS.home.testposts.tp_action.current_drain.title'| translate}}</h3>
+            <div>
+              <div fxLayout="row" fxLayoutAlign="space-between">
+                <mat-form-field appearance="outline" class="fx-col-6">
+                  <mat-label>{{
                     'CONTAINERS.home.testposts.tp_action.current_drain.input_v'
                       | translate
-                  "
-                  type="number"
-                  formControlName="cd_input_v"
-                  class="form-control"
-                />
-              </mat-form-field>
-              <mat-form-field appearance="outline" class="fx-col-6">
-                <mat-label>{{
-                  'CONTAINERS.home.testposts.tp_action.current_drain.input_a'
-                    | translate
-                }}</mat-label>
-                <input
-                  matInput
-                  [placeholder]="
+                  }}</mat-label>
+                  <input
+                    matInput
+                    [placeholder]="
+                      'CONTAINERS.home.testposts.tp_action.current_drain.input_v'
+                        | translate
+                    "
+                    type="number"
+                    formControlName="cd_input_v"
+                    class="form-control"
+                  />
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="fx-col-6">
+                  <mat-label>{{
                     'CONTAINERS.home.testposts.tp_action.current_drain.input_a'
                       | translate
-                  "
-                  type="number"
-                  formControlName="cd_input_a"
-                  class="form-control"
-                />
-              </mat-form-field>
-            </div>
-            <div fxLayout="row" fxLayoutAlign="space-between">
-              <mat-form-field appearance="outline" class="fx-col-6">
-                <mat-label>{{
-                  'CONTAINERS.home.testposts.tp_action.current_drain.output_v'
-                    | translate
-                }}</mat-label>
-                <input
-                  matInput
-                  [placeholder]="
+                  }}</mat-label>
+                  <input
+                    matInput
+                    [placeholder]="
+                      'CONTAINERS.home.testposts.tp_action.current_drain.input_a'
+                        | translate
+                    "
+                    type="number"
+                    formControlName="cd_input_a"
+                    class="form-control"
+                  />
+                </mat-form-field>
+              </div>
+              <div fxLayout="row" fxLayoutAlign="space-between">
+                <mat-form-field appearance="outline" class="fx-col-6">
+                  <mat-label>{{
                     'CONTAINERS.home.testposts.tp_action.current_drain.output_v'
                       | translate
-                  "
-                  type="number"
-                  formControlName="cd_output_v"
-                  class="form-control"
-                />
-              </mat-form-field>
-              <mat-form-field appearance="outline" class="fx-col-6">
+                  }}</mat-label>
+                  <input
+                    matInput
+                    [placeholder]="
+                      'CONTAINERS.home.testposts.tp_action.current_drain.output_v'
+                        | translate
+                    "
+                    type="number"
+                    formControlName="cd_output_v"
+                    class="form-control"
+                  />
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="fx-col-6">
+                  <mat-label>{{
+                    'CONTAINERS.home.testposts.tp_action.current_drain.output_a'
+                      | translate
+                  }}</mat-label>
+                  <input
+                    matInput
+                    [placeholder]="
+                      'CONTAINERS.home.testposts.tp_action.current_drain.output_a'
+                        | translate
+                    "
+                    type="number"
+                    formControlName="cd_output_a"
+                    class="form-control"
+                  />
+                </mat-form-field>
+              </div>
+              <div class="tp-bottom">
+                <button
+                  mat-icon-button
+                  color="accent"
+                  aria-label="add icon button"
+                  inline="true"
+                >
+                  <mat-icon>add_circle_outline</mat-icon>
+                </button>
+              </div>
+            </div>
+          </mat-expansion-panel>
+
+          <!--Fault Details-->
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>{{
+                'CONTAINERS.home.testposts.tp_action.fault.title' | translate
+              }}</mat-panel-title>
+            </mat-expansion-panel-header>
+            <div fxLayout="column">
+              <mat-form-field appearance="outline">
                 <mat-label>{{
-                  'CONTAINERS.home.testposts.tp_action.current_drain.output_a'
-                    | translate
+                  'CONTAINERS.home.testposts.tp_action.fault.type' | translate
                 }}</mat-label>
                 <input
                   matInput
                   [placeholder]="
-                    'CONTAINERS.home.testposts.tp_action.current_drain.output_a'
-                      | translate
+                    'CONTAINERS.home.testposts.tp_action.fault.type' | translate
                   "
-                  type="number"
-                  formControlName="cd_output_a"
+                  formControlName="fault_type"
                   class="form-control"
                 />
               </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>{{
+                  'CONTAINERS.home.notes.description' | translate
+                }}</mat-label>
+                <textarea matInput formControlName="fault_desc"></textarea>
+              </mat-form-field>
+              <div class="tp-bottom">
+                <button
+                  mat-icon-button
+                  color="accent"
+                  aria-label="add icon button"
+                  inline="true"
+                >
+                  <mat-icon>add_circle_outline</mat-icon>
+                </button>
+              </div>
             </div>
-            <div class="tp-bottom">
-              <button
-                mat-icon-button
-                color="accent"
-                aria-label="add icon button"
-                inline="true"
-              >
-                <mat-icon>add_circle_outline</mat-icon>
-              </button>
-            </div>
-          </div>
-        </mat-expansion-panel>
-
-        <!--Fault Details-->
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
-            <mat-panel-title>{{
-              'CONTAINERS.home.testposts.tp_action.fault.title' | translate
-            }}</mat-panel-title>
-          </mat-expansion-panel-header>
-          <div fxLayout="column">
-            <mat-form-field appearance="outline">
-              <mat-label>{{
-                'CONTAINERS.home.testposts.tp_action.fault.type' | translate
-              }}</mat-label>
-              <input
-                matInput
-                [placeholder]="
-                  'CONTAINERS.home.testposts.tp_action.fault.type' | translate
-                "
-                formControlName="fault_type"
-                class="form-control"
-              />
-            </mat-form-field>
-            <mat-form-field appearance="outline">
-              <mat-label>{{
-                'CONTAINERS.home.notes.description' | translate
-              }}</mat-label>
-              <textarea matInput formControlName="fault_desc"></textarea>
-            </mat-form-field>
-            <div class="tp-bottom">
-              <button
-                mat-icon-button
-                color="accent"
-                aria-label="add icon button"
-                inline="true"
-              >
-                <mat-icon>add_circle_outline</mat-icon>
-              </button>
-            </div>
-          </div>
-        </mat-expansion-panel>
+          </mat-expansion-panel>
+        </div>
       </form>
     </mat-card-content>
   </mat-tab>
