@@ -255,6 +255,7 @@
 					"title": "Testpost Action {{placeholder}}",
 					"date": "Date",
 					"condition": "Condition",
+					"reading": "Reading",
 					"pipe_title": "Pipe",
 					"pipe_on": "pipe_on",
 					"pipe_off": "pipe_off",
@@ -277,8 +278,13 @@
 						"current_ac": "coupon_current_ac",
 						"current_dc": "coupon_current_dc"
 					},
-					"current_domain": {
-						"title": "Current Domain",
+					"others": {
+						"title": "Others",
+						"reedswitch": "Reedswitch Quantity",
+						"refcell": "Reference Cell"
+					},
+					"current_drain": {
+						"title": "Current Drain",
 						"input_v": "Cd_input_v",
 						"input_a": "Cd_input_a",
 						"output_v": "Cd_output_v",

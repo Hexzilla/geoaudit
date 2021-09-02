@@ -107,6 +107,8 @@ export class TpActionComponent implements OnInit, AfterViewInit {
       coupon_off: null,
       coupon_current_ac: null,
       coupon_current_dc: null,
+      others_reedswitch: null,
+      others_refcell: null,
       cd_input_v: null,
       cd_input_a: null,
       cd_output_v: null,
