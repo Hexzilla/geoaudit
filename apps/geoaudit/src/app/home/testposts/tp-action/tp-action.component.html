@@ -80,6 +80,7 @@
         </mat-form-field>
 
         <!--Anodes-->
+        <h2>{{'CONTAINERS.home.testposts.tp_action.anodes_title' | translate}}</h2>
         <mat-form-field appearance="outline">
           <mat-label>{{
             'CONTAINERS.home.testposts.tp_action.anodes_on' | translate
@@ -121,6 +122,7 @@
         </mat-form-field>
 
         <!--Dead-->
+        <h2>{{'CONTAINERS.home.testposts.tp_action.dead_title' | translate}}</h2>
         <mat-form-field appearance="outline">
           <mat-label>{{
             'CONTAINERS.home.testposts.tp_action.dead_on' | translate
@@ -162,6 +164,7 @@
         </mat-form-field>
 
         <!--Sleeve-->
+        <h2>{{'CONTAINERS.home.testposts.tp_action.sleeve_title' | translate}}</h2>
         <mat-form-field appearance="outline">
           <mat-label>{{
             'CONTAINERS.home.testposts.tp_action.sleeve_on' | translate
@@ -203,14 +206,15 @@
         </mat-form-field>
 
         <!--Coupon-->
+        <h2>{{'CONTAINERS.home.testposts.tp_action.coupon.title' | translate}}</h2>
         <mat-form-field appearance="outline">
           <mat-label>{{
-            'CONTAINERS.home.testposts.tp_action.coupon_on' | translate
+            'CONTAINERS.home.testposts.tp_action.coupon.on' | translate
           }}</mat-label>
           <input
             matInput
             [placeholder]="
-              'CONTAINERS.home.testposts.tp_action.coupon_on' | translate
+              'CONTAINERS.home.testposts.tp_action.coupon.on' | translate
             "
             formControlName="coupon_on"
             class="form-control"
@@ -218,12 +222,12 @@
         </mat-form-field>
         <mat-form-field appearance="outline">
           <mat-label>{{
-            'CONTAINERS.home.testposts.tp_action.coupon_off' | translate
+            'CONTAINERS.home.testposts.tp_action.coupon.off' | translate
           }}</mat-label>
           <input
             matInput
             [placeholder]="
-              'CONTAINERS.home.testposts.tp_action.coupon_off' | translate
+              'CONTAINERS.home.testposts.tp_action.coupon.off' | translate
             "
             formControlName="coupon_off"
             class="form-control"
@@ -231,12 +235,12 @@
         </mat-form-field>
         <mat-form-field appearance="outline">
           <mat-label>{{
-            'CONTAINERS.home.testposts.tp_action.coupon_current_ac' | translate
+            'CONTAINERS.home.testposts.tp_action.coupon.current_ac' | translate
           }}</mat-label>
           <input
             matInput
             [placeholder]="
-              'CONTAINERS.home.testposts.tp_action.coupon_current_ac' | translate
+              'CONTAINERS.home.testposts.tp_action.coupon.current_ac' | translate
             "
             formControlName="coupon_current_ac"
             class="form-control"
@@ -244,12 +248,12 @@
         </mat-form-field>
         <mat-form-field appearance="outline">
           <mat-label>{{
-            'CONTAINERS.home.testposts.tp_action.coupon_current_dc' | translate
+            'CONTAINERS.home.testposts.tp_action.coupon.current_dc' | translate
           }}</mat-label>
           <input
             matInput
             [placeholder]="
-              'CONTAINERS.home.testposts.tp_action.coupon_current_dc' | translate
+              'CONTAINERS.home.testposts.tp_action.coupon.current_dc' | translate
             "
             formControlName="coupon_current_dc"
             class="form-control"
@@ -257,6 +261,7 @@
         </mat-form-field>
 
         <!--Current Drain-->
+        <h2>{{'CONTAINERS.home.testposts.tp_action.current_domain.title' | translate}}</h2>
         <mat-form-field appearance="outline">
           <mat-label>{{
             'CONTAINERS.home.testposts.tp_action.current_domain.input_v' | translate
@@ -310,35 +315,37 @@
           />
         </mat-form-field>
 
-        <!--Assert Information-->
+        <!--Asset Information-->
+        <h2>{{'CONTAINERS.home.testposts.tp_action.asset.title' | translate}}</h2>
         <mat-form-field appearance="outline">
           <mat-label>{{
-            'CONTAINERS.home.testposts.tp_action.assert.pipe_depth' | translate
+            'CONTAINERS.home.testposts.tp_action.asset.pipe_depth' | translate
           }}</mat-label>
           <input
             matInput
             [placeholder]="
-              'CONTAINERS.home.testposts.tp_action.assert.pipe_depth' | translate
+              'CONTAINERS.home.testposts.tp_action.asset.pipe_depth' | translate
             "
-            formControlName="assert_pipe_depth"
+            formControlName="asset_pipe_depth"
             class="form-control"
           />
         </mat-form-field>
         <mat-form-field appearance="outline">
           <mat-label>{{
-            'CONTAINERS.home.testposts.tp_action.assert.reinstatement' | translate
+            'CONTAINERS.home.testposts.tp_action.asset.reinstatement' | translate
           }}</mat-label>
           <input
             matInput
             [placeholder]="
-              'CONTAINERS.home.testposts.tp_action.assert.reinstatement' | translate
+              'CONTAINERS.home.testposts.tp_action.asset.reinstatement' | translate
             "
-            formControlName="assert_reinstatement"
+            formControlName="asset_reinstatement"
             class="form-control"
           />
         </mat-form-field>
 
         <!--Fault Details-->
+        <h2>{{'CONTAINERS.home.testposts.tp_action.fault.title' | translate}}</h2>
         <mat-form-field appearance="outline">
           <mat-label>{{
             'CONTAINERS.home.testposts.tp_action.fault.type' | translate
@@ -399,3 +406,27 @@
     </mat-card-content>
   </mat-tab>
 </mat-tab-group>
+
+
+<div fxLayout="row-reverse" fxLayoutAlign="space-between" class="button-area">
+  <div class="button-wrapper">
+    <button *ngIf="selectedTabIndex != 3" mat-icon-button color="accent" (click)="selectedIndexChange(selectedTabIndex + 1)" class="btn-arrow">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+  </div>
+  
+  <button
+    mat-flat-button
+    color="primary"
+    (click)="submit()"
+    type="submit"
+    class="btn-submit"
+  >
+    {{ 'CONTAINERS.home.jobs.job.form.save' | translate }}
+  </button>
+  <div class="button-wrapper">
+    <button *ngIf="selectedTabIndex != 0" mat-icon-button color="accent" (click)="selectedIndexChange(selectedTabIndex - 1)" class="btn-arrow">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+  </div>
+</div>

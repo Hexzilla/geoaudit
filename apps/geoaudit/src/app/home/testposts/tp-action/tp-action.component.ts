@@ -111,8 +111,8 @@ export class TpActionComponent implements OnInit, AfterViewInit {
       cd_input_a: null,
       cd_output_v: null,
       cd_output_a: null,
-      assert_pipe_depth: null,
-      assert_reinstatement: null,
+      asset_pipe_depth: null,
+      asset_reinstatement: null,
       fault_type: null,
       fault_desc: null,
     });
