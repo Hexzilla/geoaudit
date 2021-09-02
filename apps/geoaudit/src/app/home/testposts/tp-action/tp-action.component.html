@@ -1,11 +1,401 @@
 <geoaudit-sidebar-header
-  title="CONTAINERS.home.testposts.testpost.title"
-  [placeholder]="form?.value?.reference"
+  title="CONTAINERS.home.testposts.tp_action.title"
+  [placeholder]=""
 >
-  <!-- <mat-icon
-    *ngIf="true"
-    style="background-color: #0074d9; color: #0074d9; border-radius: 15px"
-    >radio_button_unchecked</mat-icon
-  > -->
-  <geoaudit-icon [visible]="true" [color]="getLatestConditionColour()" icon="radio_button_unchecked"></geoaudit-icon>
+  <mat-form-field appearance="outline">
+    <mat-label>{{ 'CONTAINERS.home.jobs.job.status' | translate }}</mat-label>
+    <mat-select
+      statusControlName="status"
+      name="status"
+      [(value)]="currentState"
+    >
+      <mat-option *ngFor="let status of statuses" [value]="status.id">
+        {{ 'STATUSES.' + status.name | translate }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
 </geoaudit-sidebar-header>
+
+<mat-tab-group
+  mat-align-tabs="start"
+  (selectedIndexChange)="selectedIndexChange($event)"
+  [(selectedIndex)]="selectedTabIndex"
+  class="tab-body-height"
+>
+  <!-- Details -->
+  <mat-tab [label]="'CONTAINERS.home.jobs.job.steps.details' | translate">
+    <mat-card-content class="mt-26">
+      <form fxLayout="column" [formGroup]="form" (ngSubmit)="submit()">
+        <mat-form-field appearance="outline">
+          <mat-label>{{
+            'CONTAINERS.home.testposts.tp_action.date' | translate
+          }}</mat-label>
+          <input
+            matInput
+            [placeholder]="'CONTAINERS.home.testposts.tp_action.date' | translate"
+            formControlName="date"
+            class="form-control"
+          />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>{{
+            'CONTAINERS.home.testposts.tp_action.condition' | translate
+          }}</mat-label>
+          <input
+            matInput
+            [placeholder]="
+              'CONTAINERS.home.testposts.tp_action.condition' | translate
+            "
+            formControlName="condition"
+            class="form-control"
+          />
+        </mat-form-field>
+
+        <!--Pipe-->
+        <mat-form-field appearance="outline">
+          <mat-label>{{
+            'CONTAINERS.home.testposts.tp_action.pipe_on' | translate
+          }}</mat-label>
+          <input
+            matInput
+            [placeholder]="
+              'CONTAINERS.home.testposts.tp_action.pipe_on' | translate
+            "
+            formControlName="pipe_on"
+            class="form-control"
+          />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>{{
+            'CONTAINERS.home.testposts.tp_action.pipe_off' | translate
+          }}</mat-label>
+          <input
+            matInput
+            [placeholder]="
+              'CONTAINERS.home.testposts.tp_action.pipe_off' | translate
+            "
+            formControlName="pipe_off"
+            class="form-control"
+          />
+        </mat-form-field>
+
+        <!--Anodes-->
+        <mat-form-field appearance="outline">
+          <mat-label>{{
+            'CONTAINERS.home.testposts.tp_action.anodes_on' | translate
+          }}</mat-label>
+          <input
+            matInput
+            [placeholder]="
+              'CONTAINERS.home.testposts.tp_action.anodes_on' | translate
+            "
+            formControlName="anodes_on"
+            class="form-control"
+          />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>{{
+            'CONTAINERS.home.testposts.tp_action.anodes_off' | translate
+          }}</mat-label>
+          <input
+            matInput
+            [placeholder]="
+              'CONTAINERS.home.testposts.tp_action.anodes_off' | translate
+            "
+            formControlName="anodes_off"
+            class="form-control"
+          />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>{{
+            'CONTAINERS.home.testposts.tp_action.anodes_current' | translate
+          }}</mat-label>
+          <input
+            matInput
+            [placeholder]="
+              'CONTAINERS.home.testposts.tp_action.anodes_current' | translate
+            "
+            formControlName="anodes_current"
+            class="form-control"
+          />
+        </mat-form-field>
+
+        <!--Dead-->
+        <mat-form-field appearance="outline">
+          <mat-label>{{
+            'CONTAINERS.home.testposts.tp_action.dead_on' | translate
+          }}</mat-label>
+          <input
+            matInput
+            [placeholder]="
+              'CONTAINERS.home.testposts.tp_action.dead_on' | translate
+            "
+            formControlName="dead_on"
+            class="form-control"
+          />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>{{
+            'CONTAINERS.home.testposts.tp_action.dead_off' | translate
+          }}</mat-label>
+          <input
+            matInput
+            [placeholder]="
+              'CONTAINERS.home.testposts.tp_action.dead_off' | translate
+            "
+            formControlName="dead_off"
+            class="form-control"
+          />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>{{
+            'CONTAINERS.home.testposts.tp_action.dead_current' | translate
+          }}</mat-label>
+          <input
+            matInput
+            [placeholder]="
+              'CONTAINERS.home.testposts.tp_action.dead_current' | translate
+            "
+            formControlName="dead_current"
+            class="form-control"
+          />
+        </mat-form-field>
+
+        <!--Sleeve-->
+        <mat-form-field appearance="outline">
+          <mat-label>{{
+            'CONTAINERS.home.testposts.tp_action.sleeve_on' | translate
+          }}</mat-label>
+          <input
+            matInput
+            [placeholder]="
+              'CONTAINERS.home.testposts.tp_action.sleeve_on' | translate
+            "
+            formControlName="sleeve_on"
+            class="form-control"
+          />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>{{
+            'CONTAINERS.home.testposts.tp_action.sleeve_off' | translate
+          }}</mat-label>
+          <input
+            matInput
+            [placeholder]="
+              'CONTAINERS.home.testposts.tp_action.sleeve_off' | translate
+            "
+            formControlName="sleeve_off"
+            class="form-control"
+          />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>{{
+            'CONTAINERS.home.testposts.tp_action.sleeve_current' | translate
+          }}</mat-label>
+          <input
+            matInput
+            [placeholder]="
+              'CONTAINERS.home.testposts.tp_action.sleeve_current' | translate
+            "
+            formControlName="sleeve_current"
+            class="form-control"
+          />
+        </mat-form-field>
+
+        <!--Coupon-->
+        <mat-form-field appearance="outline">
+          <mat-label>{{
+            'CONTAINERS.home.testposts.tp_action.coupon_on' | translate
+          }}</mat-label>
+          <input
+            matInput
+            [placeholder]="
+              'CONTAINERS.home.testposts.tp_action.coupon_on' | translate
+            "
+            formControlName="coupon_on"
+            class="form-control"
+          />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>{{
+            'CONTAINERS.home.testposts.tp_action.coupon_off' | translate
+          }}</mat-label>
+          <input
+            matInput
+            [placeholder]="
+              'CONTAINERS.home.testposts.tp_action.coupon_off' | translate
+            "
+            formControlName="coupon_off"
+            class="form-control"
+          />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>{{
+            'CONTAINERS.home.testposts.tp_action.coupon_current_ac' | translate
+          }}</mat-label>
+          <input
+            matInput
+            [placeholder]="
+              'CONTAINERS.home.testposts.tp_action.coupon_current_ac' | translate
+            "
+            formControlName="coupon_current_ac"
+            class="form-control"
+          />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>{{
+            'CONTAINERS.home.testposts.tp_action.coupon_current_dc' | translate
+          }}</mat-label>
+          <input
+            matInput
+            [placeholder]="
+              'CONTAINERS.home.testposts.tp_action.coupon_current_dc' | translate
+            "
+            formControlName="coupon_current_dc"
+            class="form-control"
+          />
+        </mat-form-field>
+
+        <!--Current Drain-->
+        <mat-form-field appearance="outline">
+          <mat-label>{{
+            'CONTAINERS.home.testposts.tp_action.current_domain.input_v' | translate
+          }}</mat-label>
+          <input
+            matInput
+            [placeholder]="
+              'CONTAINERS.home.testposts.tp_action.current_domain.input_v' | translate
+            "
+            formControlName="cd_input_v"
+            class="form-control"
+          />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>{{
+            'CONTAINERS.home.testposts.tp_action.current_domain.input_a' | translate
+          }}</mat-label>
+          <input
+            matInput
+            [placeholder]="
+              'CONTAINERS.home.testposts.tp_action.current_domain.input_a' | translate
+            "
+            formControlName="cd_input_a"
+            class="form-control"
+          />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>{{
+            'CONTAINERS.home.testposts.tp_action.current_domain.output_v' | translate
+          }}</mat-label>
+          <input
+            matInput
+            [placeholder]="
+              'CONTAINERS.home.testposts.tp_action.current_domain.output_v' | translate
+            "
+            formControlName="cd_output_v"
+            class="form-control"
+          />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>{{
+            'CONTAINERS.home.testposts.tp_action.current_domain.output_a' | translate
+          }}</mat-label>
+          <input
+            matInput
+            [placeholder]="
+              'CONTAINERS.home.testposts.tp_action.current_domain.output_a' | translate
+            "
+            formControlName="cd_output_a"
+            class="form-control"
+          />
+        </mat-form-field>
+
+        <!--Assert Information-->
+        <mat-form-field appearance="outline">
+          <mat-label>{{
+            'CONTAINERS.home.testposts.tp_action.assert.pipe_depth' | translate
+          }}</mat-label>
+          <input
+            matInput
+            [placeholder]="
+              'CONTAINERS.home.testposts.tp_action.assert.pipe_depth' | translate
+            "
+            formControlName="assert_pipe_depth"
+            class="form-control"
+          />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>{{
+            'CONTAINERS.home.testposts.tp_action.assert.reinstatement' | translate
+          }}</mat-label>
+          <input
+            matInput
+            [placeholder]="
+              'CONTAINERS.home.testposts.tp_action.assert.reinstatement' | translate
+            "
+            formControlName="assert_reinstatement"
+            class="form-control"
+          />
+        </mat-form-field>
+
+        <!--Fault Details-->
+        <mat-form-field appearance="outline">
+          <mat-label>{{
+            'CONTAINERS.home.testposts.tp_action.fault.type' | translate
+          }}</mat-label>
+          <input
+            matInput
+            [placeholder]="
+              'CONTAINERS.home.testposts.tp_action.fault.type' | translate
+            "
+            formControlName="fault_type"
+            class="form-control"
+          />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>{{
+            'CONTAINERS.home.testposts.tp_action.fault.desc' | translate
+          }}</mat-label>
+          <input
+            matInput
+            [placeholder]="
+              'CONTAINERS.home.testposts.tp_action.fault.desc' | translate
+            "
+            formControlName="fault_desc"
+            class="form-control"
+          />
+        </mat-form-field>
+      </form>
+    </mat-card-content>
+  </mat-tab>
+
+  <!-- Attachments -->
+  <mat-tab [label]="'CONTAINERS.home.jobs.job.steps.attachments' | translate">
+    <mat-card-content>
+      <!-- <attachment-file-upload
+        label="CONTAINERS.home.jobs.job.attachments.images"
+        (preview)="onItemPreview($event)"
+        (upload)="onImageUpload($event)"
+        fileType="IMAGE"
+        [items] = "attachedImages"
+        [multiple]="true"
+      ></attachment-file-upload>
+
+      <attachment-file-upload
+        label="CONTAINERS.home.jobs.job.attachments.documents"
+        (preview)="onItemPreview($event)"
+        (upload)="onDocumentUpload($event)"
+        fileType="DOCUMENT"
+        [items] = "Documents"
+        [multiple]="true"
+      ></attachment-file-upload> -->
+    </mat-card-content>
+  </mat-tab>
+
+  <!-- Notes -->
+  <mat-tab [label]="'CONTAINERS.home.jobs.job.steps.notes' | translate">
+    <mat-card-content>
+      <geoaudit-notes></geoaudit-notes>
+    </mat-card-content>
+  </mat-tab>
+</mat-tab-group>

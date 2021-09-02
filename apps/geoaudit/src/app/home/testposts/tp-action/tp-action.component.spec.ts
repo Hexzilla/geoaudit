@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TestpostComponent } from './testpost.component';
+import { TpActionComponent } from './tp-action.component';
 
 describe('TestpostComponent', () => {
-  let component: TestpostComponent;
-  let fixture: ComponentFixture<TestpostComponent>;
+  let component: TpActionComponent;
+  let fixture: ComponentFixture<TpActionComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ TestpostComponent ]
+      declarations: [ TpActionComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TestpostComponent);
+    fixture = TestBed.createComponent(TpActionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
