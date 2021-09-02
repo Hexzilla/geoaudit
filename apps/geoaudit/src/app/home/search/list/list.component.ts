@@ -80,13 +80,19 @@ export class ListComponent implements OnInit {
     if (this.formdata.name) {
       where = {
         ...where,
-        name: '/' + this.formdata.name + '/',
+        name_ncontainss: this.formdata.name,
       };
     }
     if (this.formdata.reference) {
       where = {
         ...where,
-        reference: this.formdata.reference,
+        reference_ncontainss: this.formdata.reference,
+      };
+    }
+    if (this.formdata.address) {
+      where = {
+        ...where,
+        address_ncontainss: this.formdata.address,
       };
     }
     if (this.formdata.latCtrl) {
@@ -126,6 +132,10 @@ export class ListComponent implements OnInit {
       if (this.formdata.nearLocation) {
         this.nearLocationSort(res);
       } else {
+        if(this.formdata.lngCtrl && this.formdata.latCtrl)
+        {
+          this.selectionService.setLocation.emit({geometry:{lat:this.formdata.latCtrl, lng:this.formdata.lngCtrl}});
+        }
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
@@ -170,16 +180,16 @@ export class ListComponent implements OnInit {
   }
 
   haversine_distance(mkPositioin, myPosition) {
-    if (!mkPositioin.geometry) return 0;
-    var R = 3958.8; // Radius of the Earth in miles
-    var rlat1 = mkPositioin.geometry.lat * (Math.PI / 180); // Convert degrees to radians
-    var rlat2 = myPosition.coords.latitude * (Math.PI / 180); // Convert degrees to radians
-    var difflat = rlat2 - rlat1; // Radian difference (latitudes)
-    var difflon =
+    if (!mkPositioin.geometry) return;
+    let R = 3958.8; // Radius of the Earth in miles
+    let rlat1 = mkPositioin.geometry.lat * (Math.PI / 180); // Convert degrees to radians
+    let rlat2 = myPosition.coords.latitude * (Math.PI / 180); // Convert degrees to radians
+    let difflat = rlat2 - rlat1; // Radian difference (latitudes)
+    let difflon =
       (myPosition.coords.longitude - mkPositioin.geometry.lng) *
       (Math.PI / 180); // Radian difference (longitudes)
 
-    var d =
+    let d =
       2 *
       R *
       Math.asin(
