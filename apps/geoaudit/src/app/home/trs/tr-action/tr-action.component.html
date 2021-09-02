@@ -70,36 +70,48 @@
               'CONTAINERS.home.testposts.tp_action.reading' | translate
             }}</mat-panel-title>
           </mat-expansion-panel-header>
-          <!--Pipe-->
-          <h3>
-            {{ 'CONTAINERS.home.testposts.tp_action.pipe_title' | translate }}
-          </h3>
           <div fxLayout="row" fxLayoutAlign="space-between">
             <mat-form-field appearance="outline" class="fx-col-6">
               <mat-label>{{
-                'CONTAINERS.home.testposts.tp_action.pipe_on' | translate
+                'CONTAINERS.home.trs.tr_action.reading.volt' | translate
               }}</mat-label>
               <input
                 matInput
                 [placeholder]="
-                  'CONTAINERS.home.testposts.tp_action.pipe_on' | translate
+                  'CONTAINERS.home.trs.tr_action.reading.volt' | translate
                 "
                 type="number"
-                formControlName="pipe_on"
+                formControlName="reading_volt"
                 class="form-control"
               />
             </mat-form-field>
             <mat-form-field appearance="outline" class="fx-col-6">
               <mat-label>{{
-                'CONTAINERS.home.testposts.tp_action.pipe_off' | translate
+                'CONTAINERS.home.trs.tr_action.reading.amps' | translate
               }}</mat-label>
               <input
                 matInput
                 [placeholder]="
-                  'CONTAINERS.home.testposts.tp_action.pipe_off' | translate
+                  'CONTAINERS.home.trs.tr_action.reading.amps' | translate
                 "
                 type="number"
-                formControlName="pipe_off"
+                formControlName="reading_amps"
+                class="form-control"
+              />
+            </mat-form-field>
+          </div>
+          <div fxLayout="column">
+            <mat-form-field appearance="outline">
+              <mat-label>{{
+                'CONTAINERS.home.trs.tr_action.reading.current_setting' | translate
+              }}</mat-label>
+              <input
+                matInput
+                [placeholder]="
+                  'CONTAINERS.home.trs.tr_action.reading.current_setting' | translate
+                "
+                type="number"
+                formControlName="current_setting"
                 class="form-control"
               />
             </mat-form-field>
@@ -108,21 +120,7 @@
           <h3>{{'CONTAINERS.home.testposts.tp_action.anodes_title' | translate}}
           </h3>
           <div fxLayout="row" fxLayoutAlign="space-between">
-            <mat-form-field appearance="outline" class="fx-col-4">
-              <mat-label>{{
-                'CONTAINERS.home.testposts.tp_action.anodes_on' | translate
-              }}</mat-label>
-              <input
-                matInput
-                [placeholder]="
-                  'CONTAINERS.home.testposts.tp_action.anodes_on' | translate
-                "
-                type="number"
-                formControlName="anodes_on"
-                class="form-control"
-              />
-            </mat-form-field>
-            <mat-form-field appearance="outline" class="fx-col-4">
+            <mat-form-field appearance="outline" class="fx-col-6">
               <mat-label>{{
                 'CONTAINERS.home.testposts.tp_action.anodes_off' | translate
               }}</mat-label>
@@ -136,7 +134,7 @@
                 class="form-control"
               />
             </mat-form-field>
-            <mat-form-field appearance="outline" class="fx-col-4">
+            <mat-form-field appearance="outline" class="fx-col-6">
               <mat-label>{{
                 'CONTAINERS.home.testposts.tp_action.anodes_current' | translate
               }}</mat-label>
@@ -148,201 +146,6 @@
                 "
                 type="number"
                 formControlName="anodes_current"
-                class="form-control"
-              />
-            </mat-form-field>
-          </div>
-          <!--Dead-->
-          <h3>{{ 'CONTAINERS.home.testposts.tp_action.dead_title' | translate }}</h3>
-          <div fxLayout="row" fxLayoutAlign="space-between">
-            <mat-form-field appearance="outline" class="fx-col-4">
-              <mat-label>{{
-                'CONTAINERS.home.testposts.tp_action.dead_on' | translate
-              }}</mat-label>
-              <input
-                matInput
-                [placeholder]="
-                  'CONTAINERS.home.testposts.tp_action.dead_on' | translate
-                "
-                type="number"
-                formControlName="dead_on"
-                class="form-control"
-              />
-            </mat-form-field>
-            <mat-form-field appearance="outline" class="fx-col-4">
-              <mat-label>{{
-                'CONTAINERS.home.testposts.tp_action.dead_off' | translate
-              }}</mat-label>
-              <input
-                matInput
-                [placeholder]="
-                  'CONTAINERS.home.testposts.tp_action.dead_off' | translate
-                "
-                type="number"
-                formControlName="dead_off"
-                class="form-control"
-              />
-            </mat-form-field>
-            <mat-form-field appearance="outline" class="fx-col-4">
-              <mat-label>{{
-                'CONTAINERS.home.testposts.tp_action.dead_current' | translate
-              }}</mat-label>
-              <input
-                matInput
-                [placeholder]="
-                  'CONTAINERS.home.testposts.tp_action.dead_current' | translate
-                "
-                type="number"
-                formControlName="dead_current"
-                class="form-control"
-              />
-            </mat-form-field>
-          </div>
-          <!--Sleeve-->
-          <h3>{{'CONTAINERS.home.testposts.tp_action.sleeve_title' | translate}}</h3>
-          <div fxLayout="row" fxLayoutAlign="space-between">
-            <mat-form-field appearance="outline" class="fx-col-4">
-              <mat-label>{{
-                'CONTAINERS.home.testposts.tp_action.sleeve_on' | translate
-              }}</mat-label>
-              <input
-                matInput
-                [placeholder]="
-                  'CONTAINERS.home.testposts.tp_action.sleeve_on' | translate
-                "
-                type="number"
-                formControlName="sleeve_on"
-                class="form-control"
-              />
-            </mat-form-field>
-            <mat-form-field appearance="outline" class="fx-col-4">
-              <mat-label>{{
-                'CONTAINERS.home.testposts.tp_action.sleeve_off' | translate
-              }}</mat-label>
-              <input
-                matInput
-                [placeholder]="
-                  'CONTAINERS.home.testposts.tp_action.sleeve_off' | translate
-                "
-                type="number"
-                formControlName="sleeve_off"
-                class="form-control"
-              />
-            </mat-form-field>
-            <mat-form-field appearance="outline" class="fx-col-4">
-              <mat-label>{{
-                'CONTAINERS.home.testposts.tp_action.sleeve_current' | translate
-              }}</mat-label>
-              <input
-                matInput
-                [placeholder]="
-                  'CONTAINERS.home.testposts.tp_action.sleeve_current'
-                    | translate
-                "
-                formControlName="sleeve_current"
-                class="form-control"
-              />
-            </mat-form-field>
-          </div>
-          <!--Coupon-->
-          <h3>{{'CONTAINERS.home.testposts.tp_action.coupon.title' | translate}}</h3>
-          <div>
-            <div fxLayout="row" fxLayoutAlign="space-between">
-              <mat-form-field appearance="outline" class="fx-col-6">
-                <mat-label>{{
-                  'CONTAINERS.home.testposts.tp_action.coupon.on' | translate
-                }}</mat-label>
-                <input
-                  matInput
-                  [placeholder]="
-                    'CONTAINERS.home.testposts.tp_action.coupon.on' | translate
-                  "
-                  type="number"
-                  formControlName="coupon_on"
-                  class="form-control"
-                />
-              </mat-form-field>
-              <mat-form-field appearance="outline" class="fx-col-6">
-                <mat-label>{{
-                  'CONTAINERS.home.testposts.tp_action.coupon.off' | translate
-                }}</mat-label>
-                <input
-                  matInput
-                  [placeholder]="
-                    'CONTAINERS.home.testposts.tp_action.coupon.off' | translate
-                  "
-                  type="number"
-                  formControlName="coupon_off"
-                  class="form-control"
-                />
-              </mat-form-field>
-            </div>
-            <div fxLayout="row" fxLayoutAlign="space-between">
-              <mat-form-field appearance="outline" class="fx-col-6">
-                <mat-label>{{
-                  'CONTAINERS.home.testposts.tp_action.coupon.current_ac'
-                    | translate
-                }}</mat-label>
-                <input
-                  matInput
-                  [placeholder]="
-                    'CONTAINERS.home.testposts.tp_action.coupon.current_ac'
-                      | translate
-                  "
-                  type="number"
-                  formControlName="coupon_current_ac"
-                  class="form-control"
-                />
-              </mat-form-field>
-              <mat-form-field appearance="outline" class="fx-col-6">
-                <mat-label>{{
-                  'CONTAINERS.home.testposts.tp_action.coupon.current_dc'
-                    | translate
-                }}</mat-label>
-                <input
-                  matInput
-                  [placeholder]="
-                    'CONTAINERS.home.testposts.tp_action.coupon.current_dc'
-                      | translate
-                  "
-                  type="number"
-                  formControlName="coupon_current_dc"
-                  class="form-control"
-                />
-              </mat-form-field>
-            </div>
-          </div>
-
-          <!--Others-->
-          <h3>{{'CONTAINERS.home.testposts.tp_action.others.title' | translate}}</h3>
-          <div fxLayout="row" fxLayoutAlign="space-between">
-            <mat-form-field appearance="outline" class="fx-col-6">
-              <mat-label>{{
-                'CONTAINERS.home.testposts.tp_action.others.reedswitch'
-                  | translate
-              }}</mat-label>
-              <input
-                matInput
-                [placeholder]="
-                  'CONTAINERS.home.testposts.tp_action.others.reedswitch'
-                    | translate
-                "
-                type="number"
-                formControlName="others_reedswitch"
-                class="form-control"
-              />
-            </mat-form-field>
-            <mat-form-field appearance="outline" class="fx-col-6">
-              <mat-label>{{
-                'CONTAINERS.home.testposts.tp_action.others.refcell' | translate
-              }}</mat-label>
-              <input
-                matInput
-                [placeholder]="
-                  'CONTAINERS.home.testposts.tp_action.others.refcell'
-                    | translate
-                "
-                formControlName="others_refcell"
                 class="form-control"
               />
             </mat-form-field>
@@ -429,47 +232,7 @@
           </div>
         </mat-expansion-panel>
 
-        <!--Asset Information-->
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
-            <mat-panel-title>{{
-              'CONTAINERS.home.testposts.tp_action.asset.title' | translate
-            }}</mat-panel-title>
-          </mat-expansion-panel-header>
-          <div fxLayout="column">
-            <mat-form-field appearance="outline">
-              <mat-label>{{
-                'CONTAINERS.home.testposts.tp_action.asset.pipe_depth' | translate
-              }}</mat-label>
-              <input
-                matInput
-                [placeholder]="
-                  'CONTAINERS.home.testposts.tp_action.asset.pipe_depth' | translate
-                "
-                type="number"
-                formControlName="asset_pipe_depth"
-                class="form-control"
-              />
-            </mat-form-field>
-            <mat-form-field appearance="outline">
-              <mat-label>{{
-                'CONTAINERS.home.testposts.tp_action.asset.reinstatement'
-                  | translate
-              }}</mat-label>
-              <input
-                matInput
-                [placeholder]="
-                  'CONTAINERS.home.testposts.tp_action.asset.reinstatement'
-                    | translate
-                "
-                formControlName="asset_reinstatement"
-                class="form-control"
-              />
-            </mat-form-field>
-          </div>
-        </mat-expansion-panel>
-
-       <!--Fault Details-->
+        <!--Fault Details-->
         <mat-expansion-panel>
           <mat-expansion-panel-header>
             <mat-panel-title>{{

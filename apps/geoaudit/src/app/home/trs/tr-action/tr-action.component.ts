@@ -42,10 +42,10 @@ import { SurveyEntityService } from '../../../entity-services/survey-entity.serv
 
 @Component({
   selector: 'geoaudit-tp-action',
-  templateUrl: './tp-action.component.html',
-  styleUrls: ['./tp-action.component.scss'],
+  templateUrl: './tr-action.component.html',
+  styleUrls: ['./tr-action.component.scss'],
 })
-export class TpActionComponent implements OnInit, AfterViewInit {
+export class TrActionComponent implements OnInit, AfterViewInit {
   /**
    * The form consisting of the form fields.
    */
@@ -108,6 +108,9 @@ export class TpActionComponent implements OnInit, AfterViewInit {
     this.form = this.formBuilder.group({
       date: null,
       condition: null,
+      reading_volt: null,
+      reading_amps: null,
+      current_setting: null,
       pipe_on: null,
       pipe_off: null,
       anodes_on: null,

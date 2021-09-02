@@ -301,6 +301,22 @@
 						"desc": "Fault Description"
 					}
 				}
+			},
+			"trs": {
+				"tr_action": {
+					"reading": {
+						"title": "Reading",
+						"volt": "Volt",
+						"amps": "Amps",
+						"current_setting": "Current Setting",
+						"anodes": {
+							"title": "Anodes",
+							"subtitle": "Anode No. 1",
+							"anode_off": "Anode off",
+							"anode_current": "Anode current"
+						}
+					}
+				}
 			}
 		},
 		"survey": {
