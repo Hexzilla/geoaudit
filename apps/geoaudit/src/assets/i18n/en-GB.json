@@ -304,6 +304,7 @@
 			},
 			"trs": {
 				"tr_action": {
+					"title": "TR Action",
 					"reading": {
 						"title": "Reading",
 						"volt": "Volt",
