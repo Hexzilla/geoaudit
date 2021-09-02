@@ -2,7 +2,7 @@
     <mat-icon 
         *ngIf="!completed" 
         class="statusButton limegreen" 
-        (click)="onComplete.emit({ complete: true})"
+        (click)="complete()"
     >done</mat-icon>
     <mat-icon *ngIf="completed && isManager && !approved" class="statusButton limegreen">thumb_up</mat-icon>
     <mat-icon *ngIf="completed && isManager" class="statusButton crimson">clear</mat-icon>

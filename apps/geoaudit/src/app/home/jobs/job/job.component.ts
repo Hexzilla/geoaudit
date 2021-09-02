@@ -330,6 +330,7 @@ export class JobComponent implements OnInit, AfterViewInit {
 
         this.getUploadFiles();
         this.dataSource = new MatTableDataSource(surveys);
+        console.log("surveys", surveys)
       },
       (err) => {
       }
@@ -598,6 +599,7 @@ export class JobComponent implements OnInit, AfterViewInit {
     this.surveys = newSurveys;
 
     this.dataSource.data = newSurveys;
+    console.log("newSurveys", newSurveys)
 
     const ids = newSurveys.map((survey) => survey.id);
 

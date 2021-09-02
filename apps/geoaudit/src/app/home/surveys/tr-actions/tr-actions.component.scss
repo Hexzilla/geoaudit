@@ -1,0 +1,73 @@
+
+@mixin md-icon-size($size: 24px) {
+    font-size: $size;
+    height: $size;
+    width: $size;
+    line-height: $size;
+}
+
+.tp_action {
+    border: 1px solid #333;
+    padding: 8px;
+    margin: 8px;
+    display: flex;
+}
+
+.tp-title{
+    .main {
+        font-size: 16px;
+        margin: 0!important;
+    }
+    .sub {
+        font-size: 12px;
+        margin: 0!important;
+    }
+}
+
+.tp-mark-button{
+    color: #ffffff;
+    background-color: #8ac926;
+    margin-right: 20px;
+}
+
+.tp-delete-button{
+    color: #ED0000;
+    margin-right: 16px;
+}
+
+.tp-bottom {
+    text-align: center;
+    margin-top: 20px;
+
+    mat-icon {
+        color: #505050;
+        @include md-icon-size(36px);
+    }
+}
+
+.button-wrapper {
+    position: absolute;
+    width: 95%;
+    bottom: 16px;
+    z-index: 1;
+}
+
+.btn-submit{
+    width: 100%;
+}
+
+@media only screen and (max-width: 512px) {
+    .button-area {
+        position: absolute;
+        width: 92%;
+        bottom: 16px;
+        z-index: 1;
+    }
+}
+
+.approve-wrapper {
+    position: absolute;
+    right: 20px;
+    bottom: 62px;
+    z-index: 1;
+}

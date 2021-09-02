@@ -11,17 +11,18 @@ export class StatusButtonsComponent implements OnInit {
 
   @Input() completed: boolean;
   @Input() approved: boolean;
-  @Output() onComplete?: EventEmitter<any> = new EventEmitter();
-  @Output() approve?: EventEmitter<any> = new EventEmitter();
-  @Output() refuse?: EventEmitter<any> = new EventEmitter();
+  @Output() completeEvent?: EventEmitter<unknown> = new EventEmitter();
 
   constructor(private authService: AuthService) { 
   }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
+
   isManager() {
     return this.authService.authValue.user.role.name === Roles.MANAGER
   }
 
+  complete() {
+    this.completeEvent?.emit({ complete: true })
+  }
 }
