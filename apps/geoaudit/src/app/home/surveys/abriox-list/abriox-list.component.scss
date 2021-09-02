@@ -6,14 +6,12 @@
     line-height: $size;
 }
 
-.tp_action {
-    border: 1px solid #333;
-    padding: 8px;
-    margin: 8px;
-    display: flex;
+.abriox_wrapper{
+    text-align: center;
+    font-size: 16px;
 }
 
-.tp-title{
+.item-title {
     .main {
         font-size: 16px;
         margin: 0!important;
@@ -24,18 +22,18 @@
     }
 }
 
-.tp-mark-button{
+.mark-button{
     color: #ffffff;
     background-color: #8ac926;
     margin-right: 20px;
 }
 
-.tp-delete-button{
+.delete-button{
     color: #ED0000;
     margin-right: 16px;
 }
 
-.tp-bottom {
+.add-button {
     text-align: center;
     margin-top: 20px;
 

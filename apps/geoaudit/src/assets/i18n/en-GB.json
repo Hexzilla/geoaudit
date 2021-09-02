@@ -235,6 +235,7 @@
 				"abriox": "Abriox",
 				"resistivity": "Resistivity",
 				"comments": "Comments",
+				"abriox_list": "Abriox List",
 				"tp_action_list": "Testpost Action List",
 				"tr_action_list": "Testpost Action List",
 				"resistivity_list": "Resistivity List"
