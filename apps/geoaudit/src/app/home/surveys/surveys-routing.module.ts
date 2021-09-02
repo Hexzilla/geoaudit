@@ -4,6 +4,7 @@ import { NotesComponent } from '../notes/notes.component';
 import { SurveyComponent } from './survey/survey.component';
 
 import { SurveysComponent } from './surveys.component';
+import { AbrioxListComponent } from './abriox-list/abriox-list.component';
 import { TpActionsComponent } from './tp-actions/tp-actions.component';
 import { TrActionsComponent } from './tr-actions/tr-actions.component';
 import { ResistivityListComponent } from './resistivity-list/resistivity-list.component';
@@ -35,6 +36,9 @@ const routes: Routes = [
   },
   {
       path: ':id/drive', component: NotesComponent
+  },
+  {
+      path: ':id/abriox_list', component: AbrioxListComponent,
   },
   {
       path: ':id/tp_action_list', component: TpActionsComponent,
