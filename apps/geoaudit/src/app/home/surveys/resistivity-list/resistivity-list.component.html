@@ -1,0 +1,83 @@
+<geoaudit-sidebar-header title="CONTAINERS.home.survey.resistivity_list">
+</geoaudit-sidebar-header>
+
+<!-- <div class="tp_actions_wrapper">
+  <div class="tp_action" *ngFor="let item of tp_actions">
+    <div class="title">
+      <h3>{{item.testpost.name}}</h3>
+      <h4>{{getActionDate(item)}} - {{item.condition.name}}</h4>
+    </div>
+  </div>
+</div> -->
+
+<mat-card
+  *ngFor="let item of resistivities"
+  style="cursor: pointer; margin-top: 20px"
+  fxLayout="row"
+  fxLayoutAlign="space-between"
+>
+  <div class="tp-title">
+    <p class="main">{{ item.testpost.name }}</p>
+    <p class="sub">{{ getActionDate(item) }} - {{ item.condition.name }}</p>
+  </div>
+
+  <div fxLayout="row">
+    <button
+      *ngIf="item.status?.name == 'COMPLETED'"
+      mat-icon-button
+      color="#8AC926"
+      class="tp-mark-button"
+      aria-label="Example icon button with a plus one icon"
+    >
+      <mat-icon>done</mat-icon>
+    </button>
+
+    <button
+      mat-icon-button
+      color="accent"
+      aria-label="delete icon button"
+      class="tp-delete-button"
+      (click)="delete(item)"
+    >
+      <mat-icon>delete</mat-icon>
+    </button>
+
+    <button
+      mat-icon-button
+      color="accent"
+      aria-label="Example icon button with a plus one icon"
+      (click)="navigate(item)"
+    >
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+  </div>
+</mat-card>
+
+<div class="tp-bottom">
+  <button
+    mat-icon-button
+    color="accent"
+    aria-label="add icon button"
+    inline="true"
+    (click)="addAction()"
+  >
+    <mat-icon>add_circle_outline</mat-icon>
+  </button>
+</div>
+
+<div class="approve-wrapper" *ngIf="resistivities.length>0">
+  <geoaudit-status-buttons></geoaudit-status-buttons>
+</div>
+
+<div fxLayout="row-reverse" class="button-wrapper">
+  <button
+    mat-flat-button
+    fxFlexFill
+    color="primary"
+    (click)="submit()"
+    >
+    {{ 'CONTAINERS.home.jobs.job.form.save' | translate }}
+  </button>
+</div>
+  
+

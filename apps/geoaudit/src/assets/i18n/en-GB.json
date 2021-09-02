@@ -231,7 +231,10 @@
 				"tr": "Transformer Rectifier",
 				"abriox": "Abriox",
 				"resistivity": "Resistivity",
-				"comments": "Comments"
+				"comments": "Comments",
+				"tp_action_list": "Testpost Action List",
+				"tr_action_list": "Testpost Action List",
+				"resistivity_list": "Resistivity List"
 			},
 			"testposts": {
 				"testpost": {
@@ -247,6 +250,73 @@
 					"model": "Model",
 					"serial_number": "Serial Number",
 					"abriox": "Abriox"
+				},
+				"tp_action": {
+					"title": "Testpost Action {{placeholder}}",
+					"date": "Date",
+					"condition": "Condition",
+					"reading": "Reading",
+					"pipe_title": "Pipe",
+					"pipe_on": "pipe_on",
+					"pipe_off": "pipe_off",
+					"anodes_title": "Anodes",
+					"anodes_on": "anodes_on",
+					"anodes_off": "anodes_off",
+					"anodes_current": "anodes_current",
+					"dead_title": "Dead",
+					"dead_on": "Dead_on",
+					"dead_off": "Dead_off",
+					"dead_current": "Dead_current",
+					"sleeve_title": "Sleeve",
+					"sleeve_on": "sleeve_on",
+					"sleeve_off": "sleeve_off",
+					"sleeve_current": "sleeve_current",
+					"coupon": {
+						"title": "Coupon",
+						"on": "coupon_on",
+						"off": "coupon_off",
+						"current_ac": "coupon_current_ac",
+						"current_dc": "coupon_current_dc"
+					},
+					"others": {
+						"title": "Others",
+						"reedswitch": "Reedswitch Quantity",
+						"refcell": "Reference Cell"
+					},
+					"current_drain": {
+						"title": "Current Drain",
+						"input_v": "Cd_input_v",
+						"input_a": "Cd_input_a",
+						"output_v": "Cd_output_v",
+						"output_a": "Cd_output_a"
+					},
+					"asset": {
+						"title": "Asset Information",
+						"pipe_depth": "Pipe_depth",
+						"reinstatement": "Reinstatement"
+					},
+					"fault": {
+						"title": "Fault Details",
+						"type": "Fault Type",
+						"desc": "Fault Description"
+					}
+				}
+			},
+			"trs": {
+				"tr_action": {
+					"title": "TR Action",
+					"reading": {
+						"title": "Reading",
+						"volt": "Volt",
+						"amps": "Amps",
+						"current_setting": "Current Setting",
+						"anodes": {
+							"title": "Anodes",
+							"subtitle": "Anode No. 1",
+							"anode_off": "Anode off",
+							"anode_current": "Anode current"
+						}
+					}
 				}
 			}
 		},

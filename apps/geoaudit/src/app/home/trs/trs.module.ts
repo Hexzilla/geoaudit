@@ -8,14 +8,18 @@ import { ErrorInterceptor, JwtInterceptor } from '../../helpers';
 // Declarations
 import { SharedModule } from '../shared.module';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { TrActionComponent } from './tr-action/tr-action.component';
+import { NotesModule } from '../notes/notes.module';
 
 @NgModule({
   declarations: [
+    TrActionComponent
   ],
   imports: [
     TrsRoutingModule,
 
     SharedModule,
+    NotesModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

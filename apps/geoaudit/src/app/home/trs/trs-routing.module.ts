@@ -5,6 +5,7 @@ import { AuthGuard } from '../../guards';
 
 import { NotesComponent } from '../notes/notes.component';
 import { SearchComponent } from '../search/search.component';
+import { TrActionComponent } from './tr-action/tr-action.component';
 
 const routes: Routes = [
     { 
@@ -34,6 +35,10 @@ const routes: Routes = [
 
     {
         path: ':id/notes', component: NotesComponent
+    },
+
+    {
+        path: ':id/tr-action/:actionId', component: TrActionComponent
     },
 
     // otherwise redirect to home

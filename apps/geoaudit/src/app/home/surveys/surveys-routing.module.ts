@@ -4,6 +4,9 @@ import { NotesComponent } from '../notes/notes.component';
 import { SurveyComponent } from './survey/survey.component';
 
 import { SurveysComponent } from './surveys.component';
+import { TpActionsComponent } from './tp-actions/tp-actions.component';
+import { TrActionsComponent } from './tr-actions/tr-actions.component';
+import { ResistivityListComponent } from './resistivity-list/resistivity-list.component';
 
 const routes: Routes = [
   {
@@ -32,6 +35,15 @@ const routes: Routes = [
   },
   {
       path: ':id/drive', component: NotesComponent
+  },
+  {
+      path: ':id/tp_action_list', component: TpActionsComponent,
+  },
+  {
+      path: ':id/tr_action_list', component: TrActionsComponent,
+  },
+  {
+      path: ':id/resistivity_list', component: ResistivityListComponent,
   },
 
   // otherwise redirect to home
