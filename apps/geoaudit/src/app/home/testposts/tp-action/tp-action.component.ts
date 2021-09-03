@@ -68,6 +68,8 @@ export class TpActionComponent implements OnInit, AfterViewInit {
 
   actionId = 0;
 
+  public testpost: Testpost = null;
+
   public tp_action: TpAction = null;
 
   public selectedTabIndex = 0;
@@ -106,6 +108,14 @@ export class TpActionComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    //
+  }
+
+  getTestpostTitle() {
+    if (this.testpost) {
+      return `${this.testpost?.reference} - ${this.testpost.name}`;
+    }
+    return 'Testpost';
   }
 
   /**
@@ -178,5 +188,9 @@ export class TpActionComponent implements OnInit, AfterViewInit {
 
   selectedIndexChange(selectedTabIndex) {
     this.selectedTabIndex = selectedTabIndex;
+  }
+
+  searchTestpost() {
+    this.router.navigate([`/home/search/testpost`]);
   }
 }
