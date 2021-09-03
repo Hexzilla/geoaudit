@@ -193,4 +193,16 @@ export class TpActionComponent implements OnInit, AfterViewInit {
   searchTestpost() {
     this.router.navigate([`/home/search`]);
   }
+
+  updateMarkState(e) {
+    if (e.complete) {
+      //TODO: update action state to completed
+    }
+    else if (e.approve) {
+      //TODO: update action state to approved
+    }
+    else if (e.refuse) {
+      //TODO: update action state to refused
+    }
+  }
 }

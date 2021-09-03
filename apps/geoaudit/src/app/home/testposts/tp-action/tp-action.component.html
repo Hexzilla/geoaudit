@@ -76,7 +76,8 @@
           </mat-form-field>
         </div>
 
-        <div *ngIf="tp_action && tp_action.testpost!=null">
+        <div>
+        <!-- <div *ngIf="tp_action && tp_action.testpost!=null"> -->
           <!--Reading-->
           <mat-expansion-panel>
             <mat-expansion-panel-header>
@@ -615,6 +616,14 @@
     </mat-card-content>
   </mat-tab>
 </mat-tab-group>
+
+<div fxLayout="row-reverse" class="approve-wrapper">
+  <geoaudit-status-buttons
+    [completed]="false"
+    [approved]="false"
+    (completeEvent)="updateMarkState($event)"
+  ></geoaudit-status-buttons>
+</div>
 
 <div fxLayout="row-reverse" fxLayoutAlign="space-between" class="button-area">
   <div class="button-wrapper">
