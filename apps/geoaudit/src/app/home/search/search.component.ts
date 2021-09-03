@@ -59,11 +59,12 @@ export class SearchComponent implements OnInit {
    initialiseForm(): void {
     this.form = this.formBuilder.group({
       category: [null, Validators.required],
-      name: [null, Validators.required],
-      reference:[null, Validators.required],
+      name: null,
+      reference: null,
       address: null,
       latCtrl: null,
       lngCtrl: null,
+      nearLocation: false,
     });
   }
 
@@ -74,7 +75,7 @@ export class SearchComponent implements OnInit {
   }
 
   toggleMyLocation(): void{
-
+    
   }
 
   clickMarker(): void {
