@@ -69,6 +69,10 @@ export class SurveyTableComponent implements OnInit, AfterViewInit {
 
   @Input() pageSize: number;
 
+  @Input() hideDeleteButton: boolean;
+
+  @Input() hidePlusButton: boolean;
+
   @ViewChild('input', { static: true }) input: ElementRef;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -350,5 +354,9 @@ export class SurveyTableComponent implements OnInit, AfterViewInit {
       const surveys = selections.selected;
       this.selectionService.setSurveyMarkerFilter.emit(surveys);
     }
+  }
+
+  getStatus(row) {
+    return row?.status?.id || row?.status
   }
 }
