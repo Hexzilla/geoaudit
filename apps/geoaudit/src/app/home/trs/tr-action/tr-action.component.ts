@@ -160,4 +160,16 @@ export class TrActionComponent implements OnInit, AfterViewInit {
   selectedIndexChange(selectedTabIndex) {
     this.selectedTabIndex = selectedTabIndex;
   }
+
+  updateMarkState(e) {
+    if (e.complete) {
+      //TODO: update action state to completed
+    }
+    else if (e.approve) {
+      //TODO: update action state to approved
+    }
+    else if (e.refuse) {
+      //TODO: update action state to refused
+    }
+  }
 }
