@@ -9,10 +9,8 @@ import {
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Store } from '@ngrx/store';
 import * as moment from 'moment';
 
-import * as fromApp from '../../../store';
 import { Abriox } from '../../../models';
 import { AlertService } from '../../../services';
 import { MatDialog } from '@angular/material/dialog';
@@ -31,7 +29,6 @@ export class AbrioxListComponent implements OnInit {
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private store: Store<fromApp.State>,
     private abrioxEntityService: AbrioxEntityService,
     private alertService: AlertService,
     private dialog: MatDialog
@@ -46,7 +43,7 @@ export class AbrioxListComponent implements OnInit {
     this.abrioxEntityService.getAll().subscribe(
       (abrioxes) => {
         console.log("abrioxes", abrioxes)
-        this.abrioxes = abrioxes
+        this.abrioxes = abrioxes.filter(it => it.name != null)
       },
       (err) => {}
     );
@@ -84,7 +81,8 @@ export class AbrioxListComponent implements OnInit {
     console.log("submit")
   }
 
-  getActionDate(action) {
-    return moment(action.date).format('L LT')
+  getSubTitle(item) {
+    //return ''//moment(action.date).format('L LT')
+    return item.condition?.name
   }
 }

@@ -13,7 +13,7 @@ export class TrActionDataService extends DefaultDataService<TrAction> {
         httpClient: HttpClient,
         httpUrlGenerator: HttpUrlGenerator
     ) {
-        super('TRAction', httpClient, httpUrlGenerator);
+        super('TrAction', httpClient, httpUrlGenerator);
     }
 
     add(event: TrAction): Observable<any> {

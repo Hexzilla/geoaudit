@@ -47,7 +47,7 @@ export class ResistivityListComponent implements OnInit {
   update() {
     this.resistivityEntityService.getAll().subscribe(
       (actions) => {
-        this.resistivities = actions;
+        this.resistivities = actions.filter(it => it.reference != null);
         console.log("resistivities", actions)
       },
       (err) => {}
@@ -89,7 +89,7 @@ export class ResistivityListComponent implements OnInit {
     console.log("submit")
   }
 
-  getActionDate(action) {
-    return moment(action.date).format('L LT')
+  getSubTitle(item) {
+    return moment(item.date).format('L LT')
   }
 }
