@@ -66,6 +66,8 @@ export class TpActionComponent implements OnInit, AfterViewInit {
    */
   submitted = false;
 
+  actionId = 0;
+
   public tp_action: TpAction = null;
 
   public selectedTabIndex = 0;
@@ -98,6 +100,9 @@ export class TpActionComponent implements OnInit, AfterViewInit {
      * constraints.
      */
     this.initialiseForm();
+
+    this.actionId = this.route.snapshot.params['actionId'];
+    console.log("actionId", this.actionId)
   }
 
   ngAfterViewInit(): void {
