@@ -191,6 +191,6 @@ export class TpActionComponent implements OnInit, AfterViewInit {
   }
 
   searchTestpost() {
-    this.router.navigate([`/home/search/testpost`]);
+    this.router.navigate([`/home/search`]);
   }
 }
