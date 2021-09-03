@@ -123,7 +123,7 @@
   
               <!-- <geoaudit-card-button title="CONTAINERS.home.buttons.surveys.title" text="CONTAINERS.home.buttons.to_do_list.text" icon="history" (onClick)="recentSurveys()"></geoaudit-card-button> -->
   
-              <geoaudit-card-button title="CONTAINERS.home.buttons.approvals.title" text="CONTAINERS.home.buttons.approvals.title" icon="thumb_up" (onClick)="approve()"></geoaudit-card-button>
+              <geoaudit-card-button *ngIf="isManager()" title="CONTAINERS.home.buttons.approvals.title" text="CONTAINERS.home.buttons.approvals.text" [placeholder]="approveCount$ | async" icon="thumb_up" (onClick)="approve()"></geoaudit-card-button>
 
               <geoaudit-card-button title="CONTAINERS.home.buttons.archive.title" text="CONTAINERS.home.buttons.archive.title" icon="inventory_2" routerLink="/home/archive"></geoaudit-card-button>
 
