@@ -43,7 +43,7 @@ const routes: Routes = [
     },
 
     {
-        path: ':id/tp_action/:action_id', component: TpActionComponent
+        path: ':id/tp_action/:actionId', component: TpActionComponent
     },
 
     // otherwise redirect to home

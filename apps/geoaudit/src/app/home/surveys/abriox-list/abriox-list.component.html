@@ -1,0 +1,81 @@
+<geoaudit-sidebar-header title="CONTAINERS.home.survey.abriox_list">
+</geoaudit-sidebar-header>
+
+<div *ngIf="abrioxes==null || abrioxes.length == 0" class="abriox_wrapper">
+  <p>No abriox related to surveyed testposts or TRs.<br>
+  Please add a new abriox to them to see it in this panel.
+  </p>
+</div>
+<div *ngIf="abrioxes && abrioxes.length>0">
+  <mat-card
+    *ngFor="let item of abrioxes"
+    style="cursor: pointer; margin-top: 20px"
+    fxLayout="row"
+    fxLayoutAlign="space-between"
+  >
+    <div class="item-title">
+      <p class="main">{{ item.name }}</p>
+      <p class="sub">{{ getSubTitle(item) }}</p>
+    </div>
+
+    <div fxLayout="row">
+      <button
+        *ngIf="item.status?.name == 'COMPLETED'"
+        mat-icon-button
+        color="#8AC926"
+        class="mark-button"
+        aria-label="Example icon button with a plus one icon"
+      >
+        <mat-icon>done</mat-icon>
+      </button>
+
+      <button
+        mat-icon-button
+        color="accent"
+        aria-label="delete icon button"
+        class="delete-button"
+        (click)="delete(item)"
+      >
+        <mat-icon>delete</mat-icon>
+      </button>
+
+      <button
+        mat-icon-button
+        color="accent"
+        aria-label="Example icon button with a plus one icon"
+        (click)="navigate(item)"
+      >
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </div>
+  </mat-card>
+
+  <div class="add-button">
+    <button
+      mat-icon-button
+      color="accent"
+      aria-label="add icon button"
+      inline="true"
+      (click)="addAction()"
+    >
+      <mat-icon>add_circle_outline</mat-icon>
+    </button>
+  </div>
+</div>
+
+<div class="approve-wrapper" *ngIf="abrioxes.length>0">
+  <geoaudit-status-buttons></geoaudit-status-buttons>
+</div>
+
+<div fxLayout="row-reverse" class="button-wrapper">
+  <button
+    mat-flat-button
+    fxFlexFill
+    color="primary"
+    (click)="submit()"
+    >
+    {{ 'CONTAINERS.home.jobs.job.form.save' | translate }}
+  </button>
+</div>
+  
+

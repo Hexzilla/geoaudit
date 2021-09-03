@@ -9,32 +9,27 @@ import {
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Store } from '@ngrx/store';
 import * as moment from 'moment';
 
-import * as fromApp from '../../../store';
-import { Resistivity } from '../../../models';
+import { Abriox } from '../../../models';
 import { AlertService } from '../../../services';
 import { MatDialog } from '@angular/material/dialog';
-import { TestpostEntityService } from '../../../entity-services/testpost-entity.service';
-import { ResistivityEntityService } from '../../../entity-services/resistivity-entity.service';
+import { AbrioxEntityService } from '../../../entity-services/abriox-entity.service';
 import { DeleteModalComponent } from '../../../modals/delete-modal/delete-modal.component';
 
 @Component({
-  selector: 'geoaudit-resistivity-list',
-  templateUrl: './resistivity-list.component.html',
-  styleUrls: ['./resistivity-list.component.scss'],
+  selector: 'geoaudit-abriox-list',
+  templateUrl: './abriox-list.component.html',
+  styleUrls: ['./abriox-list.component.scss'],
 })
-export class ResistivityListComponent implements OnInit {
-  resistivities: Array<Resistivity> = [];
+export class AbrioxListComponent implements OnInit {
+  abrioxes: Array<Abriox> = [];
 
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private store: Store<fromApp.State>,
-    private testpostEntityService: TestpostEntityService,
-    private resistivityEntityService: ResistivityEntityService,
+    private abrioxEntityService: AbrioxEntityService,
     private alertService: AlertService,
     private dialog: MatDialog
   ) {
@@ -45,10 +40,10 @@ export class ResistivityListComponent implements OnInit {
   }
 
   update() {
-    this.resistivityEntityService.getAll().subscribe(
-      (actions) => {
-        this.resistivities = actions.filter(it => it.reference != null);
-        console.log("resistivities", actions)
+    this.abrioxEntityService.getAll().subscribe(
+      (abrioxes) => {
+        console.log("abrioxes", abrioxes)
+        this.abrioxes = abrioxes.filter(it => it.name != null)
       },
       (err) => {}
     );
@@ -64,10 +59,7 @@ export class ResistivityListComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.resistivityEntityService.delete(item).subscribe(
-          (res) => {},
-          (err) => {}
-        )
+        //delete
       }
     });
   }
@@ -90,6 +82,7 @@ export class ResistivityListComponent implements OnInit {
   }
 
   getSubTitle(item) {
-    return moment(item.date).format('L LT')
+    //return ''//moment(action.date).format('L LT')
+    return item.condition?.name
   }
 }

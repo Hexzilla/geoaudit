@@ -20,7 +20,7 @@ import {
   MarkerColours,
   Survey,
   Testpost,
-  TpAction,
+  AbrioxAction,
   Status,
 } from '../../../models';
 import {
@@ -42,10 +42,10 @@ import { SurveyEntityService } from '../../../entity-services/survey-entity.serv
 
 @Component({
   selector: 'geoaudit-tp-action',
-  templateUrl: './tp-action.component.html',
-  styleUrls: ['./tp-action.component.scss'],
+  templateUrl: './abriox-action.component.html',
+  styleUrls: ['./abriox-action.component.scss'],
 })
-export class TpActionComponent implements OnInit, AfterViewInit {
+export class AbrioxActionComponent implements OnInit, AfterViewInit {
   /**
    * The form consisting of the form fields.
    */
@@ -66,9 +66,7 @@ export class TpActionComponent implements OnInit, AfterViewInit {
    */
   submitted = false;
 
-  actionId = 0;
-
-  public tp_action: TpAction = null;
+  public abriox_action: AbrioxAction = null;
 
   public selectedTabIndex = 0;
 
@@ -100,9 +98,6 @@ export class TpActionComponent implements OnInit, AfterViewInit {
      * constraints.
      */
     this.initialiseForm();
-
-    this.actionId = this.route.snapshot.params['actionId'];
-    console.log("actionId", this.actionId)
   }
 
   ngAfterViewInit(): void {
@@ -115,29 +110,15 @@ export class TpActionComponent implements OnInit, AfterViewInit {
     this.form = this.formBuilder.group({
       date: null,
       condition: null,
-      pipe_on: null,
-      pipe_off: null,
-      anodes_on: null,
+      reading_volt: null,
+      reading_amps: null,
+      current_setting: null,
       anodes_off: null,
       anodes_current: null,
-      dead_on: null,
-      dead_off: null,
-      dead_current: null,
-      sleeve_on: null,
-      sleeve_off: null,
-      sleeve_current: null,
-      coupon_on: null,
-      coupon_off: null,
-      coupon_current_ac: null,
-      coupon_current_dc: null,
-      others_reedswitch: null,
-      others_refcell: null,
       cd_input_v: null,
       cd_input_a: null,
       cd_output_v: null,
       cd_output_a: null,
-      asset_pipe_depth: null,
-      asset_reinstatement: null,
       fault_type: null,
       fault_desc: null,
     });
