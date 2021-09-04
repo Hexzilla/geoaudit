@@ -80,19 +80,19 @@ export class ListComponent implements OnInit {
     if (this.formdata.name) {
       where = {
         ...where,
-        name_ncontainss: this.formdata.name,
+        name_contains: this.formdata.name,
       };
     }
     if (this.formdata.reference) {
       where = {
         ...where,
-        reference_ncontainss: this.formdata.reference,
+        reference_contains: this.formdata.reference,
       };
     }
     if (this.formdata.address) {
       where = {
         ...where,
-        address_ncontainss: this.formdata.address,
+        address_contains: this.formdata.address,
       };
     }
     if (this.formdata.latCtrl) {
