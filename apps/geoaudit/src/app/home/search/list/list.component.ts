@@ -69,9 +69,11 @@ export class ListComponent implements OnInit {
     private siteEntityService: SiteEntityService,
     private selectionService: SelectionService
   ) {
-    this.formdata = this.router.getCurrentNavigation().extras.state.condition;
-    console.log('extra data is ', this.formdata.name);
-    this.selectedCategory = this.formdata.category;
+    if (this.router.getCurrentNavigation().extras.state) {
+      this.formdata = this.router.getCurrentNavigation().extras.state.condition;
+      console.log('extra data is ', this.formdata.name);
+      this.selectedCategory = this.formdata.category;
+    }
   }
 
   ngOnInit(): void {
