@@ -14,6 +14,11 @@
     margin-bottom: 10px;
 }
 
+.item-title {
+    display: flex;
+    align-items: center;
+}
+
 .fx-col-6 {
     width: 48%;
 }
@@ -27,6 +32,13 @@
     width: 92%;
     bottom: 8px;
     z-index:1;
+}
+
+.approve-wrapper {
+    position: absolute;
+    right: 20px;
+    bottom: 62px;
+    z-index: 1;
 }
 
 .button-wrapper {

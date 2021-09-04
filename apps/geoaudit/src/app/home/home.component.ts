@@ -189,6 +189,14 @@ export class HomeComponent implements OnInit, AfterViewInit {
         this.drawSurveyMarkers(this.surveys, selected);
       }
     });
+
+    this.selectionService.setLocation.subscribe((position) => {
+      if (position) {
+        const geometry = position.geometry;
+        this.map.panTo(new L.LatLng(geometry.lat, geometry.lng))
+        this.map.setZoom(9);
+      }
+    });
   }
 
   ngAfterViewInit(): void {

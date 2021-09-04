@@ -16,13 +16,23 @@ export class StatusButtonsComponent implements OnInit {
   constructor(private authService: AuthService) { 
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    console.log("StatusButton", this.completed, this.approved, this.isManager())
+  }
 
   isManager() {
-    return this.authService.authValue.user.role.name === Roles.MANAGER
+    return this.authService.authValue.user?.role?.name === Roles.MANAGER
   }
 
   complete() {
     this.completeEvent?.emit({ complete: true })
+  }
+
+  approve() {
+    this.completeEvent?.emit({ approve: true })
+  }
+
+  refuse() {
+    this.completeEvent?.emit({ refuse: true })
   }
 }

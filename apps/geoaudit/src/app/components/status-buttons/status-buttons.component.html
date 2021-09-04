@@ -1,9 +1,9 @@
 <div fxLayout="column" fxLayoutAlign="end end">
-    <mat-icon 
-        *ngIf="!completed" 
-        class="statusButton limegreen" 
-        (click)="complete()"
-    >done</mat-icon>
-    <mat-icon *ngIf="completed && isManager && !approved" class="statusButton limegreen">thumb_up</mat-icon>
-    <mat-icon *ngIf="completed && isManager" class="statusButton crimson">clear</mat-icon>
+    <div *ngIf="!isManager() && !completed">
+        <mat-icon class="statusButton limegreen" (click)="complete()">done</mat-icon>
+    </div>
+    <div *ngIf="isManager() && completed && !approved">
+        <mat-icon class="statusButton limegreen" (click)="approve()">thumb_up</mat-icon>
+        <mat-icon class="statusButton crimson" (click)="refuse()">clear</mat-icon>
+    </div>
 </div>
