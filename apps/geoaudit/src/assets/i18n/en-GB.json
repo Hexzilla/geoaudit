@@ -85,7 +85,7 @@
 			},
 			"buttons": {
 				"approvals": {
-					"text": "N approvals required",
+					"text": "{{placeholder}} approvals to complete",
 					"title": "Approve"
 				},
 				"jobs": {

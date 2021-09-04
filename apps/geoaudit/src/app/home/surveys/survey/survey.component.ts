@@ -1,16 +1,11 @@
-import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import {
-  AfterViewInit,
   Component,
-  ElementRef,
   OnInit,
-  ViewChild,
 } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
   FormGroup,
-  Validators,
 } from '@angular/forms';
 import { ThemePalette } from '@angular/material/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -18,7 +13,7 @@ import { Store } from '@ngrx/store';
 import * as moment from 'moment';
 
 import * as fromApp from '../../../store';
-import { Status, Statuses, Survey, User, Image, Job } from '../../../models';
+import { Status, Survey, User, Image, Job } from '../../../models';
 import { AlertService } from '../../../services';
 import { StatusEntityService } from '../../../entity-services/status-entity.service';
 import { SurveyEntityService } from '../../../entity-services/survey-entity.service';
@@ -49,67 +44,38 @@ import { JobEntityService } from '../../../entity-services/job-entity.service';
   styleUrls: ['./survey.component.scss'],
 })
 export class SurveyComponent implements OnInit {
-  API_URL: string;
 
   color: ThemePalette = 'primary';
 
   id: string;
 
-  jobId: string;
-
-  newJob = false;
-
   form: FormGroup;
 
-  mode: 'CREATE' | 'EDIT_VIEW';
-
-  selectedStatus: string;
-
-  /**
-   * An array of status i.e. NOT_STARTED, ONGOING, etc.
-   */
   statuses: Array<Status>;
-
-  submitted = false;
 
   survey: Survey;
 
   private unsubscribe = new Subject<void>();
 
-  @ViewChild('dateAssignedDateTimePicker') dateAssignedDateTimePicker: any;
-  @ViewChild('dateDeliveryDateTimePicker') dateDeliveryDateTimePicker: any;
-
   preparedByCtrl = new FormControl();
-  @ViewChild('autoPreparedBy') matAutocompletePreparedBy: MatAutocomplete;
-  selectedPreparedBy: User = null;
 
   conductedByCtrl = new FormControl();
-  @ViewChild('autoConductedBy') autoConductedBy: MatAutocomplete;
-  selectedConductedBy: User = null;
 
   filteredUsers: Array<User>;
-
-  users: Array<User>;
 
   allUsers: Array<User> = [];
 
   allJobs: Array<Job> = [];
 
   jobCtrl = new FormControl();
-  @ViewChild('autoJob') autoJob: MatAutocomplete;
-  selectedJob: Job = null;
 
   filteredJobs: Array<Job>;
-
-  // @ViewChild('auto') matAutocomplete: MatAutocomplete;
-
-  @ViewChild('latCtrlInput') latCtrlInput: ElementRef;
-  @ViewChild('lngCtrlInput') lngCtrlInput: ElementRef;
 
   latCtrl = new FormControl();
 
   lngCtrl = new FormControl();
 
+  // ngxMatDatetimePicker
   public disabled = false;
   public showSpinners = true;
   public showSeconds = false;
@@ -135,17 +101,15 @@ export class SurveyComponent implements OnInit {
     private alertService: AlertService,
     private _lightbox: Lightbox,
     private dialog: MatDialog
-  ) {}
+  ) { }
 
   ngOnInit(): void {
-    this.API_URL = environment.API_URL;
-
     this.jobEntityService.getAll().subscribe(
       (jobs) => {
         this.allJobs = jobs;
       },
 
-      (err) => {}
+      (err) => { }
     );
 
     // Fetch statuses
@@ -154,7 +118,7 @@ export class SurveyComponent implements OnInit {
         this.statuses = statuses;
       },
 
-      (err) => {}
+      (err) => { }
     );
 
     // Fetch users for assignees
@@ -163,7 +127,7 @@ export class SurveyComponent implements OnInit {
         this.allUsers = users;
       },
 
-      (err) => {}
+      (err) => { }
     );
 
     this.store.select('map').subscribe((map) => {
@@ -177,15 +141,13 @@ export class SurveyComponent implements OnInit {
      * Initialise the form with properties and
      * validation constraints.
      */
-    this.initialiseForm();
+    this.initForm();
 
     this.id = this.route.snapshot.paramMap.get('id');
 
     if (this.id) {
-      this.mode = 'EDIT_VIEW';
-      this.editAndViewMode();
+      this.getSurveyAndPatchForm();
     } else {
-      this.mode = 'CREATE';
       this.createMode();
     }
   }
@@ -238,61 +200,76 @@ export class SurveyComponent implements OnInit {
     });
   }
 
-  editAndViewMode() {
+  getSurveyAndPatchForm() {
     this.surveyEntityService.getByKey(this.id).subscribe(
       (survey) => {
-        this.survey = survey;
-
-        const {
-          status,
-          name,
-          job,
-          id,
-          prepared_by,
-          conducted_by,
-          geometry,
-          reference,
-
-          images,
-          documents
-        } = survey;
-
-        this.form.patchValue({
-          status: status?.id,
-          name,
-
-          job,
-
-          reference,
-
-          prepared_by: prepared_by?.id,
-          conducted_by: conducted_by?.id,
-
-          geometry,
-
-          images,
-          documents,
-
-          id,
-        });
-
-        this.jobCtrl.setValue(job?.reference);
-        this.selectedJob = job;
-
-        this.preparedByCtrl.setValue(prepared_by?.username);
-        this.selectedPreparedBy = prepared_by;
-
-        this.conductedByCtrl.setValue(conducted_by?.username);
-        this.selectedConductedBy = conducted_by;
-
-        this.latCtrl.setValue(geometry?.lat);
-        this.lngCtrl.setValue(geometry?.lng);
-
-        this.autoSave();
+        this.patchForm(survey);
       },
 
-      (err) => {}
+      (err) => { }
     );
+  }
+
+  patchForm(survey: Survey) {
+    const {
+      status,
+      name,
+      job,
+      id,
+      prepared_by,
+      conducted_by,
+      geometry,
+      reference,
+
+      comment,
+
+      images,
+      documents,
+    } = survey;
+
+    this.form.patchValue({
+      status: status?.id,
+      name,
+
+      job,
+
+      reference,
+
+      prepared_by: prepared_by?.id,
+      conducted_by: conducted_by?.id,
+
+      geometry,
+
+      comment,
+
+      images,
+      documents,
+
+      id,
+    });
+
+    const jobId = this.route.snapshot.queryParamMap.get('job');
+
+    if (jobId) {
+      this.jobEntityService.getByKey(jobId).subscribe((item) => {
+        this.form.patchValue({
+          job: item,
+        });
+      });
+    }
+
+    this.jobCtrl.setValue(job?.reference);
+
+    this.preparedByCtrl.setValue(prepared_by?.username);
+
+    this.conductedByCtrl.setValue(conducted_by?.username);
+
+    this.latCtrl.setValue(geometry?.lat);
+    this.lngCtrl.setValue(geometry?.lng);
+
+    this.autoSave(this.id ? false : true);
+
+    this.survey = survey;
   }
 
   createMode() {
@@ -303,17 +280,18 @@ export class SurveyComponent implements OnInit {
      */
     this.surveyEntityService.add(this.form.value).subscribe(
       (survey) => {
-        this.survey = survey;
+        // this.survey = survey;
 
-        this.form.patchValue({
-          id: survey.id,
-        });
+        // this.form.patchValue({
+        //   id: survey.id,
+        // });
 
-        this.autoSave();
+        // this.autoSave();
 
-        this.router.navigate([`/home/surveys/${this.form.value.id}`], {
-          replaceUrl: true,
-        });
+        // this.router.navigate([`/home/surveys/${this.form.value.id}`], {
+        //   replaceUrl: true,
+        // });
+        this.patchForm(survey);
       },
 
       (err) => {
@@ -324,7 +302,6 @@ export class SurveyComponent implements OnInit {
 
   onJobSelect(event: MatAutocompleteSelectedEvent): void {
     this.jobCtrl.setValue(event.option.value.reference);
-    this.selectedJob = event.option.value;
 
     this.form.patchValue({
       job: event.option.value.id,
@@ -333,7 +310,6 @@ export class SurveyComponent implements OnInit {
 
   onPreparedBySelect(event: MatAutocompleteSelectedEvent): void {
     this.preparedByCtrl.setValue(event.option.value.username);
-    this.selectedPreparedBy = event.option.value;
 
     this.form.patchValue({
       prepared_by: event.option.value.id,
@@ -342,14 +318,13 @@ export class SurveyComponent implements OnInit {
 
   onConductedBySelect(event: MatAutocompleteSelectedEvent): void {
     this.conductedByCtrl.setValue(event.option.value.username);
-    this.selectedConductedBy = event.option.value;
 
     this.form.patchValue({
       conducted_by: event.option.value.id,
     });
   }
 
-  autoSave() {
+  autoSave(reload = false) {
     this.form.valueChanges
       .pipe(
         debounceTime(500),
@@ -359,22 +334,38 @@ export class SurveyComponent implements OnInit {
         distinctUntilChanged(),
         takeUntil(this.unsubscribe)
       )
-      .subscribe();
+      .subscribe(() => {
+        /**
+         * Workaround.
+         *
+         * When we navigate to the create a note component. We may have
+         * provided a jobs query parameter. However the jobs selector is not
+         * updated with that and therefore we're reloading such that it
+         * goes into edit mode.
+         */
+        if (reload) {
+          this.router
+            .navigate([`/home/surveys/${this.form.value.id}`])
+            .then(() => {
+              window.location.reload();
+            });
+        }
+      });
   }
 
   /**
    * Initialisation of the form, properties, and validation.
    */
-  initialiseForm(): void {
+  initForm(): void {
     this.form = this.formBuilder.group({
-      status: [null, Validators.required],
-      name: [null, Validators.required],
+      status: [null],
+      name: [null],
 
-      date_assigned: [moment().toISOString(), Validators.required],
-      date_delivery: [moment().toISOString(), Validators.required],
+      date_assigned: [moment().toISOString()],
+      date_delivery: [moment().toISOString()],
 
-      //   images: [[]],
-      //   documents: [[]],
+      images: [[]],
+      documents: [[]],
 
       geometry: [null],
 
@@ -399,7 +390,7 @@ export class SurveyComponent implements OnInit {
       //     images: [[]],
       //     documents: [[]],
 
-      comments: [null],
+      comment: [null],
 
       id: [null],
       reference: [null],
@@ -408,8 +399,6 @@ export class SurveyComponent implements OnInit {
   }
 
   submit(navigate = true): void {
-    this.submitted = true;
-
     // reset alerts on submit
     this.alertService.clear();
 
@@ -435,7 +424,7 @@ export class SurveyComponent implements OnInit {
         this.alertService.error('Something went wrong');
       },
 
-      () => {}
+      () => { }
     );
   }
 
@@ -447,59 +436,8 @@ export class SurveyComponent implements OnInit {
     );
   }
 
-  /**
-   * On selection change of the steps i.e.
-   * click on step 1 -> catch event -> do something.
-   * @param event
-   */
-  selectionChange(event: StepperSelectionEvent) {
-    switch (event.selectedIndex) {
-      case 0:
-        break;
-
-      case 1:
-        break;
-
-      case 2:
-        break;
-
-      case 3:
-        break;
-
-      case 4:
-        break;
-
-      case 5:
-        break;
-    }
-  }
-
-  isStep1Completed(): boolean {
-    return false;
-  }
-
-  isStep2Completed(): boolean {
-    return false;
-  }
-
-  isStep3Completed(): boolean {
-    return false;
-  }
-
-  isStep4Completed(): boolean {
-    return false;
-  }
-
-  isStep5Completed(): boolean {
-    return false;
-  }
-
   onImageUpload(event): void {
     const { images } = this.form.value;
-
-    // this.images.push(event)
-
-    // May be multiple so just preserving the previous object on the array of images
 
     this.form.patchValue({
       images: [...images, event],
@@ -527,9 +465,9 @@ export class SurveyComponent implements OnInit {
 
         images.map((image: Image) => {
           const album = {
-            src: `${this.API_URL}${image.url}`,
+            src: `${environment.API_URL}${image.url}`,
             caption: image.name,
-            thumb: `${this.API_URL}${image.formats.thumbnail.url}`,
+            thumb: `${environment.API_URL}${image.formats.thumbnail.url}`,
           };
 
           _album.push(album);
@@ -546,7 +484,7 @@ export class SurveyComponent implements OnInit {
           },
         });
 
-        dialogRef.afterClosed().subscribe((result) => {});
+        dialogRef.afterClosed().subscribe((result) => { });
         break;
     }
   }
@@ -592,7 +530,7 @@ export class SurveyComponent implements OnInit {
         this.router.navigate(['/home/todolist']);
       },
 
-      (err) => {}
+      (err) => { }
     );
   }
 }
