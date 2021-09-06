@@ -16,7 +16,7 @@ import {
   TpAction,
   Status,
 } from '../../../models';
-import { AlertService } from '../../../services';
+import { AlertService, UploadService } from '../../../services';
 import { FileTypes } from '../../../components/file-upload/file-upload.component';
 import { IAlbum, Lightbox } from 'ngx-lightbox';
 import { MatDialog } from '@angular/material/dialog';
@@ -58,6 +58,9 @@ export class TpActionComponent implements OnInit, AfterViewInit {
   public tp_action: TpAction = null;
 
   public selectedTabIndex = 0;
+  
+  attachedImages: Array<any>;
+  attachedDocuments: Array<any>;
 
   constructor(
     private route: ActivatedRoute,
@@ -69,6 +72,7 @@ export class TpActionComponent implements OnInit, AfterViewInit {
     private store: Store<fromApp.State>,
     private router: Router,
     private alertService: AlertService,
+    private uploadService: UploadService,
     private _lightbox: Lightbox,
     private dialog: MatDialog
   ) {}
@@ -329,5 +333,42 @@ export class TpActionComponent implements OnInit, AfterViewInit {
     else if (e.refuse) {
       //TODO: update action state to refused
     }
+  }
+
+  onImageUpload(event): void {
+    const { images } = this.form.value;
+    this.form.patchValue({
+      images: [...images, event],
+    });
+
+    this.getUploadFiles();
+    this.submit(false);
+  }
+
+  onDocumentUpload(event): void {
+    const { documents } = this.form.value;
+
+    this.form.patchValue({
+      documents: [...documents, event],
+    });
+
+    this.getUploadFiles();
+    this.submit(false);
+  }
+
+  onPreview(fileType: FileTypes): void {
+    const { images, documents } = this.form.value;
+    this.uploadService.onPreview(fileType, images, documents);
+  }
+
+  onItemPreview(param: any): void {
+    const { images, documents } = this.form.value;
+    this.uploadService.onItemPreview(param.fileType, images, documents, param.index);
+  }
+
+  getUploadFiles(): void {
+    const { images, documents } = this.form.value;
+    this.attachedImages = this.uploadService.getImageUploadFiles(images);
+    this.attachedDocuments = this.uploadService.getDocumentUploadFiles(documents);
   }
 }

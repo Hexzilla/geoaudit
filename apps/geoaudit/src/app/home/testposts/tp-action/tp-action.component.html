@@ -634,7 +634,7 @@
   <!-- Attachments -->
   <mat-tab [label]="'CONTAINERS.home.jobs.job.steps.attachments' | translate">
     <mat-card-content>
-      <!-- <attachment-file-upload
+      <attachment-file-upload
         label="CONTAINERS.home.jobs.job.attachments.images"
         (preview)="onItemPreview($event)"
         (upload)="onImageUpload($event)"
@@ -648,9 +648,9 @@
         (preview)="onItemPreview($event)"
         (upload)="onDocumentUpload($event)"
         fileType="DOCUMENT"
-        [items] = "Documents"
+        [items] = "attachedDocuments"
         [multiple]="true"
-      ></attachment-file-upload> -->
+      ></attachment-file-upload>
     </mat-card-content>
   </mat-tab>
 
