@@ -369,9 +369,6 @@ export class SurveyComponent implements OnInit {
       date_assigned: [moment().toISOString()],
       date_delivery: [moment().toISOString()],
 
-      images: [[]],
-      documents: [[]],
-
       geometry: [null],
 
       // // tp_actions: [],
