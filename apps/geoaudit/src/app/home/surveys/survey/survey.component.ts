@@ -441,36 +441,6 @@ export class SurveyComponent implements OnInit {
     );
   }
 
-<<<<<<< HEAD
-  /**
-   * On selection change of the steps i.e.
-   * click on step 1 -> catch event -> do something.
-   * @param event
-   */
-  selectionChange(event: StepperSelectionEvent) {
-    switch (event.selectedIndex) {
-      case 0:
-        break;
-
-      case 1:
-        break;
-
-      case 2:
-        break;
-
-      case 3:
-        break;
-
-      case 4:
-        break;
-
-      case 5:
-        break;
-    }
-  }
-
-=======
->>>>>>> main
   onImageUpload(event): void {
     const { images } = this.form.value;
 
@@ -498,7 +468,6 @@ export class SurveyComponent implements OnInit {
     this.uploadService.onPreview(fileType, images, documents);
   }
 
-<<<<<<< HEAD
   onItemPreview(param: any): void {
     const { images, documents } = this.form.value;
     this.uploadService.onItemPreview(param.fileType, images, documents, param.index);
@@ -508,36 +477,6 @@ export class SurveyComponent implements OnInit {
       const { images, documents } = this.form.value;
       this.attachedImages = this.uploadService.getImageUploadFiles(images);
       this.Documents = this.uploadService.getDocumentUploadFiles(documents);
-=======
-    switch (fileType) {
-      case FileTypes.IMAGE:
-        let _album: Array<IAlbum> = [];
-
-        images.map((image: Image) => {
-          const album = {
-            src: `${environment.API_URL}${image.url}`,
-            caption: image.name,
-            thumb: `${environment.API_URL}${image.formats.thumbnail.url}`,
-          };
-
-          _album.push(album);
-        });
-
-        if (_album.length >= 1) this._lightbox.open(_album, 0);
-        break;
-
-      case FileTypes.DOCUMENT:
-        const dialogRef = this.dialog.open(AttachmentModalComponent, {
-          data: {
-            fileType,
-            documents,
-          },
-        });
-
-        dialogRef.afterClosed().subscribe((result) => { });
-        break;
-    }
->>>>>>> main
   }
 
   /**
