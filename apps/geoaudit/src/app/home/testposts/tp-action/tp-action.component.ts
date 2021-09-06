@@ -159,13 +159,29 @@ export class TpActionComponent implements OnInit, AfterViewInit {
     )
   }
 
+  get anodes(): FormArray {
+    return this.form.get('currentDrains') as FormArray;
+  }
+
+  addAnode(anode) {
+    if (anode) {
+		  this.anodes.push(this.formBuilder.group(anode));
+    } else {
+      this.anodes.push(this.formBuilder.group({
+        anodes_on: '',
+        anodes_off: '',
+        anodes_current: '',
+      }));
+    }
+  }
+
   get currentDrains(): FormArray {
     return this.form.get('currentDrains') as FormArray;
   }
 
-  addCurrentDrain(asset) {
-    if (asset) {
-		  this.currentDrains.push(this.formBuilder.group(asset));
+  addCurrentDrain(drain) {
+    if (drain) {
+		  this.currentDrains.push(this.formBuilder.group(drain));
     } else {
       this.currentDrains.push(this.formBuilder.group({
         cd_input_v: '',
@@ -215,9 +231,7 @@ export class TpActionComponent implements OnInit, AfterViewInit {
       condition: null,
       pipe_on: null,
       pipe_off: null,
-      anodes_on: null,
-      anodes_off: null,
-      anodes_current: null,
+      anodes: new FormArray([]),
       dead_on: null,
       dead_off: null,
       dead_current: null,
