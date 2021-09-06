@@ -5,7 +5,7 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ThemePalette } from '@angular/material/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -66,9 +66,9 @@ export class TpActionComponent implements OnInit, AfterViewInit {
    */
   submitted = false;
 
-  actionId = 0;
+  testpostId = 0;
 
-  public testpost: Testpost = null;
+  actionId = 0;
 
   public tp_action: TpAction = null;
 
@@ -103,8 +103,7 @@ export class TpActionComponent implements OnInit, AfterViewInit {
      */
     this.initialiseForm();
 
-    this.actionId = this.route.snapshot.params['actionId'];
-    console.log("actionId", this.actionId)
+    this.fetchTpAction();
   }
 
   ngAfterViewInit(): void {
@@ -112,10 +111,59 @@ export class TpActionComponent implements OnInit, AfterViewInit {
   }
 
   getTestpostTitle() {
-    if (this.testpost) {
-      return `${this.testpost?.reference} - ${this.testpost.name}`;
+    const testpost = this.tp_action?.testpost
+    if (testpost) {
+      return `${testpost.reference} - ${testpost.name}`;
     }
     return 'Testpost';
+  }
+
+  fetchTpAction() {
+    this.testpostId = this.route.snapshot.params['id']
+    console.log("testpostId", this.testpostId)
+
+    this.actionId = this.route.snapshot.params['actionId'];
+    console.log("actionId", this.actionId)
+
+    this.tpActionEntityService.getByKey(this.actionId).subscribe(
+      (tp_action) => {
+        this.tp_action = tp_action;
+
+        const fault_detail = [
+          {
+            fault_type: "type1",
+            fault_desc: "desc1"
+          },
+          {
+            fault_type: "type2",
+            fault_desc: "desc2"
+          }
+        ]/*.map(item => {
+          return new FormGroup({
+            fault_type: new FormControl(item.fault_type),
+            fault_desc: new FormControl(item.fault_desc),
+          })
+        })*/
+        console.log('fault_detail', fault_detail);
+
+        if (tp_action) {
+          this.form.patchValue({
+            date: moment(tp_action.date).format('L LT'),
+            condition: tp_action.condition?.name,
+
+            images: tp_action.images,
+            documents: tp_action.documents
+          });
+
+          fault_detail.map(item => {
+            this.addFaults()
+          })
+          this.faults.setValue(fault_detail);
+          console.log('this.faults', this.faults)
+        }
+      },
+      (err) => {}
+    )
   }
 
   /**
@@ -148,10 +196,27 @@ export class TpActionComponent implements OnInit, AfterViewInit {
       cd_output_a: null,
       asset_pipe_depth: null,
       asset_reinstatement: null,
-      fault_type: null,
+      faults: new FormArray([
+        /*new FormGroup({
+          fault_type: new FormControl(''),
+          fault_desc: new FormControl('')
+        })*/
+      ]),
       fault_desc: null,
     });
   }
+
+  get faults(): FormArray {
+    return this.form.get('faults') as FormArray;
+  }
+
+  addFaults() {
+		const fg = this.formBuilder.group({
+      fault_type: new FormControl(''),
+      fault_desc: new FormControl('')
+    });
+		this.faults.push(fg);
+	}
 
   submit(navigate = true) {
     console.log('submit');

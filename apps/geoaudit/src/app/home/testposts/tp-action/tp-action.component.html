@@ -76,8 +76,7 @@
           </mat-form-field>
         </div>
 
-        <div>
-        <!-- <div *ngIf="tp_action && tp_action.testpost!=null"> -->
+        <div *ngIf="tp_action && tp_action.testpost!=null">
           <!--Reading-->
           <mat-expansion-panel>
             <mat-expansion-panel-header>
@@ -549,26 +548,33 @@
                 'CONTAINERS.home.testposts.tp_action.fault.title' | translate
               }}</mat-panel-title>
             </mat-expansion-panel-header>
-            <div fxLayout="column">
-              <mat-form-field appearance="outline">
-                <mat-label>{{
-                  'CONTAINERS.home.testposts.tp_action.fault.type' | translate
-                }}</mat-label>
-                <input
-                  matInput
-                  [placeholder]="
-                    'CONTAINERS.home.testposts.tp_action.fault.type' | translate
-                  "
-                  formControlName="fault_type"
-                  class="form-control"
-                />
-              </mat-form-field>
-              <mat-form-field appearance="outline">
-                <mat-label>{{
-                  'CONTAINERS.home.notes.description' | translate
-                }}</mat-label>
-                <textarea matInput formControlName="fault_desc"></textarea>
-              </mat-form-field>
+            <div>
+              <div formArrayName="faults">
+                <div *ngFor="let fault of faults.controls; index as i" [formGroupName]="i" fxLayout="column">
+                  <mat-form-field appearance="outline">
+                    <mat-label>{{
+                      'CONTAINERS.home.testposts.tp_action.fault.type' | translate
+                    }}</mat-label>
+                    <input
+                      matInput
+                      [placeholder]="
+                        'CONTAINERS.home.testposts.tp_action.fault.type' | translate
+                      "
+                      formControlName="fault_type"
+                      class="form-control"
+                    />
+                  </mat-form-field>
+                  <mat-form-field appearance="outline">
+                    <mat-label>{{
+                      'CONTAINERS.home.notes.description' | translate
+                    }}</mat-label>
+                    <textarea 
+                      matInput
+                      formControlName="fault_desc">
+                    </textarea>
+                  </mat-form-field>
+                </div>
+              </div>
               <div class="tp-bottom">
                 <button
                   mat-icon-button
