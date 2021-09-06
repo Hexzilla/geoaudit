@@ -179,14 +179,47 @@ export class TpActionComponent implements OnInit, AfterViewInit {
     return this.form.get('deads') as FormArray;
   }
 
-  addDead(anode) {
-    if (anode) {
-		  this.deads.push(this.formBuilder.group(anode));
+  addDead(item) {
+    if (item) {
+		  this.deads.push(this.formBuilder.group(item));
     } else {
       this.deads.push(this.formBuilder.group({
         dead_on: '',
         dead_off: '',
         dead_current: '',
+      }));
+    }
+  }
+
+  get sleeves(): FormArray {
+    return this.form.get('sleeves') as FormArray;
+  }
+
+  addSleeve(item) {
+    if (item) {
+		  this.sleeves.push(this.formBuilder.group(item));
+    } else {
+      this.sleeves.push(this.formBuilder.group({
+        sleeve_on: '',
+        sleeve_off: '',
+        sleeve_current: '',
+      }));
+    }
+  }
+
+  get coupons(): FormArray {
+    return this.form.get('coupons') as FormArray;
+  }
+
+  addCoupon(item) {
+    if (item) {
+		  this.coupons.push(this.formBuilder.group(item));
+    } else {
+      this.coupons.push(this.formBuilder.group({
+        coupon_on: '',
+        coupon_off: '',
+        coupon_current_ac: '',
+        coupon_current_dc: '',
       }));
     }
   }
@@ -249,13 +282,8 @@ export class TpActionComponent implements OnInit, AfterViewInit {
       pipe_off: null,
       anodes: new FormArray([]),
       deads: new FormArray([]),
-      sleeve_on: null,
-      sleeve_off: null,
-      sleeve_current: null,
-      coupon_on: null,
-      coupon_off: null,
-      coupon_current_ac: null,
-      coupon_current_dc: null,
+      sleeves: new FormArray([]),
+      coupons: new FormArray([]),
       others_reedswitch: null,
       others_refcell: null,
       currentDrains: new FormArray([]),
