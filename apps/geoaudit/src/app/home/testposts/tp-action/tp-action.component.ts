@@ -141,6 +141,7 @@ export class TpActionComponent implements OnInit, AfterViewInit {
         ]
         console.log('fault_detail', fault_detail);
 
+        //TODO - FormArray
         if (tp_action) {
           this.form.patchValue({
             date: moment(tp_action.date).format('L LT'),
