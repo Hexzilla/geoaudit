@@ -8,9 +8,11 @@ import { ErrorInterceptor, JwtInterceptor } from '../../helpers';
 // Declarations
 import { SharedModule } from '../shared.module';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { ResistivityComponent } from './resistivity/resistivity.component';
 
 @NgModule({
   declarations: [
+    ResistivityComponent,
   ],
   imports: [
     ResistivitiesRoutingModule,
