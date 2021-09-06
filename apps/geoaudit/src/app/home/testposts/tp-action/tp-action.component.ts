@@ -6,34 +6,19 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { ThemePalette } from '@angular/material/core';
-import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import * as MapActions from '../../../store/map/map.actions';
 import * as fromApp from '../../../store';
 import * as moment from 'moment';
 import { TestpostEntityService } from '../../../entity-services/testpost-entity.service';
 import {
-  Abriox,
-  Conditions,
-  Image,
-  MarkerColours,
-  Survey,
   Testpost,
   TpAction,
   Status,
 } from '../../../models';
-import {
-  debounceTime,
-  tap,
-  distinctUntilChanged,
-  takeUntil,
-} from 'rxjs/operators';
-import { fromEvent, Subject } from 'rxjs';
 import { AlertService } from '../../../services';
 import { FileTypes } from '../../../components/file-upload/file-upload.component';
 import { IAlbum, Lightbox } from 'ngx-lightbox';
-import { AttachmentModalComponent } from '../../../modals/attachment-modal/attachment-modal.component';
 import { MatDialog } from '@angular/material/dialog';
 import { environment } from 'apps/geoaudit/src/environments/environment';
 import { StatusEntityService } from '../../../entity-services/status-entity.service';
