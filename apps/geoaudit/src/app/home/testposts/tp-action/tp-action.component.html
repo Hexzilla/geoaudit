@@ -120,6 +120,7 @@
                 </mat-form-field>
               </div>
             </div>
+
             <!--Anodes-->
             <div>
               <h3>{{'CONTAINERS.home.testposts.tp_action.anodes_title' | translate}}
@@ -189,49 +190,54 @@
             <!--Dead-->
             <div>
               <h3>{{ 'CONTAINERS.home.testposts.tp_action.dead_title' | translate }}</h3>
-              <div fxLayout="row" fxLayoutAlign="space-between">
-                <mat-form-field appearance="outline" class="fx-col-4">
-                  <mat-label>{{
-                    'CONTAINERS.home.testposts.tp_action.dead_on' | translate
-                  }}</mat-label>
-                  <input
-                    matInput
-                    [placeholder]="
-                      'CONTAINERS.home.testposts.tp_action.dead_on' | translate
-                    "
-                    type="number"
-                    formControlName="dead_on"
-                    class="form-control"
-                  />
-                </mat-form-field>
-                <mat-form-field appearance="outline" class="fx-col-4">
-                  <mat-label>{{
-                    'CONTAINERS.home.testposts.tp_action.dead_off' | translate
-                  }}</mat-label>
-                  <input
-                    matInput
-                    [placeholder]="
-                      'CONTAINERS.home.testposts.tp_action.dead_off' | translate
-                    "
-                    type="number"
-                    formControlName="dead_off"
-                    class="form-control"
-                  />
-                </mat-form-field>
-                <mat-form-field appearance="outline" class="fx-col-4">
-                  <mat-label>{{
-                    'CONTAINERS.home.testposts.tp_action.dead_current' | translate
-                  }}</mat-label>
-                  <input
-                    matInput
-                    [placeholder]="
-                      'CONTAINERS.home.testposts.tp_action.dead_current' | translate
-                    "
-                    type="number"
-                    formControlName="dead_current"
-                    class="form-control"
-                  />
-                </mat-form-field>
+              
+              <div formArrayName="deads">
+                <div *ngFor="let _ of deads.controls; index as i" [formGroupName]="i">
+                  <div fxLayout="row" fxLayoutAlign="space-between">
+                    <mat-form-field appearance="outline" class="fx-col-4">
+                      <mat-label>{{
+                        'CONTAINERS.home.testposts.tp_action.dead_on' | translate
+                      }}</mat-label>
+                      <input
+                        matInput
+                        [placeholder]="
+                          'CONTAINERS.home.testposts.tp_action.dead_on' | translate
+                        "
+                        type="number"
+                        formControlName="dead_on"
+                        class="form-control"
+                      />
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" class="fx-col-4">
+                      <mat-label>{{
+                        'CONTAINERS.home.testposts.tp_action.dead_off' | translate
+                      }}</mat-label>
+                      <input
+                        matInput
+                        [placeholder]="
+                          'CONTAINERS.home.testposts.tp_action.dead_off' | translate
+                        "
+                        type="number"
+                        formControlName="dead_off"
+                        class="form-control"
+                      />
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" class="fx-col-4">
+                      <mat-label>{{
+                        'CONTAINERS.home.testposts.tp_action.dead_current' | translate
+                      }}</mat-label>
+                      <input
+                        matInput
+                        [placeholder]="
+                          'CONTAINERS.home.testposts.tp_action.dead_current' | translate
+                        "
+                        type="number"
+                        formControlName="dead_current"
+                        class="form-control"
+                      />
+                    </mat-form-field>
+                  </div>
+                </div>
               </div>
               <div class="tp-bottom">
                 <button
@@ -239,11 +245,13 @@
                   color="accent"
                   aria-label="add icon button"
                   inline="true"
+                  (click)="addDead()"
                 >
                   <mat-icon>add_circle_outline</mat-icon>
                 </button>
               </div>
             </div>
+
             <!--Sleeve-->
             <div>
               <h3>{{'CONTAINERS.home.testposts.tp_action.sleeve_title' | translate}}</h3>
