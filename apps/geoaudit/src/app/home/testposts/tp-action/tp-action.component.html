@@ -127,7 +127,7 @@
               </h3>
               <div formArrayName="anodes">
                 <div *ngFor="let _ of anodes.controls; index as i" [formGroupName]="i">
-                  <h4>{{ 'CONTAINERS.home.testposts.tp_action.anodes_title' | translate }} No {{ i }}</h4>
+                  <h4>{{ 'CONTAINERS.home.testposts.tp_action.anodes_title' | translate }} No {{ i+1 }}</h4>
                   <div fxLayout="row" fxLayoutAlign="space-between">
                     <mat-form-field appearance="outline" class="fx-col-4">
                       <mat-label>{{
@@ -193,7 +193,7 @@
               <h3>{{ 'CONTAINERS.home.testposts.tp_action.dead_title' | translate }}</h3>              
               <div formArrayName="deads">
                 <div *ngFor="let _ of deads.controls; index as i" [formGroupName]="i">
-                  <h4>{{ 'CONTAINERS.home.testposts.tp_action.dead_title' | translate }} No {{ i }}</h4>
+                  <h4>{{ 'CONTAINERS.home.testposts.tp_action.dead_title' | translate }} No {{ i+1 }}</h4>
                   <div fxLayout="row" fxLayoutAlign="space-between">
                     <mat-form-field appearance="outline" class="fx-col-4">
                       <mat-label>{{
@@ -258,7 +258,7 @@
               <h3>{{'CONTAINERS.home.testposts.tp_action.sleeve_title' | translate}}</h3>
               <div formArrayName="sleeves">
                 <div *ngFor="let _ of sleeves.controls; index as i" [formGroupName]="i">
-                  <h4>{{ 'CONTAINERS.home.testposts.tp_action.sleeve_title' | translate }} No {{ i }}</h4>
+                  <h4>{{ 'CONTAINERS.home.testposts.tp_action.sleeve_title' | translate }} No {{ i+1 }}</h4>
                   <div fxLayout="row" fxLayoutAlign="space-between">
                     <mat-form-field appearance="outline" class="fx-col-4">
                       <mat-label>{{
@@ -323,7 +323,7 @@
             <div>
               <div formArrayName="coupons">
                 <div *ngFor="let _ of coupons.controls; index as i" [formGroupName]="i">
-                  <h4>{{ 'CONTAINERS.home.testposts.tp_action.coupon.title' | translate }} No {{ i }}</h4>
+                  <h4>{{ 'CONTAINERS.home.testposts.tp_action.coupon.title' | translate }} No {{ i+1 }}</h4>
                   <div fxLayout="row" fxLayoutAlign="space-between">
                     <mat-form-field appearance="outline" class="fx-col-6">
                       <mat-label>{{
@@ -450,7 +450,7 @@
             <div>
               <div formArrayName="assets">
                 <div *ngFor="let drain of currentDrains.controls; index as i" [formGroupName]="i">
-                  <h4>{{ 'CONTAINERS.home.testposts.tp_action.current_drain.title' | translate }} No {{ i }}</h4>
+                  <h4>{{ 'CONTAINERS.home.testposts.tp_action.current_drain.title' | translate }} No {{ i+1 }}</h4>
                   <div fxLayout="row" fxLayoutAlign="space-between">
                     <mat-form-field appearance="outline" class="fx-col-6">
                       <mat-label>{{
