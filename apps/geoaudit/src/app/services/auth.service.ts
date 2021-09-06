@@ -17,7 +17,12 @@ export class AuthService {
         private http: HttpClient
     ) {
         /*const auth = {
-            "user": "satham@hexagonsupport.com"
+            user: {
+                name: "satham@hexagonsupport.com",
+                role: {
+                    name: "MANAGER"
+                }
+            }
         }
         localStorage.setItem('auth', JSON.stringify(auth));*/
         this.authSubject = new BehaviorSubject<Auth>(JSON.parse(localStorage.getItem('auth')));
