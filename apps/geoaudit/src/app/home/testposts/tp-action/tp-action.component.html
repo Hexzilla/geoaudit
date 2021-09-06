@@ -560,7 +560,7 @@
                       [placeholder]="
                         'CONTAINERS.home.testposts.tp_action.fault.type' | translate
                       "
-                      formControlName="fault_type"
+                      formControlName="type"
                       class="form-control"
                     />
                   </mat-form-field>
@@ -570,7 +570,7 @@
                     }}</mat-label>
                     <textarea 
                       matInput
-                      formControlName="fault_desc">
+                      formControlName="desc">
                     </textarea>
                   </mat-form-field>
                 </div>
@@ -581,6 +581,7 @@
                   color="accent"
                   aria-label="add icon button"
                   inline="true"
+                  (click)="addFaults()"
                 >
                   <mat-icon>add_circle_outline</mat-icon>
                 </button>

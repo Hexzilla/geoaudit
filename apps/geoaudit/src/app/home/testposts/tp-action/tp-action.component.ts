@@ -131,19 +131,14 @@ export class TpActionComponent implements OnInit, AfterViewInit {
 
         const fault_detail = [
           {
-            fault_type: "type1",
-            fault_desc: "desc1"
+            type: "type1",
+            desc: "desc1"
           },
           {
-            fault_type: "type2",
-            fault_desc: "desc2"
+            type: "type2",
+            desc: "desc2"
           }
-        ]/*.map(item => {
-          return new FormGroup({
-            fault_type: new FormControl(item.fault_type),
-            fault_desc: new FormControl(item.fault_desc),
-          })
-        })*/
+        ]
         console.log('fault_detail', fault_detail);
 
         if (tp_action) {
@@ -155,15 +150,28 @@ export class TpActionComponent implements OnInit, AfterViewInit {
             documents: tp_action.documents
           });
 
-          fault_detail.map(item => {
-            this.addFaults()
-          })
-          this.faults.setValue(fault_detail);
+          this.faults.clear();
+          fault_detail.map(item => this.addFaults(item));
           console.log('this.faults', this.faults)
         }
       },
       (err) => {}
     )
+  }
+
+  get faults(): FormArray {
+    return this.form.get('faults') as FormArray;
+  }
+
+  addFaults(fault) {
+    if (fault) {
+		  this.faults.push(this.formBuilder.group(fault));
+    } else {
+      this.faults.push(this.formBuilder.group({
+        type: '',
+        desc: ''
+      }));
+    }
   }
 
   /**
@@ -194,29 +202,12 @@ export class TpActionComponent implements OnInit, AfterViewInit {
       cd_input_a: null,
       cd_output_v: null,
       cd_output_a: null,
+      assets: new FormArray([]),
       asset_pipe_depth: null,
       asset_reinstatement: null,
-      faults: new FormArray([
-        /*new FormGroup({
-          fault_type: new FormControl(''),
-          fault_desc: new FormControl('')
-        })*/
-      ]),
-      fault_desc: null,
+      faults: new FormArray([]),
     });
   }
-
-  get faults(): FormArray {
-    return this.form.get('faults') as FormArray;
-  }
-
-  addFaults() {
-		const fg = this.formBuilder.group({
-      fault_type: new FormControl(''),
-      fault_desc: new FormControl('')
-    });
-		this.faults.push(fg);
-	}
 
   submit(navigate = true) {
     console.log('submit');
