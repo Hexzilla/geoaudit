@@ -97,16 +97,10 @@ export class ListComponent implements OnInit {
         address_contains: this.formdata.address,
       };
     }
-    if (this.formdata.latCtrl) {
+    if (this.formdata.latCtrl && this.formdata.lngCtrl) {
       where = {
         ...where,
-        'geometry.lat': this.formdata.latCtrl,
-      };
-    }
-    if (this.formdata.lngCtrl) {
-      where = {
-        ...where,
-        'geometry.lng': this.formdata.lngCtrl,
+        'geometry_contains': { "lng": this.formdata.lngCtrl, "lat": this.formdata.latCtrl }
       };
     }
     const parameters = qs.stringify({
