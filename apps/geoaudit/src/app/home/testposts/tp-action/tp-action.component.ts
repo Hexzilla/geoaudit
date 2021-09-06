@@ -159,6 +159,23 @@ export class TpActionComponent implements OnInit, AfterViewInit {
     )
   }
 
+  get currentDrains(): FormArray {
+    return this.form.get('currentDrains') as FormArray;
+  }
+
+  addCurrentDrain(asset) {
+    if (asset) {
+		  this.currentDrains.push(this.formBuilder.group(asset));
+    } else {
+      this.currentDrains.push(this.formBuilder.group({
+        cd_input_v: '',
+        cd_input_a: '',
+        cd_output_v: '',
+        cd_output_a: ''
+      }));
+    }
+  }
+
   get assets(): FormArray {
     return this.form.get('assets') as FormArray;
   }
@@ -213,10 +230,7 @@ export class TpActionComponent implements OnInit, AfterViewInit {
       coupon_current_dc: null,
       others_reedswitch: null,
       others_refcell: null,
-      cd_input_v: null,
-      cd_input_a: null,
-      cd_output_v: null,
-      cd_output_a: null,
+      currentDrains: new FormArray([]),
       assets: new FormArray([]),
       faults: new FormArray([]),
     });
