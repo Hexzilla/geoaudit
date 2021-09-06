@@ -508,36 +508,40 @@
                 'CONTAINERS.home.testposts.tp_action.asset.title' | translate
               }}</mat-panel-title>
             </mat-expansion-panel-header>
-            <div fxLayout="column">
-              <mat-form-field appearance="outline">
-                <mat-label>{{
-                  'CONTAINERS.home.testposts.tp_action.asset.pipe_depth' | translate
-                }}</mat-label>
-                <input
-                  matInput
-                  [placeholder]="
-                    'CONTAINERS.home.testposts.tp_action.asset.pipe_depth' | translate
-                  "
-                  type="number"
-                  formControlName="asset_pipe_depth"
-                  class="form-control"
-                />
-              </mat-form-field>
-              <mat-form-field appearance="outline">
-                <mat-label>{{
-                  'CONTAINERS.home.testposts.tp_action.asset.reinstatement'
-                    | translate
-                }}</mat-label>
-                <input
-                  matInput
-                  [placeholder]="
-                    'CONTAINERS.home.testposts.tp_action.asset.reinstatement'
-                      | translate
-                  "
-                  formControlName="asset_reinstatement"
-                  class="form-control"
-                />
-              </mat-form-field>
+            <div>
+              <div formArrayName="assets">
+                <div *ngFor="let asset of assets.controls; index as i" [formGroupName]="i" fxLayout="column">
+                  <mat-form-field appearance="outline">
+                    <mat-label>{{
+                      'CONTAINERS.home.testposts.tp_action.asset.pipe_depth' | translate
+                    }}</mat-label>
+                    <input
+                      matInput
+                      [placeholder]="
+                        'CONTAINERS.home.testposts.tp_action.asset.pipe_depth' | translate
+                      "
+                      type="number"
+                      formControlName="pipe_depth"
+                      class="form-control"
+                    />
+                  </mat-form-field>
+                  <mat-form-field appearance="outline">
+                    <mat-label>{{
+                      'CONTAINERS.home.testposts.tp_action.asset.reinstatement'
+                        | translate
+                    }}</mat-label>
+                    <input
+                      matInput
+                      [placeholder]="
+                        'CONTAINERS.home.testposts.tp_action.asset.reinstatement'
+                          | translate
+                      "
+                      formControlName="reinstatement"
+                      class="form-control"
+                    />
+                  </mat-form-field>
+                </div>
+              </div>
             </div>
           </mat-expansion-panel>
 

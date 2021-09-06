@@ -159,6 +159,21 @@ export class TpActionComponent implements OnInit, AfterViewInit {
     )
   }
 
+  get assets(): FormArray {
+    return this.form.get('assets') as FormArray;
+  }
+
+  addAssets(asset) {
+    if (asset) {
+		  this.assets.push(this.formBuilder.group(asset));
+    } else {
+      this.assets.push(this.formBuilder.group({
+        pipe_depth: '',
+        reinstatement: ''
+      }));
+    }
+  }
+
   get faults(): FormArray {
     return this.form.get('faults') as FormArray;
   }
@@ -203,8 +218,6 @@ export class TpActionComponent implements OnInit, AfterViewInit {
       cd_output_v: null,
       cd_output_a: null,
       assets: new FormArray([]),
-      asset_pipe_depth: null,
-      asset_reinstatement: null,
       faults: new FormArray([]),
     });
   }
