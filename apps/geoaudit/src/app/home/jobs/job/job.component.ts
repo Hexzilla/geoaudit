@@ -1,4 +1,4 @@
-import { SelectionModel } from '@angular/cdk/collections';
+//import { SelectionModel } from '@angular/cdk/collections';
 import { ENTER, COMMA, P } from '@angular/cdk/keycodes';
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import {
@@ -147,6 +147,8 @@ export class JobComponent implements OnInit, AfterViewInit {
 
   attachedImages: Array<any>;
   Documents: Array<any>;
+
+  completed: boolean = false;
 
   public chartSeries = null;
   public selectedTabIndex = 0;
@@ -328,6 +330,7 @@ export class JobComponent implements OnInit, AfterViewInit {
 
         this.getUploadFiles();
         this.dataSource = new MatTableDataSource(surveys);
+        console.log("surveys", surveys)
       },
       (err) => {
       }
@@ -596,6 +599,7 @@ export class JobComponent implements OnInit, AfterViewInit {
     this.surveys = newSurveys;
 
     this.dataSource.data = newSurveys;
+    console.log("newSurveys", newSurveys)
 
     const ids = newSurveys.map((survey) => survey.id);
 
@@ -644,5 +648,9 @@ export class JobComponent implements OnInit, AfterViewInit {
 
   selectedIndexChange(selectedTabIndex) {
     this.selectedTabIndex = selectedTabIndex;
+  }
+
+  complete(complete:boolean){
+    this.completed = true;
   }
 }

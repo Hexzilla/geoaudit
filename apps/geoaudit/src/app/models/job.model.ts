@@ -17,7 +17,8 @@ export interface Job {
     surveys: Array<Survey>;
     updated_at: any;
     published: boolean;
-
+    archived: boolean;
+    
     images: Array<Image>;
     documents: Array<any>;
     comment: Array<any>;

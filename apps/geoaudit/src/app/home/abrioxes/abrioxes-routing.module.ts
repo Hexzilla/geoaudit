@@ -6,6 +6,7 @@ import { AuthGuard } from '../../guards';
 import { NotesComponent } from '../notes/notes.component';
 import { SearchComponent } from '../search/search.component';
 import { AbrioxComponent } from './abriox/abriox.component';
+import { AbrioxActionComponent } from './abriox-action/abriox-action.component';
 
 const routes: Routes = [
     { 
@@ -35,6 +36,10 @@ const routes: Routes = [
 
     {
         path: ':id/notes', component: NotesComponent
+    },
+
+    {
+        path: ':id/abriox_action/:actionId', component: AbrioxActionComponent
     },
 
     // otherwise redirect to home

@@ -36,7 +36,7 @@ const iconDefault = L.icon({
 });
 L.Marker.prototype.options.icon = iconDefault;
 
-import { Auth , Notification} from '../models';
+import { Auth , Notification, Roles, Statuses} from '../models';
 import { Abriox } from '../models';
 import { Testpost } from '../models';
 import { Tr } from '../models';
@@ -127,6 +127,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   myJobsCount$: Observable<number>;
 
+  approveCount$: Observable<number>;
+
   toDoList$ = this.toDoListEntityService.entities$;
 
   constructor(
@@ -169,6 +171,12 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
     this.myJobsCount$ = this.myJobEntityService.count(parameters);
 
+    this.approveCount$ = this.surveyEntityService.count(qs.stringify({
+      _where: {
+        'status.name': Statuses.COMPLETED,
+      },
+    }))
+
     this.selectionService.setSurveyMarkerFilter.subscribe((selected) => {
       this.surveyFilters = selected
 
@@ -179,6 +187,14 @@ export class HomeComponent implements OnInit, AfterViewInit {
       
       if (this.surveys) {
         this.drawSurveyMarkers(this.surveys, selected);
+      }
+    });
+
+    this.selectionService.setLocation.subscribe((position) => {
+      if (position) {
+        const geometry = position.geometry;
+        this.map.panTo(new L.LatLng(geometry.lat, geometry.lng))
+        this.map.setZoom(9);
       }
     });
   }
@@ -1290,5 +1306,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   get isRoot(): boolean {
     return this.router.url === '/home';
+  }
+
+  isManager() {
+    return this.authService.authValue.user.role.name === Roles.MANAGER;
   }
 }
