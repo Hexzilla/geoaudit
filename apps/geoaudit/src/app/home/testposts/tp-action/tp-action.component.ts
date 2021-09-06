@@ -294,6 +294,15 @@ export class TpActionComponent implements OnInit, AfterViewInit {
       return;
     }
 
+    const surveyId = this.tp_action?.survey?.id;
+    if (surveyId) {
+      const url = `/home/surveys/${surveyId}/tp_action_list`;
+      this.router.navigate([url]);
+    }
+    else {
+      this.router.navigate([`/home/`]);
+    }
+
     /**
      * Invoke the backend with a PUT request to update
      * the job with the form values.
