@@ -5,43 +5,27 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { ThemePalette } from '@angular/material/core';
-import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
+import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import * as MapActions from '../../../store/map/map.actions';
 import * as fromApp from '../../../store';
 import * as moment from 'moment';
 import { TestpostEntityService } from '../../../entity-services/testpost-entity.service';
 import {
-  Abriox,
-  Conditions,
-  Image,
-  MarkerColours,
-  Survey,
-  Testpost,
-  TpAction,
+  Resistivity,
   Status,
 } from '../../../models';
-import {
-  debounceTime,
-  tap,
-  distinctUntilChanged,
-  takeUntil,
-} from 'rxjs/operators';
-import { fromEvent, Subject } from 'rxjs';
-import { AlertService } from '../../../services';
+import { AlertService, UploadService } from '../../../services';
 import { FileTypes } from '../../../components/file-upload/file-upload.component';
 import { IAlbum, Lightbox } from 'ngx-lightbox';
-import { AttachmentModalComponent } from '../../../modals/attachment-modal/attachment-modal.component';
 import { MatDialog } from '@angular/material/dialog';
 import { environment } from 'apps/geoaudit/src/environments/environment';
 import { StatusEntityService } from '../../../entity-services/status-entity.service';
-import { TpActionEntityService } from '../../../entity-services/tp-action-entity.service';
+import { ResistivityEntityService } from '../../../entity-services/resistivity-entity.service';
 import { SurveyEntityService } from '../../../entity-services/survey-entity.service';
 
 @Component({
-  selector: 'geoaudit-tp-action',
+  selector: 'geoaudit-resistivity',
   templateUrl: './resistivity.component.html',
   styleUrls: ['./resistivity.component.scss'],
 })
@@ -66,13 +50,16 @@ export class ResistivityComponent implements OnInit, AfterViewInit {
    */
   submitted = false;
 
+  testpostId = 0;
+
   actionId = 0;
 
-  public testpost: Testpost = null;
-
-  public tp_action: TpAction = null;
+  public resistivity: Resistivity = null;
 
   public selectedTabIndex = 0;
+  
+  attachedImages: Array<any>;
+  attachedDocuments: Array<any>;
 
   constructor(
     private route: ActivatedRoute,
@@ -80,10 +67,11 @@ export class ResistivityComponent implements OnInit, AfterViewInit {
     private surveyEntityService: SurveyEntityService,
     private testpostEntityService: TestpostEntityService,
     private statusEntityService: StatusEntityService,
-    private tpActionEntityService: TpActionEntityService,
+    private resistivityEntityService: ResistivityEntityService,
     private store: Store<fromApp.State>,
     private router: Router,
     private alertService: AlertService,
+    private uploadService: UploadService,
     private _lightbox: Lightbox,
     private dialog: MatDialog
   ) {}
@@ -103,8 +91,7 @@ export class ResistivityComponent implements OnInit, AfterViewInit {
      */
     this.initialiseForm();
 
-    this.actionId = this.route.snapshot.params['actionId'];
-    console.log("actionId", this.actionId)
+    this.fetchTpAction();
   }
 
   ngAfterViewInit(): void {
@@ -112,10 +99,51 @@ export class ResistivityComponent implements OnInit, AfterViewInit {
   }
 
   getTestpostTitle() {
-    if (this.testpost) {
-      return `${this.testpost?.reference} - ${this.testpost.name}`;
-    }
     return 'Testpost';
+  }
+
+  fetchTpAction() {
+    this.testpostId = this.route.snapshot.params['id']
+    console.log("testpostId", this.testpostId)
+
+    this.actionId = this.route.snapshot.params['actionId'];
+    console.log("actionId", this.actionId)
+
+    this.resistivityEntityService.getByKey(this.actionId).subscribe(
+      (resistivity) => {
+        this.resistivity = resistivity;
+
+        //TODO - FormArray
+        if (resistivity) {
+          this.form.patchValue({
+            date: moment(resistivity.date).format('L LT'),
+            reference: resistivity.reference,
+            latitude: resistivity.geometry['latitude'],
+            longitude: resistivity.geometry['longitude'],
+
+            images: resistivity.images,
+            documents: resistivity.documents
+          });
+        }
+      },
+      (err) => {}
+    )
+  }
+
+  get readings(): FormArray {
+    return this.form.get('readings') as FormArray;
+  }
+
+  addReading(e, item) {
+    e.preventDefault();
+    if (item) {
+		  this.readings.push(this.formBuilder.group(item));
+    } else {
+      this.readings.push(this.formBuilder.group({
+        distance: '',
+        value: '',
+      }));
+    }
   }
 
   /**
@@ -124,32 +152,10 @@ export class ResistivityComponent implements OnInit, AfterViewInit {
   initialiseForm(): void {
     this.form = this.formBuilder.group({
       date: null,
-      condition: null,
-      pipe_on: null,
-      pipe_off: null,
-      anodes_on: null,
-      anodes_off: null,
-      anodes_current: null,
-      dead_on: null,
-      dead_off: null,
-      dead_current: null,
-      sleeve_on: null,
-      sleeve_off: null,
-      sleeve_current: null,
-      coupon_on: null,
-      coupon_off: null,
-      coupon_current_ac: null,
-      coupon_current_dc: null,
-      others_reedswitch: null,
-      others_refcell: null,
-      cd_input_v: null,
-      cd_input_a: null,
-      cd_output_v: null,
-      cd_output_a: null,
-      asset_pipe_depth: null,
-      asset_reinstatement: null,
-      fault_type: null,
-      fault_desc: null,
+      reference: null,
+      latitude: null,
+      longitude: null,
+      readings: new FormArray([]),
     });
   }
 
@@ -163,6 +169,15 @@ export class ResistivityComponent implements OnInit, AfterViewInit {
     if (this.form.invalid) {
       this.alertService.error('Invalid');
       return;
+    }
+
+    const surveyId = this.resistivity?.survey?.id;
+    if (surveyId) {
+      const url = `/home/surveys/${surveyId}/tp_action_list`;
+      this.router.navigate([url]);
+    }
+    else {
+      this.router.navigate([`/home/`]);
     }
 
     /**
@@ -204,5 +219,42 @@ export class ResistivityComponent implements OnInit, AfterViewInit {
     else if (e.refuse) {
       //TODO: update action state to refused
     }
+  }
+
+  onImageUpload(event): void {
+    const { images } = this.form.value;
+    this.form.patchValue({
+      images: [...images, event],
+    });
+
+    this.getUploadFiles();
+    this.submit(false);
+  }
+
+  onDocumentUpload(event): void {
+    const { documents } = this.form.value;
+
+    this.form.patchValue({
+      documents: [...documents, event],
+    });
+
+    this.getUploadFiles();
+    this.submit(false);
+  }
+
+  onPreview(fileType: FileTypes): void {
+    const { images, documents } = this.form.value;
+    this.uploadService.onPreview(fileType, images, documents);
+  }
+
+  onItemPreview(param: any): void {
+    const { images, documents } = this.form.value;
+    this.uploadService.onItemPreview(param.fileType, images, documents, param.index);
+  }
+
+  getUploadFiles(): void {
+    const { images, documents } = this.form.value;
+    this.attachedImages = this.uploadService.getImageUploadFiles(images);
+    this.attachedDocuments = this.uploadService.getDocumentUploadFiles(documents);
   }
 }

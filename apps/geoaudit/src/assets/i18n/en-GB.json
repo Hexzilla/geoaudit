@@ -322,6 +322,18 @@
 						}
 					}
 				}
+			},
+			"resistivity": {
+				"title": "Resistivity",
+				"reference": "Reference",
+				"date": "Date",
+				"latitude": "Latitude",
+				"longitude": "Longitude",
+				"reading": {
+					"title": "Reading",
+					"distance": "Distance",
+					"value": "Value"
+				}
 			}
 		},
 		"survey": {
