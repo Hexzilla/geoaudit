@@ -141,7 +141,7 @@ export class TpActionComponent implements OnInit, AfterViewInit {
           });
 
           this.faults.clear();
-          fault_detail.map(item => this.addFaults(item));
+          fault_detail.map(item => this.addFaults(null, item));
           console.log('this.faults', this.faults)
         }
       },
@@ -153,9 +153,10 @@ export class TpActionComponent implements OnInit, AfterViewInit {
     return this.form.get('anodes') as FormArray;
   }
 
-  addAnode(anode) {
-    if (anode) {
-		  this.anodes.push(this.formBuilder.group(anode));
+  addAnode(event, item=null) {
+    event?.preventDefault();
+    if (item) {
+		  this.anodes.push(this.formBuilder.group(item));
     } else {
       this.anodes.push(this.formBuilder.group({
         anodes_on: '',
@@ -169,7 +170,8 @@ export class TpActionComponent implements OnInit, AfterViewInit {
     return this.form.get('deads') as FormArray;
   }
 
-  addDead(item) {
+  addDead(event, item=null) {
+    event?.preventDefault();
     if (item) {
 		  this.deads.push(this.formBuilder.group(item));
     } else {
@@ -185,7 +187,8 @@ export class TpActionComponent implements OnInit, AfterViewInit {
     return this.form.get('sleeves') as FormArray;
   }
 
-  addSleeve(item) {
+  addSleeve(event, item=null) {
+    event?.preventDefault();
     if (item) {
 		  this.sleeves.push(this.formBuilder.group(item));
     } else {
@@ -201,7 +204,8 @@ export class TpActionComponent implements OnInit, AfterViewInit {
     return this.form.get('coupons') as FormArray;
   }
 
-  addCoupon(item) {
+  addCoupon(event, item=null) {
+    event?.preventDefault();
     if (item) {
 		  this.coupons.push(this.formBuilder.group(item));
     } else {
@@ -218,9 +222,10 @@ export class TpActionComponent implements OnInit, AfterViewInit {
     return this.form.get('currentDrains') as FormArray;
   }
 
-  addCurrentDrain(drain) {
-    if (drain) {
-		  this.currentDrains.push(this.formBuilder.group(drain));
+  addCurrentDrain(event, item=null) {
+    event?.preventDefault();
+    if (item) {
+		  this.currentDrains.push(this.formBuilder.group(item));
     } else {
       this.currentDrains.push(this.formBuilder.group({
         cd_input_v: '',
@@ -250,9 +255,10 @@ export class TpActionComponent implements OnInit, AfterViewInit {
     return this.form.get('faults') as FormArray;
   }
 
-  addFaults(fault) {
-    if (fault) {
-		  this.faults.push(this.formBuilder.group(fault));
+  addFaults(event, item=null) {
+    event?.preventDefault();
+    if (item) {
+		  this.faults.push(this.formBuilder.group(item));
     } else {
       this.faults.push(this.formBuilder.group({
         type: '',
