@@ -38,7 +38,7 @@ const routes: Routes = [
     },
 
     {
-        path: ':id/tr-action/:actionId', component: TrActionComponent
+        path: ':id/tr_action/:actionId', component: TrActionComponent
     },
 
     // otherwise redirect to home
