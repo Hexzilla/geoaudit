@@ -8,6 +8,7 @@ import { Component, Input, OnInit } from '@angular/core';
 export class SurveyActionButtonComponent implements OnInit {
 
   @Input() label;
+  @Input() item_list_completed: boolean;
 
   constructor() { }
 

@@ -1,10 +1,17 @@
 <geoaudit-sidebar-header title="CONTAINERS.home.survey.add_survey.title">
-  <mat-icon (click)="delete()" style="color: red">delete</mat-icon>
 </geoaudit-sidebar-header>
 
-<mat-horizontal-stepper>
-  <mat-step>
-    <mat-card-content>
+
+<mat-tab-group mat-align-tabs="start"
+  (selectedIndexChange)="selectedIndexChange($event)"
+  [(selectedIndex)]="selectedTabIndex"
+  class="tab-body-height"
+  >
+  <!-- Details -->
+  <mat-tab
+    [label]="'CONTAINERS.home.survey.steps.overview' | translate"
+  >
+    <mat-card-content class="mt-26">
       <form fxLayout="column" [formGroup]="form" (ngSubmit)="submit()">
         <mat-form-field appearance="outline">
           <mat-label>{{
@@ -67,10 +74,12 @@
         </div>
       </form>
     </mat-card-content>
-  </mat-step>
+  </mat-tab>
 
-  <mat-step>
-    <mat-card-content>
+  <mat-tab
+    [label]="'CONTAINERS.home.survey.steps.delivery' | translate"
+  >
+    <mat-card-content class="mt-26">
       <form fxLayout="column" [formGroup]="form" (ngSubmit)="submit()">
         <mat-form-field appearance="outline">
           <mat-label>{{
@@ -129,42 +138,103 @@
         </mat-form-field>
       </form>
     </mat-card-content>
-  </mat-step>
+  </mat-tab>
 
-  <mat-step>
-    <geoaudit-file-upload label="CONTAINERS.home.jobs.job.attachments.images" (preview)="onPreview($event)"
-      (upload)="onImageUpload($event)" fileType="IMAGE" [multiple]="true"></geoaudit-file-upload>
+  <!-- Attachments -->
+  <mat-tab
+    [label]="'CONTAINERS.home.jobs.job.steps.attachments' | translate"
+  >
+    <mat-card-content>
+      <attachment-file-upload
+        label="CONTAINERS.home.jobs.job.attachments.images"
+        (preview)="onItemPreview($event)"
+        (upload)="onImageUpload($event)"
+        fileType="IMAGE"
+        [items] = "attachedImages"
+        [multiple]="true"
+      ></attachment-file-upload>
 
-    <geoaudit-file-upload label="CONTAINERS.home.jobs.job.attachments.documents" (preview)="onPreview($event)"
-      (upload)="onDocumentUpload($event)" fileType="DOCUMENT" [multiple]="true"></geoaudit-file-upload>
+      <attachment-file-upload
+        label="CONTAINERS.home.jobs.job.attachments.documents"
+        (preview)="onItemPreview($event)"
+        (upload)="onDocumentUpload($event)"
+        fileType="DOCUMENT"
+        [items] = "Documents"
+        [multiple]="true"
+      ></attachment-file-upload>
+    </mat-card-content>
+  </mat-tab>
 
-    <form fxLayout="column" [formGroup]="form" (ngSubmit)="submit()">
-
-      <mat-form-field class="example-full-width" appearance="outline" style="margin-top: 20px; width: 100%;">
-        <mat-label>{{
-          'CONTAINERS.home.survey.comments' | translate
-          }}</mat-label>
-        <textarea matInput formControlName="comment"></textarea>
-      </mat-form-field>
-    </form>
-  </mat-step>
-
-  <mat-step>
-    <geoaudit-survey-action-button label="site_details" [routerLink]="'/home/surveys/' + id + '/search/sites'">
+  <mat-tab
+    [label]="'CONTAINERS.home.survey.steps.inspection' | translate"
+  >
+    <geoaudit-survey-action-button
+      label="site_details"
+      [item_list_completed]="true"
+      [routerLink]="'/home/surveys/' + id + '/search/sites'">
     </geoaudit-survey-action-button>
-    <geoaudit-survey-action-button label="testpost" [routerLink]="'/home/surveys/' + id + '/tp_action_list'">
+    <geoaudit-survey-action-button
+      label="testpost"
+      [item_list_completed]="true"
+      [routerLink]="'/home/surveys/' + id + '/tp_action_list'">
     </geoaudit-survey-action-button>
-    <geoaudit-survey-action-button label="tr" [routerLink]="'/home/surveys/' + id + '/tr_action_list'">
+    <geoaudit-survey-action-button
+      label="tr"
+      [item_list_completed]="false"
+      [routerLink]="'/home/surveys/' + id + '/tr_action_list'">
     </geoaudit-survey-action-button>
-    <geoaudit-survey-action-button label="abriox" [routerLink]="'/home/surveys/' + id + '/abriox_list'">
+    <geoaudit-survey-action-button
+      label="abriox"
+      [item_list_completed]="true"
+      [routerLink]="'/home/surveys/' + id + '/abriox_list'">
     </geoaudit-survey-action-button>
-    <geoaudit-survey-action-button label="resistivity" [routerLink]="'/home/surveys/' + id + '/resistivity_list'">
+    <geoaudit-survey-action-button
+      label="resistivity"
+      [item_list_completed]="false"
+      [routerLink]="'/home/surveys/' + id + '/resistivity_list'">
     </geoaudit-survey-action-button>
-  </mat-step>
-</mat-horizontal-stepper>
+  </mat-tab>
 
-<div fxLayout="row-reverse">
-  <button mat-flat-button color="primary" (click)="submit()" fxFlexFill type="submit">
+  <mat-tab
+    [label]="'CONTAINERS.home.survey.steps.notes' | translate"
+  >
+    <mat-card-content>
+      <geoaudit-notes></geoaudit-notes>
+    </mat-card-content>
+  </mat-tab>
+</mat-tab-group>
+
+<!-- <div fxLayout="row-reverse">
+  <button
+    mat-flat-button
+    color="primary"
+    (click)="submit()"
+    fxFlexFill
+    type="submit"
+  >
     {{ 'CONTAINERS.home.jobs.job.form.save' | translate }}
   </button>
+</div> -->
+
+<div fxLayout="row-reverse" fxLayoutAlign="space-between" class="button-area">
+  <div class="button-wrapper">
+    <button *ngIf="selectedTabIndex != 3" mat-icon-button color="accent" (click)="selectedIndexChange(selectedTabIndex + 1)" class="btn-arrow">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+  </div>
+  
+  <button
+    mat-flat-button
+    color="primary"
+    (click)="submit()"
+    type="submit"
+    class="btn-submit"
+  >
+    {{ 'CONTAINERS.home.jobs.job.form.save' | translate }}
+  </button>
+  <div class="button-wrapper">
+    <button *ngIf="selectedTabIndex != 0" mat-icon-button color="accent" (click)="selectedIndexChange(selectedTabIndex - 1)" class="btn-arrow">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+  </div>
 </div>
