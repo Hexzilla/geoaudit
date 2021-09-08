@@ -55,7 +55,7 @@ export class ListComponent implements OnInit {
   pageEvent: PageEvent;
 
   public selectedCategory = 'List';
-  public formdata;
+  public formdata: any = {};
 
   constructor(
     // public dialog: MatDialog,
@@ -97,43 +97,30 @@ export class ListComponent implements OnInit {
         address_contains: this.formdata.address,
       };
     }
-    if (this.formdata.latCtrl) {
+    /*if (this.formdata.latCtrl && this.formdata.lngCtrl) {
       where = {
         ...where,
-        'geometry.lat': this.formdata.latCtrl,
+        'geometry_contains': { "lng": this.formdata.lngCtrl, "lat": this.formdata.latCtrl }
       };
-    }
-    if (this.formdata.lngCtrl) {
-      where = {
-        ...where,
-        'geometry.lng': this.formdata.lngCtrl,
-      };
-    }
+    }*/
     const parameters = qs.stringify({
       _where: where,
       _sort: 'created_at:DESC',
     });
 
-    let tempcategory;
-
-    switch(this.selectedCategory){
-      case "surveys" : tempcategory = this.surveyEntityService;
-        break;
-      case "testpost" : tempcategory = this.testpostEntityService;
-        break;
-      case "tr" : tempcategory = this.trEntityService;
-        break;
-      case "site" : tempcategory = this.siteEntityService;
-        break;
-      case "abriox" : tempcategory = this.abrioxEntityService;
-        break;
-      case "resistivity" : tempcategory = this.resistivityEntityService;
-        break;
-    }
-    tempcategory.getWithQuery(parameters).subscribe((res) => {
+    const entityService: any = this.getEntityService(this.selectedCategory);
+    entityService?.getWithQuery(parameters).subscribe((res) => {
       if (this.formdata.nearLocation) {
         this.nearLocationSort(res);
-      } else {
+      } 
+      else if (this.formdata.latCtrl && this.formdata.lngCtrl) {
+        const coords = {
+          latitude: this.formdata.latCtrl,
+          longitude: this.formdata.lngCtrl,
+        }
+        this.sortByLocation(res, coords);
+      }
+      else {
         if(this.formdata.lngCtrl && this.formdata.latCtrl)
         {
           this.selectionService.setLocation.emit({geometry:{lat:this.formdata.latCtrl, lng:this.formdata.lngCtrl}});
@@ -147,26 +134,48 @@ export class ListComponent implements OnInit {
     this.selectionService.setSurveyMarkerFilter.emit([]);
   }
   
-  nearLocationSort(res){
+  nearLocationSort(res) {
     window.navigator.geolocation.getCurrentPosition(
       (position) => {
         console.log('mylocation', position.coords);
-        this.selectionService.setLocation.emit({geometry:{lat:position.coords.latitude, lng:position.coords.longitude}});
-        res.sort((a, b): number => {
-          return (
-            this.haversine_distance(a, position) -
-            this.haversine_distance(b, position)
-          );
-        });
-        this.dataSource = new MatTableDataSource(res);
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-        this.selection = new SelectionModel<Survey>(true, []);
+        this.sortByLocation(res, position.coords);
       },
       (error) => {
         console.log(error);
       }
     );
+  }
+  
+  sortByLocation(res, coords) {
+    console.log('sortByLocation', coords);
+    this.selectionService.setLocation.emit({geometry:{lat: coords.latitude, lng: coords.longitude}});
+    res.sort((a, b): number => {
+      return (
+        this.haversine_distance(a, coords) - this.haversine_distance(b, coords)
+      );
+    });
+    this.dataSource = new MatTableDataSource(res);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+    this.selection = new SelectionModel<Survey>(true, []);
+  }
+
+  getEntityService(category) {
+    switch (category) {
+      case 'surveys':
+        return this.surveyEntityService;
+      case 'testpost':
+        return this.testpostEntityService;
+      case 'tr':
+        return this.trEntityService;
+      case 'site':
+        return this.siteEntityService;
+      case 'abriox':
+        return this.abrioxEntityService;
+      case 'resistivity':
+        return this.resistivityEntityService;
+    }
+    return null;
   }
   
   // eslint-disable-next-line @angular-eslint/use-lifecycle-interface
@@ -181,17 +190,17 @@ export class ListComponent implements OnInit {
     return numSelected === numRows;
   }
 
-  haversine_distance(mkPositioin, myPosition) {
+  haversine_distance(mkPositioin, coords) {
     if (!mkPositioin.geometry) return;
-    let R = 3958.8; // Radius of the Earth in miles
-    let rlat1 = mkPositioin.geometry.lat * (Math.PI / 180); // Convert degrees to radians
-    let rlat2 = myPosition.coords.latitude * (Math.PI / 180); // Convert degrees to radians
-    let difflat = rlat2 - rlat1; // Radian difference (latitudes)
-    let difflon =
-      (myPosition.coords.longitude - mkPositioin.geometry.lng) *
+    const R = 3958.8; // Radius of the Earth in miles
+    const rlat1 = mkPositioin.geometry.lat * (Math.PI / 180); // Convert degrees to radians
+    const rlat2 = coords.latitude * (Math.PI / 180); // Convert degrees to radians
+    const difflat = rlat2 - rlat1; // Radian difference (latitudes)
+    const difflon =
+      (coords.longitude - mkPositioin.geometry.lng) *
       (Math.PI / 180); // Radian difference (longitudes)
 
-    let d =
+      const d =
       2 *
       R *
       Math.asin(
