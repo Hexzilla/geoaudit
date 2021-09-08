@@ -55,7 +55,7 @@
           </mat-form-field>
         </div>
         <div fxLayout="row" fxLayoutAlign="space-between">
-          <mat-form-field appearance="outline" class="fx-col-6">
+          <mat-form-field appearance="outline" class="geolocation">
             <mat-label>{{
               'CONTAINERS.home.resistivity.latitude' | translate
             }}</mat-label>
@@ -64,11 +64,11 @@
               [placeholder]="
                 'CONTAINERS.home.resistivity.latitude' | translate
               "
-              formControlName="latitude"
+              [formControl]="latCtrl"
               class="form-control"
             />
           </mat-form-field>
-          <mat-form-field appearance="outline" class="fx-col-6">
+          <mat-form-field appearance="outline" class="geolocation">
             <mat-label>{{
               'CONTAINERS.home.resistivity.longitude' | translate
             }}</mat-label>
@@ -77,10 +77,17 @@
               [placeholder]="
                 'CONTAINERS.home.resistivity.longitude' | translate
               "
-              formControlName="longitude"
+              [formControl]="lngCtrl"
               class="form-control"
             />
-          </mat-form-field></div>
+          </mat-form-field>
+          <div fxLayoutAlign="space-between center">
+            <button mat-icon-button color="accent" type="button" aria-label="Example icon button with a plus one icon"
+              (click)="clickMarker()">
+              <mat-icon>location_on</mat-icon>
+            </button>
+          </div>
+        </div>
 
         <div>
           <!--Reading-->
