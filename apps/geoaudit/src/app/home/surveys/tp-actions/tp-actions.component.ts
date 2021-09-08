@@ -8,6 +8,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import qs from 'qs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import * as moment from 'moment';
@@ -45,7 +46,15 @@ export class TpActionsComponent implements OnInit {
   }
 
   update() {
-    this.tpActionEntityService.getAll().subscribe(
+    const serveyId = this.route.snapshot.params['id'];
+    console.log("serveyId", serveyId);
+
+    const parameters = qs.stringify({
+      _where: {
+        survey: serveyId
+      }
+    });
+    this.tpActionEntityService.getWithQuery(parameters).subscribe(
       (actions) => {
         this.tp_actions = actions;
         console.log("actions", actions)
