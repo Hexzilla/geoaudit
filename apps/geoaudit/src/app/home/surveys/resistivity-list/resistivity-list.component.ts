@@ -8,6 +8,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import qs from 'qs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import * as moment from 'moment';
@@ -45,7 +46,15 @@ export class ResistivityListComponent implements OnInit {
   }
 
   update() {
-    this.resistivityEntityService.getAll().subscribe(
+    const serveyId = this.route.snapshot.params['id'];
+    console.log("serveyId", serveyId);
+
+    const parameters = qs.stringify({
+      _where: {
+        survey: serveyId
+      }
+    });
+    this.resistivityEntityService.getWithQuery(parameters).subscribe(
       (actions) => {
         this.resistivities = actions.filter(it => it.reference != null);
         console.log("resistivities", actions)
@@ -73,11 +82,9 @@ export class ResistivityListComponent implements OnInit {
   }
 
   navigate(item) {
-    if (item.testpost) {
-      const url = `/home/testpost/${item.testpost.id}/tr_action/${item.id}`
-      console.log("navigate", item, url)
-      this.router.navigate([url]);
-    }
+    console.log("navigate", item)
+    const url = `/home/resistivities/${item.id}`
+    this.router.navigate([url]);
   }
 
   addAction() {
