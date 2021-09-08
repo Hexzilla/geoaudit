@@ -57,7 +57,7 @@ export class TpActionsComponent implements OnInit {
     this.tpActionEntityService.getWithQuery(parameters).subscribe(
       (actions) => {
         this.tp_actions = actions;
-        console.log("actions", actions)
+        console.log("tp-actions", actions)
       },
       (err) => {}
     );
@@ -90,7 +90,7 @@ export class TpActionsComponent implements OnInit {
   }
 
   addAction() {
-    const url = `/home/testpost/1/tp_action`
+    const url = `/home/testposts`
     this.router.navigate([url]);
   }
 
