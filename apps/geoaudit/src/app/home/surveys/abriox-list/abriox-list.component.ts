@@ -8,6 +8,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import qs from 'qs';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as moment from 'moment';
 
@@ -40,7 +41,15 @@ export class AbrioxListComponent implements OnInit {
   }
 
   update() {
-    this.abrioxEntityService.getAll().subscribe(
+    const serveyId = this.route.snapshot.params['id'];
+    console.log("serveyId", serveyId);
+
+    const parameters = qs.stringify({
+      _where: {
+        survey: serveyId
+      }
+    });
+    this.abrioxEntityService.getWithQuery(parameters).subscribe(
       (abrioxes) => {
         console.log("abrioxes", abrioxes)
         this.abrioxes = abrioxes.filter(it => it.name != null)
