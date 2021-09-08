@@ -1,0 +1,214 @@
+<geoaudit-sidebar-header
+  title="CONTAINERS.home.resistivity.title"
+  [placeholder]=""
+>
+  <mat-form-field appearance="outline">
+    <mat-label>{{ 'CONTAINERS.home.jobs.job.status' | translate }}</mat-label>
+    <mat-select
+      statusControlName="status"
+      name="status"
+      [(value)]="currentState"
+    >
+      <mat-option *ngFor="let status of statuses" [value]="status.id">
+        {{ 'STATUSES.' + status.name | translate }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</geoaudit-sidebar-header>
+
+<mat-tab-group
+  mat-align-tabs="start"
+  (selectedIndexChange)="selectedIndexChange($event)"
+  [(selectedIndex)]="selectedTabIndex"
+  class="tab-body-height"
+>
+  <!-- Details -->
+  <mat-tab [label]="'CONTAINERS.home.jobs.job.steps.details' | translate">
+    <mat-card-content class="mt-26">
+      <form fxLayout="column" [formGroup]="form" (ngSubmit)="submit()">
+        <div fxLayout="column">
+          <mat-form-field appearance="outline">
+            <mat-label>{{
+              'CONTAINERS.home.resistivity.reference' | translate
+            }}</mat-label>
+            <input
+              matInput
+              [placeholder]="
+                'CONTAINERS.home.resistivity.reference' | translate
+              "
+              formControlName="reference"
+              class="form-control"
+            />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>{{
+              'CONTAINERS.home.testposts.tp_action.date' | translate
+            }}</mat-label>
+            <input
+              matInput
+              [placeholder]="
+                'CONTAINERS.home.testposts.tp_action.date' | translate
+              "
+              formControlName="date"
+              class="form-control"
+            />
+          </mat-form-field>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="space-between">
+          <mat-form-field appearance="outline" class="fx-col-6">
+            <mat-label>{{
+              'CONTAINERS.home.resistivity.latitude' | translate
+            }}</mat-label>
+            <input
+              matInput
+              [placeholder]="
+                'CONTAINERS.home.resistivity.latitude' | translate
+              "
+              formControlName="latitude"
+              class="form-control"
+            />
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="fx-col-6">
+            <mat-label>{{
+              'CONTAINERS.home.resistivity.longitude' | translate
+            }}</mat-label>
+            <input
+              matInput
+              [placeholder]="
+                'CONTAINERS.home.resistivity.longitude' | translate
+              "
+              formControlName="longitude"
+              class="form-control"
+            />
+          </mat-form-field></div>
+
+        <div>
+          <!--Reading-->
+          <h2>{{
+            'CONTAINERS.home.resistivity.reading.title' | translate
+          }}</h2>
+          <div>
+            <div formArrayName="readings">
+              <div *ngFor="let _ of readings.controls; index as i" [formGroupName]="i">
+                <div fxLayout="row" fxLayoutAlign="space-between">
+                  <mat-form-field appearance="outline" class="fx-col-6">
+                    <mat-label>{{
+                      'CONTAINERS.home.resistivity.reading.distance' | translate
+                    }}</mat-label>
+                    <input
+                      matInput
+                      [placeholder]="
+                        'CONTAINERS.home.resistivity.reading.distance' | translate
+                      "
+                      type="number"
+                      formControlName="distance"
+                      class="form-control"
+                    />
+                  </mat-form-field>
+                  <mat-form-field appearance="outline" class="fx-col-6">
+                    <mat-label>{{
+                      'CONTAINERS.home.resistivity.reading.value' | translate
+                    }}</mat-label>
+                    <input
+                      matInput
+                      [placeholder]="
+                        'CONTAINERS.home.resistivity.reading.value' | translate
+                      "
+                      type="number"
+                      formControlName="value"
+                      class="form-control"
+                    />
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+            <div class="tp-bottom">
+              <button
+                mat-icon-button
+                color="accent"
+                aria-label="add icon button"
+                inline="true"
+                (click)="addReading($event, null)"
+              >
+                <mat-icon>add_circle_outline</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-tab>
+
+  <!-- Attachments -->
+  <mat-tab [label]="'CONTAINERS.home.jobs.job.steps.attachments' | translate">
+    <mat-card-content>
+      <attachment-file-upload
+        label="CONTAINERS.home.jobs.job.attachments.images"
+        (preview)="onItemPreview($event)"
+        (upload)="onImageUpload($event)"
+        fileType="IMAGE"
+        [items] = "attachedImages"
+        [multiple]="true"
+      ></attachment-file-upload>
+
+      <attachment-file-upload
+        label="CONTAINERS.home.jobs.job.attachments.documents"
+        (preview)="onItemPreview($event)"
+        (upload)="onDocumentUpload($event)"
+        fileType="DOCUMENT"
+        [items] = "attachedDocuments"
+        [multiple]="true"
+      ></attachment-file-upload>
+    </mat-card-content>
+  </mat-tab>
+
+  <!-- Notes -->
+  <mat-tab [label]="'CONTAINERS.home.jobs.job.steps.notes' | translate">
+    <mat-card-content>
+      <geoaudit-notes></geoaudit-notes>
+    </mat-card-content>
+  </mat-tab>
+</mat-tab-group>
+
+<div fxLayout="row-reverse" class="approve-wrapper">
+  <geoaudit-status-buttons
+    [completed]="false"
+    [approved]="false"
+    (completeEvent)="updateMarkState($event)"
+  ></geoaudit-status-buttons>
+</div>
+
+<div fxLayout="row-reverse" fxLayoutAlign="space-between" class="button-area">
+  <div class="button-wrapper">
+    <button
+      *ngIf="selectedTabIndex != 3"
+      mat-icon-button
+      color="accent"
+      (click)="selectedIndexChange(selectedTabIndex + 1)"
+      class="btn-arrow"
+    >
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+  </div>
+
+  <button
+    mat-flat-button
+    color="primary"
+    (click)="submit()"
+    type="submit"
+    class="btn-submit"
+  >
+    {{ 'CONTAINERS.home.jobs.job.form.save' | translate }}
+  </button>
+  <div class="button-wrapper">
+    <button
+      *ngIf="selectedTabIndex != 0"
+      mat-icon-button
+      color="accent"
+      (click)="selectedIndexChange(selectedTabIndex - 1)"
+      class="btn-arrow"
+    >
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+  </div>
+</div>

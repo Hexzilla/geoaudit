@@ -235,6 +235,13 @@
 				"abriox": "Abriox",
 				"resistivity": "Resistivity",
 				"comments": "Comments",
+				"steps": {
+					"overview": "Overview",
+					"delivery": "Delivery",
+					"attachments": "Attachments",
+					"inspection": "Inspection",
+					"notes": "Notes"
+				},
 				"abriox_list": "Abriox List",
 				"tp_action_list": "Testpost Action List",
 				"tr_action_list": "Testpost Action List",
@@ -321,6 +328,18 @@
 							"anode_current": "Anode current"
 						}
 					}
+				}
+			},
+			"resistivity": {
+				"title": "Resistivity",
+				"reference": "Reference",
+				"date": "Date",
+				"latitude": "Latitude",
+				"longitude": "Longitude",
+				"reading": {
+					"title": "Reading",
+					"distance": "Distance",
+					"value": "Value"
 				}
 			}
 		},

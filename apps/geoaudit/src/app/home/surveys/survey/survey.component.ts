@@ -13,8 +13,8 @@ import { Store } from '@ngrx/store';
 import * as moment from 'moment';
 
 import * as fromApp from '../../../store';
-import { Status, Survey, User, Image, Job } from '../../../models';
-import { AlertService } from '../../../services';
+import { Status, Statuses, Survey, User, Image, Job } from '../../../models';
+import { AlertService, UploadService } from '../../../services';
 import { StatusEntityService } from '../../../entity-services/status-entity.service';
 import { SurveyEntityService } from '../../../entity-services/survey-entity.service';
 import {
@@ -89,6 +89,10 @@ export class SurveyComponent implements OnInit {
   public disableMinute = false;
   public hideTime = false;
 
+  public selectedTabIndex = 0;
+  attachedImages: Array<any>;
+  Documents: Array<any>;
+
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
@@ -99,6 +103,7 @@ export class SurveyComponent implements OnInit {
     private surveyEntityService: SurveyEntityService,
     private userEntityService: UserEntityService,
     private alertService: AlertService,
+    private uploadService: UploadService,
     private _lightbox: Lightbox,
     private dialog: MatDialog
   ) { }
@@ -364,9 +369,6 @@ export class SurveyComponent implements OnInit {
       date_assigned: [moment().toISOString()],
       date_delivery: [moment().toISOString()],
 
-      images: [[]],
-      documents: [[]],
-
       geometry: [null],
 
       // // tp_actions: [],
@@ -387,8 +389,8 @@ export class SurveyComponent implements OnInit {
 
       // // calendar_events: [],
 
-      //     images: [[]],
-      //     documents: [[]],
+      images: [],
+      documents: [],
 
       comment: [null],
 
@@ -443,6 +445,7 @@ export class SurveyComponent implements OnInit {
       images: [...images, event],
     });
 
+    this.getUploadFiles();
     this.submit(false);
   }
 
@@ -453,40 +456,24 @@ export class SurveyComponent implements OnInit {
       documents: [...documents, event],
     });
 
+    this.getUploadFiles();
     this.submit(false);
   }
 
   onPreview(fileType: FileTypes): void {
     const { images, documents } = this.form.value;
+    this.uploadService.onPreview(fileType, images, documents);
+  }
 
-    switch (fileType) {
-      case FileTypes.IMAGE:
-        let _album: Array<IAlbum> = [];
+  onItemPreview(param: any): void {
+    const { images, documents } = this.form.value;
+    this.uploadService.onItemPreview(param.fileType, images, documents, param.index);
+  }
 
-        images.map((image: Image) => {
-          const album = {
-            src: `${environment.API_URL}${image.url}`,
-            caption: image.name,
-            thumb: `${environment.API_URL}${image.formats.thumbnail.url}`,
-          };
-
-          _album.push(album);
-        });
-
-        if (_album.length >= 1) this._lightbox.open(_album, 0);
-        break;
-
-      case FileTypes.DOCUMENT:
-        const dialogRef = this.dialog.open(AttachmentModalComponent, {
-          data: {
-            fileType,
-            documents,
-          },
-        });
-
-        dialogRef.afterClosed().subscribe((result) => { });
-        break;
-    }
+  getUploadFiles(): void {
+      const { images, documents } = this.form.value;
+      this.attachedImages = this.uploadService.getImageUploadFiles(images);
+      this.Documents = this.uploadService.getDocumentUploadFiles(documents);
   }
 
   /**
@@ -532,5 +519,9 @@ export class SurveyComponent implements OnInit {
 
       (err) => { }
     );
+  }
+
+  selectedIndexChange(selectedTabIndex) {
+    this.selectedTabIndex = selectedTabIndex;
   }
 }

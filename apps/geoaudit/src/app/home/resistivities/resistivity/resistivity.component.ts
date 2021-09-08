@@ -6,14 +6,13 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import * as fromApp from '../../../store';
 import * as moment from 'moment';
 import { TestpostEntityService } from '../../../entity-services/testpost-entity.service';
 import {
-  Testpost,
-  TrAction,
+  Resistivity,
   Status,
 } from '../../../models';
 import { AlertService, UploadService } from '../../../services';
@@ -22,15 +21,15 @@ import { IAlbum, Lightbox } from 'ngx-lightbox';
 import { MatDialog } from '@angular/material/dialog';
 import { environment } from 'apps/geoaudit/src/environments/environment';
 import { StatusEntityService } from '../../../entity-services/status-entity.service';
-import { TrActionEntityService } from '../../../entity-services/tr-action-entity.service';
+import { ResistivityEntityService } from '../../../entity-services/resistivity-entity.service';
 import { SurveyEntityService } from '../../../entity-services/survey-entity.service';
 
 @Component({
-  selector: 'geoaudit-tp-action',
-  templateUrl: './tr-action.component.html',
-  styleUrls: ['./tr-action.component.scss'],
+  selector: 'geoaudit-resistivity',
+  templateUrl: './resistivity.component.html',
+  styleUrls: ['./resistivity.component.scss'],
 })
-export class TrActionComponent implements OnInit, AfterViewInit {
+export class ResistivityComponent implements OnInit, AfterViewInit {
   /**
    * The form consisting of the form fields.
    */
@@ -51,10 +50,11 @@ export class TrActionComponent implements OnInit, AfterViewInit {
    */
   submitted = false;
 
+  testpostId = 0;
 
   actionId = 0;
 
-  public tr_action: TrAction = null;
+  public resistivity: Resistivity = null;
 
   public selectedTabIndex = 0;
   
@@ -67,7 +67,7 @@ export class TrActionComponent implements OnInit, AfterViewInit {
     private surveyEntityService: SurveyEntityService,
     private testpostEntityService: TestpostEntityService,
     private statusEntityService: StatusEntityService,
-    private trActionEntityService: TrActionEntityService,
+    private resistivityEntityService: ResistivityEntityService,
     private store: Store<fromApp.State>,
     private router: Router,
     private alertService: AlertService,
@@ -98,22 +98,31 @@ export class TrActionComponent implements OnInit, AfterViewInit {
     //
   }
 
+  getTestpostTitle() {
+    return 'Testpost';
+  }
+
   fetchTpAction() {
+    this.testpostId = this.route.snapshot.params['id']
+    console.log("testpostId", this.testpostId)
+
     this.actionId = this.route.snapshot.params['actionId'];
     console.log("actionId", this.actionId)
 
-    this.trActionEntityService.getByKey(this.actionId).subscribe(
-      (tr_action) => {
-        this.tr_action = tr_action;
+    this.resistivityEntityService.getByKey(this.actionId).subscribe(
+      (resistivity) => {
+        this.resistivity = resistivity;
 
         //TODO - FormArray
-        if (tr_action) {
+        if (resistivity) {
           this.form.patchValue({
-            date: moment(tr_action.date).format('L LT'),
-            condition: tr_action.condition?.name,
+            date: moment(resistivity.date).format('L LT'),
+            reference: resistivity.reference,
+            latitude: resistivity.geometry['latitude'],
+            longitude: resistivity.geometry['longitude'],
 
-            images: tr_action.images,
-            documents: tr_action.documents
+            images: resistivity.images,
+            documents: resistivity.documents
           });
         }
       },
@@ -121,50 +130,18 @@ export class TrActionComponent implements OnInit, AfterViewInit {
     )
   }
 
-  get anodes(): FormArray {
-    return this.form.get('anodes') as FormArray;
+  get readings(): FormArray {
+    return this.form.get('readings') as FormArray;
   }
 
-  addAnode(anode) {
-    if (anode) {
-		  this.anodes.push(this.formBuilder.group(anode));
+  addReading(e, item) {
+    e.preventDefault();
+    if (item) {
+		  this.readings.push(this.formBuilder.group(item));
     } else {
-      this.anodes.push(this.formBuilder.group({
-        anodes_on: '',
-        anodes_off: '',
-        anodes_current: '',
-      }));
-    }
-  }
-
-  get currentDrains(): FormArray {
-    return this.form.get('currentDrains') as FormArray;
-  }
-
-  addCurrentDrain(drain) {
-    if (drain) {
-		  this.currentDrains.push(this.formBuilder.group(drain));
-    } else {
-      this.currentDrains.push(this.formBuilder.group({
-        cd_input_v: '',
-        cd_input_a: '',
-        cd_output_v: '',
-        cd_output_a: ''
-      }));
-    }
-  }
-  
-  get faults(): FormArray {
-    return this.form.get('faults') as FormArray;
-  }
-
-  addFaults(fault) {
-    if (fault) {
-		  this.faults.push(this.formBuilder.group(fault));
-    } else {
-      this.faults.push(this.formBuilder.group({
-        type: '',
-        desc: ''
+      this.readings.push(this.formBuilder.group({
+        distance: '',
+        value: '',
       }));
     }
   }
@@ -175,13 +152,10 @@ export class TrActionComponent implements OnInit, AfterViewInit {
   initialiseForm(): void {
     this.form = this.formBuilder.group({
       date: null,
-      condition: null,
-      reading_volt: null,
-      reading_amps: null,
-      current_setting: null,
-      anodes: new FormArray([]),
-      currentDrains: new FormArray([]),
-      faults: new FormArray([]),
+      reference: null,
+      latitude: null,
+      longitude: null,
+      readings: new FormArray([]),
     });
   }
 
@@ -195,6 +169,15 @@ export class TrActionComponent implements OnInit, AfterViewInit {
     if (this.form.invalid) {
       this.alertService.error('Invalid');
       return;
+    }
+
+    const surveyId = this.resistivity?.survey?.id;
+    if (surveyId) {
+      const url = `/home/surveys/${surveyId}/tp_action_list`;
+      this.router.navigate([url]);
+    }
+    else {
+      this.router.navigate([`/home/`]);
     }
 
     /**
@@ -220,6 +203,10 @@ export class TrActionComponent implements OnInit, AfterViewInit {
 
   selectedIndexChange(selectedTabIndex) {
     this.selectedTabIndex = selectedTabIndex;
+  }
+
+  searchTestpost() {
+    this.router.navigate([`/home/search`]);
   }
 
   updateMarkState(e) {
