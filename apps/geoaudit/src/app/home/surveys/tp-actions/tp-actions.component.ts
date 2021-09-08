@@ -83,7 +83,7 @@ export class TpActionsComponent implements OnInit {
 
   navigate(item) {
     if (item.testpost) {
-      const url = `/home/testpost/${item.testpost.id}/tp_action/${item.id}`
+      const url = `/home/testposts/${item.testpost.id}/tp_action/${item.id}`
       console.log("navigate", item, url)
       this.router.navigate([url]);
     }
