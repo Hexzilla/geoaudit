@@ -8,6 +8,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import qs from 'qs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import * as moment from 'moment';
@@ -45,10 +46,18 @@ export class TpActionsComponent implements OnInit {
   }
 
   update() {
-    this.tpActionEntityService.getAll().subscribe(
+    const serveyId = this.route.snapshot.params['id'];
+    console.log("serveyId", serveyId);
+
+    const parameters = qs.stringify({
+      _where: {
+        survey: serveyId
+      }
+    });
+    this.tpActionEntityService.getWithQuery(parameters).subscribe(
       (actions) => {
         this.tp_actions = actions;
-        console.log("actions", actions)
+        console.log("tp-actions", actions)
       },
       (err) => {}
     );
@@ -74,14 +83,14 @@ export class TpActionsComponent implements OnInit {
 
   navigate(item) {
     if (item.testpost) {
-      const url = `/home/testpost/${item.testpost.id}/tp_action/${item.id}`
+      const url = `/home/testposts/${item.testpost.id}/tp_action/${item.id}`
       console.log("navigate", item, url)
       this.router.navigate([url]);
     }
   }
 
   addAction() {
-    const url = `/home/testpost/1/tp_action`
+    const url = `/home/testposts`
     this.router.navigate([url]);
   }
 
