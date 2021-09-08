@@ -289,7 +289,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
     this.alertService.clear();
 
     if (this.form.invalid) {
-      this.alertService.error('Invalid');
+      this.alertService.error('ALERTS.invalid');
       return;
     }
 
@@ -301,13 +301,13 @@ export class NoteComponent implements OnInit, AfterViewInit {
      */
     this.noteEntityService.update(this.form.value).subscribe(
       (update) => {
-        this.alertService.info('Saved Changes');
+        this.alertService.info('ALERTS.saved_changes');
 
         // if (navigate) this.router.navigate([`/home/notes`]);
       },
 
       (err) => {
-        this.alertService.error('Something went wrong');
+        this.alertService.error('ALERTS.something_went_wrong');
       },
 
       () => {}

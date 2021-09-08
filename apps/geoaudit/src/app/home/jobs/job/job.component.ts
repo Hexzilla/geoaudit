@@ -361,7 +361,7 @@ export class JobComponent implements OnInit, AfterViewInit {
       },
 
       (err) => {
-        this.alertService.error('Something went wrong');
+        this.alertService.error('ALERTS.something_went_wrong');
       }
     );
   }
@@ -406,7 +406,7 @@ export class JobComponent implements OnInit, AfterViewInit {
     this.alertService.clear();
 
     if (this.form.invalid) {
-      this.alertService.error('Invalid');
+      this.alertService.error('ALERTS.invalid');
       return;
     }
 
@@ -418,7 +418,7 @@ export class JobComponent implements OnInit, AfterViewInit {
      */
     this.jobEntityService.update(this.form.value).subscribe(
       (update) => {
-        this.alertService.info('Saved Changes');
+        this.alertService.info('ALERTS.saved_changed');
 
         this.dataSource = new MatTableDataSource(update.surveys);
 
@@ -426,7 +426,7 @@ export class JobComponent implements OnInit, AfterViewInit {
       },
 
       (err) => {
-        this.alertService.error('Something went wrong');
+        this.alertService.error('ALERTS.something_went_wrong');
       }
     );
   }

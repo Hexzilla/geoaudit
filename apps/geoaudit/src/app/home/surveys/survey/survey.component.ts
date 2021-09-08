@@ -300,7 +300,7 @@ export class SurveyComponent implements OnInit {
       },
 
       (err) => {
-        this.alertService.error('Something went wrong');
+        this.alertService.error('ALERTS.something_went_wrong');
       }
     );
   }
@@ -405,7 +405,7 @@ export class SurveyComponent implements OnInit {
     this.alertService.clear();
 
     if (this.form.invalid) {
-      this.alertService.error('Invalid');
+      this.alertService.error('ALERTS.invalid');
       return;
     }
 
@@ -417,13 +417,13 @@ export class SurveyComponent implements OnInit {
      */
     this.surveyEntityService.update(this.form.value).subscribe(
       (update) => {
-        this.alertService.info('Saved Changes');
+        this.alertService.info('ALERTS.saved_changes');
 
         if (navigate) this.router.navigate([`/home`]);
       },
 
       (err) => {
-        this.alertService.error('Something went wrong');
+        this.alertService.error('ALERTS.something_went_wrong');
       },
 
       () => { }
