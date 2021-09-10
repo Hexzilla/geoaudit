@@ -12,7 +12,7 @@ import * as fromApp from '../../../store';
 import * as moment from 'moment';
 import { TestpostEntityService } from '../../../entity-services/testpost-entity.service';
 import {
-  Testpost,
+  Condition,
   TpAction,
   Status,
 } from '../../../models';
@@ -23,7 +23,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { environment } from 'apps/geoaudit/src/environments/environment';
 import { StatusEntityService } from '../../../entity-services/status-entity.service';
 import { TpActionEntityService } from '../../../entity-services/tp-action-entity.service';
-import { SurveyEntityService } from '../../../entity-services/survey-entity.service';
+import { ConditionEntityService } from '../../../entity-services/condition-entity.service';
 
 @Component({
   selector: 'geoaudit-tp-action',
@@ -51,6 +51,8 @@ export class TpActionComponent implements OnInit, AfterViewInit {
    */
   submitted = false;
 
+  conditions: Array<Condition>;
+
   testpostId = 0;
 
   actionId = 0;
@@ -65,10 +67,10 @@ export class TpActionComponent implements OnInit, AfterViewInit {
   constructor(
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
-    private surveyEntityService: SurveyEntityService,
     private testpostEntityService: TestpostEntityService,
     private statusEntityService: StatusEntityService,
     private tpActionEntityService: TpActionEntityService,
+    private conditionEntityService: ConditionEntityService,
     private store: Store<fromApp.State>,
     private router: Router,
     private alertService: AlertService,
@@ -92,7 +94,7 @@ export class TpActionComponent implements OnInit, AfterViewInit {
      */
     this.initialiseForm();
 
-    this.fetchTpAction();
+    this.fetchData();
   }
 
   ngAfterViewInit(): void {
@@ -107,63 +109,63 @@ export class TpActionComponent implements OnInit, AfterViewInit {
     return 'Testpost';
   }
 
-  fetchTpAction() {
-    this.testpostId = this.route.snapshot.params['id']
-    console.log("testpostId", this.testpostId)
+  fetchData() {
+    this.conditionEntityService.getAll().subscribe(
+      (conditions) => {
+        this.conditions = conditions;
+        console.log("conditions", conditions);
+      }
+    )
 
+    this.testpostId = this.route.snapshot.params['id']
     this.actionId = this.route.snapshot.params['actionId'];
     console.log("actionId", this.actionId)
 
     this.tpActionEntityService.getByKey(this.actionId).subscribe(
-      (tp_action) => {
-        this.tp_action = tp_action;
+      (tpaction) => {
+        this.tp_action = tpaction;
+        console.log("tp_action", tpaction);
 
-        const fault_detail = [
-          {
-            type: "type1",
-            desc: "desc1"
-          },
-          {
-            type: "type2",
-            desc: "desc2"
-          }
-        ]
-        console.log('fault_detail', fault_detail);
+        this.currentState = tpaction.status?.id;
 
-        //TODO - FormArray
-        if (tp_action) {
-          this.form.patchValue({
-            date: moment(tp_action.date).format('L LT'),
-            condition: tp_action.condition?.name,
+        this.form.patchValue({
+          id: tpaction.id,
+          date: tpaction.date,
+          condition: tpaction.condition?.id,
 
-            images: tp_action.images,
-            documents: tp_action.documents
-          });
+          images: tpaction.images,
+          documents: tpaction.documents
+        });
 
-          this.faults.clear();
-          fault_detail.map(item => this.addFaults(null, item));
-          console.log('this.faults', this.faults)
-        }
+        this.fault_detail.clear();
+        tpaction.fault_detail?.map(item => this.fault_detail.push(this.formBuilder.group(item)));
+
+        this.current_drain.clear();
+        tpaction.current_drain?.map(item => this.current_drain.push(this.formBuilder.group(item)));
       },
       (err) => {}
     )
+  }
+
+  getDate() {
+    if (this.tp_action) {
+      const datestr = moment(this.tp_action.date).format('L');
+      return ` - [${datestr}]`
+    }
+    return ''
   }
 
   get anodes(): FormArray {
     return this.form.get('anodes') as FormArray;
   }
 
-  addAnode(event, item=null) {
+  addAnode(event) {
     event?.preventDefault();
-    if (item) {
-		  this.anodes.push(this.formBuilder.group(item));
-    } else {
-      this.anodes.push(this.formBuilder.group({
-        anodes_on: '',
-        anodes_off: '',
-        anodes_current: '',
-      }));
-    }
+    this.anodes.push(this.formBuilder.group({
+      anodes_on: '',
+      anodes_off: '',
+      anodes_current: '',
+    }));
   }
 
   get deads(): FormArray {
@@ -218,22 +220,18 @@ export class TpActionComponent implements OnInit, AfterViewInit {
     }
   }
 
-  get currentDrains(): FormArray {
-    return this.form.get('currentDrains') as FormArray;
+  get current_drain(): FormArray {
+    return this.form.get('current_drain') as FormArray;
   }
 
-  addCurrentDrain(event, item=null) {
+  addCurrentDrain(event) {
     event?.preventDefault();
-    if (item) {
-		  this.currentDrains.push(this.formBuilder.group(item));
-    } else {
-      this.currentDrains.push(this.formBuilder.group({
-        cd_input_v: '',
-        cd_input_a: '',
-        cd_output_v: '',
-        cd_output_a: ''
-      }));
-    }
+    this.current_drain.push(this.formBuilder.group({
+      cd_input_v: '',
+      cd_input_a: '',
+      cd_output_v: '',
+      cd_output_a: ''
+    }));
   }
 
   get assets(): FormArray {
@@ -251,20 +249,16 @@ export class TpActionComponent implements OnInit, AfterViewInit {
     }
   }
 
-  get faults(): FormArray {
-    return this.form.get('faults') as FormArray;
+  get fault_detail(): FormArray {
+    return this.form.get('fault_detail') as FormArray;
   }
 
-  addFaults(event, item=null) {
+  addFaults(event) {
     event?.preventDefault();
-    if (item) {
-		  this.faults.push(this.formBuilder.group(item));
-    } else {
-      this.faults.push(this.formBuilder.group({
-        type: '',
-        desc: ''
-      }));
-    }
+    this.fault_detail.push(this.formBuilder.group({
+      type: '',
+      desc: ''
+    }));
   }
 
   /**
@@ -272,19 +266,20 @@ export class TpActionComponent implements OnInit, AfterViewInit {
    */
   initialiseForm(): void {
     this.form = this.formBuilder.group({
-      date: null,
-      condition: null,
-      pipe_on: null,
-      pipe_off: null,
+      id: [null],
+      date: [null],
+      condition: [null],
+      pipe_on: [null],
+      pipe_off: [null],
       anodes: new FormArray([]),
       deads: new FormArray([]),
       sleeves: new FormArray([]),
       coupons: new FormArray([]),
-      others_reedswitch: null,
-      others_refcell: null,
-      currentDrains: new FormArray([]),
+      others_reedswitch: [null],
+      others_refcell: [null],
+      current_drain: new FormArray([]),
       assets: new FormArray([]),
-      faults: new FormArray([]),
+      fault_detail: new FormArray([]),
     });
   }
 
@@ -300,34 +295,29 @@ export class TpActionComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    const surveyId = this.tp_action?.survey?.id;
-    if (surveyId) {
-      const url = `/home/surveys/${surveyId}/tp_action_list`;
-      this.router.navigate([url]);
-    }
-    else {
-      this.router.navigate([`/home/`]);
-    }
-
     /**
      * Invoke the backend with a PUT request to update
-     * the job with the form values.
+     * the tp action with the form values.
      *
      * If create then navigate to the job id.
      */
-    /*this.jobEntityService.update(this.form.value).subscribe(
+    this.tpActionEntityService.update(this.form.value).subscribe(
       (update) => {
         this.alertService.info('Saved Changes');
 
-        this.dataSource = new MatTableDataSource(update.surveys);
-
-        if (navigate) this.router.navigate([`/home/jobs`]);
+        if (navigate) {
+          const surveyId = this.tp_action?.survey?.id;
+          if (surveyId) {
+            const url = `/home/surveys/${surveyId}/tp_action_list`;
+            this.router.navigate([url]);
+          }
+        }
       },
 
       (err) => {
         this.alertService.error('Something went wrong');
       }
-    );*/
+    );
   }
 
   selectedIndexChange(selectedTabIndex) {
