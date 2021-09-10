@@ -40,18 +40,19 @@
               class="form-control"
             />
           </mat-form-field>
+
+
           <mat-form-field appearance="outline">
             <mat-label>{{
               'CONTAINERS.home.testposts.tp_action.date' | translate
             }}</mat-label>
-            <input
-              matInput
-              [placeholder]="
-                'CONTAINERS.home.testposts.tp_action.date' | translate
-              "
-              formControlName="date"
-              class="form-control"
-            />
+            <input matInput [ngxMatDatetimePicker]="resistivity_date"
+              [placeholder]="'CONTAINERS.home.testposts.tp_action.date' | translate" formControlName="date" />
+  
+            <mat-datepicker-toggle matSuffix [for]="resistivity_date"></mat-datepicker-toggle>
+  
+            <ngx-mat-datetime-picker #resistivity_date [showSpinners]="true">
+            </ngx-mat-datetime-picker>
           </mat-form-field>
         </div>
         <div fxLayout="row" fxLayoutAlign="space-between">
@@ -95,8 +96,8 @@
             'CONTAINERS.home.resistivity.reading.title' | translate
           }}</h2>
           <div>
-            <div formArrayName="readings">
-              <div *ngFor="let _ of readings.controls; index as i" [formGroupName]="i">
+            <div formArrayName="resistivity_detail">
+              <div *ngFor="let _ of resistivity_detail.controls; index as i" [formGroupName]="i">
                 <div fxLayout="row" fxLayoutAlign="space-between">
                   <mat-form-field appearance="outline" class="fx-col-6">
                     <mat-label>{{
@@ -107,7 +108,6 @@
                       [placeholder]="
                         'CONTAINERS.home.resistivity.reading.distance' | translate
                       "
-                      type="number"
                       formControlName="distance"
                       class="form-control"
                     />
@@ -135,7 +135,7 @@
                 color="accent"
                 aria-label="add icon button"
                 inline="true"
-                (click)="addReading($event, null)"
+                (click)="addResistivityDetail($event)"
               >
                 <mat-icon>add_circle_outline</mat-icon>
               </button>
