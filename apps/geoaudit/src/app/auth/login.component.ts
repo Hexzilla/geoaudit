@@ -37,7 +37,7 @@ export class LoginComponent implements OnInit {
 
         // stop here if form is invalid
         if (this.form.invalid) {
-            this.alertService.error('Invalid');
+            this.alertService.error('ALERTS.invalid');
             return;
         }
 

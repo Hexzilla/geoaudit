@@ -182,11 +182,11 @@ export class ShareModalComponent implements OnInit, AfterViewInit {
       })
       .subscribe(
         (update) => {
-          this.alertService.info('Saved Changes');
+          this.alertService.info('ALERTS.saved_changes');
         },
 
         (err) => {
-          this.alertService.error('Something went wrong');
+          this.alertService.error('ALERTS.something_went_wrong');
         }
       );
 

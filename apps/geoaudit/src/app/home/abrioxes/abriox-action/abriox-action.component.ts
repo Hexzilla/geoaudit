@@ -163,7 +163,7 @@ export class AbrioxActionComponent implements OnInit, AfterViewInit {
     this.alertService.clear();
 
     if (this.form.invalid) {
-      this.alertService.error('Invalid');
+      this.alertService.error('ALERTS.invalid');
       return;
     }
 
