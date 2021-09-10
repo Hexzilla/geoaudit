@@ -13,6 +13,7 @@ import * as moment from 'moment';
 import { TestpostEntityService } from '../../../entity-services/testpost-entity.service';
 import {
   Condition,
+  FaultType,
   TpAction,
   Status,
 } from '../../../models';
@@ -24,6 +25,7 @@ import { environment } from 'apps/geoaudit/src/environments/environment';
 import { StatusEntityService } from '../../../entity-services/status-entity.service';
 import { TpActionEntityService } from '../../../entity-services/tp-action-entity.service';
 import { ConditionEntityService } from '../../../entity-services/condition-entity.service';
+import { FaultTypeEntityService } from '../../../entity-services/fault-type-entity.service';
 
 @Component({
   selector: 'geoaudit-tp-action',
@@ -53,6 +55,8 @@ export class TpActionComponent implements OnInit, AfterViewInit {
 
   conditions: Array<Condition>;
 
+  faultTypes: Array<FaultType>;
+
   testpostId = 0;
 
   actionId = 0;
@@ -71,6 +75,7 @@ export class TpActionComponent implements OnInit, AfterViewInit {
     private statusEntityService: StatusEntityService,
     private tpActionEntityService: TpActionEntityService,
     private conditionEntityService: ConditionEntityService,
+    private faultTypeEntityService: FaultTypeEntityService,
     private store: Store<fromApp.State>,
     private router: Router,
     private alertService: AlertService,
@@ -114,6 +119,12 @@ export class TpActionComponent implements OnInit, AfterViewInit {
       (conditions) => {
         this.conditions = conditions;
         console.log("conditions", conditions);
+      }
+    )
+    this.faultTypeEntityService.getAll().subscribe(
+      (faultTypes) => {
+        this.faultTypes = faultTypes;
+        console.log("faultTypes", faultTypes);
       }
     )
 

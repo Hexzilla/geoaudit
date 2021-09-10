@@ -584,18 +584,16 @@
             <div>
               <div formArrayName="fault_detail">
                 <div *ngFor="let _ of fault_detail.controls; index as i" [formGroupName]="i" fxLayout="column">
+
                   <mat-form-field appearance="outline">
                     <mat-label>{{
                       'CONTAINERS.home.testposts.tp_action.fault.type' | translate
                     }}</mat-label>
-                    <input
-                      matInput
-                      [placeholder]="
-                        'CONTAINERS.home.testposts.tp_action.fault.type' | translate
-                      "
-                      formControlName="type"
-                      class="form-control"
-                    />
+                    <mat-select formControlName="type" name="type">
+                      <mat-option *ngFor="let faultType of faultTyps" [value]="faultType.id">
+                        {{ faultType.name }}
+                      </mat-option>
+                    </mat-select>
                   </mat-form-field>
                   <mat-form-field appearance="outline">
                     <mat-label>{{
