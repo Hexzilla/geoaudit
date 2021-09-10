@@ -14,6 +14,7 @@ import { TestpostEntityService } from '../../../entity-services/testpost-entity.
 import {
   Condition,
   FaultType,
+  TpInformation,
   TpAction,
   Status,
 } from '../../../models';
@@ -114,6 +115,31 @@ export class TpActionComponent implements OnInit, AfterViewInit {
     return 'Testpost';
   }
 
+  /**
+   * Initialisation of the form, properties, and validation.
+   */
+   initialiseForm(): void {
+    this.form = this.formBuilder.group({
+      id: [null],
+      date: [null],
+      condition: [null],
+      pipe_on: [null],
+      pipe_off: [null],
+      anodes_off: [null],
+      anode_on: [null],
+      anodes_current: [null],
+      anode: new FormArray([]),
+      dead: new FormArray([]),
+      sleeve: new FormArray([]),
+      coupon: new FormArray([]),
+      others_reedswitch: [null],
+      others_refcell: [null],
+      current_drain: new FormArray([]),
+      assets: new FormArray([]),
+      fault_detail: new FormArray([]),
+    });
+  }
+
   fetchData() {
     this.conditionEntityService.getAll().subscribe(
       (conditions) => {
@@ -137,8 +163,6 @@ export class TpActionComponent implements OnInit, AfterViewInit {
         this.tp_action = tpaction;
         console.log("tp_action", tpaction);
 
-        this.currentState = tpaction.status?.id;
-
         this.form.patchValue({
           id: tpaction.id,
           date: tpaction.date,
@@ -147,6 +171,24 @@ export class TpActionComponent implements OnInit, AfterViewInit {
           images: tpaction.images,
           documents: tpaction.documents
         });
+
+        this.currentState = tpaction.status?.id;
+
+        if (tpaction.tp_information) {
+          const info = tpaction.tp_information;
+
+          this.anode.clear();
+          info.anode?.map(item => this.anode.push(this.formBuilder.group(item)));
+
+          this.sleeve.clear();
+          info.sleeve?.map(item => this.sleeve.push(this.formBuilder.group(item)));
+          
+          this.coupon.clear();
+          info.coupon?.map(item => this.coupon.push(this.formBuilder.group(item)));
+          
+          this.dead.clear();
+          info.dead?.map(item => this.dead.push(this.formBuilder.group(item)));
+        }
 
         this.fault_detail.clear();
         tpaction.fault_detail?.map(item => this.fault_detail.push(this.formBuilder.group(item)));
@@ -166,69 +208,56 @@ export class TpActionComponent implements OnInit, AfterViewInit {
     return ''
   }
 
-  get anodes(): FormArray {
-    return this.form.get('anodes') as FormArray;
+  get anode(): FormArray {
+    return this.form.get('anode') as FormArray;
   }
 
   addAnode(event) {
     event?.preventDefault();
-    this.anodes.push(this.formBuilder.group({
-      anodes_on: '',
-      anodes_off: '',
-      anodes_current: '',
+    this.anode.push(this.formBuilder.group({
+      anode_off: '',
+      anode_current: '',
     }));
   }
 
-  get deads(): FormArray {
-    return this.form.get('deads') as FormArray;
+  get dead(): FormArray {
+    return this.form.get('dead') as FormArray;
   }
 
-  addDead(event, item=null) {
+  addDead(event) {
     event?.preventDefault();
-    if (item) {
-		  this.deads.push(this.formBuilder.group(item));
-    } else {
-      this.deads.push(this.formBuilder.group({
-        dead_on: '',
-        dead_off: '',
-        dead_current: '',
-      }));
-    }
+    this.dead.push(this.formBuilder.group({
+      dead_on: '',
+      dead_off: '',
+      dead_current: '',
+    }));
   }
 
-  get sleeves(): FormArray {
-    return this.form.get('sleeves') as FormArray;
+  get sleeve(): FormArray {
+    return this.form.get('sleeve') as FormArray;
   }
 
-  addSleeve(event, item=null) {
+  addSleeve(event) {
     event?.preventDefault();
-    if (item) {
-		  this.sleeves.push(this.formBuilder.group(item));
-    } else {
-      this.sleeves.push(this.formBuilder.group({
-        sleeve_on: '',
-        sleeve_off: '',
-        sleeve_current: '',
-      }));
-    }
+    this.sleeve.push(this.formBuilder.group({
+      sleeve_on: '',
+      sleeve_off: '',
+      sleeve_current: '',
+    }));
   }
 
-  get coupons(): FormArray {
-    return this.form.get('coupons') as FormArray;
+  get coupon(): FormArray {
+    return this.form.get('coupon') as FormArray;
   }
 
-  addCoupon(event, item=null) {
+  addCoupon(event) {
     event?.preventDefault();
-    if (item) {
-		  this.coupons.push(this.formBuilder.group(item));
-    } else {
-      this.coupons.push(this.formBuilder.group({
-        coupon_on: '',
-        coupon_off: '',
-        coupon_current_ac: '',
-        coupon_current_dc: '',
-      }));
-    }
+    this.coupon.push(this.formBuilder.group({
+      coupon_on: null,
+      coupon_off: null,
+      coupon_current_ac: null,
+      coupon_current_dc: null,
+    }));
   }
 
   get current_drain(): FormArray {
@@ -272,28 +301,6 @@ export class TpActionComponent implements OnInit, AfterViewInit {
     }));
   }
 
-  /**
-   * Initialisation of the form, properties, and validation.
-   */
-  initialiseForm(): void {
-    this.form = this.formBuilder.group({
-      id: [null],
-      date: [null],
-      condition: [null],
-      pipe_on: [null],
-      pipe_off: [null],
-      anodes: new FormArray([]),
-      deads: new FormArray([]),
-      sleeves: new FormArray([]),
-      coupons: new FormArray([]),
-      others_reedswitch: [null],
-      others_refcell: [null],
-      current_drain: new FormArray([]),
-      assets: new FormArray([]),
-      fault_detail: new FormArray([]),
-    });
-  }
-
   submit(navigate = true) {
     console.log('submit');
     this.submitted = true;
@@ -306,14 +313,32 @@ export class TpActionComponent implements OnInit, AfterViewInit {
       return;
     }
 
+    const payload = {
+      ...this.form.value,
+      tp_information: {
+        anodes_off: this.form.value.anodes_off,
+        anode_on: this.form.value.anode_on,
+        anodes_current: this.form.value.anodes_current,
+        anode: this.form.value.anode,
+        dead: this.form.value.dead,
+        sleeve: this.form.value.sleeve,
+        coupon: this.form.value.coupon,
+      }
+    };
+
+    delete payload.anode;
+    delete payload.dead;
+    delete payload.sleeve;
+    delete payload.coupon;
+
     /**
      * Invoke the backend with a PUT request to update
      * the tp action with the form values.
      *
      * If create then navigate to the job id.
      */
-    this.tpActionEntityService.update(this.form.value).subscribe(
-      (update) => {
+    this.tpActionEntityService.update(payload).subscribe(
+      () => {
         this.alertService.info('Saved Changes');
 
         if (navigate) {
@@ -325,7 +350,7 @@ export class TpActionComponent implements OnInit, AfterViewInit {
         }
       },
 
-      (err) => {
+      () => {
         this.alertService.error('Something went wrong');
       }
     );

@@ -122,25 +122,55 @@
             <div>
               <h3>{{'CONTAINERS.home.testposts.tp_action.anodes_title' | translate}}
               </h3>
-              <div formArrayName="anodes">
-                <div *ngFor="let _ of anodes.controls; index as i" [formGroupName]="i">
+              <div fxLayout="row" fxLayoutAlign="space-between">
+                <mat-form-field appearance="outline" class="fx-col-4">
+                  <mat-label>{{
+                    'CONTAINERS.home.testposts.tp_action.anodes_on' | translate
+                  }}</mat-label>
+                  <input
+                    matInput
+                    [placeholder]="
+                      'CONTAINERS.home.testposts.tp_action.anodes_on' | translate
+                    "
+                    type="number"
+                    formControlName="anode_on"
+                    class="form-control"
+                  />
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="fx-col-4">
+                  <mat-label>{{
+                    'CONTAINERS.home.testposts.tp_action.anodes_off' | translate
+                  }}</mat-label>
+                  <input
+                    matInput
+                    [placeholder]="
+                      'CONTAINERS.home.testposts.tp_action.anodes_off' | translate
+                    "
+                    type="number"
+                    formControlName="anodes_off"
+                    class="form-control"
+                  />
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="fx-col-4">
+                  <mat-label>{{
+                    'CONTAINERS.home.testposts.tp_action.anodes_current' | translate
+                  }}</mat-label>
+                  <input
+                    matInput
+                    [placeholder]="
+                      'CONTAINERS.home.testposts.tp_action.anodes_current' | translate
+                    "
+                    type="number"
+                    formControlName="anodes_current"
+                    class="form-control"
+                  />
+                </mat-form-field>
+              </div>
+              <div formArrayName="anode">
+                <div *ngFor="let _ of anode.controls; index as i" [formGroupName]="i">
                   <h4>{{ 'CONTAINERS.home.testposts.tp_action.anodes_title' | translate }} No {{ i+1 }}</h4>
                   <div fxLayout="row" fxLayoutAlign="space-between">
-                    <mat-form-field appearance="outline" class="fx-col-4">
-                      <mat-label>{{
-                        'CONTAINERS.home.testposts.tp_action.anodes_on' | translate
-                      }}</mat-label>
-                      <input
-                        matInput
-                        [placeholder]="
-                          'CONTAINERS.home.testposts.tp_action.anodes_on' | translate
-                        "
-                        type="number"
-                        formControlName="anodes_on"
-                        class="form-control"
-                      />
-                    </mat-form-field>
-                    <mat-form-field appearance="outline" class="fx-col-4">
+                    <mat-form-field appearance="outline" class="fx-col-6">
                       <mat-label>{{
                         'CONTAINERS.home.testposts.tp_action.anodes_off' | translate
                       }}</mat-label>
@@ -150,11 +180,11 @@
                           'CONTAINERS.home.testposts.tp_action.anodes_off' | translate
                         "
                         type="number"
-                        formControlName="anodes_off"
+                        formControlName="anode_off"
                         class="form-control"
                       />
                     </mat-form-field>
-                    <mat-form-field appearance="outline" class="fx-col-4">
+                    <mat-form-field appearance="outline" class="fx-col-6">
                       <mat-label>{{
                         'CONTAINERS.home.testposts.tp_action.anodes_current' | translate
                       }}</mat-label>
@@ -165,7 +195,7 @@
                             | translate
                         "
                         type="number"
-                        formControlName="anodes_current"
+                        formControlName="anode_current"
                         class="form-control"
                       />
                     </mat-form-field>
@@ -188,8 +218,8 @@
             <!--Dead-->
             <div>
               <h3>{{ 'CONTAINERS.home.testposts.tp_action.dead_title' | translate }}</h3>              
-              <div formArrayName="deads">
-                <div *ngFor="let _ of deads.controls; index as i" [formGroupName]="i">
+              <div formArrayName="dead">
+                <div *ngFor="let _ of dead.controls; index as i" [formGroupName]="i">
                   <h4>{{ 'CONTAINERS.home.testposts.tp_action.dead_title' | translate }} No {{ i+1 }}</h4>
                   <div fxLayout="row" fxLayoutAlign="space-between">
                     <mat-form-field appearance="outline" class="fx-col-4">
@@ -253,8 +283,8 @@
             <!--Sleeve-->
             <div>
               <h3>{{'CONTAINERS.home.testposts.tp_action.sleeve_title' | translate}}</h3>
-              <div formArrayName="sleeves">
-                <div *ngFor="let _ of sleeves.controls; index as i" [formGroupName]="i">
+              <div formArrayName="sleeve">
+                <div *ngFor="let _ of sleeve.controls; index as i" [formGroupName]="i">
                   <h4>{{ 'CONTAINERS.home.testposts.tp_action.sleeve_title' | translate }} No {{ i+1 }}</h4>
                   <div fxLayout="row" fxLayoutAlign="space-between">
                     <mat-form-field appearance="outline" class="fx-col-4">
@@ -318,8 +348,8 @@
             <!--Coupon-->
             <h3>{{'CONTAINERS.home.testposts.tp_action.coupon.title' | translate}}</h3>
             <div>
-              <div formArrayName="coupons">
-                <div *ngFor="let _ of coupons.controls; index as i" [formGroupName]="i">
+              <div formArrayName="coupon">
+                <div *ngFor="let _ of coupon.controls; index as i" [formGroupName]="i">
                   <h4>{{ 'CONTAINERS.home.testposts.tp_action.coupon.title' | translate }} No {{ i+1 }}</h4>
                   <div fxLayout="row" fxLayoutAlign="space-between">
                     <mat-form-field appearance="outline" class="fx-col-6">
