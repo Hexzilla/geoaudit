@@ -15,6 +15,7 @@ import {
   Resistivity,
   Status,
 } from '../../../models';
+import * as MapActions from '../../../store/map/map.actions';
 import { AlertService, UploadService } from '../../../services';
 import { FileTypes } from '../../../components/file-upload/file-upload.component';
 import { IAlbum, Lightbox } from 'ngx-lightbox';
@@ -50,9 +51,7 @@ export class ResistivityComponent implements OnInit, AfterViewInit {
    */
   submitted = false;
 
-  testpostId = 0;
-
-  actionId = 0;
+  resistivityId = 0;
 
   public resistivity: Resistivity = null;
 
@@ -60,6 +59,9 @@ export class ResistivityComponent implements OnInit, AfterViewInit {
   
   attachedImages: Array<any>;
   attachedDocuments: Array<any>;
+
+  latCtrl = new FormControl();
+  lngCtrl = new FormControl();
 
   constructor(
     private route: ActivatedRoute,
@@ -91,39 +93,66 @@ export class ResistivityComponent implements OnInit, AfterViewInit {
      */
     this.initialiseForm();
 
-    this.fetchTpAction();
+    this.store.select('map').subscribe((map) => {
+      if (map.clickMarker) {
+        this.latCtrl.setValue(map.clickMarker.lat);
+        this.lngCtrl.setValue(map.clickMarker.lng);
+      }
+    });
+
+    this.fetchData();
   }
 
   ngAfterViewInit(): void {
-    //
+    this.latCtrl.valueChanges.subscribe((value) => {
+      if (value) {
+        this.form.patchValue({
+          geometry: {
+            ...this.form.value.geometry,
+            lat: value,
+          },
+        });
+      }
+    });
+
+    this.lngCtrl.valueChanges.subscribe((value) => {
+      if (value) {
+        this.form.patchValue({
+          geometry: {
+            ...this.form.value.geometry,
+            lng: value,
+          },
+        });
+      }
+    });
   }
 
   getTestpostTitle() {
     return 'Testpost';
   }
 
-  fetchTpAction() {
-    this.testpostId = this.route.snapshot.params['id']
-    console.log("testpostId", this.testpostId)
+  fetchData() {
+    this.resistivityId = this.route.snapshot.params['id']
+    console.log("resistivityId", this.resistivityId)
 
-    this.actionId = this.route.snapshot.params['actionId'];
-    console.log("actionId", this.actionId)
-
-    this.resistivityEntityService.getByKey(this.actionId).subscribe(
+    this.resistivityEntityService.getByKey(this.resistivityId).subscribe(
       (resistivity) => {
         this.resistivity = resistivity;
 
         //TODO - FormArray
         if (resistivity) {
+          const geometry = resistivity.geometry;
+
           this.form.patchValue({
             date: moment(resistivity.date).format('L LT'),
             reference: resistivity.reference,
-            latitude: resistivity.geometry['latitude'],
-            longitude: resistivity.geometry['longitude'],
-
+            geometry: geometry,
             images: resistivity.images,
             documents: resistivity.documents
           });
+
+          this.latCtrl.setValue(geometry['lat']);
+          this.lngCtrl.setValue(geometry['lng']);
         }
       },
       (err) => {}
@@ -153,8 +182,7 @@ export class ResistivityComponent implements OnInit, AfterViewInit {
     this.form = this.formBuilder.group({
       date: null,
       reference: null,
-      latitude: null,
-      longitude: null,
+      geometry: [null],
       readings: new FormArray([]),
     });
   }
@@ -167,7 +195,7 @@ export class ResistivityComponent implements OnInit, AfterViewInit {
     this.alertService.clear();
 
     if (this.form.invalid) {
-      this.alertService.error('Invalid');
+      this.alertService.error('ALERTS.invalid');
       return;
     }
 
@@ -207,6 +235,14 @@ export class ResistivityComponent implements OnInit, AfterViewInit {
 
   searchTestpost() {
     this.router.navigate([`/home/search`]);
+  }
+
+  clickMarker(): void {
+    this.store.dispatch(
+      MapActions.toggleSidebar({
+        url: this.router.url,
+      })
+    );
   }
 
   updateMarkState(e) {

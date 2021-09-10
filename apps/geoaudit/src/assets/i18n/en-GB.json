@@ -411,5 +411,14 @@
 		"AAA": "AAA",
 		"CAT5": "CAT5",
 		"CIPS": "CIPS"
+	},
+	"ALERTS": {
+		"failed": "Failed",
+		"success": "Success",
+		"saved_changed": "Saved Changes",
+		"invalid": "Invalid",
+		"something_went_wrong": "Something went wrong",
+		"updated": "Update Successful",
+		"user_added": "User Added Successfully"
 	}
 }

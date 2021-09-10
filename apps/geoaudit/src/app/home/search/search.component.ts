@@ -88,7 +88,7 @@ export class SearchComponent implements OnInit {
 
   submit() {
     if (this.form.invalid) {
-      this.alertService.error('Invalid');
+      this.alertService.error('ALERTS.invalid');
       return;
     }
     const queryParams = {
