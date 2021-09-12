@@ -90,7 +90,7 @@ export class TpActionsComponent implements OnInit {
   }
 
   addAction() {
-    const url = `/home/testposts`
+    const url = `/home/tp_actions/create`
     this.router.navigate([url]);
   }
 

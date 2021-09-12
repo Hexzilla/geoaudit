@@ -88,7 +88,7 @@ export class ResistivityListComponent implements OnInit {
   }
 
   addAction() {
-    const url = `/home/resistivity`
+    const url = `/home/resistivities/create`
     this.router.navigate([url]);
   }
 

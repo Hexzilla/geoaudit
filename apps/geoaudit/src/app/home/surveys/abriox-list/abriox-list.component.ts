@@ -82,7 +82,7 @@ export class AbrioxListComponent implements OnInit {
   }
 
   addAction() {
-    const url = `/home/resistivity`
+    const url = `/home/abrioxes_actions/create`
     this.router.navigate([url]);
   }
 

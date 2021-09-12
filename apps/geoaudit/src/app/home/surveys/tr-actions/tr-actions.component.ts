@@ -90,7 +90,7 @@ export class TrActionsComponent implements OnInit {
   }
 
   addAction() {
-    const url = `/home/testposts`
+    const url = `/home/tr_actions/create`
     this.router.navigate([url]);
   }
 
