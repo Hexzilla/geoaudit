@@ -127,10 +127,6 @@ export class ResistivityComponent implements OnInit, AfterViewInit {
     });
   }
 
-  getTestpostTitle() {
-    return 'Testpost';
-  }
-
   fetchData() {
     this.resistivityId = this.route.snapshot.params['id']
     console.log("resistivityId", this.resistivityId)
@@ -138,41 +134,43 @@ export class ResistivityComponent implements OnInit, AfterViewInit {
     this.resistivityEntityService.getByKey(this.resistivityId).subscribe(
       (resistivity) => {
         this.resistivity = resistivity;
+        console.log("resistivity", this.resistivity)
+        
+        this.currentState = resistivity.status.id;
+        const geometry = resistivity.geometry;
 
-        //TODO - FormArray
-        if (resistivity) {
-          const geometry = resistivity.geometry;
+        this.form.patchValue({
+          id: resistivity.id,
+          date: resistivity.date,
+          reference: resistivity.reference,
+          geometry: geometry,
+          
+          images: resistivity.images,
+          documents: resistivity.documents
+        });
 
-          this.form.patchValue({
-            date: moment(resistivity.date).format('L LT'),
-            reference: resistivity.reference,
-            geometry: geometry,
-            images: resistivity.images,
-            documents: resistivity.documents
-          });
+        this.latCtrl.setValue(geometry['lat']);
+        this.lngCtrl.setValue(geometry['lng']);
 
-          this.latCtrl.setValue(geometry['lat']);
-          this.lngCtrl.setValue(geometry['lng']);
-        }
+        this.resistivity_detail.clear();
+        resistivity.resistivity_detail?.map(item => {
+          this.resistivity_detail.push(this.formBuilder.group(item));
+        });
       },
       (err) => {}
     )
   }
 
-  get readings(): FormArray {
-    return this.form.get('readings') as FormArray;
+  get resistivity_detail(): FormArray {
+    return this.form.get('resistivity_detail') as FormArray;
   }
 
-  addReading(e, item) {
-    e.preventDefault();
-    if (item) {
-		  this.readings.push(this.formBuilder.group(item));
-    } else {
-      this.readings.push(this.formBuilder.group({
-        distance: '',
-        value: '',
-      }));
-    }
+  addResistivityDetail(e) {
+    e?.preventDefault();
+    this.resistivity_detail.push(this.formBuilder.group({
+      distance: '',
+      value: '',
+    }));
   }
 
   /**
@@ -180,10 +178,11 @@ export class ResistivityComponent implements OnInit, AfterViewInit {
    */
   initialiseForm(): void {
     this.form = this.formBuilder.group({
-      date: null,
-      reference: null,
+      id: [null],
+      date: [null],
+      reference: [null],
       geometry: [null],
-      readings: new FormArray([]),
+      resistivity_detail: new FormArray([]),
     });
   }
 
@@ -199,34 +198,23 @@ export class ResistivityComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    const surveyId = this.resistivity?.survey?.id;
-    if (surveyId) {
-      const url = `/home/surveys/${surveyId}/tp_action_list`;
-      this.router.navigate([url]);
-    }
-    else {
-      this.router.navigate([`/home/`]);
-    }
-
+    console.log("this.form.value", this.form.value);
     /**
      * Invoke the backend with a PUT request to update
-     * the job with the form values.
+     * the resistivity with the form values.
      *
      * If create then navigate to the job id.
      */
-    /*this.jobEntityService.update(this.form.value).subscribe(
-      (update) => {
+    this.resistivityEntityService.update(this.form.value).subscribe(
+      () => {
         this.alertService.info('Saved Changes');
-
-        this.dataSource = new MatTableDataSource(update.surveys);
-
-        if (navigate) this.router.navigate([`/home/jobs`]);
+        //if (navigate) this.router.navigate([`/home/jobs`]);
       },
-
       (err) => {
+        console.error(err);
         this.alertService.error('Something went wrong');
       }
-    );*/
+    );
   }
 
   selectedIndexChange(selectedTabIndex) {

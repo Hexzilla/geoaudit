@@ -10,20 +10,18 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import * as fromApp from '../../../store';
 import * as moment from 'moment';
-import { TestpostEntityService } from '../../../entity-services/testpost-entity.service';
 import {
-  Testpost,
+  FaultType,
   AbrioxAction,
   Status,
 } from '../../../models';
 import { AlertService, UploadService } from '../../../services';
 import { FileTypes } from '../../../components/file-upload/file-upload.component';
-import { IAlbum, Lightbox } from 'ngx-lightbox';
 import { MatDialog } from '@angular/material/dialog';
 import { environment } from 'apps/geoaudit/src/environments/environment';
 import { StatusEntityService } from '../../../entity-services/status-entity.service';
 import { AbrioxActionEntityService } from '../../../entity-services/abriox-action-entity.service';
-import { SurveyEntityService } from '../../../entity-services/survey-entity.service';
+import { FaultTypeEntityService } from '../../../entity-services/fault-type-entity.service';
 
 @Component({
   selector: 'geoaudit-tp-action',
@@ -51,6 +49,8 @@ export class AbrioxActionComponent implements OnInit, AfterViewInit {
    */
   submitted = false;
 
+  faultTypes: Array<FaultType>;
+
   abrioxId = 0;
 
   actionId = 0;
@@ -65,15 +65,13 @@ export class AbrioxActionComponent implements OnInit, AfterViewInit {
   constructor(
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
-    private surveyEntityService: SurveyEntityService,
-    private testpostEntityService: TestpostEntityService,
     private statusEntityService: StatusEntityService,
     private abrioxActionEntityService: AbrioxActionEntityService,
+    private faultTypeEntityService: FaultTypeEntityService,
     private store: Store<fromApp.State>,
     private router: Router,
     private alertService: AlertService,
     private uploadService: UploadService,
-    private _lightbox: Lightbox,
     private dialog: MatDialog
   ) {}
 
@@ -92,56 +90,55 @@ export class AbrioxActionComponent implements OnInit, AfterViewInit {
      */
     this.initialiseForm();
 
-    this.fetchAbrioxAction();
+    this.fetchData();
   }
 
   ngAfterViewInit(): void {
+    //
   }
-  fetchAbrioxAction() {
+
+  fetchData() {
+    this.faultTypeEntityService.getAll().subscribe(
+      (faultTypes) => {
+        this.faultTypes = faultTypes;
+        console.log("faultTypes", faultTypes);
+      }
+    )
+
     this.abrioxId = this.route.snapshot.params['id']
-    console.log("abrioxId", this.abrioxId)
-
     this.actionId = this.route.snapshot.params['actionId'];
-    console.log("actionId", this.actionId)
-
     this.abrioxActionEntityService.getByKey(this.actionId).subscribe(
       (abriox_action) => {
         this.abriox_action = abriox_action;
         console.log("abriox_action", this.abriox_action)
 
-        //TODO - FormArray
-        if (abriox_action) {
-          this.form.patchValue({
-            date: moment(abriox_action.date).format('L LT'),
-            condition: abriox_action.condition?.name,
+        this.form.patchValue({
+          id: abriox_action.id,
+          date: abriox_action.date,
+          condition: abriox_action.condition?.name,
 
-            images: abriox_action.images,
-            documents: abriox_action.documents
-          });
+          images: abriox_action.images,
+          documents: abriox_action.documents
+        });
 
-          //this.faults.clear();
-          //fault_detail.map(item => this.addFaults(null, item));
-          //console.log('this.faults', this.faults)
-        }
+        //this.fault_detail.clear();
+        //fault_detail.map(item => this.fault_detail.push(this.formBuilder.group(item)));
+        //console.log('this.fault_detail', this.fault_detail)
       },
       (err) => {}
     )
   }
 
-  get faults(): FormArray {
-    return this.form.get('faults') as FormArray;
+  get fault_detail(): FormArray {
+    return this.form.get('fault_detail') as FormArray;
   }
 
-  addFaults(event, item=null) {
+  addFaults(event) {
     event?.preventDefault();
-    if (item) {
-		  this.faults.push(this.formBuilder.group(item));
-    } else {
-      this.faults.push(this.formBuilder.group({
-        type: '',
-        desc: ''
-      }));
-    }
+    this.fault_detail.push(this.formBuilder.group({
+      fault_type: '',
+      fault_desc: ''
+    }));
   }
 
   /**
@@ -149,9 +146,10 @@ export class AbrioxActionComponent implements OnInit, AfterViewInit {
    */
   initialiseForm(): void {
     this.form = this.formBuilder.group({
-      date: null,
-      condition: null,
-      faults: new FormArray([]),
+      id: [null],
+      date: [null],
+      condition: [null],
+      fault_detail: new FormArray([]),
     });
   }
 
@@ -167,25 +165,23 @@ export class AbrioxActionComponent implements OnInit, AfterViewInit {
       return;
     }
 
+    console.log("submit", this.form.value);
+
     /**
      * Invoke the backend with a PUT request to update
      * the job with the form values.
      *
      * If create then navigate to the job id.
      */
-    /*this.jobEntityService.update(this.form.value).subscribe(
+    this.abrioxActionEntityService.update(this.form.value).subscribe(
       (update) => {
         this.alertService.info('Saved Changes');
-
-        this.dataSource = new MatTableDataSource(update.surveys);
-
-        if (navigate) this.router.navigate([`/home/jobs`]);
       },
 
       (err) => {
         this.alertService.error('Something went wrong');
       }
-    );*/
+    );
   }
 
   selectedIndexChange(selectedTabIndex) {

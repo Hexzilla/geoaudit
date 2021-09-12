@@ -12,7 +12,9 @@ import * as fromApp from '../../../store';
 import * as moment from 'moment';
 import { TestpostEntityService } from '../../../entity-services/testpost-entity.service';
 import {
-  Testpost,
+  Condition,
+  FaultType,
+  TpInformation,
   TpAction,
   Status,
 } from '../../../models';
@@ -23,7 +25,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { environment } from 'apps/geoaudit/src/environments/environment';
 import { StatusEntityService } from '../../../entity-services/status-entity.service';
 import { TpActionEntityService } from '../../../entity-services/tp-action-entity.service';
-import { SurveyEntityService } from '../../../entity-services/survey-entity.service';
+import { ConditionEntityService } from '../../../entity-services/condition-entity.service';
+import { FaultTypeEntityService } from '../../../entity-services/fault-type-entity.service';
 
 @Component({
   selector: 'geoaudit-tp-action',
@@ -51,6 +54,10 @@ export class TpActionComponent implements OnInit, AfterViewInit {
    */
   submitted = false;
 
+  conditions: Array<Condition>;
+
+  faultTypes: Array<FaultType>;
+
   testpostId = 0;
 
   actionId = 0;
@@ -65,10 +72,11 @@ export class TpActionComponent implements OnInit, AfterViewInit {
   constructor(
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
-    private surveyEntityService: SurveyEntityService,
     private testpostEntityService: TestpostEntityService,
     private statusEntityService: StatusEntityService,
     private tpActionEntityService: TpActionEntityService,
+    private conditionEntityService: ConditionEntityService,
+    private faultTypeEntityService: FaultTypeEntityService,
     private store: Store<fromApp.State>,
     private router: Router,
     private alertService: AlertService,
@@ -92,7 +100,7 @@ export class TpActionComponent implements OnInit, AfterViewInit {
      */
     this.initialiseForm();
 
-    this.fetchTpAction();
+    this.fetchData();
   }
 
   ngAfterViewInit(): void {
@@ -107,133 +115,163 @@ export class TpActionComponent implements OnInit, AfterViewInit {
     return 'Testpost';
   }
 
-  fetchTpAction() {
-    this.testpostId = this.route.snapshot.params['id']
-    console.log("testpostId", this.testpostId)
+  /**
+   * Initialisation of the form, properties, and validation.
+   */
+   initialiseForm(): void {
+    this.form = this.formBuilder.group({
+      id: [null],
+      date: [null],
+      condition: [null],
+      pipe_on: [null],
+      pipe_off: [null],
+      anodes_off: [null],
+      anode_on: [null],
+      anodes_current: [null],
+      anode: new FormArray([]),
+      dead: new FormArray([]),
+      sleeve: new FormArray([]),
+      coupon: new FormArray([]),
+      others_reedswitch: [null],
+      others_refcell: [null],
+      current_drain: new FormArray([]),
+      assets: new FormArray([]),
+      fault_detail: new FormArray([]),
+    });
+  }
 
+  fetchData() {
+    this.conditionEntityService.getAll().subscribe(
+      (conditions) => {
+        this.conditions = conditions;
+        console.log("conditions", conditions);
+      }
+    )
+    this.faultTypeEntityService.getAll().subscribe(
+      (faultTypes) => {
+        this.faultTypes = faultTypes;
+        console.log("faultTypes", faultTypes);
+      }
+    )
+
+    this.testpostId = this.route.snapshot.params['id']
     this.actionId = this.route.snapshot.params['actionId'];
     console.log("actionId", this.actionId)
 
     this.tpActionEntityService.getByKey(this.actionId).subscribe(
-      (tp_action) => {
-        this.tp_action = tp_action;
+      (tpaction) => {
+        this.tp_action = tpaction;
+        console.log("tp_action", tpaction);
 
-        const fault_detail = [
-          {
-            type: "type1",
-            desc: "desc1"
-          },
-          {
-            type: "type2",
-            desc: "desc2"
-          }
-        ]
-        console.log('fault_detail', fault_detail);
+        this.form.patchValue({
+          id: tpaction.id,
+          date: tpaction.date,
+          condition: tpaction.condition?.id,
 
-        //TODO - FormArray
-        if (tp_action) {
-          this.form.patchValue({
-            date: moment(tp_action.date).format('L LT'),
-            condition: tp_action.condition?.name,
+          images: tpaction.images,
+          documents: tpaction.documents
+        });
 
-            images: tp_action.images,
-            documents: tp_action.documents
-          });
+        this.currentState = tpaction.status?.id;
 
-          this.faults.clear();
-          fault_detail.map(item => this.addFaults(null, item));
-          console.log('this.faults', this.faults)
+        if (tpaction.tp_information) {
+          const info = tpaction.tp_information;
+
+          this.anode.clear();
+          info.anode?.map(item => this.anode.push(this.formBuilder.group(item)));
+
+          this.sleeve.clear();
+          info.sleeve?.map(item => this.sleeve.push(this.formBuilder.group(item)));
+          
+          this.coupon.clear();
+          info.coupon?.map(item => this.coupon.push(this.formBuilder.group(item)));
+          
+          this.dead.clear();
+          info.dead?.map(item => this.dead.push(this.formBuilder.group(item)));
         }
+
+        this.fault_detail.clear();
+        tpaction.fault_detail?.map(item => this.fault_detail.push(this.formBuilder.group(item)));
+
+        this.current_drain.clear();
+        tpaction.current_drain?.map(item => this.current_drain.push(this.formBuilder.group(item)));
       },
       (err) => {}
     )
   }
 
-  get anodes(): FormArray {
-    return this.form.get('anodes') as FormArray;
-  }
-
-  addAnode(event, item=null) {
-    event?.preventDefault();
-    if (item) {
-		  this.anodes.push(this.formBuilder.group(item));
-    } else {
-      this.anodes.push(this.formBuilder.group({
-        anodes_on: '',
-        anodes_off: '',
-        anodes_current: '',
-      }));
+  getDate() {
+    if (this.tp_action) {
+      const datestr = moment(this.tp_action.date).format('L');
+      return ` - [${datestr}]`
     }
+    return ''
   }
 
-  get deads(): FormArray {
-    return this.form.get('deads') as FormArray;
+  get anode(): FormArray {
+    return this.form.get('anode') as FormArray;
   }
 
-  addDead(event, item=null) {
+  addAnode(event) {
     event?.preventDefault();
-    if (item) {
-		  this.deads.push(this.formBuilder.group(item));
-    } else {
-      this.deads.push(this.formBuilder.group({
-        dead_on: '',
-        dead_off: '',
-        dead_current: '',
-      }));
-    }
+    this.anode.push(this.formBuilder.group({
+      anode_off: '',
+      anode_current: '',
+    }));
   }
 
-  get sleeves(): FormArray {
-    return this.form.get('sleeves') as FormArray;
+  get dead(): FormArray {
+    return this.form.get('dead') as FormArray;
   }
 
-  addSleeve(event, item=null) {
+  addDead(event) {
     event?.preventDefault();
-    if (item) {
-		  this.sleeves.push(this.formBuilder.group(item));
-    } else {
-      this.sleeves.push(this.formBuilder.group({
-        sleeve_on: '',
-        sleeve_off: '',
-        sleeve_current: '',
-      }));
-    }
+    this.dead.push(this.formBuilder.group({
+      dead_on: '',
+      dead_off: '',
+      dead_current: '',
+    }));
   }
 
-  get coupons(): FormArray {
-    return this.form.get('coupons') as FormArray;
+  get sleeve(): FormArray {
+    return this.form.get('sleeve') as FormArray;
   }
 
-  addCoupon(event, item=null) {
+  addSleeve(event) {
     event?.preventDefault();
-    if (item) {
-		  this.coupons.push(this.formBuilder.group(item));
-    } else {
-      this.coupons.push(this.formBuilder.group({
-        coupon_on: '',
-        coupon_off: '',
-        coupon_current_ac: '',
-        coupon_current_dc: '',
-      }));
-    }
+    this.sleeve.push(this.formBuilder.group({
+      sleeve_on: '',
+      sleeve_off: '',
+      sleeve_current: '',
+    }));
   }
 
-  get currentDrains(): FormArray {
-    return this.form.get('currentDrains') as FormArray;
+  get coupon(): FormArray {
+    return this.form.get('coupon') as FormArray;
   }
 
-  addCurrentDrain(event, item=null) {
+  addCoupon(event) {
     event?.preventDefault();
-    if (item) {
-		  this.currentDrains.push(this.formBuilder.group(item));
-    } else {
-      this.currentDrains.push(this.formBuilder.group({
-        cd_input_v: '',
-        cd_input_a: '',
-        cd_output_v: '',
-        cd_output_a: ''
-      }));
-    }
+    this.coupon.push(this.formBuilder.group({
+      coupon_on: null,
+      coupon_off: null,
+      coupon_current_ac: null,
+      coupon_current_dc: null,
+    }));
+  }
+
+  get current_drain(): FormArray {
+    return this.form.get('current_drain') as FormArray;
+  }
+
+  addCurrentDrain(event) {
+    event?.preventDefault();
+    this.current_drain.push(this.formBuilder.group({
+      cd_input_v: '',
+      cd_input_a: '',
+      cd_output_v: '',
+      cd_output_a: ''
+    }));
   }
 
   get assets(): FormArray {
@@ -251,41 +289,16 @@ export class TpActionComponent implements OnInit, AfterViewInit {
     }
   }
 
-  get faults(): FormArray {
-    return this.form.get('faults') as FormArray;
+  get fault_detail(): FormArray {
+    return this.form.get('fault_detail') as FormArray;
   }
 
-  addFaults(event, item=null) {
+  addFaults(event) {
     event?.preventDefault();
-    if (item) {
-		  this.faults.push(this.formBuilder.group(item));
-    } else {
-      this.faults.push(this.formBuilder.group({
-        type: '',
-        desc: ''
-      }));
-    }
-  }
-
-  /**
-   * Initialisation of the form, properties, and validation.
-   */
-  initialiseForm(): void {
-    this.form = this.formBuilder.group({
-      date: null,
-      condition: null,
-      pipe_on: null,
-      pipe_off: null,
-      anodes: new FormArray([]),
-      deads: new FormArray([]),
-      sleeves: new FormArray([]),
-      coupons: new FormArray([]),
-      others_reedswitch: null,
-      others_refcell: null,
-      currentDrains: new FormArray([]),
-      assets: new FormArray([]),
-      faults: new FormArray([]),
-    });
+    this.fault_detail.push(this.formBuilder.group({
+      type: '',
+      desc: ''
+    }));
   }
 
   submit(navigate = true) {
@@ -300,34 +313,47 @@ export class TpActionComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    const surveyId = this.tp_action?.survey?.id;
-    if (surveyId) {
-      const url = `/home/surveys/${surveyId}/tp_action_list`;
-      this.router.navigate([url]);
-    }
-    else {
-      this.router.navigate([`/home/`]);
-    }
+    const payload = {
+      ...this.form.value,
+      tp_information: {
+        anodes_off: this.form.value.anodes_off,
+        anode_on: this.form.value.anode_on,
+        anodes_current: this.form.value.anodes_current,
+        anode: this.form.value.anode,
+        dead: this.form.value.dead,
+        sleeve: this.form.value.sleeve,
+        coupon: this.form.value.coupon,
+      }
+    };
+
+    delete payload.anode;
+    delete payload.dead;
+    delete payload.sleeve;
+    delete payload.coupon;
 
     /**
      * Invoke the backend with a PUT request to update
-     * the job with the form values.
+     * the tp action with the form values.
      *
      * If create then navigate to the job id.
      */
-    /*this.jobEntityService.update(this.form.value).subscribe(
-      (update) => {
+    this.tpActionEntityService.update(payload).subscribe(
+      () => {
         this.alertService.info('Saved Changes');
 
-        this.dataSource = new MatTableDataSource(update.surveys);
-
-        if (navigate) this.router.navigate([`/home/jobs`]);
+        if (navigate) {
+          const surveyId = this.tp_action?.survey?.id;
+          if (surveyId) {
+            const url = `/home/surveys/${surveyId}/tp_action_list`;
+            this.router.navigate([url]);
+          }
+        }
       },
 
-      (err) => {
+      () => {
         this.alertService.error('Something went wrong');
       }
-    );*/
+    );
   }
 
   selectedIndexChange(selectedTabIndex) {
