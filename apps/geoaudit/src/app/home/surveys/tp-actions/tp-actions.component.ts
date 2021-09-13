@@ -1,13 +1,10 @@
 import {
+  Input,
+  Output,
   Component,
   OnInit,
+  EventEmitter,
 } from '@angular/core';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
 import qs from 'qs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -17,7 +14,6 @@ import * as fromApp from '../../../store';
 import { TpAction } from '../../../models';
 import { AlertService } from '../../../services';
 import { MatDialog } from '@angular/material/dialog';
-import { TestpostEntityService } from '../../../entity-services/testpost-entity.service';
 import { TpActionEntityService } from '../../../entity-services/tp-action-entity.service';
 import { DeleteModalComponent } from '../../../modals/delete-modal/delete-modal.component';
 
@@ -27,14 +23,15 @@ import { DeleteModalComponent } from '../../../modals/delete-modal/delete-modal.
   styleUrls: ['./tp-actions.component.scss'],
 })
 export class TpActionsComponent implements OnInit {
-  tp_actions: Array<TpAction> = [];
+  @Input() item_list_completed: boolean;
+  @Output() change_list_state: EventEmitter<any> = new EventEmitter();
+
+  tp_actions: Array<TpAction> = [];  
 
   constructor(
-    private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
     private store: Store<fromApp.State>,
-    private testpostEntityService: TestpostEntityService,
     private tpActionEntityService: TpActionEntityService,
     private alertService: AlertService,
     private dialog: MatDialog
@@ -42,10 +39,10 @@ export class TpActionsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.update();
+    this.fetchData();
   }
 
-  update() {
+  fetchData() {
     const serveyId = this.route.snapshot.params['id'];
     console.log("serveyId", serveyId);
 
@@ -87,6 +84,14 @@ export class TpActionsComponent implements OnInit {
       console.log("navigate", item, url)
       this.router.navigate([url]);
     }
+  }
+
+  completed() {
+    return this.item_list_completed
+  }
+
+  updateMarkState(e) {
+    this.change_list_state.emit(e);
   }
 
   addAction() {

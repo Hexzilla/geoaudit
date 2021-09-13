@@ -65,6 +65,14 @@
   </button>
 </div>
 
+<div fxLayout="row-reverse" class="approve-wrapper">
+  <geoaudit-status-buttons
+    [completed]="completed()"
+    [approved]="false"
+    (completeEvent)="updateMarkState($event)"
+  ></geoaudit-status-buttons>
+</div>
+
 <div fxLayout="row-reverse" class="button-wrapper">
   <button
     mat-flat-button
