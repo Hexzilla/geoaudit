@@ -175,11 +175,6 @@ export class AbrioxActionComponent implements OnInit, AfterViewInit {
       approved: this.approved
     };
 
-    delete payload.anode;
-    delete payload.dead;
-    delete payload.sleeve;
-    delete payload.coupon;
-
     /**
      * Invoke the backend with a PUT request to update
      * the job with the form values.
