@@ -7,6 +7,7 @@
     <mat-select
       statusControlName="status"
       name="status"
+      (selectionChange)="onChangeState()"
       [(value)]="currentState"
     >
       <mat-option *ngFor="let status of statuses" [value]="status.id">
@@ -367,12 +368,12 @@
 
 <div fxLayout="row-reverse" class="approve-wrapper">
   <geoaudit-status-buttons
-    [completed]="false"
-    [approved]="false"
+    *ngIf="tr_action!=null"
+    [completed]="completed()"
+    [approved]="approved == true"
     (completeEvent)="updateMarkState($event)"
   ></geoaudit-status-buttons>
 </div>
-
 
 <div fxLayout="row-reverse" fxLayoutAlign="space-between" class="button-area">
   <div class="button-wrapper">
@@ -390,7 +391,7 @@
   <button
     mat-flat-button
     color="primary"
-    (click)="submit()"
+    (click)="submit(true)"
     type="submit"
     class="btn-submit"
   >

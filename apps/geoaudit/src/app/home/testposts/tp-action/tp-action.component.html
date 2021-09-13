@@ -1,12 +1,13 @@
 <geoaudit-sidebar-header
   title="CONTAINERS.home.testposts.tp_action.title"
-  [placeholder]="getDate()"
+  [reference]="getReference()"
 >
   <mat-form-field appearance="outline">
     <mat-label>{{ 'CONTAINERS.home.jobs.job.status' | translate }}</mat-label>
     <mat-select
       statusControlName="status"
       name="status"
+      (selectionChange)="onChangeState()"
       [(value)]="currentState"
     >
       <mat-option *ngFor="let status of statuses" [value]="status.id">
@@ -687,8 +688,9 @@
 
 <div fxLayout="row-reverse" class="approve-wrapper">
   <geoaudit-status-buttons
-    [completed]="false"
-    [approved]="false"
+    *ngIf="tp_action!=null"
+    [completed]="completed()"
+    [approved]="approved == true"
     (completeEvent)="updateMarkState($event)"
   ></geoaudit-status-buttons>
 </div>

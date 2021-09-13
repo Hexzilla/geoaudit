@@ -93,6 +93,12 @@ export class SurveyComponent implements OnInit {
   attachedImages: Array<any>;
   Documents: Array<any>;
 
+  public site_list_completed = false;
+  public testpost_list_completed = false;
+  public tr_list_completed = false;
+  public abriox_list_completed = false;
+  public resistivity_list_completed = false;
+
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,

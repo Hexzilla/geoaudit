@@ -10,7 +10,6 @@ import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import * as fromApp from '../../../store';
 import * as moment from 'moment';
-import { TestpostEntityService } from '../../../entity-services/testpost-entity.service';
 import {
   Testpost,
   TrAction,
@@ -18,12 +17,8 @@ import {
 } from '../../../models';
 import { AlertService, UploadService } from '../../../services';
 import { FileTypes } from '../../../components/file-upload/file-upload.component';
-import { IAlbum, Lightbox } from 'ngx-lightbox';
-import { MatDialog } from '@angular/material/dialog';
-import { environment } from 'apps/geoaudit/src/environments/environment';
 import { StatusEntityService } from '../../../entity-services/status-entity.service';
 import { TrActionEntityService } from '../../../entity-services/tr-action-entity.service';
-import { SurveyEntityService } from '../../../entity-services/survey-entity.service';
 
 @Component({
   selector: 'geoaudit-tp-action',
@@ -46,11 +41,12 @@ export class TrActionComponent implements OnInit, AfterViewInit {
    */
   currentState = 0;
 
+  approved = false;
+
   /**
    * Whether the form has been submitted.
    */
   submitted = false;
-
 
   actionId = 0;
 
@@ -64,16 +60,12 @@ export class TrActionComponent implements OnInit, AfterViewInit {
   constructor(
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
-    private surveyEntityService: SurveyEntityService,
-    private testpostEntityService: TestpostEntityService,
     private statusEntityService: StatusEntityService,
     private trActionEntityService: TrActionEntityService,
     private store: Store<fromApp.State>,
     private router: Router,
     private alertService: AlertService,
     private uploadService: UploadService,
-    private _lightbox: Lightbox,
-    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -107,15 +99,17 @@ export class TrActionComponent implements OnInit, AfterViewInit {
         this.tr_action = tr_action;
 
         //TODO - FormArray
-        if (tr_action) {
-          this.form.patchValue({
-            date: moment(tr_action.date).format('L LT'),
-            condition: tr_action.condition?.name,
+        this.form.patchValue({
+          date: moment(tr_action.date).format('L LT'),
+          condition: tr_action.condition?.name,
 
-            images: tr_action.images,
-            documents: tr_action.documents
-          });
-        }
+          images: tr_action.images,
+          documents: tr_action.documents
+        });
+
+        this.currentState = tr_action.status?.id;
+        this.approved = tr_action.approved;
+
       },
       (err) => {}
     )
@@ -197,40 +191,53 @@ export class TrActionComponent implements OnInit, AfterViewInit {
       return;
     }
 
+    const payload = {
+      ...this.form.value,
+      status: this.currentState,
+      approved: this.approved
+    };
+
     /**
      * Invoke the backend with a PUT request to update
-     * the job with the form values.
-     *
-     * If create then navigate to the job id.
      */
-    /*this.jobEntityService.update(this.form.value).subscribe(
-      (update) => {
+    this.trActionEntityService.update(payload).subscribe(
+      () => {
         this.alertService.info('Saved Changes');
-
-        this.dataSource = new MatTableDataSource(update.surveys);
-
-        if (navigate) this.router.navigate([`/home/jobs`]);
+        if (navigate) this.router.navigate([`/home/trs`]);
       },
-
-      (err) => {
+      () => {
         this.alertService.error('Something went wrong');
       }
-    );*/
+    );
   }
 
   selectedIndexChange(selectedTabIndex) {
     this.selectedTabIndex = selectedTabIndex;
   }
+  
+  completed() {
+    //return this.tp_action?.status?.name == Statuses.COMPLETED;
+    return this.currentState == 1
+  }
+
+  onChangeState() {
+    console.log("onChangeState", this.currentState);
+    this.submit(false);
+  }
 
   updateMarkState(e) {
+    console.log('updateMarkState', e)
     if (e.complete) {
-      //TODO: update action state to completed
+      this.currentState = 1;
+      this.submit(true);
     }
     else if (e.approve) {
-      //TODO: update action state to approved
+      this.approved = true;
+      this.submit(true);
     }
     else if (e.refuse) {
-      //TODO: update action state to refused
+      this.approved = false;
+      this.submit(true);
     }
   }
 

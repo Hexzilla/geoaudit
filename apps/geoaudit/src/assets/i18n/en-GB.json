@@ -263,7 +263,7 @@
 					"abriox": "Abriox"
 				},
 				"tp_action": {
-					"title": "Testpost Action {{placeholder}}",
+					"title": "Testpost Action",
 					"date": "Date",
 					"condition": "Condition",
 					"reading": "Reading",

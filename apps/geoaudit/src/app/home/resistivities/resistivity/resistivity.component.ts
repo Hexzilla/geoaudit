@@ -9,8 +9,6 @@ import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import * as fromApp from '../../../store';
-import * as moment from 'moment';
-import { TestpostEntityService } from '../../../entity-services/testpost-entity.service';
 import {
   Resistivity,
   Status,
@@ -18,12 +16,8 @@ import {
 import * as MapActions from '../../../store/map/map.actions';
 import { AlertService, UploadService } from '../../../services';
 import { FileTypes } from '../../../components/file-upload/file-upload.component';
-import { IAlbum, Lightbox } from 'ngx-lightbox';
-import { MatDialog } from '@angular/material/dialog';
-import { environment } from 'apps/geoaudit/src/environments/environment';
 import { StatusEntityService } from '../../../entity-services/status-entity.service';
 import { ResistivityEntityService } from '../../../entity-services/resistivity-entity.service';
-import { SurveyEntityService } from '../../../entity-services/survey-entity.service';
 
 @Component({
   selector: 'geoaudit-resistivity',
@@ -46,6 +40,8 @@ export class ResistivityComponent implements OnInit, AfterViewInit {
    */
   currentState = 0;
 
+  approved = false;
+
   /**
    * Whether the form has been submitted.
    */
@@ -66,16 +62,12 @@ export class ResistivityComponent implements OnInit, AfterViewInit {
   constructor(
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
-    private surveyEntityService: SurveyEntityService,
-    private testpostEntityService: TestpostEntityService,
     private statusEntityService: StatusEntityService,
     private resistivityEntityService: ResistivityEntityService,
     private store: Store<fromApp.State>,
     private router: Router,
     private alertService: AlertService,
     private uploadService: UploadService,
-    private _lightbox: Lightbox,
-    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -137,6 +129,7 @@ export class ResistivityComponent implements OnInit, AfterViewInit {
         console.log("resistivity", this.resistivity)
         
         this.currentState = resistivity.status.id;
+        this.approved = resistivity.approved;
         const geometry = resistivity.geometry;
 
         this.form.patchValue({
@@ -198,17 +191,22 @@ export class ResistivityComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    console.log("this.form.value", this.form.value);
+    const payload = {
+      ...this.form.value,
+      status: this.currentState,
+      approved: this.approved,
+    };
+
     /**
      * Invoke the backend with a PUT request to update
      * the resistivity with the form values.
      *
      * If create then navigate to the job id.
      */
-    this.resistivityEntityService.update(this.form.value).subscribe(
+    this.resistivityEntityService.update(payload).subscribe(
       () => {
         this.alertService.info('Saved Changes');
-        //if (navigate) this.router.navigate([`/home/jobs`]);
+        if (navigate) this.router.navigate([`/home/resistivities`]);
       },
       (err) => {
         console.error(err);
@@ -232,16 +230,30 @@ export class ResistivityComponent implements OnInit, AfterViewInit {
       })
     );
   }
+  
+  completed() {
+    //return this.tp_action?.status?.name == Statuses.COMPLETED;
+    return this.currentState == 1
+  }
+
+  onChangeState() {
+    console.log("onChangeState", this.currentState);
+    this.submit(false);
+  }
 
   updateMarkState(e) {
+    console.log('updateMarkState', e)
     if (e.complete) {
-      //TODO: update action state to completed
+      this.currentState = 1;
+      this.submit(true);
     }
     else if (e.approve) {
-      //TODO: update action state to approved
+      this.approved = true;
+      this.submit(true);
     }
     else if (e.refuse) {
-      //TODO: update action state to refused
+      this.approved = false;
+      this.submit(true);
     }
   }
 

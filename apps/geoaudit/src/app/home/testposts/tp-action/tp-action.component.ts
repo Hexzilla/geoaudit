@@ -7,22 +7,20 @@ import {
 } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Store } from '@ngrx/store';
+import { State, Store } from '@ngrx/store';
 import * as fromApp from '../../../store';
 import * as moment from 'moment';
-import { TestpostEntityService } from '../../../entity-services/testpost-entity.service';
 import {
   Condition,
   FaultType,
   TpInformation,
   TpAction,
   Status,
+  Statuses,
 } from '../../../models';
 import { AlertService, UploadService } from '../../../services';
 import { FileTypes } from '../../../components/file-upload/file-upload.component';
-import { IAlbum, Lightbox } from 'ngx-lightbox';
 import { MatDialog } from '@angular/material/dialog';
-import { environment } from 'apps/geoaudit/src/environments/environment';
 import { StatusEntityService } from '../../../entity-services/status-entity.service';
 import { TpActionEntityService } from '../../../entity-services/tp-action-entity.service';
 import { ConditionEntityService } from '../../../entity-services/condition-entity.service';
@@ -49,6 +47,8 @@ export class TpActionComponent implements OnInit, AfterViewInit {
    */
   currentState = 0;
 
+  approved = false;
+
   /**
    * Whether the form has been submitted.
    */
@@ -72,7 +72,6 @@ export class TpActionComponent implements OnInit, AfterViewInit {
   constructor(
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
-    private testpostEntityService: TestpostEntityService,
     private statusEntityService: StatusEntityService,
     private tpActionEntityService: TpActionEntityService,
     private conditionEntityService: ConditionEntityService,
@@ -81,8 +80,6 @@ export class TpActionComponent implements OnInit, AfterViewInit {
     private router: Router,
     private alertService: AlertService,
     private uploadService: UploadService,
-    private _lightbox: Lightbox,
-    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -173,6 +170,7 @@ export class TpActionComponent implements OnInit, AfterViewInit {
         });
 
         this.currentState = tpaction.status?.id;
+        this.approved = tpaction.approved;
 
         if (tpaction.tp_information) {
           const info = tpaction.tp_information;
@@ -200,10 +198,10 @@ export class TpActionComponent implements OnInit, AfterViewInit {
     )
   }
 
-  getDate() {
+  getReference() {
     if (this.tp_action) {
       const datestr = moment(this.tp_action.date).format('L');
-      return ` - [${datestr}]`
+      return `[${datestr}]`
     }
     return ''
   }
@@ -315,6 +313,8 @@ export class TpActionComponent implements OnInit, AfterViewInit {
 
     const payload = {
       ...this.form.value,
+      status: this.currentState,
+      approved: this.approved,
       tp_information: {
         anodes_off: this.form.value.anodes_off,
         anode_on: this.form.value.anode_on,
@@ -363,16 +363,30 @@ export class TpActionComponent implements OnInit, AfterViewInit {
   searchTestpost() {
     this.router.navigate([`/home/search`]);
   }
+  
+  completed() {
+    //return this.tp_action?.status?.name == Statuses.COMPLETED;
+    return this.currentState == 1
+  }
+
+  onChangeState() {
+    console.log("onChangeState", this.currentState);
+    this.submit(false);
+  }
 
   updateMarkState(e) {
+    console.log('updateMarkState', e)
     if (e.complete) {
-      //TODO: update action state to completed
+      this.currentState = 1;
+      this.submit(true);
     }
     else if (e.approve) {
-      //TODO: update action state to approved
+      this.approved = true;
+      this.submit(true);
     }
     else if (e.refuse) {
-      //TODO: update action state to refused
+      this.approved = false;
+      this.submit(true);
     }
   }
 
