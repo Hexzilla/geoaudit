@@ -21,6 +21,7 @@ export class StatusButtonsComponent implements OnInit {
   }
 
   isManager() {
+    //return false;
     return this.authService.authValue.user?.role?.name === Roles.MANAGER
   }
 
