@@ -210,6 +210,11 @@ export class AbrioxActionComponent implements OnInit, AfterViewInit {
   searchAbriox() {
     this.router.navigate([`/home/search`]);
   }
+  
+  completed() {
+    //return this.tp_action?.status?.name == Statuses.COMPLETED;
+    return this.currentState == 1
+  }
 
   onChangeState() {
     console.log("onChangeState", this.currentState);

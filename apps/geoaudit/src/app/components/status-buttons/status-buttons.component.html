@@ -1,5 +1,5 @@
 <div fxLayout="column" fxLayoutAlign="end end">
-    <div *ngIf="!isManager() && !completed">
+    <div *ngIf="!completed">
         <mat-icon class="statusButton limegreen" (click)="complete()">done</mat-icon>
     </div>
     <div *ngIf="isManager() && completed && !approved">

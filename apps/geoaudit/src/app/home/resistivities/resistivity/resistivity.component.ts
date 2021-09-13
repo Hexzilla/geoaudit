@@ -230,6 +230,11 @@ export class ResistivityComponent implements OnInit, AfterViewInit {
       })
     );
   }
+  
+  completed() {
+    //return this.tp_action?.status?.name == Statuses.COMPLETED;
+    return this.currentState == 1
+  }
 
   onChangeState() {
     console.log("onChangeState", this.currentState);

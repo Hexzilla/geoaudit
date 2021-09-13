@@ -206,11 +206,6 @@ export class TpActionComponent implements OnInit, AfterViewInit {
     return ''
   }
 
-  completed() {
-    //return this.tp_action?.status?.name == Statuses.COMPLETED;
-    return this.currentState == 1
-  }
-
   get anode(): FormArray {
     return this.form.get('anode') as FormArray;
   }
@@ -367,6 +362,11 @@ export class TpActionComponent implements OnInit, AfterViewInit {
 
   searchTestpost() {
     this.router.navigate([`/home/search`]);
+  }
+  
+  completed() {
+    //return this.tp_action?.status?.name == Statuses.COMPLETED;
+    return this.currentState == 1
   }
 
   onChangeState() {
