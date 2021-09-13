@@ -10,7 +10,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { State, Store } from '@ngrx/store';
 import * as fromApp from '../../../store';
 import * as moment from 'moment';
-import { TestpostEntityService } from '../../../entity-services/testpost-entity.service';
 import {
   Condition,
   FaultType,
@@ -21,9 +20,7 @@ import {
 } from '../../../models';
 import { AlertService, UploadService } from '../../../services';
 import { FileTypes } from '../../../components/file-upload/file-upload.component';
-import { IAlbum, Lightbox } from 'ngx-lightbox';
 import { MatDialog } from '@angular/material/dialog';
-import { environment } from 'apps/geoaudit/src/environments/environment';
 import { StatusEntityService } from '../../../entity-services/status-entity.service';
 import { TpActionEntityService } from '../../../entity-services/tp-action-entity.service';
 import { ConditionEntityService } from '../../../entity-services/condition-entity.service';
@@ -75,7 +72,6 @@ export class TpActionComponent implements OnInit, AfterViewInit {
   constructor(
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
-    private testpostEntityService: TestpostEntityService,
     private statusEntityService: StatusEntityService,
     private tpActionEntityService: TpActionEntityService,
     private conditionEntityService: ConditionEntityService,
@@ -84,8 +80,6 @@ export class TpActionComponent implements OnInit, AfterViewInit {
     private router: Router,
     private alertService: AlertService,
     private uploadService: UploadService,
-    private _lightbox: Lightbox,
-    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {

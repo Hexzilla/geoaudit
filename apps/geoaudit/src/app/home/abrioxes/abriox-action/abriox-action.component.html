@@ -7,6 +7,7 @@
     <mat-select
       statusControlName="status"
       name="status"
+      (selectionChange)="onChangeState()"
       [(value)]="currentState"
     >
       <mat-option *ngFor="let status of statuses" [value]="status.id">
@@ -60,6 +61,7 @@
             <ngx-mat-datetime-picker #tp_action_date [showSpinners]="true">
             </ngx-mat-datetime-picker>
           </mat-form-field>
+
           <mat-form-field appearance="outline">
             <mat-label>{{
               'CONTAINERS.home.testposts.tp_action.condition' | translate
@@ -86,6 +88,7 @@
             <div>
               <div formArrayName="fault_detail">
                 <div *ngFor="let _ of fault_detail.controls; index as i" [formGroupName]="i" fxLayout="column">
+
                   <mat-form-field appearance="outline">
                     <mat-label>{{
                       'CONTAINERS.home.testposts.tp_action.fault.type' | translate
@@ -156,6 +159,15 @@
   </mat-tab>
 </mat-tab-group>
 
+<div fxLayout="row-reverse" class="approve-wrapper">
+  <geoaudit-status-buttons
+    *ngIf="abriox_action!=null"
+    [completed]="completed()"
+    [approved]="approved == true"
+    (completeEvent)="updateMarkState($event)"
+  ></geoaudit-status-buttons>
+</div>
+
 <div fxLayout="row-reverse" fxLayoutAlign="space-between" class="button-area">
   <div class="button-wrapper">
     <button
@@ -172,7 +184,7 @@
   <button
     mat-flat-button
     color="primary"
-    (click)="submit()"
+    (click)="submit(true)"
     type="submit"
     class="btn-submit"
   >

@@ -14,6 +14,7 @@ import {
   FaultType,
   AbrioxAction,
   Status,
+  Statuses,
 } from '../../../models';
 import { AlertService, UploadService } from '../../../services';
 import { FileTypes } from '../../../components/file-upload/file-upload.component';
@@ -44,14 +45,14 @@ export class AbrioxActionComponent implements OnInit, AfterViewInit {
    */
   currentState = 0;
 
+  approved = false;
+
   /**
    * Whether the form has been submitted.
    */
   submitted = false;
 
   faultTypes: Array<FaultType>;
-
-  abrioxId = 0;
 
   actionId = 0;
 
@@ -72,7 +73,6 @@ export class AbrioxActionComponent implements OnInit, AfterViewInit {
     private router: Router,
     private alertService: AlertService,
     private uploadService: UploadService,
-    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -97,6 +97,19 @@ export class AbrioxActionComponent implements OnInit, AfterViewInit {
     //
   }
 
+
+  /**
+   * Initialisation of the form, properties, and validation.
+   */
+   initialiseForm(): void {
+    this.form = this.formBuilder.group({
+      id: [null],
+      date: [null],
+      condition: [null],
+      fault_detail: new FormArray([]),
+    });
+  }
+
   fetchData() {
     this.faultTypeEntityService.getAll().subscribe(
       (faultTypes) => {
@@ -105,7 +118,7 @@ export class AbrioxActionComponent implements OnInit, AfterViewInit {
       }
     )
 
-    this.abrioxId = this.route.snapshot.params['id']
+    //const abrioxId = this.route.snapshot.params['id']
     this.actionId = this.route.snapshot.params['actionId'];
     this.abrioxActionEntityService.getByKey(this.actionId).subscribe(
       (abriox_action) => {
@@ -120,6 +133,9 @@ export class AbrioxActionComponent implements OnInit, AfterViewInit {
           images: abriox_action.images,
           documents: abriox_action.documents
         });
+
+        this.currentState = abriox_action.status?.id;
+        this.approved = abriox_action.approved;
 
         //this.fault_detail.clear();
         //fault_detail.map(item => this.fault_detail.push(this.formBuilder.group(item)));
@@ -140,19 +156,7 @@ export class AbrioxActionComponent implements OnInit, AfterViewInit {
       fault_desc: ''
     }));
   }
-
-  /**
-   * Initialisation of the form, properties, and validation.
-   */
-  initialiseForm(): void {
-    this.form = this.formBuilder.group({
-      id: [null],
-      date: [null],
-      condition: [null],
-      fault_detail: new FormArray([]),
-    });
-  }
-
+  
   submit(navigate = true) {
     console.log('submit');
     this.submitted = true;
@@ -165,7 +169,16 @@ export class AbrioxActionComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    console.log("submit", this.form.value);
+    const payload = {
+      ...this.form.value,
+      status: this.currentState,
+      approved: this.approved
+    };
+
+    delete payload.anode;
+    delete payload.dead;
+    delete payload.sleeve;
+    delete payload.coupon;
 
     /**
      * Invoke the backend with a PUT request to update
@@ -173,12 +186,16 @@ export class AbrioxActionComponent implements OnInit, AfterViewInit {
      *
      * If create then navigate to the job id.
      */
-    this.abrioxActionEntityService.update(this.form.value).subscribe(
+    this.abrioxActionEntityService.update(payload).subscribe(
       (update) => {
         this.alertService.info('Saved Changes');
+
+        if (navigate) {
+          //
+        }
       },
 
-      (err) => {
+      () => {
         this.alertService.error('Something went wrong');
       }
     );
@@ -199,15 +216,24 @@ export class AbrioxActionComponent implements OnInit, AfterViewInit {
     this.router.navigate([`/home/search`]);
   }
 
+  onChangeState() {
+    console.log("onChangeState", this.currentState);
+    this.submit(false);
+  }
+
   updateMarkState(e) {
+    console.log('updateMarkState', e)
     if (e.complete) {
-      //TODO: update action state to completed
+      this.currentState = 1;
+      this.submit(true);
     }
     else if (e.approve) {
-      //TODO: update action state to approved
+      this.approved = true;
+      this.submit(true);
     }
     else if (e.refuse) {
-      //TODO: update action state to refused
+      this.approved = false;
+      this.submit(true);
     }
   }
 
