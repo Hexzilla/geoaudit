@@ -98,7 +98,9 @@ export class TrActionsComponent implements OnInit {
     console.log("submit")
   }
 
-  getActionDate(action) {
-    return moment(action.date).format('L LT')
+  getSubTitle(action) {
+    const date = action.date ? moment(action.date).format('L LT') : '';
+    const condition = action.condition?.name || '';
+    return `${date} - ${condition}`
   }
 }
