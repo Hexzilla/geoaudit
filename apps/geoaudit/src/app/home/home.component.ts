@@ -53,6 +53,7 @@ import { TrEntityService } from '../entity-services/tr-entity.service';
 import { ResistivityEntityService } from '../entity-services/resistivity-entity.service';
 import { SurveyEntityService } from '../entity-services/survey-entity.service';
 import { ToDoListEntityService } from '../entity-services/to-do-list-entity.service';
+import { ConditionEntityService } from '../entity-services/condition-entity.service';
 
 import * as fromApp from '../store';
 import * as MapActions from '../store/map/map.actions';
@@ -147,6 +148,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     private notificationEntityService: NotificationEntityService,
     private toDoListEntityService: ToDoListEntityService,
     private myJobEntityService: MyJobEntityService,
+    private conditionEntityService: ConditionEntityService,
     private selectionService: SelectionService,
     private location: Location
   ) {
@@ -373,7 +375,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.testpostEntityService.getAll().subscribe(
       (marker_data) => {
         this.testposts = [...marker_data];
-        console.log("~~~~~~~~~this.testposts", this.testposts)
+        console.log("this.testposts", this.testposts)
         
         const _testposts = marker_data
           .filter(it => it.name && it.geometry && it.approved)
@@ -386,29 +388,30 @@ export class HomeComponent implements OnInit, AfterViewInit {
               const diff = moment(a.date).diff(moment(b.date), 'seconds')
               return (diff > 0) ? a : b
             });
-            return { ...tp, condition: action.condition }
+            console.log("action", action)
+            return { ...tp, condition: action.condition || 0 }
           })
           .filter(it => it && it.condition)
 
         console.log("_testposts", _testposts)
 
         _testposts.map(testpost => {
-          const iconColor = this.getTestpostMarkerIconColor(testpost.condition.name);
+          const iconColor = this.getTestpostMarkerIconColor(testpost.condition);
           const markerColor = 'rgba(255, 255, 255, 0.8)';
           const outlineColor = 'black';
           const busIcon = this.createIconMaterial("tv", iconColor, markerColor, outlineColor)
           const marker = this.createTestpostMarker(busIcon, testpost);
 
-          if (testpost.condition.name == 'WORKING') {
+          if (testpost.condition == 1) {
             marker.addTo(testpost_working_layer);
           }
-          else if (testpost.condition.name == 'NOT_WORKING') {
+          else if (testpost.condition == 2) {
             marker.addTo(testpost_not_working_layer);
           }
-          else if (testpost.condition.name == 'REPAIRING') {
+          else if (testpost.condition == 3) {
             marker.addTo(testpost_repairing_layer);
           }
-          else if (testpost.condition.name == 'REPLACING') {
+          else if (testpost.condition == 4) {
             marker.addTo(testpost_replacing_layer);
           }
         })
@@ -420,10 +423,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
     );
 
     //fetch tr
-    var tr_working_layer = new L.markerClusterGroup();
-    var tr_not_working_layer = new L.markerClusterGroup();
-    var tr_repairing_layer = new L.markerClusterGroup();
-    var tr_replacing_layer = new L.markerClusterGroup();
+    const tr_working_layer = new L.markerClusterGroup();
+    const tr_not_working_layer = new L.markerClusterGroup();
+    const tr_repairing_layer = new L.markerClusterGroup();
+    const tr_replacing_layer = new L.markerClusterGroup();
     this.trEntityService.getAll().subscribe(
       (marker_data) => {
         marker_data.sort(function(a,b){
@@ -1056,16 +1059,16 @@ export class HomeComponent implements OnInit, AfterViewInit {
     return '#FF0000'
   }
 
-  private getTestpostMarkerIconColor(statusName) {
-    switch (statusName) {
-      case 'WORKING':
+  private getTestpostMarkerIconColor(condition) {
+    switch (condition) {
+      case 1:
         return '#8AC926'
-      case 'NOT_WORKING':
+      case 2:
         return '#E71D36'
-      case 'REPLACING':
+        case 3:
+          return '#3A86FF'
+      case 4:
         return 'black';
-      case 'REPAIRING':
-        return '#3A86FF'
     }
     return '#FF0000'
   }
