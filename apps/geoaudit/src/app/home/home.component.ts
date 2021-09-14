@@ -375,7 +375,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.testpostEntityService.getAll().subscribe(
       (marker_data) => {
         this.testposts = [...marker_data];
-        console.log("this.testposts", this.testposts)
+        console.log("testposts", this.testposts)
         
         const _testposts = marker_data
           .filter(it => it.name && it.geometry && it.approved)
@@ -393,7 +393,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
           })
           .filter(it => it && it.condition)
 
-        console.log("_testposts", _testposts)
+        console.log("testposts.filtered", _testposts)
 
         _testposts.map(testpost => {
           const iconColor = this.getTestpostMarkerIconColor(testpost.condition);
@@ -429,139 +429,47 @@ export class HomeComponent implements OnInit, AfterViewInit {
     const tr_replacing_layer = new L.markerClusterGroup();
     this.trEntityService.getAll().subscribe(
       (marker_data) => {
-        marker_data.sort(function(a,b){
-          if(a.date_installation < b.date_installation )
-            return -1;
-          return 1;
-        });
-        this.trs = marker_data;
+        this.trs = [...marker_data];
+        console.log("trs", this.trs)
         
-        var flag1 = 0 ,flag2 = 0 , flag3 = 0 , flag4 = 0;
-        for( var i=0 ;i < this.trs.length ;i ++)
-        {
-          var a = this.trs[i];
+        const _trs = marker_data
+          .filter(it => it.name && it.geometry && it.approved)
+          .map(tr => {
+            const actions = tr.tr_actions
+            if (!actions || actions.length <= 0) {
+              return null;
+            }
+            const action = actions.reduce((a, b) => {
+              const diff = moment(a.date).diff(moment(b.date), 'seconds')
+              return (diff > 0) ? a : b
+            });
+            console.log("action", action)
+            return { ...tr, condition: action.condition || 0 }
+          })
+          .filter(it => it && it.condition)
 
-          // if no geometry data, skip it
-          if(!a || !a.geometry || !this.trs[i].name) continue;
-          // if against Layer rule, skip it
-          if(!a.approved) continue;
+        console.log("trs.filtered", _trs)
 
-          // if no condition data, skip it
-          if(!a.actions || !a.actions.condition || !a.actions.condition.name) continue;
+        _trs.map(tr => {
+          const iconColor = this.getTestpostMarkerIconColor(tr.condition);
+          const markerColor = 'rgba(255, 255, 255, 0.8)';
+          const outlineColor = 'black';
+          const busIcon = this.createIconMaterial("bolt", iconColor, markerColor, outlineColor)
+          const marker = this.createTrMarker(busIcon, tr);
 
-          // seperate icons and layers for condition
-          var icon_name = "signal_wifi_0_bar";
-          switch(a.actions.condition.name)
-          {
-            case "WORKING":
-              if(flag1 == 0)
-              {
-                icon_name = "bolt";
-                var busIcon = L.IconMaterial.icon({
-                  icon: icon_name,            // Name of Material icon
-                  iconColor: '#8AC926',              // Material icon color (could be rgba, hex, html name...)
-                  markerColor: 'rgba(255,255,255,0.8)',  // Marker fill color
-                  outlineColor: 'black',            // Marker outline color
-                  outlineWidth: 1,                   // Marker outline width 
-                  iconSize: [31, 42]                 // Width and height of the icon
-                })
-                var marker_i = L.marker(new L.LatLng(a.geometry['lat'], a.geometry['lng']), {icon:busIcon , title: this.trs[i].name });
-                var select_popup = '<h2> tr ' + this.trs[i].name + "</h2><hr>";
-                select_popup += '<button data-btn="detail" data-type="trs" data-id="'+this.trs[i].id+'" class="sp_button">Details<span class="detail_button_icon">></span></button></a>';
-                select_popup += '<button data-btn="history" data-type="trs" data-id="'+this.trs[i].id+'" class="sp_button">Historical data<span class="detail_button_icon">></span></button>';
-                select_popup += '<button data-btn="notes" data-type="trs" data-id="'+this.trs[i].id+'" class="sp_button">Notes<span class="detail_button_icon">></span></button>';
-                select_popup += '<button data-btn="drive" data-type="trs" data-id="'+this.trs[i].id+'" class="sp_button">DriveTo<span class="detail_button_icon">></span></button>';
-
-                var popup = L.popup({className: 'select_marker_popup' , 'closeButton' : false})
-                    .setContent(select_popup);
-                marker_i.bindPopup(popup);
-                // marker_i.addTo(tr_working_layer);
-                tr_working_layer.addLayer(marker_i);
-                flag1 = 1;
-              }
-              break;
-            case "NOT_WORKING":
-              if(flag2 == 0)
-              {
-                icon_name = "bolt";
-                var busIcon = L.IconMaterial.icon({
-                  icon: icon_name,            // Name of Material icon
-                  iconColor: '#E71D36',              // Material icon color (could be rgba, hex, html name...)
-                  markerColor: 'rgba(255,255,255,0.8)',  // Marker fill color
-                  outlineColor: 'black',            // Marker outline color
-                  outlineWidth: 1,                   // Marker outline width 
-                  iconSize: [31, 42]                 // Width and height of the icon
-                })
-                var marker_i = L.marker(new L.LatLng(a.geometry['lat'], a.geometry['lng']), {icon:busIcon , title: this.trs[i].name });
-                var select_popup = '<h2> tr ' + this.trs[i].name + "</h2><hr>";
-                select_popup += '<button data-btn="detail" data-type="trs" data-id="'+this.trs[i].id+'" class="sp_button">Details<span class="detail_button_icon">></span></button></a>';
-                select_popup += '<button data-btn="history" data-type="trs" data-id="'+this.trs[i].id+'" class="sp_button">Historical data<span class="detail_button_icon">></span></button>';
-                select_popup += '<button data-btn="notes" data-type="trs" data-id="'+this.trs[i].id+'" class="sp_button">Notes<span class="detail_button_icon">></span></button>';
-                select_popup += '<button data-btn="drive" data-type="trs" data-id="'+this.trs[i].id+'" class="sp_button">DriveTo<span class="detail_button_icon">></span></button>';
-
-                var popup = L.popup({className: 'select_marker_popup' , 'closeButton' : false})
-                    .setContent(select_popup);
-                marker_i.bindPopup(popup);
-                // marker_i.addTo(tr_not_working_layer);
-                tr_not_working_layer.addLayer(marker_i);
-                flag2 = 1;
-              }
-              break;
-            case "REPAIRING":
-              if(flag3 == 0)
-              {
-                icon_name = "bolt";
-                var busIcon = L.IconMaterial.icon({
-                  icon: icon_name,            // Name of Material icon
-                  iconColor: '#3A86FF',              // Material icon color (could be rgba, hex, html name...)
-                  markerColor: 'rgba(255,255,255,0.8)',  // Marker fill color
-                  outlineColor: 'black',            // Marker outline color
-                  outlineWidth: 1,                   // Marker outline width 
-                  iconSize: [31, 42]                 // Width and height of the icon
-                })
-                var marker_i = L.marker(new L.LatLng(a.geometry['lat'], a.geometry['lng']), {icon:busIcon , title: this.trs[i].name });
-                var select_popup = '<h2> tr ' + this.trs[i].name + "</h2><hr>";
-                select_popup += '<button data-btn="detail" data-type="trs" data-id="'+this.trs[i].id+'" class="sp_button">Details<span class="detail_button_icon">></span></button></a>';
-                select_popup += '<button data-btn="history" data-type="trs" data-id="'+this.trs[i].id+'" class="sp_button">Historical data<span class="detail_button_icon">></span></button>';
-                select_popup += '<button data-btn="notes" data-type="trs" data-id="'+this.trs[i].id+'" class="sp_button">Notes<span class="detail_button_icon">></span></button>';
-                select_popup += '<button data-btn="drive" data-type="trs" data-id="'+this.trs[i].id+'" class="sp_button">DriveTo<span class="detail_button_icon">></span></button>';
-
-                var popup = L.popup({className: 'select_marker_popup' , 'closeButton' : false})
-                    .setContent(select_popup);
-                marker_i.bindPopup(popup);
-                // marker_i.addTo(tr_repairing_layer);
-                tr_repairing_layer.addLayer(marker_i);
-                flag3 = 1;
-              }
-              break;
-            case "REPLACING":
-              if(flag4 == 0)
-              {
-                icon_name = "bolt";
-                var busIcon = L.IconMaterial.icon({
-                  icon: icon_name,            // Name of Material icon
-                  iconColor: 'black',              // Material icon color (could be rgba, hex, html name...)
-                  markerColor: 'rgba(255,255,255,0.8)',  // Marker fill color
-                  outlineColor: 'black',            // Marker outline color
-                  outlineWidth: 1,                   // Marker outline width 
-                  iconSize: [31, 42]                 // Width and height of the icon
-                })
-                var marker_i = L.marker(new L.LatLng(a.geometry['lat'], a.geometry['lng']), {icon:busIcon , title: this.trs[i].name });
-                var select_popup = '<h2> tr ' + this.trs[i].name + "</h2><hr>";
-                select_popup += '<button data-btn="detail" data-type="trs" data-id="'+this.trs[i].id+'" class="sp_button">Details<span class="detail_button_icon">></span></button></a>';
-                select_popup += '<button data-btn="history" data-type="trs" data-id="'+this.trs[i].id+'" class="sp_button">Historical data<span class="detail_button_icon">></span></button>';
-                select_popup += '<button data-btn="notes" data-type="trs" data-id="'+this.trs[i].id+'" class="sp_button">Notes<span class="detail_button_icon">></span></button>';
-                select_popup += '<button data-btn="drive" data-type="trs" data-id="'+this.trs[i].id+'" class="sp_button">DriveTo<span class="detail_button_icon">></span></button>';
-
-                var popup = L.popup({className: 'select_marker_popup' , 'closeButton' : false})
-                    .setContent(select_popup);
-                marker_i.bindPopup(popup);
-                tr_replacing_layer.addLayer(marker_i);
-                flag4 = 1;
-              }
-              break;
+          if (tr.condition == 1) {
+            marker.addTo(tr_working_layer);
           }
-        }
+          else if (tr.condition == 2) {
+            marker.addTo(tr_not_working_layer);
+          }
+          else if (tr.condition == 3) {
+            marker.addTo(tr_repairing_layer);
+          }
+          else if (tr.condition == 4) {
+            marker.addTo(tr_replacing_layer);
+          }
+        })
       },
 
       (err) => {
@@ -1135,7 +1043,28 @@ export class HomeComponent implements OnInit, AfterViewInit {
     marker_i.bindPopup(popup);
 
     return marker_i;
-}
+  }
+
+  createTrMarker(busIcon, tr){
+    const marker_i = L.marker(
+      new L.LatLng(tr.geometry['lat'], tr.geometry['lng']),
+      { icon: busIcon, title: tr.name }
+    );
+
+    let select_popup = '<h2> tr ' + tr.name + "</h2><hr>";
+    select_popup += '<button data-btn="detail" data-type="trs" data-id="'+this.trs[i].id+'" class="sp_button">Details<span class="detail_button_icon">></span></button></a>';
+    select_popup += '<button data-btn="history" data-type="trs" data-id="'+this.trs[i].id+'" class="sp_button">Historical data<span class="detail_button_icon">></span></button>';
+    select_popup += '<button data-btn="notes" data-type="trs" data-id="'+this.trs[i].id+'" class="sp_button">Notes<span class="detail_button_icon">></span></button>';
+    select_popup += '<button data-btn="drive" data-type="trs" data-id="'+this.trs[i].id+'" class="sp_button">DriveTo<span class="detail_button_icon">></span></button>';
+
+    const popup = L.popup({
+      className: 'select_marker_popup',
+      closeButton: false,
+    }).setContent(select_popup);
+    marker_i.bindPopup(popup);
+
+    return marker_i;
+  }
 
   private initialiseControls(): void {
     this.initializeSidebarControl();

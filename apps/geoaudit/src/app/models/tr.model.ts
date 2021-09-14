@@ -4,6 +4,7 @@ import { Image } from "./image.model";
 import { Note } from "./note.model";
 import { Status } from "./status.model";
 import { TpAction } from "./tp-action.model";
+import { TrAction } from "./tr-action.model";
 import { User } from "./user.model";
 
 export interface Tr {
@@ -18,6 +19,7 @@ export interface Tr {
     status?: Status;
     actions?: TpAction;
     reference?: string;
+    tr_actions?: Array<TrAction>;
 
     images?: Array<Image>;
     documents?: Array<any>;
