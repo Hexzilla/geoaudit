@@ -66,6 +66,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { SelectionService } from '../services/selection.service';
 import { MyJobEntityService } from '../entity-services/my-job-entity.service';
+import { I } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'geoaudit-home',
@@ -444,6 +445,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.surveyEntityService.getAll().subscribe(
       (marker_data) => {
         this.surveys = marker_data;
+        console.log("surveys", this.surveys)
         this.drawSurveyMarkers(this.surveys, this.surveyFilters)
       },
 
@@ -841,8 +843,11 @@ export class HomeComponent implements OnInit, AfterViewInit {
     })
   }
 
-  private drawSurveyMarkers(items, selected) {
-    items.filter(it => it && it.geometry && it.status && it.status.name)
+  private drawSurveyMarkers(items: Array<Survey>, selected) {
+    items
+      .filter(it => it && it.geometry && it.status && it.status.name)
+      .filter(it => it.job && it.job.assignees && it.job.assignees.length > 0)
+      .filter(it => it.job.assignees.find(a => a.id == this.authService.authValue.user.id))
       .map(a => {
         let iconColor = this.getMarkerIconColor(a.status.name);
         let markerColor = 'rgba(255,255,255,0.8)'
