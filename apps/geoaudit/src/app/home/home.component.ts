@@ -268,13 +268,11 @@ export class HomeComponent implements OnInit, AfterViewInit {
               const diff = moment(a.date).diff(moment(b.date), 'seconds')
               return (diff > 0) ? a : b
             });
-            console.log("action", action)
             return { ...abriox, condition: action.condition || 0 }
           })
           .filter(it => it && it.condition)
 
-        console.log("abriox.filtered", _abrioxes)
-
+        //console.log("abriox.filtered", _abrioxes)
         _abrioxes.map(abriox => {
           const iconColor = this.getTestpostMarkerIconColor(abriox.condition);
           const markerColor = 'rgba(255, 255, 255, 0.8)';
@@ -323,13 +321,11 @@ export class HomeComponent implements OnInit, AfterViewInit {
               const diff = moment(a.date).diff(moment(b.date), 'seconds')
               return (diff > 0) ? a : b
             });
-            console.log("action", action)
             return { ...tp, condition: action.condition || 0 }
           })
           .filter(it => it && it.condition)
 
-        console.log("testposts.filtered", _testposts)
-
+        //console.log("testposts.filtered", _testposts)
         _testposts.map(testpost => {
           const iconColor = this.getTestpostMarkerIconColor(testpost.condition);
           const markerColor = 'rgba(255, 255, 255, 0.8)';
@@ -378,13 +374,11 @@ export class HomeComponent implements OnInit, AfterViewInit {
               const diff = moment(a.date).diff(moment(b.date), 'seconds')
               return (diff > 0) ? a : b
             });
-            console.log("action", action)
             return { ...tr, condition: action.condition || 0 }
           })
           .filter(it => it && it.condition)
 
-        console.log("trs.filtered", _trs)
-
+        //console.log("trs.filtered", _trs)
         _trs.map(tr => {
           const iconColor = this.getTestpostMarkerIconColor(tr.condition);
           const markerColor = 'rgba(255, 255, 255, 0.8)';
@@ -420,7 +414,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
         console.log("resistivities", this.resistivities)
         
         const _resistivities = marker_data.filter(it => it.reference && it.geometry && it.approved)
-        console.log("resistivities.filtered", _resistivities)
+        //console.log("resistivities.filtered", _resistivities)
 
         _resistivities.map(tr => {
           const iconColor = 'black';
@@ -445,7 +439,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.surveyEntityService.getAll().subscribe(
       (marker_data) => {
         this.surveys = marker_data;
-        console.log("surveys", this.surveys)
         this.drawSurveyMarkers(this.surveys, this.surveyFilters)
       },
 
