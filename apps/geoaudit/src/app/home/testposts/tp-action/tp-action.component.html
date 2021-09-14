@@ -454,15 +454,11 @@
                 <mat-label>{{
                   'CONTAINERS.home.testposts.tp_action.others.refcell' | translate
                 }}</mat-label>
-                <input
-                  matInput
-                  [placeholder]="
-                    'CONTAINERS.home.testposts.tp_action.others.refcell'
-                      | translate
-                  "
-                  formControlName="others_refcell"
-                  class="form-control"
-                />
+                <mat-select formControlName="others_refcell" name="others_refcell">
+                  <mat-option *ngFor="let _it of referenceCells" [value]="_it.id">
+                    {{ _it.name }}
+                  </mat-option>
+                </mat-select>
               </mat-form-field>
             </div>
           </mat-expansion-panel>

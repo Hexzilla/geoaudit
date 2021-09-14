@@ -13,7 +13,7 @@ import * as moment from 'moment';
 import {
   Condition,
   FaultType,
-  TpInformation,
+  ReferenceCell,
   TpAction,
   Status,
   Statuses,
@@ -59,6 +59,8 @@ export class TpActionComponent implements OnInit, AfterViewInit {
 
   faultTypes: Array<FaultType>;
 
+  referenceCells: Array<ReferenceCell>
+
   testpostId = 0;
 
   actionId = 0;
@@ -77,7 +79,7 @@ export class TpActionComponent implements OnInit, AfterViewInit {
     private tpActionEntityService: TpActionEntityService,
     private conditionEntityService: ConditionEntityService,
     private faultTypeEntityService: FaultTypeEntityService,
-    private referenceCellEntityService: ReferenceCelEntityService,
+    private referenceCellEntityService: ReferenceCellEntityService,
     private store: Store<fromApp.State>,
     private router: Router,
     private alertService: AlertService,
@@ -153,6 +155,12 @@ export class TpActionComponent implements OnInit, AfterViewInit {
         console.log("faultTypes", faultTypes);
       }
     )
+    this.referenceCellEntityService.getAll().subscribe(
+      (referenceCells) => {
+        this.referenceCells = referenceCells;
+        console.log("referenceCells", referenceCells);
+      }
+    )
 
     this.testpostId = this.route.snapshot.params['id']
     this.actionId = this.route.snapshot.params['actionId'];
@@ -164,15 +172,8 @@ export class TpActionComponent implements OnInit, AfterViewInit {
         console.log("tp_action", tpaction);
 
         this.form.patchValue({
-          id: tpaction.id,
-          date: tpaction.date,
+          ...tpaction,
           condition: tpaction.condition?.id,
-
-          pipe_depth: tpaction.pipe_depth,
-          reinstatement: tpaction.reinstatement,
-
-          images: tpaction.images,
-          documents: tpaction.documents
         });
 
         this.currentState = tpaction.status?.id;
@@ -196,7 +197,6 @@ export class TpActionComponent implements OnInit, AfterViewInit {
 
         this.fault_detail.clear();
         tpaction.fault_detail?.map(item => this.fault_detail.push(this.formBuilder.group(item)));
-        console.log("this.fault_detail", this.fault_detail)
 
         this.current_drain.clear();
         tpaction.current_drain?.map(item => this.current_drain.push(this.formBuilder.group(item)));
