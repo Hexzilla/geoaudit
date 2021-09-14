@@ -132,7 +132,8 @@ export class TpActionComponent implements OnInit, AfterViewInit {
       others_reedswitch: [null],
       others_refcell: [null],
       current_drain: new FormArray([]),
-      assets: new FormArray([]),
+      pipe_depth: [null],
+      reinstatement: [null],
       fault_detail: new FormArray([]),
     });
   }
@@ -165,6 +166,9 @@ export class TpActionComponent implements OnInit, AfterViewInit {
           date: tpaction.date,
           condition: tpaction.condition?.id,
 
+          pipe_depth: tpaction.pipe_depth,
+          reinstatement: tpaction.reinstatement,
+
           images: tpaction.images,
           documents: tpaction.documents
         });
@@ -190,6 +194,7 @@ export class TpActionComponent implements OnInit, AfterViewInit {
 
         this.fault_detail.clear();
         tpaction.fault_detail?.map(item => this.fault_detail.push(this.formBuilder.group(item)));
+        console.log("this.fault_detail", this.fault_detail)
 
         this.current_drain.clear();
         tpaction.current_drain?.map(item => this.current_drain.push(this.formBuilder.group(item)));
@@ -272,21 +277,6 @@ export class TpActionComponent implements OnInit, AfterViewInit {
     }));
   }
 
-  get assets(): FormArray {
-    return this.form.get('assets') as FormArray;
-  }
-
-  addAssets(asset) {
-    if (asset) {
-		  this.assets.push(this.formBuilder.group(asset));
-    } else {
-      this.assets.push(this.formBuilder.group({
-        pipe_depth: '',
-        reinstatement: ''
-      }));
-    }
-  }
-
   get fault_detail(): FormArray {
     return this.form.get('fault_detail') as FormArray;
   }
@@ -294,8 +284,8 @@ export class TpActionComponent implements OnInit, AfterViewInit {
   addFaults(event) {
     event?.preventDefault();
     this.fault_detail.push(this.formBuilder.group({
-      type: '',
-      desc: ''
+      fault_type: '',
+      fault_desc: ''
     }));
   }
 
