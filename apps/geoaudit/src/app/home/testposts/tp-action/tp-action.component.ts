@@ -25,6 +25,7 @@ import { StatusEntityService } from '../../../entity-services/status-entity.serv
 import { TpActionEntityService } from '../../../entity-services/tp-action-entity.service';
 import { ConditionEntityService } from '../../../entity-services/condition-entity.service';
 import { FaultTypeEntityService } from '../../../entity-services/fault-type-entity.service';
+import { ReferenceCellEntityService } from '../../../entity-services/reference-cell-entity.service';
 
 @Component({
   selector: 'geoaudit-tp-action',
@@ -76,6 +77,7 @@ export class TpActionComponent implements OnInit, AfterViewInit {
     private tpActionEntityService: TpActionEntityService,
     private conditionEntityService: ConditionEntityService,
     private faultTypeEntityService: FaultTypeEntityService,
+    private referenceCellEntityService: ReferenceCelEntityService,
     private store: Store<fromApp.State>,
     private router: Router,
     private alertService: AlertService,
