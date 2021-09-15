@@ -13,7 +13,7 @@ export interface TrAction {
     date: string;
     tr: Tr;
     tr_readings: TrReadings;
-    current_drain: CurrentDrain;
+    current_drain: Array<CurrentDrain>;
     survey: Survey;
     fault_detail: Array<FaultDetail>;
     status: Status;

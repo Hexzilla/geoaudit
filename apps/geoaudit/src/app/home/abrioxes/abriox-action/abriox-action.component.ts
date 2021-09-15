@@ -86,6 +86,11 @@ export class AbrioxActionComponent implements OnInit, AfterViewInit {
       (err) => {}
     );
 
+    this.faultTypeEntityService.getAll().subscribe((faultTypes) => {
+      this.faultTypes = faultTypes;
+      console.log("faultTypes", faultTypes);
+    })
+
     this.conditionEntityService.getAll().subscribe((conditions) => {
       this.conditions = conditions
     });
@@ -117,14 +122,6 @@ export class AbrioxActionComponent implements OnInit, AfterViewInit {
   }
 
   fetchData() {
-    this.faultTypeEntityService.getAll().subscribe(
-      (faultTypes) => {
-        this.faultTypes = faultTypes;
-        console.log("faultTypes", faultTypes);
-      }
-    )
-
-    //const abrioxId = this.route.snapshot.params['id']
     this.actionId = this.route.snapshot.params['actionId'];
     this.abrioxActionEntityService.getByKey(this.actionId).subscribe(
       (abriox_action) => {
@@ -140,8 +137,7 @@ export class AbrioxActionComponent implements OnInit, AfterViewInit {
         this.approved = abriox_action.approved;
 
         //this.fault_detail.clear();
-        //fault_detail.map(item => this.fault_detail.push(this.formBuilder.group(item)));
-        //console.log('this.fault_detail', this.fault_detail)
+        //abriox_action.fault_detail?.map(item => this.fault_detail.push(this.formBuilder.group(item)));
       },
       (err) => {}
     )

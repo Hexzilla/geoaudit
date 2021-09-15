@@ -11,14 +11,17 @@ import { Store } from '@ngrx/store';
 import * as fromApp from '../../../store';
 import * as moment from 'moment';
 import {
-  Testpost,
   TrAction,
   Status,
+  FaultType,
+  Condition
 } from '../../../models';
 import { AlertService, UploadService } from '../../../services';
 import { FileTypes } from '../../../components/file-upload/file-upload.component';
 import { StatusEntityService } from '../../../entity-services/status-entity.service';
 import { TrActionEntityService } from '../../../entity-services/tr-action-entity.service';
+import { FaultTypeEntityService } from '../../../entity-services/fault-type-entity.service';
+import { ConditionEntityService } from '../../../entity-services/condition-entity.service';
 
 @Component({
   selector: 'geoaudit-tp-action',
@@ -35,6 +38,10 @@ export class TrActionComponent implements OnInit, AfterViewInit {
    * An array of status i.e. NOT_STARTED, ONGOING, etc.
    */
   statuses: Array<Status>;
+
+  faultTypes: Array<FaultType>;
+
+  conditions: Array<Condition>;
 
   /**
    * The current job state.
@@ -62,6 +69,8 @@ export class TrActionComponent implements OnInit, AfterViewInit {
     private formBuilder: FormBuilder,
     private statusEntityService: StatusEntityService,
     private trActionEntityService: TrActionEntityService,
+    private faultTypeEntityService: FaultTypeEntityService,
+    private conditionEntityService: ConditionEntityService,
     private store: Store<fromApp.State>,
     private router: Router,
     private alertService: AlertService,
@@ -76,6 +85,14 @@ export class TrActionComponent implements OnInit, AfterViewInit {
       },
       (err) => {}
     );
+
+    this.faultTypeEntityService.getAll().subscribe((faultTypes) => {
+      this.faultTypes = faultTypes;
+    })
+
+    this.conditionEntityService.getAll().subscribe((conditions) => {
+      this.conditions = conditions
+    });
 
     /**
      * Initialise the form with properties and validation
@@ -92,24 +109,40 @@ export class TrActionComponent implements OnInit, AfterViewInit {
 
   fetchTpAction() {
     this.actionId = this.route.snapshot.params['actionId'];
-    console.log("actionId", this.actionId)
 
     this.trActionEntityService.getByKey(this.actionId).subscribe(
       (tr_action) => {
         this.tr_action = tr_action;
-
-        //TODO - FormArray
-        this.form.patchValue({
-          date: moment(tr_action.date).format('L LT'),
-          condition: tr_action.condition?.name,
-
-          images: tr_action.images,
-          documents: tr_action.documents
-        });
+        console.log("trs.tr_action", tr_action)
 
         this.currentState = tr_action.status?.id;
         this.approved = tr_action.approved;
 
+        this.form.patchValue({
+          ...tr_action,
+          condition: tr_action.condition?.id,
+        });
+
+        this.anodes.clear();
+        tr_action.tr_readings?.groundbed?.map(it => {
+          const anode = {
+            anode_off: it.anode_off,
+            anode_current: it.anode_current,
+          }
+          this.anodes.push(this.formBuilder.group(anode))
+        });
+
+        this.current_drain.clear();
+        tr_action.current_drain?.map(item => this.current_drain.push(this.formBuilder.group(item)));
+
+        this.fault_detail.clear();
+        tr_action.fault_detail?.map(item => {
+          const fault = {
+            fault_type: item.fault_type?.id,
+            fault_desc: item.fault_desc
+          }
+          this.fault_detail.push(this.formBuilder.group(fault))
+        });
       },
       (err) => {}
     )
@@ -119,48 +152,38 @@ export class TrActionComponent implements OnInit, AfterViewInit {
     return this.form.get('anodes') as FormArray;
   }
 
-  addAnode(anode) {
-    if (anode) {
-		  this.anodes.push(this.formBuilder.group(anode));
-    } else {
-      this.anodes.push(this.formBuilder.group({
-        anodes_on: '',
-        anodes_off: '',
-        anodes_current: '',
-      }));
-    }
+  addAnode(event) {
+    event?.preventDefault();
+    this.anodes.push(this.formBuilder.group({
+      anode_off: '',
+      anode_current: '',
+    }));
   }
 
-  get currentDrains(): FormArray {
-    return this.form.get('currentDrains') as FormArray;
+  get current_drain(): FormArray {
+    return this.form.get('current_drain') as FormArray;
   }
 
-  addCurrentDrain(drain) {
-    if (drain) {
-		  this.currentDrains.push(this.formBuilder.group(drain));
-    } else {
-      this.currentDrains.push(this.formBuilder.group({
-        cd_input_v: '',
-        cd_input_a: '',
-        cd_output_v: '',
-        cd_output_a: ''
-      }));
-    }
+  addCurrentDrain(event) {
+    event?.preventDefault();
+    this.current_drain.push(this.formBuilder.group({
+      cd_input_v: '',
+      cd_input_a: '',
+      cd_output_v: '',
+      cd_output_a: ''
+    }));
   }
   
-  get faults(): FormArray {
-    return this.form.get('faults') as FormArray;
+  get fault_detail(): FormArray {
+    return this.form.get('fault_detail') as FormArray;
   }
 
-  addFaults(fault) {
-    if (fault) {
-		  this.faults.push(this.formBuilder.group(fault));
-    } else {
-      this.faults.push(this.formBuilder.group({
-        type: '',
-        desc: ''
-      }));
-    }
+  addFaults(event) {
+    event?.preventDefault();
+    this.fault_detail.push(this.formBuilder.group({
+      fault_type: '',
+      fault_desc: ''
+    }));
   }
 
   /**
@@ -168,19 +191,21 @@ export class TrActionComponent implements OnInit, AfterViewInit {
    */
   initialiseForm(): void {
     this.form = this.formBuilder.group({
+      id: null,
       date: null,
       condition: null,
-      reading_volt: null,
-      reading_amps: null,
-      current_setting: null,
+      tr_readings: this.formBuilder.group({
+        Amps: null,
+        Volt: null,
+        current_settings: null,
+      }),
       anodes: new FormArray([]),
-      currentDrains: new FormArray([]),
-      faults: new FormArray([]),
+      current_drain: new FormArray([]),
+      fault_detail: new FormArray([]),
     });
   }
 
   submit(navigate = true) {
-    console.log('submit');
     this.submitted = true;
 
     // reset alerts on submit
@@ -193,6 +218,10 @@ export class TrActionComponent implements OnInit, AfterViewInit {
 
     const payload = {
       ...this.form.value,
+      tr_readings: {
+        ...this.form.value.tr_readings,
+        groundbed: this.form.value.anodes,
+      },
       status: this.currentState,
       approved: this.approved
     };
@@ -221,12 +250,10 @@ export class TrActionComponent implements OnInit, AfterViewInit {
   }
 
   onChangeState() {
-    console.log("onChangeState", this.currentState);
     this.submit(false);
   }
 
   updateMarkState(e) {
-    console.log('updateMarkState', e)
     if (e.complete) {
       this.currentState = 1;
       this.submit(true);
