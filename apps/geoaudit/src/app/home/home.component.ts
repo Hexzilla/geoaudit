@@ -111,10 +111,11 @@ export class HomeComponent implements OnInit, AfterViewInit {
   private map;
   private states;
 
-  survey_complete_layer = new L.markerClusterGroup();
-  survey_not_started_layer = new L.markerClusterGroup();
-  survey_ongoing_layer = new L.markerClusterGroup();
-  survey_refused_layer = new L.markerClusterGroup();
+  private survey_complete_layer = null;
+  private survey_not_started_layer = null;
+  private survey_ongoing_layer = null;
+  private survey_refused_layer = null;
+  private survey_na_layer = null;
   private surveyFilters = null;
 
   clickMarker;
@@ -188,6 +189,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
       this.survey_not_started_layer.clearLayers();
       this.survey_ongoing_layer.clearLayers();
       this.survey_refused_layer.clearLayers();
+      this.survey_na_layer.clearLayers();
       
       if (this.surveys) {
         this.drawSurveyMarkers(this.surveys, selected);
@@ -251,6 +253,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     const abriox_not_working_layer = new L.markerClusterGroup();
     const abriox_repairing_layer = new L.markerClusterGroup();
     const abriox_replacing_layer = new L.markerClusterGroup();
+    const abriox_na_layer = new L.markerClusterGroup();
     this.abrioxEntityService.getAll().subscribe(
       (marker_data) => {
         this.abrioxes = marker_data;
@@ -270,27 +273,36 @@ export class HomeComponent implements OnInit, AfterViewInit {
             });
             return { ...abriox, condition: action.condition || 0 }
           })
-          .filter(it => it && it.condition)
 
         //console.log("abriox.filtered", _abrioxes)
         _abrioxes.map(abriox => {
-          const iconColor = this.getTestpostMarkerIconColor(abriox.condition);
-          const markerColor = 'rgba(255, 255, 255, 0.8)';
-          const outlineColor = 'black';
-          const busIcon = this.createIconMaterial("signal_wifi_0_bar", iconColor, markerColor, outlineColor)
-          const marker = this.createAbrioxMarker(busIcon, abriox);
+          if (abriox && abriox.condition) {
+            const iconColor = this.getTestpostMarkerIconColor(abriox.condition);
+            const markerColor = 'rgba(255, 255, 255, 0.8)';
+            const outlineColor = 'black';
+            const busIcon = this.createIconMaterial("signal_wifi_0_bar", iconColor, markerColor, outlineColor)
+            const marker = this.createAbrioxMarker(busIcon, abriox);
 
-          if (abriox.condition == 1) {
-            marker.addTo(abriox_working_layer);
+            if (abriox.condition == 1) {
+              marker.addTo(abriox_working_layer);
+            }
+            else if (abriox.condition == 2) {
+              marker.addTo(abriox_not_working_layer);
+            }
+            else if (abriox.condition == 3) {
+              marker.addTo(abriox_repairing_layer);
+            }
+            else if (abriox.condition == 4) {
+              marker.addTo(abriox_replacing_layer);
+            }
           }
-          else if (abriox.condition == 2) {
-            marker.addTo(abriox_not_working_layer);
-          }
-          else if (abriox.condition == 3) {
-            marker.addTo(abriox_repairing_layer);
-          }
-          else if (abriox.condition == 4) {
-            marker.addTo(abriox_replacing_layer);
+          else {
+            const iconColor = 'black';
+            const markerColor = 'rgba(255, 255, 255, 0.8)';
+            const outlineColor = 'black';
+            const busIcon = this.createIconMaterial("signal_wifi_0_bar", iconColor, markerColor, outlineColor)
+            const marker = this.createAbrioxMarker(busIcon, abriox);
+            marker.addTo(abriox_na_layer);
           }
         })
       },
@@ -305,6 +317,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     const testpost_not_working_layer = new L.markerClusterGroup();
     const testpost_repairing_layer = new L.markerClusterGroup();
     const testpost_replacing_layer = new L.markerClusterGroup();
+    const testpost_na_layer = new L.markerClusterGroup();
     this.testpostEntityService.getAll().subscribe(
       (marker_data) => {
         this.testposts = marker_data;
@@ -323,27 +336,36 @@ export class HomeComponent implements OnInit, AfterViewInit {
             });
             return { ...tp, condition: action.condition || 0 }
           })
-          .filter(it => it && it.condition)
 
         //console.log("testposts.filtered", _testposts)
         _testposts.map(testpost => {
-          const iconColor = this.getTestpostMarkerIconColor(testpost.condition);
-          const markerColor = 'rgba(255, 255, 255, 0.8)';
-          const outlineColor = 'black';
-          const busIcon = this.createIconMaterial("tv", iconColor, markerColor, outlineColor)
-          const marker = this.createTestpostMarker(busIcon, testpost);
+          if (testpost && testpost.condition) {
+            const iconColor = this.getTestpostMarkerIconColor(testpost.condition);
+            const markerColor = 'rgba(255, 255, 255, 0.8)';
+            const outlineColor = 'black';
+            const busIcon = this.createIconMaterial("tv", iconColor, markerColor, outlineColor)
+            const marker = this.createTestpostMarker(busIcon, testpost);
 
-          if (testpost.condition == 1) {
-            marker.addTo(testpost_working_layer);
+            if (testpost.condition == 1) {
+              marker.addTo(testpost_working_layer);
+            }
+            else if (testpost.condition == 2) {
+              marker.addTo(testpost_not_working_layer);
+            }
+            else if (testpost.condition == 3) {
+              marker.addTo(testpost_repairing_layer);
+            }
+            else if (testpost.condition == 4) {
+              marker.addTo(testpost_replacing_layer);
+            }
           }
-          else if (testpost.condition == 2) {
-            marker.addTo(testpost_not_working_layer);
-          }
-          else if (testpost.condition == 3) {
-            marker.addTo(testpost_repairing_layer);
-          }
-          else if (testpost.condition == 4) {
-            marker.addTo(testpost_replacing_layer);
+          else {
+            const iconColor = 'black';
+            const markerColor = 'rgba(255, 255, 255, 0.8)';
+            const outlineColor = 'black';
+            const busIcon = this.createIconMaterial("tv", iconColor, markerColor, outlineColor)
+            const marker = this.createTestpostMarker(busIcon, testpost);
+            marker.addTo(testpost_na_layer);
           }
         })
       },
@@ -358,6 +380,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     const tr_not_working_layer = new L.markerClusterGroup();
     const tr_repairing_layer = new L.markerClusterGroup();
     const tr_replacing_layer = new L.markerClusterGroup();
+    const tr_na_layer = new L.markerClusterGroup();
     this.trEntityService.getAll().subscribe(
       (marker_data) => {
         this.trs = marker_data;
@@ -376,27 +399,36 @@ export class HomeComponent implements OnInit, AfterViewInit {
             });
             return { ...tr, condition: action.condition || 0 }
           })
-          .filter(it => it && it.condition)
 
         //console.log("trs.filtered", _trs)
         _trs.map(tr => {
-          const iconColor = this.getTestpostMarkerIconColor(tr.condition);
-          const markerColor = 'rgba(255, 255, 255, 0.8)';
-          const outlineColor = 'black';
-          const busIcon = this.createIconMaterial("bolt", iconColor, markerColor, outlineColor)
-          const marker = this.createTrMarker(busIcon, tr);
+          if (tr && tr.condition) {
+            const iconColor = this.getTestpostMarkerIconColor(tr.condition);
+            const markerColor = 'rgba(255, 255, 255, 0.8)';
+            const outlineColor = 'black';
+            const busIcon = this.createIconMaterial("bolt", iconColor, markerColor, outlineColor)
+            const marker = this.createTrMarker(busIcon, tr);
 
-          if (tr.condition == 1) {
-            marker.addTo(tr_working_layer);
+            if (tr.condition == 1) {
+              marker.addTo(tr_working_layer);
+            }
+            else if (tr.condition == 2) {
+              marker.addTo(tr_not_working_layer);
+            }
+            else if (tr.condition == 3) {
+              marker.addTo(tr_repairing_layer);
+            }
+            else if (tr.condition == 4) {
+              marker.addTo(tr_replacing_layer);
+            }
           }
-          else if (tr.condition == 2) {
-            marker.addTo(tr_not_working_layer);
-          }
-          else if (tr.condition == 3) {
-            marker.addTo(tr_repairing_layer);
-          }
-          else if (tr.condition == 4) {
-            marker.addTo(tr_replacing_layer);
+          else {
+            const iconColor = 'black'
+            const markerColor = 'rgba(255, 255, 255, 0.8)';
+            const outlineColor = 'black';
+            const busIcon = this.createIconMaterial("bolt", iconColor, markerColor, outlineColor)
+            const marker = this.createTrMarker(busIcon, tr);
+            marker.addTo(tr_na_layer);
           }
         })
       },
@@ -436,6 +468,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.survey_not_started_layer = new L.markerClusterGroup();
     this.survey_ongoing_layer = new L.markerClusterGroup();
     this.survey_refused_layer = new L.markerClusterGroup();
+    this.survey_na_layer = new L.markerClusterGroup();
     this.surveyEntityService.getAll().subscribe(
       (marker_data) => {
         this.surveys = marker_data;
@@ -453,19 +486,22 @@ export class HomeComponent implements OnInit, AfterViewInit {
         "WORKING": abriox_working_layer,
         "NOT_WORKING": abriox_not_working_layer,
         "REPAIRING": abriox_repairing_layer,
-        "REPLACING": abriox_replacing_layer
+        "REPLACING": abriox_replacing_layer,
+        "N/A": abriox_na_layer,
       },
       "Testpost": {
         "WORKING": testpost_working_layer,
         "NOT_WORKING": testpost_not_working_layer,
         "REPAIRING": testpost_repairing_layer,
-        "REPLACING": testpost_replacing_layer
+        "REPLACING": testpost_replacing_layer,
+        "N/A": testpost_na_layer,
       },
       "TR": {
         "WORKING": tr_working_layer,
         "NOT_WORKING": tr_not_working_layer,
         "REPAIRING": tr_repairing_layer,
-        "REPLACING": tr_replacing_layer
+        "REPLACING": tr_replacing_layer,
+        "N/A": tr_na_layer
       },
       "Resistivity":{
         "Resistivity":resistivity_layer
@@ -474,7 +510,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
         "COMPLETED": this.survey_complete_layer,
         "NOT_STARTED": this.survey_not_started_layer,
         "ONGOING": this.survey_ongoing_layer,
-        "REFUSED": this.survey_refused_layer
+        "REFUSED": this.survey_refused_layer,
+        "N/A": this.survey_na_layer,
       },
       "Uploads":{
         
@@ -482,8 +519,20 @@ export class HomeComponent implements OnInit, AfterViewInit {
     };
 
     this.map = L.map('map', {
-      center: [environment.coordinates.lat, environment.coordinates.lng],
-      layers: [Basemaps.OpenStreetMap,testpost_working_layer,testpost_not_working_layer,testpost_repairing_layer,testpost_replacing_layer,this.survey_complete_layer,this.survey_not_started_layer,this.survey_ongoing_layer,this.survey_refused_layer],
+      center: [ environment.coordinates.lat, environment.coordinates.lng ],
+      layers: [
+        Basemaps.OpenStreetMap,
+        testpost_working_layer,
+        testpost_not_working_layer,
+        testpost_repairing_layer,
+        testpost_replacing_layer,
+        testpost_na_layer,
+        this.survey_complete_layer,
+        this.survey_not_started_layer,
+        this.survey_ongoing_layer,
+        this.survey_refused_layer,
+        this.survey_na_layer
+      ],
       zoom: 8,
       zoomControl : false // remove +/- Zoom Control.
     });
@@ -838,23 +887,34 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   private drawSurveyMarkers(items: Array<Survey>, selected) {
     items
-      .filter(it => it && it.geometry && it.status && it.status.name)
+      .filter(it => it && it.geometry)
       .filter(it => it.job && it.job.assignees && it.job.assignees.length > 0)
       .filter(it => it.job.assignees.find(a => a.id == this.authService.authValue.user.id))
-      .map(a => {
-        let iconColor = this.getMarkerIconColor(a.status.name);
-        let markerColor = 'rgba(255,255,255,0.8)'
-        let outlineColor = 'black'
+      .map(it => {
+        if (it.status && it.status.name) {
+          let iconColor = this.getMarkerIconColor(it.status.name);
+          let markerColor = 'rgba(255,255,255,0.8)'
+          let outlineColor = 'black'
 
-        if (selected && !selected.find(it => it.id === a.id)) {
-          iconColor = '#E0E0E0'
-          markerColor = 'rgba(140,140,140,1)'
-          outlineColor = 'rgba(140,140,140)'
+          if (selected && !selected.find(x => x.id === it.id)) {
+            iconColor = '#E0E0E0'
+            markerColor = 'rgba(140,140,140,1)'
+            outlineColor = 'rgba(140,140,140)'
+          }
+
+          const busIcon = this.createFlagIconMaterial(iconColor, markerColor, outlineColor)
+          const marker = this.createMarker(busIcon, it);
+          this.survey_complete_layer.addLayer(marker);
         }
+        else {
+          const iconColor = 'black'
+          const markerColor = 'rgba(255,255,255,0.8)'
+          const outlineColor = 'black'
 
-        const busIcon = this.createFlagIconMaterial(iconColor, markerColor, outlineColor)
-        const marker = this.createMarker(busIcon, a);
-        this.survey_complete_layer.addLayer(marker);
+          const busIcon = this.createFlagIconMaterial(iconColor, markerColor, outlineColor)
+          const marker = this.createMarker(busIcon, it);
+          this.survey_na_layer.addLayer(marker);
+        }
       })
 
     if (selected && selected.length === 1) {
