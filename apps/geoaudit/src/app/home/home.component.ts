@@ -265,7 +265,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
           .map(abriox => {
             const actions = abriox.abriox_actions?.filter(it => it.approved)
             if (!actions || actions.length <= 0) {
-              return null;
+              return { ...abriox, condition: null }
             }
             const action = actions.reduce((a, b) => {
               const diff = moment(a.date).diff(moment(b.date), 'seconds')
@@ -328,7 +328,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
           .map(tp => {
             const actions = tp.tp_actions?.filter(it => it.approved)
             if (!actions || actions.length <= 0) {
-              return null;
+              return { ...tp, condition: null }
             }
             const action = actions.reduce((a, b) => {
               const diff = moment(a.date).diff(moment(b.date), 'seconds')
@@ -391,7 +391,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
           .map(tr => {
             const actions = tr.tr_actions?.filter(it => it.approved)
             if (!actions || actions.length <= 0) {
-              return null;
+              return { ...tr, condition: null }
             }
             const action = actions.reduce((a, b) => {
               const diff = moment(a.date).diff(moment(b.date), 'seconds')
