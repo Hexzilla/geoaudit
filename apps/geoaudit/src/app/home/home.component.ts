@@ -260,7 +260,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
           .filter(it => it.name && it.approved)
           .filter(it => (it.testpost && it.testpost.geometry) || (it.tr && it.tr.geometry))
           .map(abriox => {
-            const actions = abriox.abriox_actions
+            const actions = abriox.abriox_actions?.filter(it => it.approved)
             if (!actions || actions.length <= 0) {
               return null;
             }
@@ -313,7 +313,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
         const _testposts = marker_data
           .filter(it => it.name && it.geometry && it.approved)
           .map(tp => {
-            const actions = tp.tp_actions
+            const actions = tp.tp_actions?.filter(it => it.approved)
             if (!actions || actions.length <= 0) {
               return null;
             }
@@ -366,7 +366,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
         const _trs = marker_data
           .filter(it => it.name && it.geometry && it.approved)
           .map(tr => {
-            const actions = tr.tr_actions
+            const actions = tr.tr_actions?.filter(it => it.approved)
             if (!actions || actions.length <= 0) {
               return null;
             }
