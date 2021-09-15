@@ -454,15 +454,11 @@
                 <mat-label>{{
                   'CONTAINERS.home.testposts.tp_action.others.refcell' | translate
                 }}</mat-label>
-                <input
-                  matInput
-                  [placeholder]="
-                    'CONTAINERS.home.testposts.tp_action.others.refcell'
-                      | translate
-                  "
-                  formControlName="others_refcell"
-                  class="form-control"
-                />
+                <mat-select formControlName="others_refcell" name="others_refcell">
+                  <mat-option *ngFor="let _it of referenceCells" [value]="_it.id">
+                    {{ _it.name }}
+                  </mat-option>
+                </mat-select>
               </mat-form-field>
             </div>
           </mat-expansion-panel>
@@ -568,40 +564,30 @@
                 'CONTAINERS.home.testposts.tp_action.asset.title' | translate
               }}</mat-panel-title>
             </mat-expansion-panel-header>
-            <div>
-              <div formArrayName="assets">
-                <div *ngFor="let asset of assets.controls; index as i" [formGroupName]="i" fxLayout="column">
-                  <mat-form-field appearance="outline">
-                    <mat-label>{{
-                      'CONTAINERS.home.testposts.tp_action.asset.pipe_depth' | translate
-                    }}</mat-label>
-                    <input
-                      matInput
-                      [placeholder]="
-                        'CONTAINERS.home.testposts.tp_action.asset.pipe_depth' | translate
-                      "
-                      type="number"
-                      formControlName="pipe_depth"
-                      class="form-control"
-                    />
-                  </mat-form-field>
-                  <mat-form-field appearance="outline">
-                    <mat-label>{{
-                      'CONTAINERS.home.testposts.tp_action.asset.reinstatement'
-                        | translate
-                    }}</mat-label>
-                    <input
-                      matInput
-                      [placeholder]="
-                        'CONTAINERS.home.testposts.tp_action.asset.reinstatement'
-                          | translate
-                      "
-                      formControlName="reinstatement"
-                      class="form-control"
-                    />
-                  </mat-form-field>
-                </div>
-              </div>
+            <div fxLayout="column">
+              <mat-form-field appearance="outline">
+                <mat-label>{{
+                  'CONTAINERS.home.testposts.tp_action.asset.pipe_depth' | translate
+                }}</mat-label>
+                <input
+                  matInput
+                  [placeholder]="
+                    'CONTAINERS.home.testposts.tp_action.asset.pipe_depth' | translate
+                  "
+                  formControlName="pipe_depth"
+                  class="form-control"
+                />
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>{{
+                  'CONTAINERS.home.testposts.tp_action.asset.reinstatement'
+                    | translate
+                }}</mat-label>
+                <textarea 
+                  matInput
+                  formControlName="reinstatement">
+                </textarea>
+              </mat-form-field>
             </div>
           </mat-expansion-panel>
 
@@ -620,8 +606,8 @@
                     <mat-label>{{
                       'CONTAINERS.home.testposts.tp_action.fault.type' | translate
                     }}</mat-label>
-                    <mat-select formControlName="type" name="type">
-                      <mat-option *ngFor="let faultType of faultTyps" [value]="faultType.id">
+                    <mat-select formControlName="fault_type" name="fault_type">
+                      <mat-option *ngFor="let faultType of faultTypes" [value]="faultType.id">
                         {{ faultType.name }}
                       </mat-option>
                     </mat-select>
@@ -632,7 +618,7 @@
                     }}</mat-label>
                     <textarea 
                       matInput
-                      formControlName="desc">
+                      formControlName="fault_desc">
                     </textarea>
                   </mat-form-field>
                 </div>

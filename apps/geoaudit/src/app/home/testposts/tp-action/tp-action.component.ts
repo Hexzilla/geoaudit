@@ -13,7 +13,7 @@ import * as moment from 'moment';
 import {
   Condition,
   FaultType,
-  TpInformation,
+  ReferenceCell,
   TpAction,
   Status,
   Statuses,
@@ -25,6 +25,7 @@ import { StatusEntityService } from '../../../entity-services/status-entity.serv
 import { TpActionEntityService } from '../../../entity-services/tp-action-entity.service';
 import { ConditionEntityService } from '../../../entity-services/condition-entity.service';
 import { FaultTypeEntityService } from '../../../entity-services/fault-type-entity.service';
+import { ReferenceCellEntityService } from '../../../entity-services/reference-cell-entity.service';
 
 @Component({
   selector: 'geoaudit-tp-action',
@@ -58,6 +59,8 @@ export class TpActionComponent implements OnInit, AfterViewInit {
 
   faultTypes: Array<FaultType>;
 
+  referenceCells: Array<ReferenceCell>
+
   testpostId = 0;
 
   actionId = 0;
@@ -76,6 +79,7 @@ export class TpActionComponent implements OnInit, AfterViewInit {
     private tpActionEntityService: TpActionEntityService,
     private conditionEntityService: ConditionEntityService,
     private faultTypeEntityService: FaultTypeEntityService,
+    private referenceCellEntityService: ReferenceCellEntityService,
     private store: Store<fromApp.State>,
     private router: Router,
     private alertService: AlertService,
@@ -132,7 +136,8 @@ export class TpActionComponent implements OnInit, AfterViewInit {
       others_reedswitch: [null],
       others_refcell: [null],
       current_drain: new FormArray([]),
-      assets: new FormArray([]),
+      pipe_depth: [null],
+      reinstatement: [null],
       fault_detail: new FormArray([]),
     });
   }
@@ -150,6 +155,12 @@ export class TpActionComponent implements OnInit, AfterViewInit {
         console.log("faultTypes", faultTypes);
       }
     )
+    this.referenceCellEntityService.getAll().subscribe(
+      (referenceCells) => {
+        this.referenceCells = referenceCells;
+        console.log("referenceCells", referenceCells);
+      }
+    )
 
     this.testpostId = this.route.snapshot.params['id']
     this.actionId = this.route.snapshot.params['actionId'];
@@ -161,12 +172,8 @@ export class TpActionComponent implements OnInit, AfterViewInit {
         console.log("tp_action", tpaction);
 
         this.form.patchValue({
-          id: tpaction.id,
-          date: tpaction.date,
+          ...tpaction,
           condition: tpaction.condition?.id,
-
-          images: tpaction.images,
-          documents: tpaction.documents
         });
 
         this.currentState = tpaction.status?.id;
@@ -272,21 +279,6 @@ export class TpActionComponent implements OnInit, AfterViewInit {
     }));
   }
 
-  get assets(): FormArray {
-    return this.form.get('assets') as FormArray;
-  }
-
-  addAssets(asset) {
-    if (asset) {
-		  this.assets.push(this.formBuilder.group(asset));
-    } else {
-      this.assets.push(this.formBuilder.group({
-        pipe_depth: '',
-        reinstatement: ''
-      }));
-    }
-  }
-
   get fault_detail(): FormArray {
     return this.form.get('fault_detail') as FormArray;
   }
@@ -294,8 +286,8 @@ export class TpActionComponent implements OnInit, AfterViewInit {
   addFaults(event) {
     event?.preventDefault();
     this.fault_detail.push(this.formBuilder.group({
-      type: '',
-      desc: ''
+      fault_type: '',
+      fault_desc: ''
     }));
   }
 
