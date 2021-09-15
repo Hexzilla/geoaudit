@@ -25,9 +25,9 @@ const routes: Routes = [
         path: 'drive', component: SearchComponent
     },
 
-    // {
-    //     path: 'create', component: AbrioxComponent
-    // },
+    {
+        path: 'create', component: ResistivityComponent
+    },
 
     {
         path: ':id', component: ResistivityComponent

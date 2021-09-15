@@ -66,14 +66,11 @@
             <mat-label>{{
               'CONTAINERS.home.testposts.tp_action.condition' | translate
             }}</mat-label>
-            <input
-              matInput
-              [placeholder]="
-                'CONTAINERS.home.testposts.tp_action.condition' | translate
-              "
-              formControlName="condition"
-              class="form-control"
-            />
+            <mat-select formControlName="condition" name="condition">
+              <mat-option *ngFor="let condition of conditions" [value]="condition.id">
+                {{ condition.name }}
+              </mat-option>
+            </mat-select>
           </mat-form-field>
         </div>
 

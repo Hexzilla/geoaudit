@@ -14,15 +14,14 @@ import {
   FaultType,
   AbrioxAction,
   Status,
-  Statuses,
+  Condition,
 } from '../../../models';
 import { AlertService, UploadService } from '../../../services';
 import { FileTypes } from '../../../components/file-upload/file-upload.component';
-import { MatDialog } from '@angular/material/dialog';
-import { environment } from 'apps/geoaudit/src/environments/environment';
 import { StatusEntityService } from '../../../entity-services/status-entity.service';
 import { AbrioxActionEntityService } from '../../../entity-services/abriox-action-entity.service';
 import { FaultTypeEntityService } from '../../../entity-services/fault-type-entity.service';
+import { ConditionEntityService } from '../../../entity-services/condition-entity.service';
 
 @Component({
   selector: 'geoaudit-tp-action',
@@ -54,6 +53,8 @@ export class AbrioxActionComponent implements OnInit, AfterViewInit {
 
   faultTypes: Array<FaultType>;
 
+  conditions: Array<Condition>;
+
   actionId = 0;
 
   public abriox_action: AbrioxAction = null;
@@ -69,6 +70,7 @@ export class AbrioxActionComponent implements OnInit, AfterViewInit {
     private statusEntityService: StatusEntityService,
     private abrioxActionEntityService: AbrioxActionEntityService,
     private faultTypeEntityService: FaultTypeEntityService,
+    private conditionEntityService: ConditionEntityService,
     private store: Store<fromApp.State>,
     private router: Router,
     private alertService: AlertService,
@@ -83,6 +85,15 @@ export class AbrioxActionComponent implements OnInit, AfterViewInit {
       },
       (err) => {}
     );
+
+    this.faultTypeEntityService.getAll().subscribe((faultTypes) => {
+      this.faultTypes = faultTypes;
+      console.log("faultTypes", faultTypes);
+    })
+
+    this.conditionEntityService.getAll().subscribe((conditions) => {
+      this.conditions = conditions
+    });
 
     /**
      * Initialise the form with properties and validation
@@ -111,14 +122,6 @@ export class AbrioxActionComponent implements OnInit, AfterViewInit {
   }
 
   fetchData() {
-    this.faultTypeEntityService.getAll().subscribe(
-      (faultTypes) => {
-        this.faultTypes = faultTypes;
-        console.log("faultTypes", faultTypes);
-      }
-    )
-
-    //const abrioxId = this.route.snapshot.params['id']
     this.actionId = this.route.snapshot.params['actionId'];
     this.abrioxActionEntityService.getByKey(this.actionId).subscribe(
       (abriox_action) => {
@@ -126,20 +129,15 @@ export class AbrioxActionComponent implements OnInit, AfterViewInit {
         console.log("abriox_action", this.abriox_action)
 
         this.form.patchValue({
-          id: abriox_action.id,
-          date: abriox_action.date,
-          condition: abriox_action.condition?.name,
-
-          images: abriox_action.images,
-          documents: abriox_action.documents
+          ...abriox_action,
+          condition: abriox_action.condition?.id,
         });
 
         this.currentState = abriox_action.status?.id;
         this.approved = abriox_action.approved;
 
         //this.fault_detail.clear();
-        //fault_detail.map(item => this.fault_detail.push(this.formBuilder.group(item)));
-        //console.log('this.fault_detail', this.fault_detail)
+        //abriox_action.fault_detail?.map(item => this.fault_detail.push(this.formBuilder.group(item)));
       },
       (err) => {}
     )
