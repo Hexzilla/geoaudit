@@ -13,6 +13,7 @@ import {
   Resistivity,
   Status,
 } from '../../../models';
+import * as moment from 'moment';
 import * as MapActions from '../../../store/map/map.actions';
 import { AlertService, UploadService } from '../../../services';
 import { FileTypes } from '../../../components/file-upload/file-upload.component';
@@ -25,6 +26,7 @@ import { ResistivityEntityService } from '../../../entity-services/resistivity-e
   styleUrls: ['./resistivity.component.scss'],
 })
 export class ResistivityComponent implements OnInit, AfterViewInit {
+  id: string;
   /**
    * The form consisting of the form fields.
    */
@@ -46,8 +48,6 @@ export class ResistivityComponent implements OnInit, AfterViewInit {
    * Whether the form has been submitted.
    */
   submitted = false;
-
-  resistivityId = 0;
 
   public resistivity: Resistivity = null;
 
@@ -71,6 +71,8 @@ export class ResistivityComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit(): void {
+    this.id = this.route.snapshot.paramMap.get('id');
+
     // Fetch statuses
     this.statusEntityService.getAll().subscribe(
       (statuses) => {
@@ -92,7 +94,11 @@ export class ResistivityComponent implements OnInit, AfterViewInit {
       }
     });
 
-    this.fetchData();
+    if (this.id && this.id != 'create') {
+      this.fetchData(this.id);
+    } else {
+      this.createMode();
+    }
   }
 
   ngAfterViewInit(): void {
@@ -119,39 +125,53 @@ export class ResistivityComponent implements OnInit, AfterViewInit {
     });
   }
 
-  fetchData() {
-    this.resistivityId = this.route.snapshot.params['id']
-    console.log("resistivityId", this.resistivityId)
+  createMode() {
+    console.log("createMode")
+    this.resistivityEntityService.add(this.form.value).subscribe(
+      (resistivity) => {
+        console.log("createMode-resistivity", resistivity)
+        this.patchForm(resistivity);
+      },
 
-    this.resistivityEntityService.getByKey(this.resistivityId).subscribe(
+      (err) => {}
+    );
+  }
+
+  fetchData(id) {
+    this.resistivityEntityService.getByKey(id).subscribe(
       (resistivity) => {
         this.resistivity = resistivity;
         console.log("resistivity", this.resistivity)
-        
-        this.currentState = resistivity.status.id;
-        this.approved = resistivity.approved;
-        const geometry = resistivity.geometry;
-
-        this.form.patchValue({
-          id: resistivity.id,
-          date: resistivity.date,
-          reference: resistivity.reference,
-          geometry: geometry,
-          
-          images: resistivity.images,
-          documents: resistivity.documents
-        });
-
-        this.latCtrl.setValue(geometry['lat']);
-        this.lngCtrl.setValue(geometry['lng']);
-
-        this.resistivity_detail.clear();
-        resistivity.resistivity_detail?.map(item => {
-          this.resistivity_detail.push(this.formBuilder.group(item));
-        });
+        this.patchForm(resistivity)
       },
       (err) => {}
     )
+  }
+
+  private patchForm(resistivity) {
+    this.currentState = resistivity.status?.id;
+    this.approved = resistivity.approved;
+    const geometry = resistivity.geometry;
+
+    this.form.patchValue({
+      id: resistivity.id,
+      date: resistivity.date,
+      reference: resistivity.reference,
+      geometry: geometry,
+      
+      images: resistivity.images,
+      documents: resistivity.documents
+    });
+
+    if (geometry) {
+      this.latCtrl.setValue(geometry['lat']);
+      this.lngCtrl.setValue(geometry['lng']);
+    }
+
+    this.resistivity_detail.clear();
+    resistivity.resistivity_detail?.map(item => {
+      this.resistivity_detail.push(this.formBuilder.group(item));
+    });
   }
 
   get resistivity_detail(): FormArray {
@@ -172,7 +192,7 @@ export class ResistivityComponent implements OnInit, AfterViewInit {
   initialiseForm(): void {
     this.form = this.formBuilder.group({
       id: [null],
-      date: [null],
+      date: [moment().toISOString()],
       reference: [null],
       geometry: [null],
       resistivity_detail: new FormArray([]),
