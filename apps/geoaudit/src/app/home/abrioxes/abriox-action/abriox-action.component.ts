@@ -95,6 +95,7 @@ export class AbrioxActionComponent implements OnInit, AfterViewInit {
       this.conditions = conditions
     });
 
+    this.initRoutes();
     /**
      * Initialise the form with properties and validation
      * constraints.
@@ -108,6 +109,18 @@ export class AbrioxActionComponent implements OnInit, AfterViewInit {
     //
   }
 
+  initRoutes() {
+    this.route.queryParams.subscribe(params => {
+      const tabIndex = params['tab'];
+      if (tabIndex == 'actions') {
+        this.selectedTabIndex = 2;
+      } else if (tabIndex == 'notes') {
+        this.selectedTabIndex = 3;
+      } else {
+        this.selectedTabIndex = 0;
+      }
+    });
+  }
 
   /**
    * Initialisation of the form, properties, and validation.

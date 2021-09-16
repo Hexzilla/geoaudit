@@ -213,6 +213,8 @@ export class JobComponent implements OnInit, AfterViewInit {
       }
     );
 
+    this.initRoutes();
+
     /**
      * Initialise the form with properties and validation
      * constraints.
@@ -364,6 +366,19 @@ export class JobComponent implements OnInit, AfterViewInit {
         this.alertService.error('ALERTS.something_went_wrong');
       }
     );
+  }
+
+  initRoutes() {
+    this.route.queryParams.subscribe(params => {
+      const tabIndex = params['tab'];
+      if (tabIndex == 'actions') {
+        this.selectedTabIndex = 2;
+      } else if (tabIndex == 'notes') {
+        this.selectedTabIndex = 3;
+      } else {
+        this.selectedTabIndex = 0;
+      }
+    });
   }
 
   /**

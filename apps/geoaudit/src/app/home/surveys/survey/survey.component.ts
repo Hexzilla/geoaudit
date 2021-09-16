@@ -150,6 +150,8 @@ export class SurveyComponent implements OnInit {
       }
     });
 
+    this.initRoutes();
+
     /**
      * Initialise the form with properties and
      * validation constraints.
@@ -364,6 +366,19 @@ export class SurveyComponent implements OnInit {
             });
         }
       });
+  }
+
+  initRoutes() {
+    this.route.queryParams.subscribe(params => {
+      const tabIndex = params['tab'];
+      if (tabIndex == 'actions') {
+        this.selectedTabIndex = 2;
+      } else if (tabIndex == 'notes') {
+        this.selectedTabIndex = 3;
+      } else {
+        this.selectedTabIndex = 0;
+      }
+    });
   }
 
   /**
