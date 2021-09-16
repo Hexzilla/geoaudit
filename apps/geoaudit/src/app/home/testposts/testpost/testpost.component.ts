@@ -69,6 +69,9 @@ export class TestpostComponent implements OnInit, AfterViewInit {
 
   tp_actions: Array<TpAction> = [];
 
+  currentState = 0;
+  approved = null;
+
   // surveys: Array<Survey> = [];
 
   constructor(
@@ -170,6 +173,8 @@ export class TestpostComponent implements OnInit, AfterViewInit {
       (testpost) => {
         this.patchForm(testpost);
 
+        this.currentState = testpost.status?.id;
+        this.approved = testpost.approved;
         this.abriox = testpost.abriox;
 
         testpost.tp_actions.map(tp_action => {
@@ -229,13 +234,18 @@ export class TestpostComponent implements OnInit, AfterViewInit {
       return;
     }
 
+    const payload = {
+      ...this.form.value,
+      status: this.currentState,
+      approved: this.approved
+    }
     /**
      * Invoke the backend with a PUT request to update
      * the job with the form values.
      *
      * If create then navigate to the job id.
      */
-    this.testpostEntityService.update(this.form.value).subscribe(
+    this.testpostEntityService.update(payload).subscribe(
       (update) => {
         this.alertService.info('ALERTS.saved_changes');
 
@@ -334,12 +344,12 @@ export class TestpostComponent implements OnInit, AfterViewInit {
   
   completed() {
     //return this.tp_action?.status?.name == Statuses.COMPLETED;
-    //return this.currentState == 1
+    return this.currentState == 1
   }
 
   updateMarkState(e) {
     console.log('updateMarkState', e)
-    /*if (e.complete) {
+    if (e.complete) {
       this.currentState = 1;
       this.submit(true);
     }
@@ -350,7 +360,7 @@ export class TestpostComponent implements OnInit, AfterViewInit {
     else if (e.refuse) {
       this.approved = false;
       this.submit(true);
-    }*/
+    }
   }
 
   onImageUpload(event): void {

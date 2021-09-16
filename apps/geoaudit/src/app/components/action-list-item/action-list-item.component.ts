@@ -24,7 +24,6 @@ export class ActionListItemComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    console.log("action-list-item", this.item)
     if (this.item && this.item.survey) {
       this.surveyEntityService.getByKey(this.item.survey.id).subscribe(survey => {
         this.survey = survey;
