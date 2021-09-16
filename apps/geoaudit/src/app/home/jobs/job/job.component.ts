@@ -410,13 +410,18 @@ export class JobComponent implements OnInit, AfterViewInit {
       return;
     }
 
+    const payload = {
+      ...this.form.value,
+      status: this.currentState
+    }
+
     /**
      * Invoke the backend with a PUT request to update
      * the job with the form values.
      *
      * If create then navigate to the job id.
      */
-    this.jobEntityService.update(this.form.value).subscribe(
+    this.jobEntityService.update(payload).subscribe(
       (update) => {
         this.alertService.info('ALERTS.saved_changed');
 
@@ -652,5 +657,10 @@ export class JobComponent implements OnInit, AfterViewInit {
 
   complete(complete:boolean){
     this.completed = true;
+  }
+
+  onChangeState() {
+    console.log("onChangeState", this.currentState);
+    this.submit(false);
   }
 }

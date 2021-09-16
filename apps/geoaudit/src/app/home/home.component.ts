@@ -111,12 +111,12 @@ export class HomeComponent implements OnInit, AfterViewInit {
   private map;
   private states;
 
-  private survey_complete_layer = null;
-  private survey_not_started_layer = null;
-  private survey_ongoing_layer = null;
-  private survey_refused_layer = null;
-  private survey_na_layer = null;
-  private surveyFilters = null;
+  private survey_complete_layer = new L.markerClusterGroup();
+  private survey_not_started_layer = new L.markerClusterGroup();
+  private survey_ongoing_layer = new L.markerClusterGroup();
+  private survey_refused_layer = new L.markerClusterGroup();
+  private survey_na_layer = new L.markerClusterGroup();
+  private surveyFilters = new L.markerClusterGroup();
 
   clickMarker;
   url: string;
@@ -185,11 +185,11 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.selectionService.setSurveyMarkerFilter.subscribe((selected) => {
       this.surveyFilters = selected
 
-      this.survey_complete_layer.clearLayers();
-      this.survey_not_started_layer.clearLayers();
-      this.survey_ongoing_layer.clearLayers();
-      this.survey_refused_layer.clearLayers();
-      this.survey_na_layer.clearLayers();
+      this.survey_complete_layer?.clearLayers();
+      this.survey_not_started_layer?.clearLayers();
+      this.survey_ongoing_layer?.clearLayers();
+      this.survey_refused_layer?.clearLayers();
+      this.survey_na_layer?.clearLayers();
       
       if (this.surveys) {
         this.drawSurveyMarkers(this.surveys, selected);
@@ -393,9 +393,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
             if (!actions || actions.length <= 0) {
               return { ...tr, condition: null }
             }
-            const action = actions.reduce((a, b) => {
-              const diff = moment(a.date).diff(moment(b.date), 'seconds')
-              return (diff > 0) ? a : b
+            const action = actions.reduce((previous, current) => {
+              const diff = moment(previous.date).diff(moment(current.date), 'seconds')
+              return (diff > 0) ? previous : current
             });
             return { ...tr, condition: action.condition || 0 }
           })
@@ -464,11 +464,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
     );
 
     //fetch survey
-    this.survey_complete_layer = new L.markerClusterGroup();
-    this.survey_not_started_layer = new L.markerClusterGroup();
-    this.survey_ongoing_layer = new L.markerClusterGroup();
-    this.survey_refused_layer = new L.markerClusterGroup();
-    this.survey_na_layer = new L.markerClusterGroup();
     this.surveyEntityService.getAll().subscribe(
       (marker_data) => {
         this.surveys = marker_data;

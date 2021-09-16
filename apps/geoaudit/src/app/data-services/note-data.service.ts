@@ -45,4 +45,8 @@ export class NoteDataService extends DefaultDataService<Note> {
     update(update: Update<Note>): Observable<any> {
         return this.http.put<any>(`${environment.API_URL}/notes/${update.id}`, update.changes);
     }
+
+    delete(id: number) {
+        return this.http.delete<any>(`${environment.API_URL}/notes/${id}`);
+    } 
 }
