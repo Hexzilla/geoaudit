@@ -1,6 +1,7 @@
 import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { Location } from '@angular/common'
-import { Router } from '@angular/router';
+import { NavigationExtras, Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
 import L from 'leaflet';
 import qs from 'qs';
 import 'leaflet-sidebar-v2';
@@ -46,6 +47,7 @@ import { Survey } from '../models';
 import { AuthService } from '../services/auth.service';
 import { environment } from '../../environments/environment';
 import { Store } from '@ngrx/store';
+import { NavigationModalComponent } from '../modals/navigation-modal/navigation-modal.component';
 
 import { AbrioxEntityService } from '../entity-services/abriox-entity.service';
 import { TestpostEntityService } from '../entity-services/testpost-entity.service';
@@ -152,6 +154,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     private myJobEntityService: MyJobEntityService,
     private conditionEntityService: ConditionEntityService,
     private selectionService: SelectionService,
+    private dialog: MatDialog,
     private location: Location
   ) {
     this.auth = this.authService.authValue;
@@ -603,7 +606,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
                     var select_popup = '<h2> '+now_op_val+' ' + "" + "</h2><hr>";
                     select_popup += '<button data-btn="detail" data-type="'+now_op_val+'" data-id="'+insert_id+'" class="sp_button">Details<span class="detail_button_icon">></span></button></a>';
                     if(now_op_val == "testpost" || now_op_val == "tr")
-                      select_popup += '<button data-btn="history" data-type="'+now_op_val+'" data-id="'+insert_id+'" class="sp_button">Historical data<span class="detail_button_icon">></span></button>';
+                      select_popup += '<button data-btn="history" data-type="'+now_op_val+'" data-id="'+insert_id+'" class="sp_button">History<span class="detail_button_icon">></span></button>';
                     select_popup += '<button data-btn="notes" data-type="'+now_op_val+'" data-id="'+insert_id+'" class="sp_button">Notes<span class="detail_button_icon">></span></button>';
                     select_popup += '<button data-btn="drive" data-type="'+now_op_val+'" data-id="'+insert_id+'" class="sp_button">DriveTo<span class="detail_button_icon">></span></button>';
   
@@ -641,7 +644,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
                     var marker_i = L.marker(new L.LatLng(popup_geometry.lat, popup_geometry.lng), {icon:busIcon , title: "" });
                     var select_popup = '<h2> '+now_op_val+' ' + "" + "</h2><hr>";
                     select_popup += '<button data-btn="detail" data-type="'+now_op_val+'" data-id="'+insert_id+'" class="sp_button">Details<span class="detail_button_icon">></span></button></a>';
-                      select_popup += '<button data-btn="history" data-type="'+now_op_val+'" data-id="'+insert_id+'" class="sp_button">Historical data<span class="detail_button_icon">></span></button>';
+                      select_popup += '<button data-btn="history" data-type="'+now_op_val+'" data-id="'+insert_id+'" class="sp_button">History<span class="detail_button_icon">></span></button>';
                     select_popup += '<button data-btn="notes" data-type="'+now_op_val+'" data-id="'+insert_id+'" class="sp_button">Notes<span class="detail_button_icon">></span></button>';
                     select_popup += '<button data-btn="drive" data-type="'+now_op_val+'" data-id="'+insert_id+'" class="sp_button">DriveTo<span class="detail_button_icon">></span></button>';
   
@@ -679,7 +682,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
                     var marker_i = L.marker(new L.LatLng(popup_geometry.lat, popup_geometry.lng), {icon:busIcon , title: "" });
                     var select_popup = '<h2> '+now_op_val+' ' + "" + "</h2><hr>";
                     select_popup += '<button data-btn="detail" data-type="'+now_op_val+'" data-id="'+insert_id+'" class="sp_button">Details<span class="detail_button_icon">></span></button></a>';
-                      select_popup += '<button data-btn="history" data-type="'+now_op_val+'" data-id="'+insert_id+'" class="sp_button">Historical data<span class="detail_button_icon">></span></button>';
+                      select_popup += '<button data-btn="history" data-type="'+now_op_val+'" data-id="'+insert_id+'" class="sp_button">History<span class="detail_button_icon">></span></button>';
                     select_popup += '<button data-btn="notes" data-type="'+now_op_val+'" data-id="'+insert_id+'" class="sp_button">Notes<span class="detail_button_icon">></span></button>';
                     select_popup += '<button data-btn="drive" data-type="'+now_op_val+'" data-id="'+insert_id+'" class="sp_button">DriveTo<span class="detail_button_icon">></span></button>';
   
@@ -834,25 +837,26 @@ export class HomeComponent implements OnInit, AfterViewInit {
     
     this.map.on('popupopen', function(e) {
       $(".sp_button").on('click',(e)=>{
-        var self = e.currentTarget;
-        var type = $(self).data('type');
-        var id = $(self).data('id');
-        var btn_type = $(self).data('btn');
+        const self = e.currentTarget;
+        const type = $(self).data('type');
+        const id = $(self).data('id');
+        const btn_type = $(self).data('btn');
 
         instance.sidebar.open('home');
+        const navigate_url = `/home/${type}/${id}`
         switch(btn_type)
         {
           case "detail":
-            instance.router.navigate(['/home/'+type+'/'+id]);
+            instance.router.navigate([navigate_url]);
             break;
           case "history":
-            instance.router.navigate(['/home/'+type+'/'+id+"/history"]);
+            instance.router.navigate([navigate_url], { queryParams: { tab: 'actions' }});
             break;
           case "notes":
-            instance.router.navigate(['/home/'+type+'/'+id+"/notes"]);
+            instance.router.navigate([navigate_url], { queryParams: { tab: 'notes' }});
             break;
           case "drive":
-            instance.router.navigate(['/home/'+type+'/'+id+"/drive"]);
+            instance.driveTo();
             break;
         }
         
@@ -1019,7 +1023,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
     let select_popup = '<h2> testpost ' + testpost.name + "</h2><hr>";
     select_popup += '<button data-btn="detail" data-type="testposts" data-id="'+testpost.id+'" class="sp_button">Details<span class="detail_button_icon">></span></button></a>';
-    select_popup += '<button data-btn="history" data-type="testposts" data-id="'+testpost.id+'" class="sp_button">Historical data<span class="detail_button_icon">></span></button>';
+    select_popup += '<button data-btn="history" data-type="testposts" data-id="'+testpost.id+'" class="sp_button">History<span class="detail_button_icon">></span></button>';
     select_popup += '<button data-btn="notes" data-type="testposts" data-id="'+testpost.id+'" class="sp_button">Notes<span class="detail_button_icon">></span></button>';
     select_popup += '<button data-btn="drive" data-type="testposts" data-id="'+testpost.id+'" class="sp_button">DriveTo<span class="detail_button_icon">></span></button>';
 
@@ -1040,7 +1044,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
     let select_popup = '<h2> tr ' + tr.name + "</h2><hr>";
     select_popup += '<button data-btn="detail" data-type="trs" data-id="'+tr.id+'" class="sp_button">Details<span class="detail_button_icon">></span></button></a>';
-    select_popup += '<button data-btn="history" data-type="trs" data-id="'+tr.id+'" class="sp_button">Historical data<span class="detail_button_icon">></span></button>';
+    select_popup += '<button data-btn="history" data-type="trs" data-id="'+tr.id+'" class="sp_button">History<span class="detail_button_icon">></span></button>';
     select_popup += '<button data-btn="notes" data-type="trs" data-id="'+tr.id+'" class="sp_button">Notes<span class="detail_button_icon">></span></button>';
     select_popup += '<button data-btn="drive" data-type="trs" data-id="'+tr.id+'" class="sp_button">DriveTo<span class="detail_button_icon">></span></button>';
 
@@ -1199,5 +1203,20 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   isManager() {
     return this.authService.authValue.user.role.name === Roles.MANAGER;
+  }
+
+  driveTo(): void {
+    // Open modal
+    const dialogRef = this.dialog.open(NavigationModalComponent, {
+      data: {
+        surveys: [],
+      },
+      autoFocus: true,
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+      }
+    });
   }
 }

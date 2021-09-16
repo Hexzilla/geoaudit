@@ -86,7 +86,7 @@ export class AbrioxComponent implements OnInit {
 
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id');
-
+    this.initRoutes();
     this.initForm();
 
     if (this.id) {
@@ -94,6 +94,19 @@ export class AbrioxComponent implements OnInit {
     } else {
       this.createMode();
     }
+  }
+
+  initRoutes() {
+    this.route.queryParams.subscribe(params => {
+      const tabIndex = params['tab'];
+      if (tabIndex == 'actions') {
+        this.selectedTabIndex = 2;
+      } else if (tabIndex == 'notes') {
+        this.selectedTabIndex = 3;
+      } else {
+        this.selectedTabIndex = 0;
+      }
+    });
   }
 
   initForm() {

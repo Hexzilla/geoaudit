@@ -89,9 +89,9 @@ export class TrComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.API_URL = environment.API_URL;
-
     this.id = this.route.snapshot.paramMap.get('id');
 
+    this.initRoutes();
     this.initForm();
 
     if (this.id) {
@@ -128,6 +128,19 @@ export class TrComponent implements OnInit, AfterViewInit {
             lng: value,
           },
         });
+      }
+    });
+  }
+
+  initRoutes() {
+    this.route.queryParams.subscribe(params => {
+      const tabIndex = params['tab'];
+      if (tabIndex == 'actions') {
+        this.selectedTabIndex = 2;
+      } else if (tabIndex == 'notes') {
+        this.selectedTabIndex = 3;
+      } else {
+        this.selectedTabIndex = 0;
       }
     });
   }

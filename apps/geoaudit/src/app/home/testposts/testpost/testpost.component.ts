@@ -89,8 +89,9 @@ export class TestpostComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.API_URL = environment.API_URL;
-
     this.id = this.route.snapshot.paramMap.get('id');
+
+    this.initRoutes();
 
     this.initForm();
 
@@ -129,6 +130,20 @@ export class TestpostComponent implements OnInit, AfterViewInit {
           },
         });
       }
+    });
+  }
+
+  initRoutes() {
+    this.route.queryParams.subscribe(params => {
+      const tabIndex = params['tab'];
+      if (tabIndex == 'actions') {
+        this.selectedTabIndex = 2;
+      } else if (tabIndex == 'notes') {
+        this.selectedTabIndex = 3;
+      } else {
+        this.selectedTabIndex = 0;
+      }
+      console.log("tabIndex", tabIndex, this.selectedTabIndex);
     });
   }
 
