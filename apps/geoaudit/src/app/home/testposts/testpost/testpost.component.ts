@@ -13,7 +13,6 @@ import { Subject } from 'rxjs';
 import { AlertService, UploadService } from '../../../services';
 import { FileTypes } from '../../../components/file-upload/file-upload.component';
 import { IAlbum, Lightbox } from 'ngx-lightbox';
-import { AttachmentModalComponent } from '../../../modals/attachment-modal/attachment-modal.component';
 import { MatDialog } from '@angular/material/dialog';
 import { environment } from 'apps/geoaudit/src/environments/environment';
 import { TpActionEntityService } from '../../../entity-services/tp-action-entity.service';
@@ -291,8 +290,10 @@ export class TestpostComponent implements OnInit, AfterViewInit {
       documents
     })
 
-    this.latCtrl.setValue(geometry?.lat);
-    this.lngCtrl.setValue(geometry?.lng);
+    if (geometry) {
+      this.latCtrl.setValue(geometry['lat']);
+      this.lngCtrl.setValue(geometry['lng']);
+    }
   }
 
   clickMarker(): void {
@@ -316,8 +317,7 @@ export class TestpostComponent implements OnInit, AfterViewInit {
     let color = "00FFFFFF";
     if (id) {
       if (this.tp_actions) {
-        const tp_action = this.tp_actions.find(tp_action => tp_action.condition.id === id);
-
+        const tp_action = this.tp_actions.find(it => it.condition && it.condition.id === id);
         if (tp_action) {
           color = MarkerColours[tp_action.condition.name];
         }
@@ -328,18 +328,27 @@ export class TestpostComponent implements OnInit, AfterViewInit {
   }
 
   getLatestConditionColour() {
-    if (this.tp_actions && this.tp_actions.length > 0) {
-      const tp_action = this.tp_actions.reduce((a, b) => {
-        const diff = moment(a.date).diff(moment(b.date), 'seconds')
-        return (diff > 0) ? a : b
-      });
-      return MarkerColours[tp_action.condition.name];
+    if (this.tp_actions && this.tp_actions.length > 0) {      
+      const tp_action = this.tp_actions
+        .filter(it => it.condition)
+        .reduce((a, b) => {
+          const diff = moment(a.date).diff(moment(b.date), 'seconds')
+          return (diff > 0) ? a : b
+        }, null);
+      if (tp_action) {
+        return MarkerColours[tp_action.condition.name];
+      }
     }  
     return "00FFFFFF";
   }
 
   selectedIndexChange(selectedTabIndex) {
     this.selectedTabIndex = selectedTabIndex;
+  }
+
+  onNavigate(actionId) {
+    console.log("onNavigate", actionId)
+    this.router.navigate([`/home/tr_action/${actionId}`]);
   }
   
   completed() {

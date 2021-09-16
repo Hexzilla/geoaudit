@@ -218,6 +218,7 @@
       <geoaudit-action-list-item
         *ngFor="let item of tp_actions"
         [item]="item"
+        (onNavigate)="onNavigate($event)"
         attribute="tp_actions">
       </geoaudit-action-list-item>
     </mat-card-content>
