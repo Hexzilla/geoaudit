@@ -6,7 +6,11 @@
     <mat-label>{{
       'CONTAINERS.home.jobs.job.status' | translate
     }}</mat-label>
-    <mat-select statusControlName="status" name="status" [(value)]="currentState">
+    <mat-select 
+      statusControlName="status" 
+      name="status" 
+      (selectionChange)="onChangeState()"
+      [(value)]="currentState">
       <mat-option *ngFor="let status of statuses" [value]="status.id">
         {{ 'STATUSES.' + status.name | translate }}
       </mat-option>

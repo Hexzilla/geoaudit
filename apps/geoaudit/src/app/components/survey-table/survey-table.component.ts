@@ -103,9 +103,11 @@ export class SurveyTableComponent implements OnInit, AfterViewInit {
   } 
 
   ngAfterViewInit() {
-    this.data = this.dataSource.data;
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+    if (this.dataSource) {
+      this.data = this.dataSource.data;
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+    }
     //this.selectionService.setSurveyMarkerFilter.emit(this.data);
 
     /**
