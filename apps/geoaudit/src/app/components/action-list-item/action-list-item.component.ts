@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, Output, OnInit, EventEmitter } from '@angular/core';
 import { environment } from 'apps/geoaudit/src/environments/environment';
 import { SurveyEntityService } from '../../entity-services/survey-entity.service';
 import { MarkerColours, Survey } from '../../models';
@@ -17,19 +17,15 @@ export class ActionListItemComponent implements OnInit {
   
   @Input() selector: Selectors;
 
+  @Output() onNavigate?: EventEmitter<number> = new EventEmitter();
+
   survey: Survey;
-
-  API_URL: string;
-
 
   constructor(
     private surveyEntityService: SurveyEntityService
   ) { }
 
   ngOnInit(): void {
-
-    this.API_URL = environment.API_URL;
-
     if (this.item && this.item.survey) {
       this.surveyEntityService.getByKey(this.item.survey.id).subscribe(survey => {
         this.survey = survey;
@@ -37,13 +33,19 @@ export class ActionListItemComponent implements OnInit {
     }
   }
 
-  getConditionColour(action?: any) {
-    let color = "00FFFFFF";
-
-    if (action) {
-        color = MarkerColours[action.condition.name];
+  getAvatar() {
+    const url = this.survey?.conducted_by?.avatar.url
+    if (url) {
+      return `${environment.API_URL} + ${url}`;
     }
+    return "https://bestoked.ams3.digitaloceanspaces.com/geoaudit/static/assets/Avatar%20-%20Geoaudit.png"
+  }
 
-    return color;
+  getConditionColour(action?: any) {
+    return (action && action.condition) ? MarkerColours[action.condition.name] : "00FFFFFF";
+  }
+
+  navigate() {
+    this.onNavigate?.emit(this.item.id)
   }
 }

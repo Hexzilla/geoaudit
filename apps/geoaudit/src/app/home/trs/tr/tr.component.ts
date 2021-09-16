@@ -6,8 +6,8 @@ import { Store } from '@ngrx/store';
 import * as MapActions from '../../../store/map/map.actions';
 import * as fromApp from '../../../store';
 import * as moment from 'moment';
-import { TestpostEntityService } from '../../../entity-services/testpost-entity.service';
-import { Abriox, Conditions, Image, MarkerColours, Survey, Testpost, TpAction } from '../../../models';
+import { TrEntityService } from '../../../entity-services/tr-entity.service';
+import { Abriox, Conditions, Image, MarkerColours, Survey, Tr, TrAction } from '../../../models';
 import { debounceTime, tap, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { AlertService, UploadService } from '../../../services';
@@ -15,15 +15,15 @@ import { FileTypes } from '../../../components/file-upload/file-upload.component
 import { IAlbum, Lightbox } from 'ngx-lightbox';
 import { MatDialog } from '@angular/material/dialog';
 import { environment } from 'apps/geoaudit/src/environments/environment';
-import { TpActionEntityService } from '../../../entity-services/tp-action-entity.service';
+import { TrActionEntityService } from '../../../entity-services/tr-action-entity.service';
 import { SurveyEntityService } from '../../../entity-services/survey-entity.service';
 
 @Component({
-  selector: 'geoaudit-testpost',
-  templateUrl: './testpost.component.html',
-  styleUrls: ['./testpost.component.scss']
+  selector: 'geoaudit-tr',
+  templateUrl: './tr.component.html',
+  styleUrls: ['./tr.component.scss']
 })
-export class TestpostComponent implements OnInit, AfterViewInit {
+export class TrComponent implements OnInit, AfterViewInit {
 
   id: string;
 
@@ -64,9 +64,9 @@ export class TestpostComponent implements OnInit, AfterViewInit {
 
   abriox: Abriox;
 
-  testpost: Testpost;
+  tr: Tr;
 
-  tp_actions: Array<TpAction> = [];
+  tr_actions: Array<TrAction> = [];
 
   currentState = 0;
   approved = null;
@@ -77,8 +77,8 @@ export class TestpostComponent implements OnInit, AfterViewInit {
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private surveyEntityService: SurveyEntityService,
-    private testpostEntityService: TestpostEntityService,
-    private tpActionEntityService: TpActionEntityService,
+    private trEntityService: TrEntityService,
+    private trActionEntityService: TrActionEntityService,
     private store: Store<fromApp.State>,
     private router: Router,
     private alertService: AlertService,
@@ -168,26 +168,26 @@ export class TestpostComponent implements OnInit, AfterViewInit {
   }
 
   getTestpostAndPatchForm(id: string) {
-    this.testpostEntityService.getByKey(id).subscribe(
-      (testpost) => {
-        this.patchForm(testpost);
+    this.trEntityService.getByKey(id).subscribe(
+      (tr) => {
+        this.patchForm(tr);
 
-        this.currentState = testpost.status?.id;
-        this.approved = testpost.approved;
-        this.abriox = testpost.abriox;
+        this.currentState = tr.status?.id;
+        this.approved = tr.approved;
+        this.abriox = tr.abriox;
 
-        testpost.tp_actions.map(tp_action => {
-          this.tpActionEntityService.getByKey(tp_action.id).subscribe(item => {
-            this.tp_actions.push(item)
-            this.tp_actions.sort((a, b) => moment(a.date).diff(moment(b.date), 'seconds'))
-            
+        tr.tr_actions.map(tr_action => {
+          this.trActionEntityService.getByKey(tr_action.id).subscribe(item => {
+            this.tr_actions.push(item)
+            this.tr_actions.sort((a, b) => moment(a.date).diff(moment(b.date), 'seconds'))
+            console.log("~~~~~~~~~~~~~~~", this.tr_actions)
             // this.surveyEntityService.getByKey(item.survey.id).subscribe(survey => {
             //   this.surveys.push(survey);
             // })
           })
         })
 
-        this.testpost = testpost;
+        this.tr = tr;
         this.autoSave(this.id ? false : true);
       },
 
@@ -244,7 +244,7 @@ export class TestpostComponent implements OnInit, AfterViewInit {
      *
      * If create then navigate to the job id.
      */
-    this.testpostEntityService.update(payload).subscribe(
+    this.trEntityService.update(payload).subscribe(
       (update) => {
         this.alertService.info('ALERTS.saved_changes');
 
@@ -259,21 +259,19 @@ export class TestpostComponent implements OnInit, AfterViewInit {
     );
   }
 
-  patchForm(testpost: Testpost) {
+  patchForm(tr: Tr) {
     const {
       id,
 
       reference,
       name,
       date_installation,
-      manufacture,
-      model,
       serial_number,
       geometry,
     
       images,
       documents
-    } = testpost;
+    } = tr;
 
     this.form.patchValue({
       id,
@@ -281,8 +279,6 @@ export class TestpostComponent implements OnInit, AfterViewInit {
       reference,
       name,
       date_installation,
-      manufacture,
-      model,
       serial_number,
       geometry,
 
@@ -316,10 +312,10 @@ export class TestpostComponent implements OnInit, AfterViewInit {
   getConditionColour(id?: number) {
     let color = "00FFFFFF";
     if (id) {
-      if (this.tp_actions) {
-        const tp_action = this.tp_actions.find(it => it.condition && it.condition.id === id);
-        if (tp_action) {
-          color = MarkerColours[tp_action.condition.name];
+      if (this.tr_actions) {
+        const tr_action = this.tr_actions.find(tr_action => tr_action.condition && tr_action.condition.id === id);
+        if (tr_action) {
+          color = MarkerColours[tr_action.condition.name];
         }
       }   
     }
@@ -328,15 +324,15 @@ export class TestpostComponent implements OnInit, AfterViewInit {
   }
 
   getLatestConditionColour() {
-    if (this.tp_actions && this.tp_actions.length > 0) {      
-      const tp_action = this.tp_actions
+    if (this.tr_actions && this.tr_actions.length > 0) {      
+      const tr_action = this.tr_actions
         .filter(it => it.condition)
         .reduce((a, b) => {
           const diff = moment(a.date).diff(moment(b.date), 'seconds')
           return (diff > 0) ? a : b
         }, null);
-      if (tp_action) {
-        return MarkerColours[tp_action.condition.name];
+      if (tr_action) {
+        return MarkerColours[tr_action.condition.name];
       }
     }  
     return "00FFFFFF";
@@ -348,7 +344,7 @@ export class TestpostComponent implements OnInit, AfterViewInit {
 
   onNavigate(actionId) {
     console.log("onNavigate", actionId)
-    this.router.navigate([`/home/tp_action/${actionId}`]);
+    this.router.navigate([`/home/tr_action/${actionId}`]);
   }
   
   completed() {

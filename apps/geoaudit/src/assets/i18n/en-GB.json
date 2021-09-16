@@ -314,6 +314,9 @@
 				}
 			},
 			"trs": {
+				"tr": {
+					"title": "Tr {{placeholder}}"
+				},
 				"tr_action": {
 					"title": "TR Action",
 					"reading": {

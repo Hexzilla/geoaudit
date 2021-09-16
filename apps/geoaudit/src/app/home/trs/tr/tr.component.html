@@ -1,5 +1,5 @@
 <geoaudit-sidebar-header
-  title="CONTAINERS.home.testposts.testpost.title"
+  title="CONTAINERS.home.trs.tr.title"
   [placeholder]="form?.value?.reference"
 >
   <geoaudit-icon [visible]="true" [color]="getLatestConditionColour()" icon="radio_button_unchecked"></geoaudit-icon>
@@ -84,35 +84,7 @@
             </ngx-mat-datetime-picker>
           </mat-form-field>
 
-          <!-- Manufacture -->
-          <mat-form-field appearance="outline">
-            <mat-label>{{
-              'CONTAINERS.home.testposts.testpost.manufacture' | translate
-            }}</mat-label>
-            <input
-              matInput
-              [placeholder]="
-                'CONTAINERS.home.testposts.testpost.manufacture' | translate
-              "
-              formControlName="manufacture"
-              class="form-control"
-            />
-          </mat-form-field>
-
-          <!-- Model -->
-          <mat-form-field appearance="outline">
-            <mat-label>{{
-              'CONTAINERS.home.testposts.testpost.model' | translate
-            }}</mat-label>
-            <input
-              matInput
-              [placeholder]="'CONTAINERS.home.testposts.testpost.model' | translate"
-              formControlName="model"
-              class="form-control"
-            />
-          </mat-form-field>
-
-          <!-- Manufacture -->
+          <!-- serial_number -->
           <mat-form-field appearance="outline">
             <mat-label>{{
               'CONTAINERS.home.testposts.testpost.serial_number' | translate
@@ -216,7 +188,7 @@
   <mat-tab [label]="'CONTAINERS.home.testposts.testpost.actions' | translate">
     <mat-card-content>
       <geoaudit-action-list-item
-        *ngFor="let item of tp_actions"
+        *ngFor="let item of tr_actions"
         [item]="item"
         (onNavigate)="onNavigate($event)"
         attribute="tp_actions">
@@ -236,7 +208,7 @@
 
 <div fxLayout="row-reverse" class="approve-wrapper">
   <geoaudit-status-buttons
-    *ngIf="testpost!=null"
+    *ngIf="tr!=null"
     [completed]="completed()"
     [approved]="approved == true"
     (completeEvent)="updateMarkState($event)"
