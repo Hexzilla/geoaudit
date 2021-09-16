@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, Output, OnInit, EventEmitter } from '@angular/core';
 import { environment } from 'apps/geoaudit/src/environments/environment';
 import { SurveyEntityService } from '../../entity-services/survey-entity.service';
 import { MarkerColours, Survey } from '../../models';
@@ -16,6 +16,8 @@ export class ActionListItemComponent implements OnInit {
   @Input() item;
   
   @Input() selector: Selectors;
+
+  @Output() onNavigate?: EventEmitter<number> = new EventEmitter();
 
   survey: Survey;
 
@@ -40,6 +42,10 @@ export class ActionListItemComponent implements OnInit {
   }
 
   getConditionColour(action?: any) {
-    return action ? MarkerColours[action.condition.name] : "00FFFFFF";
+    return (action && action.condition) ? MarkerColours[action.condition.name] : "00FFFFFF";
+  }
+
+  navigate() {
+    this.onNavigate?.emit(this.item.id)
   }
 }

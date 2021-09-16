@@ -9,6 +9,7 @@ import { Tr } from "./tr.model";
 import { User } from "./user.model";
 
 export interface TrAction {
+    id: string;
     name: string;
     date: string;
     tr: Tr;
