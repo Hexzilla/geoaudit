@@ -67,6 +67,7 @@ import { JobTypeEntityService } from '../entity-services/job-type-entity.service
 import { UserEntityService } from '../entity-services/user-entity.service';
 import { UserDataService } from '../data-services/user-data.service';
 import { AbrioxDataService } from '../data-services/abriox-data.service';
+import { AbrioxEntityService } from '../entity-services/abriox-entity.service';
 import { TestpostDataService } from '../data-services/testpost-data.service';
 import { ResistivityDataService } from '../data-services/resistivity-data.service';
 import { TrDataService } from '../data-services/tr-data.service';
@@ -274,6 +275,7 @@ const entityMetadataMap: EntityMetadataMap = {
     UserDataService,
 
     AbrioxDataService,
+    AbrioxEntityService,
 
     TestpostDataService,
 

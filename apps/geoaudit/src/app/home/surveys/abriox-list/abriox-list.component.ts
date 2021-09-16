@@ -16,6 +16,8 @@ import { Abriox } from '../../../models';
 import { AlertService } from '../../../services';
 import { MatDialog } from '@angular/material/dialog';
 import { AbrioxEntityService } from '../../../entity-services/abriox-entity.service';
+import { TpActionEntityService } from '../../../entity-services/tp-action-entity.service';
+import { TrActionEntityService } from '../../../entity-services/tr-action-entity.service';
 import { DeleteModalComponent } from '../../../modals/delete-modal/delete-modal.component';
 
 @Component({
@@ -31,16 +33,18 @@ export class AbrioxListComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private abrioxEntityService: AbrioxEntityService,
+    private tpActionEntityService: TpActionEntityService,
+    private trActionEntityService: TrActionEntityService,
     private alertService: AlertService,
     private dialog: MatDialog
   ) {
   }
 
   ngOnInit(): void {
-    this.update();
+    this.fetchData();
   }
 
-  update() {
+  fetchData() {
     const serveyId = this.route.snapshot.params['id'];
     console.log("serveyId", serveyId);
 
@@ -51,8 +55,29 @@ export class AbrioxListComponent implements OnInit {
     });
     this.abrioxEntityService.getWithQuery(parameters).subscribe(
       (abrioxes) => {
-        console.log("abrioxes", abrioxes)
+        console.log("~~~abrioxes", abrioxes)
         this.abrioxes = abrioxes.filter(it => it.name != null)
+        this.getAbrioxesFromActions(serveyId)        
+      },
+      (err) => {}
+    );
+  }
+
+  private getAbrioxesFromActions(serveyId) {
+    const parameters = qs.stringify({
+      _where: {
+        survey: serveyId
+      }
+    });
+    this.tpActionEntityService.getWithQuery(parameters).subscribe(
+      (actions) => {
+        console.log("~~~tp-actions", actions)
+      },
+      (err) => {}
+    );
+    this.trActionEntityService.getWithQuery(parameters).subscribe(
+      (actions) => {
+        console.log("~~~~tp-actions", actions)
       },
       (err) => {}
     );

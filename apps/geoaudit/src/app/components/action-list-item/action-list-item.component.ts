@@ -30,7 +30,7 @@ export class ActionListItemComponent implements OnInit {
 
     this.API_URL = environment.API_URL;
 
-    if (this.item) {
+    if (this.item && this.item.survey) {
       this.surveyEntityService.getByKey(this.item.survey.id).subscribe(survey => {
         this.survey = survey;
       })
