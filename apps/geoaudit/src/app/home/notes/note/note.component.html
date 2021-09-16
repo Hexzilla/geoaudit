@@ -165,6 +165,7 @@
     mat-flat-button
     color="warn"
     class="btn-delete"
+    [disabled]="!id"
     (click)="deleteNote()"
     >
       Delete

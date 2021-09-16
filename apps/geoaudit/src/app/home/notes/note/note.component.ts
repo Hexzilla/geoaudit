@@ -13,6 +13,7 @@ import { Subject } from 'rxjs';
 import { NoteEntityService } from '../../../entity-services/note-entity.service';
 import { Note } from '../../../models';
 import { AlertService, AuthService, UploadService } from '../../../services';
+import { MatDialog } from '@angular/material/dialog';
 import { FileTypes } from '../../../components/file-upload/file-upload.component';
 import { JobEntityService } from '../../../entity-services/job-entity.service';
 import { AbrioxEntityService } from '../../../entity-services/abriox-entity.service';
@@ -21,6 +22,7 @@ import { SiteEntityService } from '../../../entity-services/site-entity.service'
 import { SurveyEntityService } from '../../../entity-services/survey-entity.service';
 import { TestpostEntityService } from '../../../entity-services/testpost-entity.service';
 import { TrEntityService } from '../../../entity-services/tr-entity.service';
+import { DeleteModalComponent } from '../../../modals/delete-modal/delete-modal.component';
 
 @Component({
   selector: 'geoaudit-note',
@@ -29,6 +31,8 @@ import { TrEntityService } from '../../../entity-services/tr-entity.service';
 })
 export class NoteComponent implements OnInit, AfterViewInit {
   @Input() id: string;
+
+  note: Note;
 
   form: FormGroup;
 
@@ -54,12 +58,14 @@ export class NoteComponent implements OnInit, AfterViewInit {
     private alertService: AlertService,
     private router: Router,
     private uploadService: UploadService,
-    private authService: AuthService
+    private authService: AuthService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
-    if(this.route.snapshot.paramMap.get('notes'))
+    if (this.route.snapshot.paramMap.get('notes')) {
       this.id = this.route.snapshot.paramMap.get('id');
+    }
     this.initForm();
 
     if (this.id) {
@@ -74,6 +80,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
   getNoteAndPatchForm(id: string) {
     this.noteEntityService.getByKey(id).subscribe(
       (note) => {
+        this.note = note;
         this.patchForm(note);
       },
 
@@ -242,6 +249,8 @@ export class NoteComponent implements OnInit, AfterViewInit {
 
     this.noteEntityService.add(this.form.value).subscribe(
       (note) => {
+        this.id = note.id.toString();
+        this.note = note;
         this.patchForm(note);
 
         this.autoSave(false);
@@ -346,6 +355,19 @@ export class NoteComponent implements OnInit, AfterViewInit {
   }
 
   deleteNote() {
-    this.closeNote.emit();
+    const dialogRef = this.dialog.open(DeleteModalComponent, {
+      data: {
+        length: 1,
+      },
+      autoFocus: true,
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.noteEntityService.delete(this.id).subscribe(() => {
+          this.closeNote.emit();
+        })
+      }
+    });
   }
 }
