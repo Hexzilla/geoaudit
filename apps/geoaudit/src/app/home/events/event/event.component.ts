@@ -169,8 +169,7 @@ export class EventComponent implements OnInit {
     this.eventEntityService.add(this.form.value).subscribe(
       (calendarEvent) => {
         this.patchForm(calendarEvent);
-
-        this.autoSave(true);
+        this.autoSave(false);
       },
 
       (err) => {}
