@@ -313,27 +313,14 @@ export class TestpostComponent implements OnInit, AfterViewInit {
     this.router.navigate(["/home/abrioxes/create"], navigationExtras)
   }
 
-  getConditionColour(id?: number) {
-    let color = "00FFFFFF";
-    if (id) {
-      if (this.tp_actions) {
-        const tp_action = this.tp_actions.find(it => it.condition && it.condition.id === id);
-        if (tp_action) {
-          color = MarkerColours[tp_action.condition.name];
-        }
-      }   
-    }
-
-    return color;
-  }
-
   getLatestConditionColour() {
     if (this.tp_actions && this.tp_actions.length > 0) {      
       const tp_action = this.tp_actions
         .filter(it => it.condition)
-        .reduce((a, b) => {
-          const diff = moment(a.date).diff(moment(b.date), 'seconds')
-          return (diff > 0) ? a : b
+        .reduce((previous, current) => {
+          if (!previous) return current;
+          const diff = moment(previous.date).diff(moment(current.date), 'seconds')
+          return (diff > 0) ? previous : current
         }, null);
       if (tp_action) {
         return MarkerColours[tp_action.condition.name];

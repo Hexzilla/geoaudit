@@ -309,27 +309,14 @@ export class TrComponent implements OnInit, AfterViewInit {
     this.router.navigate(["/home/abrioxes/create"], navigationExtras)
   }
 
-  getConditionColour(id?: number) {
-    let color = "00FFFFFF";
-    if (id) {
-      if (this.tr_actions) {
-        const tr_action = this.tr_actions.find(tr_action => tr_action.condition && tr_action.condition.id === id);
-        if (tr_action) {
-          color = MarkerColours[tr_action.condition.name];
-        }
-      }   
-    }
-
-    return color;
-  }
-
   getLatestConditionColour() {
     if (this.tr_actions && this.tr_actions.length > 0) {      
       const tr_action = this.tr_actions
         .filter(it => it.condition)
-        .reduce((a, b) => {
-          const diff = moment(a.date).diff(moment(b.date), 'seconds')
-          return (diff > 0) ? a : b
+        .reduce((previous, current) => {
+          if (!previous) return current;
+          const diff = moment(previous.date).diff(moment(current.date), 'seconds')
+          return (diff > 0) ? previous : current
         }, null);
       if (tr_action) {
         return MarkerColours[tr_action.condition.name];

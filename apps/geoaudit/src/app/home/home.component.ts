@@ -393,9 +393,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
             if (!actions || actions.length <= 0) {
               return { ...tr, condition: null }
             }
-            const action = actions.reduce((a, b) => {
-              const diff = moment(a.date).diff(moment(b.date), 'seconds')
-              return (diff > 0) ? a : b
+            const action = actions.reduce((previous, current) => {
+              const diff = moment(previous.date).diff(moment(current.date), 'seconds')
+              return (diff > 0) ? previous : current
             });
             return { ...tr, condition: action.condition || 0 }
           })

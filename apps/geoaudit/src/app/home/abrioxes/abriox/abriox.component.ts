@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { ThemePalette } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
+import * as moment from 'moment';
 import { environment } from 'apps/geoaudit/src/environments/environment';
 import { IAlbum, Lightbox } from 'ngx-lightbox';
 import { Subject } from 'rxjs';
@@ -36,13 +37,10 @@ export class AbrioxComponent implements OnInit {
 
   @ViewChild('dateInstallationDateTimePicker') dateInstallationDateTimePicker: any;
 
-  abriox_actions: Array<AbrioxAction> = [];
-
-  abriox: Abriox;
-
-  ready = false;
-
-  surveys: Array<Survey> = [];
+  public selectedTabIndex = 0;
+  
+  attachedImages: Array<any>;
+  attachedDocuments: Array<any>;
 
   public disabled = false;
   public showSpinners = true;
@@ -59,6 +57,17 @@ export class AbrioxComponent implements OnInit {
 
   private unsubscribe = new Subject<void>();
 
+  abriox_actions: Array<AbrioxAction> = [];
+
+  abriox: Abriox;
+
+  currentState = 0;
+  approved = null;
+  
+  ready = false;
+
+  surveys: Array<Survey> = [];
+
   constructor(
     private route: ActivatedRoute,
     private abrioxEntityService: AbrioxEntityService,
@@ -73,7 +82,7 @@ export class AbrioxComponent implements OnInit {
     private authService: AuthService,
     private _lightbox: Lightbox,
     private dialog: MatDialog
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id');
@@ -110,11 +119,15 @@ export class AbrioxComponent implements OnInit {
     this.abrioxEntityService.getByKey(id).subscribe(
       (abriox) => {
         this.patchForm(abriox);
-        
+
+        this.currentState = abriox.status?.id;
+        this.approved = abriox.approved;
+
         abriox.abriox_actions.map(abriox_action => {
           this.abrioxActionEntityService.getByKey(abriox_action.id).subscribe(item => {
             if (item.approved) {
               this.abriox_actions.push(item);
+              this.abriox_actions.sort((a, b) => moment(a.date).diff(moment(b.date), 'seconds'))
             }
 
             this.surveyEntityService.getByKey(item.survey.id).subscribe(survey => {
@@ -240,13 +253,18 @@ export class AbrioxComponent implements OnInit {
       return;
     }
 
+    const payload = {
+      ...this.form.value,
+      status: this.currentState,
+      approved: this.approved
+    }
     /**
      * Invoke the backend with a PUT request to update
      * the job with the form values.
      *
      * If create then navigate to the job id.
      */
-    this.abrioxEntityService.update(this.form.value).subscribe(
+    this.abrioxEntityService.update(payload).subscribe(
       (update) => {
         this.alertService.info('ALERTS.saved_changes');
 
@@ -261,50 +279,59 @@ export class AbrioxComponent implements OnInit {
     );
   }
 
-  onPreview(fileType: FileTypes): void {
-    const { images, documents } = this.form.value;
+  getLatestConditionColour() {
+    if (this.abriox_actions && this.abriox_actions.length > 0) {      
+      const tp_action = this.abriox_actions
+        .filter(it => it && it.condition)
+        .reduce((previous, current) => {
+          if (!previous) return current;
+          const diff = moment(previous.date).diff(moment(current.date), 'seconds')
+          return (diff > 0) ? previous : current
+        }, null);
+      if (tp_action) {
+        return MarkerColours[tp_action.condition.name];
+      }
+    }  
+    return "00FFFFFF";
+  }
 
-    switch (fileType) {
-      case FileTypes.IMAGE:
-        let _album: Array<IAlbum> = [];
+  selectedIndexChange(selectedTabIndex) {
+    this.selectedTabIndex = selectedTabIndex;
+  }
 
-        images.map((image: Image) => {
-          const album = {
-            src: `${environment.API_URL}${image.url}`,
-            caption: image.name,
-            thumb: `${environment.API_URL}${image.formats.thumbnail.url}`,
-          };
+  onNavigate(actionId) {
+    console.log("onNavigate", actionId)
+    this.router.navigate([`/home/tp_action/${actionId}`]);
+  }
+  
+  completed() {
+    //return this.tp_action?.status?.name == Statuses.COMPLETED;
+    return this.currentState == 1
+  }
 
-          _album.push(album);
-        });
-
-        if (_album.length >= 1) this._lightbox.open(_album, 0);
-        break;
-
-      case FileTypes.DOCUMENT:
-        const dialogRef = this.dialog.open(AttachmentModalComponent, {
-          data: {
-            fileType,
-            documents,
-          },
-        });
-
-        dialogRef.afterClosed().subscribe((result) => {});
-        break;
+  updateMarkState(e) {
+    console.log('updateMarkState', e)
+    if (e.complete) {
+      this.currentState = 1;
+      this.submit(true);
+    }
+    else if (e.approve) {
+      this.approved = true;
+      this.submit(true);
+    }
+    else if (e.refuse) {
+      this.approved = false;
+      this.submit(true);
     }
   }
 
   onImageUpload(event): void {
     const { images } = this.form.value;
-
-    // this.images.push(event)
-
-    // May be multiple so just preserving the previous object on the array of images
-
     this.form.patchValue({
       images: [...images, event],
     });
 
+    this.getUploadFiles();
     this.submit(false);
   }
 
@@ -312,37 +339,27 @@ export class AbrioxComponent implements OnInit {
     const { documents } = this.form.value;
 
     this.form.patchValue({
-        documents: [...documents, event],
+      documents: [...documents, event],
     });
 
+    this.getUploadFiles();
     this.submit(false);
   }
 
-  onItemChange(item: any, attribute: string): void {
-    this.form.patchValue({
-      [attribute]: item ? item.id : null
-    });
+  onPreview(fileType: FileTypes): void {
+    const { images, documents } = this.form.value;
+    this.uploadService.onPreview(fileType, images, documents);
   }
 
-  getConditionColour(abrioxAction?: AbrioxAction) {
-    let color = "00FFFFFF";
-
-    if (abrioxAction) {
-        color = MarkerColours[abrioxAction.condition.name];
-    }
-
-    return color;
+  onItemPreview(param: any): void {
+    const { images, documents } = this.form.value;
+    this.uploadService.onItemPreview(param.fileType, images, documents, param.index);
   }
 
-  getSurvey(id?: number) {
-    let survey: Survey;
-
-    if (id) {
-      if (this.surveys) {
-        survey = this.surveys.find(item => item.id === id);
-      }
-    }
-
-    return survey;
+  getUploadFiles(): void {
+    const { images, documents } = this.form.value;
+    this.attachedImages = this.uploadService.getImageUploadFiles(images);
+    this.attachedDocuments = this.uploadService.getDocumentUploadFiles(documents);
   }
+  
 }
