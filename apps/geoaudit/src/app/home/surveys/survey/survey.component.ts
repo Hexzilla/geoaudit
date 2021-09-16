@@ -75,6 +75,8 @@ export class SurveyComponent implements OnInit {
 
   lngCtrl = new FormControl();
 
+  currentState = 0;
+
   // ngxMatDatetimePicker
   public disabled = false;
   public showSpinners = true;
@@ -434,6 +436,14 @@ export class SurveyComponent implements OnInit {
 
       () => { }
     );
+  }
+
+  onChangeState() {
+    console.log("onChangeState", this.currentState);
+    this.form.patchValue({
+      status: this.currentState
+    })
+    this.submit(false);
   }
 
   clickMarker(): void {

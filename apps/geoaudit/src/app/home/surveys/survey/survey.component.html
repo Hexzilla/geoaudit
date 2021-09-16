@@ -5,18 +5,13 @@
           <mat-label>{{
             'CONTAINERS.home.survey.status' | translate
             }}</mat-label>
-          <mat-select formControlName="status" name="status">
+          <mat-select name="status" [(value)]="currentState" (selectionChange)="onChangeState()">
             <mat-option *ngFor="let status of statuses" [value]="status.id">
               {{ 'STATUSES.' + status.name | translate }}
             </mat-option>
           </mat-select>
         </mat-form-field>
 </geoaudit-sidebar-header>
-
-
-
-
-
 
 <mat-tab-group mat-align-tabs="start"
   (selectedIndexChange)="selectedIndexChange($event)"
@@ -29,8 +24,6 @@
   >
     <mat-card-content class="mt-26">
       <form fxLayout="column" [formGroup]="form" (ngSubmit)="submit()">
-
-
         <mat-form-field appearance="outline">
           <mat-label>Job</mat-label>
           <input matInput aria-label="Job" [matAutocomplete]="autoJob" [formControl]="jobCtrl" #jobInput />
@@ -41,7 +34,6 @@
             </mat-option>
           </mat-autocomplete>
         </mat-form-field>
-
         <mat-form-field appearance="outline">
           <mat-label>{{
             'CONTAINERS.home.jobs.job.form.reference' | translate
