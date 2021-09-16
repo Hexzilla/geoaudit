@@ -1,27 +1,28 @@
 <mat-card style="cursor: pointer; margin-top: 20px">
-    <div fxLayout="row" fxLayoutAlign="space-between">
-      <p>{{ item.date | date: 'HH:mm dd/MM/yyyy' }}</p>
-      <geoaudit-icon [visible]="true" [color]="getConditionColour(item)" icon="radio_button_unchecked"></geoaudit-icon>
-
+  <div fxLayout="row" fxLayoutAlign="space-between">
+    <div fxLayout="row" class="card-wrapper">
+      <div class="mr-40">{{ item.date | date: 'HH:mm dd/MM/yyyy' }}</div>
+      <geoaudit-icon
+        class="mr-40"
+        [visible]="true"
+        [color]="getConditionColour(item)" 
+        icon="radio_button_unchecked">
+      </geoaudit-icon>
       <img
-      *ngIf="survey?.conducted_by?.avatar"
-      mat-card-avatar
-      [src]="API_URL + survey?.conducted_by?.avatar.url"
-    />
-    <img
-      *ngIf="!survey?.conducted_by?.avatar"
-      mat-card-avatar
-      src="https://bestoked.ams3.digitaloceanspaces.com/geoaudit/static/assets/Avatar%20-%20Geoaudit.png"
-    />
-
-    <p>{{ survey?.reference }}</p>
-
-      <button
-      mat-icon-button
-      color="accent"
-      aria-label="Example icon button with a plus one icon"
-    >
-      <mat-icon>chevron_right</mat-icon>
-    </button>
+        class="mr-40"
+        mat-card-avatar
+        [src]="getAvatar()"
+      />
+      <div>{{ survey?.reference }}</div>
     </div>
-  </mat-card>
+    <div fxLayout="row" fxLayoutAlign="space-between">
+      <button
+        mat-icon-button
+        color="accent"
+        aria-label="Example icon button with a plus one icon"
+      >
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </div>
+  </div>
+</mat-card>

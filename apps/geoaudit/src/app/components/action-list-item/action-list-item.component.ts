@@ -19,17 +19,12 @@ export class ActionListItemComponent implements OnInit {
 
   survey: Survey;
 
-  API_URL: string;
-
-
   constructor(
     private surveyEntityService: SurveyEntityService
   ) { }
 
   ngOnInit(): void {
-
-    this.API_URL = environment.API_URL;
-
+    console.log("action-list-item", this.item)
     if (this.item && this.item.survey) {
       this.surveyEntityService.getByKey(this.item.survey.id).subscribe(survey => {
         this.survey = survey;
@@ -37,13 +32,15 @@ export class ActionListItemComponent implements OnInit {
     }
   }
 
-  getConditionColour(action?: any) {
-    let color = "00FFFFFF";
-
-    if (action) {
-        color = MarkerColours[action.condition.name];
+  getAvatar() {
+    const url = this.survey?.conducted_by?.avatar.url
+    if (url) {
+      return `${environment.API_URL} + ${url}`;
     }
+    return "https://bestoked.ams3.digitaloceanspaces.com/geoaudit/static/assets/Avatar%20-%20Geoaudit.png"
+  }
 
-    return color;
+  getConditionColour(action?: any) {
+    return action ? MarkerColours[action.condition.name] : "00FFFFFF";
   }
 }

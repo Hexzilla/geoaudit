@@ -10,7 +10,7 @@ import { TestpostEntityService } from '../../../entity-services/testpost-entity.
 import { Abriox, Conditions, Image, MarkerColours, Survey, Testpost, TpAction } from '../../../models';
 import { debounceTime, tap, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { AlertService } from '../../../services';
+import { AlertService, UploadService } from '../../../services';
 import { FileTypes } from '../../../components/file-upload/file-upload.component';
 import { IAlbum, Lightbox } from 'ngx-lightbox';
 import { AttachmentModalComponent } from '../../../modals/attachment-modal/attachment-modal.component';
@@ -40,6 +40,11 @@ export class TestpostComponent implements OnInit, AfterViewInit {
   latCtrl = new FormControl();
 
   lngCtrl = new FormControl();
+
+  public selectedTabIndex = 0;
+  
+  attachedImages: Array<any>;
+  attachedDocuments: Array<any>;
 
   public disabled = false;
   public showSpinners = true;
@@ -75,6 +80,7 @@ export class TestpostComponent implements OnInit, AfterViewInit {
     private store: Store<fromApp.State>,
     private router: Router,
     private alertService: AlertService,
+    private uploadService: UploadService,
     private _lightbox: Lightbox,
     private dialog: MatDialog
   ) { }
@@ -168,7 +174,8 @@ export class TestpostComponent implements OnInit, AfterViewInit {
 
         testpost.tp_actions.map(tp_action => {
           this.tpActionEntityService.getByKey(tp_action.id).subscribe(item => {
-            this.tp_actions.push(item);
+            this.tp_actions.push(item)
+            this.tp_actions.sort((a, b) => moment(a.date).diff(moment(b.date), 'seconds'))
             
             // this.surveyEntityService.getByKey(item.survey.id).subscribe(survey => {
             //   this.surveys.push(survey);
@@ -177,8 +184,6 @@ export class TestpostComponent implements OnInit, AfterViewInit {
         })
 
         this.testpost = testpost;
-
-
         this.autoSave(this.id ? false : true);
       },
 
@@ -288,51 +293,73 @@ export class TestpostComponent implements OnInit, AfterViewInit {
     );
   }
 
-
-  onPreview(fileType: FileTypes): void {
-    const { images, documents } = this.form.value;
-
-    switch (fileType) {
-      case FileTypes.IMAGE:
-        let _album: Array<IAlbum> = [];
-
-        images.map((image: Image) => {
-          const album = {
-            src: `${this.API_URL}${image.url}`,
-            caption: image.name,
-            thumb: `${this.API_URL}${image.formats.thumbnail.url}`,
-          };
-
-          _album.push(album);
-        });
-
-        if (_album.length >= 1) this._lightbox.open(_album, 0);
-        break;
-
-      case FileTypes.DOCUMENT:
-        const dialogRef = this.dialog.open(AttachmentModalComponent, {
-          data: {
-            fileType,
-            documents,
-          },
-        });
-
-        dialogRef.afterClosed().subscribe((result) => {});
-        break;
+  addAbriox() {
+    const navigationExtras: NavigationExtras = {
+      queryParams: {
+        testpost: this.form.value.id
+      }
     }
+    this.router.navigate(["/home/abrioxes/create"], navigationExtras)
+  }
+
+  getConditionColour(id?: number) {
+    let color = "00FFFFFF";
+    if (id) {
+      if (this.tp_actions) {
+        const tp_action = this.tp_actions.find(tp_action => tp_action.condition.id === id);
+
+        if (tp_action) {
+          color = MarkerColours[tp_action.condition.name];
+        }
+      }   
+    }
+
+    return color;
+  }
+
+  getLatestConditionColour() {
+    if (this.tp_actions && this.tp_actions.length > 0) {
+      const tp_action = this.tp_actions.reduce((a, b) => {
+        const diff = moment(a.date).diff(moment(b.date), 'seconds')
+        return (diff > 0) ? a : b
+      });
+      return MarkerColours[tp_action.condition.name];
+    }  
+    return "00FFFFFF";
+  }
+
+  selectedIndexChange(selectedTabIndex) {
+    this.selectedTabIndex = selectedTabIndex;
+  }
+  
+  completed() {
+    //return this.tp_action?.status?.name == Statuses.COMPLETED;
+    //return this.currentState == 1
+  }
+
+  updateMarkState(e) {
+    console.log('updateMarkState', e)
+    /*if (e.complete) {
+      this.currentState = 1;
+      this.submit(true);
+    }
+    else if (e.approve) {
+      this.approved = true;
+      this.submit(true);
+    }
+    else if (e.refuse) {
+      this.approved = false;
+      this.submit(true);
+    }*/
   }
 
   onImageUpload(event): void {
     const { images } = this.form.value;
-
-    // this.images.push(event)
-
-    // May be multiple so just preserving the previous object on the array of images
-
     this.form.patchValue({
       images: [...images, event],
     });
 
+    this.getUploadFiles();
     this.submit(false);
   }
 
@@ -343,61 +370,24 @@ export class TestpostComponent implements OnInit, AfterViewInit {
       documents: [...documents, event],
     });
 
+    this.getUploadFiles();
     this.submit(false);
   }
 
-  addAbriox() {
-    
-    const navigationExtras: NavigationExtras = {
-      queryParams: {
-        testpost: this.form.value.id
-      }
-    }
-
-    this.router.navigate(["/home/abrioxes/create"], navigationExtras)
+  onPreview(fileType: FileTypes): void {
+    const { images, documents } = this.form.value;
+    this.uploadService.onPreview(fileType, images, documents);
   }
 
-  getConditionColour(id?: number) {
-
-    let color = "00FFFFFF";
-
-    if (id) {
-        if (this.tp_actions) {
-          const tp_action = this.tp_actions.find(tp_action => tp_action.condition.id === id);
-
-          if (tp_action) {
-            color = MarkerColours[tp_action.condition.name];
-          }
-        }   
-    }
-
-    return color;
+  onItemPreview(param: any): void {
+    const { images, documents } = this.form.value;
+    this.uploadService.onItemPreview(param.fileType, images, documents, param.index);
   }
 
-  getLatestConditionColour() {
-    let color = "00FFFFFF";
-
-    if (this.tp_actions) {
-      const tp_action = this.tp_actions.sort((a: any, b: any) => b.date - a.date);
-
-      if (tp_action) {
-        color = MarkerColours[tp_action[tp_action.length - 1]?.condition.name];
-      }
-    }  
-
-    return color;
+  getUploadFiles(): void {
+    const { images, documents } = this.form.value;
+    this.attachedImages = this.uploadService.getImageUploadFiles(images);
+    this.attachedDocuments = this.uploadService.getDocumentUploadFiles(documents);
   }
-
-  // getSurvey(id?: number) {
-  //   let survey: Survey;
-
-
-  //   if (id) {
-  //     if (this.surveys) {
-  //       survey = this.surveys.find(item => item.id === id);
-  //     }
-  //   }
-
-  //   return survey;
-  // }
+  
 }
