@@ -318,7 +318,6 @@ export class AbrioxComponent implements OnInit {
   }
 
   onNavigate(actionId) {
-    console.log("onNavigate", actionId)
     this.router.navigate([`/home/tp_action/${actionId}`]);
   }
   
@@ -328,7 +327,6 @@ export class AbrioxComponent implements OnInit {
   }
 
   updateMarkState(e) {
-    console.log('updateMarkState', e)
     if (e.complete) {
       this.currentState = 1;
       this.submit(true);

@@ -142,7 +142,7 @@ export class TrActionComponent implements OnInit, AfterViewInit {
     this.trActionEntityService.getByKey(this.actionId).subscribe(
       (tr_action) => {
         this.tr_action = tr_action;
-        console.log("trs.tr_action", tr_action)
+        //console.log("trs.tr_action", tr_action)
 
         this.currentState = tr_action.status?.id;
         this.approved = tr_action.approved;

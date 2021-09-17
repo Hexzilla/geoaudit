@@ -71,7 +71,6 @@ export class SearchComponent implements OnInit {
   onSelect(event=null): void {
     // this.selectedCategory = category;
     if(event != null) this.isSelectedCategory = true;
-    console.log("selected= ", event);
   }
 
   toggleMyLocation(): void{
@@ -94,7 +93,6 @@ export class SearchComponent implements OnInit {
     const queryParams = {
       condition: this.form.value,
     };
-    console.log("condition = ", queryParams);
     const navigationExtras: NavigationExtras = { state: queryParams};
     this.router.navigate([`/home/search/`+this.form.value.category], navigationExtras);
   }

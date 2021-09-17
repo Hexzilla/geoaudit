@@ -47,7 +47,6 @@ export class ResistivityListComponent implements OnInit {
 
   update() {
     const serveyId = this.route.snapshot.params['id'];
-    console.log("serveyId", serveyId);
 
     const parameters = qs.stringify({
       _where: {
@@ -57,7 +56,6 @@ export class ResistivityListComponent implements OnInit {
     this.resistivityEntityService.getWithQuery(parameters).subscribe(
       (actions) => {
         this.resistivities = actions.filter(it => it.reference != null);
-        console.log("resistivities", actions)
       },
       (err) => {}
     );
@@ -82,7 +80,6 @@ export class ResistivityListComponent implements OnInit {
   }
 
   navigate(item) {
-    console.log("navigate", item)
     const url = `/home/resistivities/${item.id}`
     this.router.navigate([url]);
   }

@@ -119,7 +119,6 @@ export class AbrioxActionComponent implements OnInit, AfterViewInit {
 
     this.faultTypeEntityService.getAll().subscribe((faultTypes) => {
       this.faultTypes = faultTypes;
-      console.log("faultTypes", faultTypes);
     })
 
     this.conditionEntityService.getAll().subscribe((conditions) => {
@@ -241,12 +240,10 @@ export class AbrioxActionComponent implements OnInit, AfterViewInit {
   }
 
   onChangeState() {
-    console.log("onChangeState", this.currentState);
     this.submit(false);
   }
 
   updateMarkState(e) {
-    console.log('updateMarkState', e)
     if (e.complete) {
       this.currentState = 1;
       this.submit(true);

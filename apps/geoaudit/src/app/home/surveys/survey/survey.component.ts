@@ -456,7 +456,6 @@ export class SurveyComponent implements OnInit {
   }
 
   onChangeState() {
-    console.log("onChangeState", this.currentState);
     this.form.patchValue({
       status: this.currentState
     })

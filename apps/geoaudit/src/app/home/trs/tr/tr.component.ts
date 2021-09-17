@@ -194,7 +194,6 @@ export class TrComponent implements OnInit, AfterViewInit {
           this.trActionEntityService.getByKey(tr_action.id).subscribe(item => {
             this.tr_actions.push(item)
             this.tr_actions.sort((a, b) => moment(a.date).diff(moment(b.date), 'seconds'))
-            console.log("~~~~~~~~~~~~~~~", this.tr_actions)
             // this.surveyEntityService.getByKey(item.survey.id).subscribe(survey => {
             //   this.surveys.push(survey);
             // })
@@ -354,7 +353,6 @@ export class TrComponent implements OnInit, AfterViewInit {
   }
 
   updateMarkState(e) {
-    console.log('updateMarkState', e)
     if (e.complete) {
       this.currentState = 1;
       this.submit(true);

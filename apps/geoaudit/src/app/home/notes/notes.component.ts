@@ -122,7 +122,6 @@ export class NotesComponent implements OnInit, OnChanges {
   }
 
   showNoteDetails(note) {
-    console.log("showNoteDetails", note);
     this.selectedNote = note;
     this.viewMode = 2;
   }

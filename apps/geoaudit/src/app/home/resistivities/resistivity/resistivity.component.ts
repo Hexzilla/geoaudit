@@ -152,10 +152,8 @@ export class ResistivityComponent implements OnInit, AfterViewInit {
   }
 
   createMode() {
-    console.log("createMode")
     this.resistivityEntityService.add(this.form.value).subscribe(
       (resistivity) => {
-        console.log("createMode-resistivity", resistivity)
         this.patchForm(resistivity);
       },
 
@@ -167,7 +165,6 @@ export class ResistivityComponent implements OnInit, AfterViewInit {
     this.resistivityEntityService.getByKey(id).subscribe(
       (resistivity) => {
         this.resistivity = resistivity;
-        console.log("resistivity", this.resistivity)
         this.patchForm(resistivity)
       },
       (err) => {}
@@ -283,12 +280,10 @@ export class ResistivityComponent implements OnInit, AfterViewInit {
   }
 
   onChangeState() {
-    console.log("onChangeState", this.currentState);
     this.submit(false);
   }
 
   updateMarkState(e) {
-    console.log('updateMarkState', e)
     if (e.complete) {
       this.currentState = 1;
       this.submit(true);

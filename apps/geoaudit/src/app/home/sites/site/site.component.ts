@@ -269,7 +269,6 @@ export class SiteComponent implements OnInit, AfterViewInit {
   }
 
   updateMarkState(e) {
-    console.log('updateMarkState', e)
     if (e.complete) {
       this.currentState = 1;
       this.submit(true);
