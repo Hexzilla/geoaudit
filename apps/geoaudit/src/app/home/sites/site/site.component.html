@@ -199,6 +199,7 @@
               }}</mat-label>
               <input
                 matInput
+                type="number"
                 [placeholder]="'CONTAINERS.home.sites.site.speed_limit' | translate"
                 formControlName="speed_limit"
                 class="form-control"
@@ -233,6 +234,60 @@
                 class="form-control"
               />
             </mat-form-field>
+
+            <!--Tm_required-->
+            <div fxLayout="row" fxLayoutAlign="start center">
+              <div fxFlex="40%" fxLayoutAlign="space-between">
+                <mat-label class="mr-20">{{ 'CONTAINERS.home.sites.site.tm_required' | translate }}</mat-label>
+                <mat-slide-toggle
+                  class="mr-20"
+                  [color]="'primary'"
+                  formControlName="tm_required">
+                </mat-slide-toggle>
+              </div>
+              <div fxFlex="60%">
+                <mat-form-field appearance="outline" fxFlex="100%">
+                  <mat-label>{{
+                    'CONTAINERS.home.sites.site.tm_descr' | translate
+                  }}</mat-label>
+                  <input
+                    matInput
+                    [placeholder]="
+                      'CONTAINERS.home.sites.site.tm_descr' | translate
+                    "
+                    formControlName="tm_descr"
+                    class="form-control"
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+
+            <!--nrswa_required-->
+            <div fxLayout="row" fxLayoutAlign="start center">
+              <div fxFlex="40%" fxLayoutAlign="space-between">
+                <mat-label class="mr-20">{{ 'CONTAINERS.home.sites.site.nrswa_required' | translate }}</mat-label>
+                <mat-slide-toggle
+                  class="mr-20"
+                  [color]="'primary'"
+                  formControlName="nrswa_required">
+                </mat-slide-toggle>
+              </div>
+              <div fxFlex="60%">
+                <mat-form-field appearance="outline" fxFlex="100%">
+                  <mat-label>{{
+                    'CONTAINERS.home.sites.site.nrswa_descr' | translate
+                  }}</mat-label>
+                  <input
+                    matInput
+                    [placeholder]="
+                      'CONTAINERS.home.sites.site.nrswa_descr' | translate
+                    "
+                    formControlName="nrswa_description"
+                    class="form-control"
+                  />
+                </mat-form-field>
+              </div>
+            </div>
           </div>
         </mat-expansion-panel>
 
