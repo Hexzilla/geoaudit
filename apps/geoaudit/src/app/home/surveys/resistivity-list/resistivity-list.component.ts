@@ -80,13 +80,11 @@ export class ResistivityListComponent implements OnInit {
   }
 
   navigate(item) {
-    const url = `/home/resistivities/${item.id}`
-    this.router.navigate([url]);
+    this.router.navigate([`/home/resistivities/${item.id}`]);
   }
 
   addAction() {
-    const url = `/home/resistivities/create`
-    this.router.navigate([url]);
+    this.router.navigate([`/home/resistivities/create`]);
   }
 
   submit() {

@@ -97,15 +97,11 @@ export class AbrioxListComponent implements OnInit {
   }
 
   navigate(item) {
-    if (item.testpost) {
-      const url = `/home/testpost/${item.testpost.id}/tr_action/${item.id}`
-      this.router.navigate([url]);
-    }
+    this.router.navigate([`/home/abrioxes_actions/${item.id}`]);
   }
 
   addAction() {
-    const url = `/home/abrioxes_actions/create`
-    this.router.navigate([url]);
+    this.router.navigate([`/home/abrioxes_actions/create`]);
   }
 
   submit() {

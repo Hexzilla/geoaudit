@@ -80,15 +80,11 @@ export class TrActionsComponent implements OnInit {
   }
 
   navigate(item) {
-    if (item.testpost) {
-      const url = `/home/testposts/${item.testpost.id}/tr_action/${item.id}`
-      this.router.navigate([url]);
-    }
+    this.router.navigate([`/home/tr_action/${item.id}`]);
   }
 
   addAction() {
-    const url = `/home/tr_actions/create`
-    this.router.navigate([url]);
+    this.router.navigate([`/home/tr_actions/create`]);
   }
 
   submit() {
