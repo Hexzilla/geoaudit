@@ -19,6 +19,7 @@ import { AlertService, UploadService } from '../../../services';
 import { FileTypes } from '../../../components/file-upload/file-upload.component';
 import { StatusEntityService } from '../../../entity-services/status-entity.service';
 import { ResistivityEntityService } from '../../../entity-services/resistivity-entity.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'geoaudit-resistivity',
@@ -31,6 +32,8 @@ export class ResistivityComponent implements OnInit, AfterViewInit {
    * The form consisting of the form fields.
    */
   form: FormGroup;
+
+  subscriptions: Array<Subscription> = [];
 
   /**
    * An array of status i.e. NOT_STARTED, ONGOING, etc.
@@ -68,39 +71,29 @@ export class ResistivityComponent implements OnInit, AfterViewInit {
     private router: Router,
     private alertService: AlertService,
     private uploadService: UploadService,
-  ) {}
+  ) {
+    this.subscriptions.push(this.route.queryParams.subscribe(params => {
+      const tabIndex = params['tab'];
+      if (tabIndex == 'actions') {
+        this.selectedTabIndex = 2;
+      } else if (tabIndex == 'notes') {
+        this.selectedTabIndex = 3;
+      } else {
+        this.selectedTabIndex = 0;
+      }
+    }));
+
+    this.subscriptions.push(this.route.params.subscribe(() => {
+      this.initialize();
+    }));}
 
   ngOnInit(): void {
-    this.id = this.route.snapshot.paramMap.get('id');
+    this.initialize();
+  }
 
-    // Fetch statuses
-    this.statusEntityService.getAll().subscribe(
-      (statuses) => {
-        this.statuses = statuses;
-      },
-      (err) => {}
-    );
-
-    this.initRoutes();
-
-    /**
-     * Initialise the form with properties and validation
-     * constraints.
-     */
-    this.initialiseForm();
-
-    this.store.select('map').subscribe((map) => {
-      if (map.clickMarker) {
-        this.latCtrl.setValue(map.clickMarker.lat);
-        this.lngCtrl.setValue(map.clickMarker.lng);
-      }
-    });
-
-    if (this.id && this.id != 'create') {
-      this.fetchData(this.id);
-    } else {
-      this.createMode();
-    }
+  // eslint-disable-next-line @angular-eslint/use-lifecycle-interface
+  ngOnDestroy() {
+    this.subscriptions.map(it => it.unsubscribe());
   }
 
   ngAfterViewInit(): void {
@@ -125,6 +118,37 @@ export class ResistivityComponent implements OnInit, AfterViewInit {
         });
       }
     });
+  }
+
+  private initialize() {
+    this.id = this.route.snapshot.paramMap.get('id');
+
+    // Fetch statuses
+    this.statusEntityService.getAll().subscribe(
+      (statuses) => {
+        this.statuses = statuses;
+      },
+      (err) => {}
+    );
+
+    /**
+     * Initialise the form with properties and validation
+     * constraints.
+     */
+    this.initialiseForm();
+
+    this.store.select('map').subscribe((map) => {
+      if (map.clickMarker) {
+        this.latCtrl.setValue(map.clickMarker.lat);
+        this.lngCtrl.setValue(map.clickMarker.lng);
+      }
+    });
+
+    if (this.id && this.id != 'create') {
+      this.fetchData(this.id);
+    } else {
+      this.createMode();
+    }
   }
 
   createMode() {
@@ -186,19 +210,6 @@ export class ResistivityComponent implements OnInit, AfterViewInit {
       distance: '',
       value: '',
     }));
-  }
-
-  initRoutes() {
-    this.route.queryParams.subscribe(params => {
-      const tabIndex = params['tab'];
-      if (tabIndex == 'actions') {
-        this.selectedTabIndex = 2;
-      } else if (tabIndex == 'notes') {
-        this.selectedTabIndex = 3;
-      } else {
-        this.selectedTabIndex = 0;
-      }
-    });
   }
 
   /**

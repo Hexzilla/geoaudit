@@ -27,7 +27,7 @@ import { Store } from '@ngrx/store';
 
 import { environment } from 'apps/geoaudit/src/environments/environment';
 import { Lightbox } from 'ngx-lightbox';
-import { fromEvent, Subject } from 'rxjs';
+import { fromEvent, Subject, Subscription } from 'rxjs';
 import {
   map,
   filter,
@@ -80,6 +80,8 @@ export class JobComponent implements OnInit, AfterViewInit {
    * The form consisting of the form fields.
    */
   form: FormGroup;
+
+  subscriptions: Array<Subscription> = [];
 
   /**
    * The job object.
@@ -171,9 +173,62 @@ export class JobComponent implements OnInit, AfterViewInit {
     private uploadService: UploadService,
     private selectionService: SelectionService
   ) {
+    this.subscriptions.push(this.route.queryParams.subscribe(params => {
+      const tabIndex = params['tab'];
+      if (tabIndex == 'actions') {
+        this.selectedTabIndex = 2;
+      } else if (tabIndex == 'notes') {
+        this.selectedTabIndex = 3;
+      } else {
+        this.selectedTabIndex = 0;
+      }
+    }));
+
+    this.subscriptions.push(this.route.params.subscribe(() => {
+      this.initialize();
+    }));
   }
 
   ngOnInit(): void {
+    this.initialize();
+  }
+
+  ngAfterViewInit(): void {
+    // this.dataSource.paginator = this.paginator;
+
+    /**
+     * Used for filtering users (assignees) on a given
+     * input text filter.
+     */
+    fromEvent(this.userInput.nativeElement, 'keyup')
+      .pipe(
+        map((event: any) => {
+          return event.target.value;
+        }),
+        filter((res) => res.length >= 0),
+        // debounceTime(1000), // if needed for delay
+        distinctUntilChanged()
+      )
+      .subscribe((text: string) => {
+        this.filteredUsers = this._filter(text);
+      });
+
+    this.surveyCtrl.valueChanges.subscribe((value) => {
+      if (value) {
+        this.filteredSurveys = this._filterSurveys(value);
+      } else {
+        this.filteredSurveys = this.allSurveys.slice();
+      }
+    });
+  }
+
+  // eslint-disable-next-line @angular-eslint/use-lifecycle-interface
+  ngOnDestroy() {
+    this.subscriptions.map(it => it.unsubscribe());
+  }
+
+  private initialize() {
+    
     this.API_URL = environment.API_URL;
     // Fetch job types
     this.jobTypeEntityervice.getAll().subscribe(
@@ -213,8 +268,6 @@ export class JobComponent implements OnInit, AfterViewInit {
       }
     );
 
-    this.initRoutes();
-
     /**
      * Initialise the form with properties and validation
      * constraints.
@@ -237,35 +290,6 @@ export class JobComponent implements OnInit, AfterViewInit {
     }
 
     this.selectionService.setSurveyMarkerFilter.emit([]);
-  }
-
-  ngAfterViewInit(): void {
-    // this.dataSource.paginator = this.paginator;
-
-    /**
-     * Used for filtering users (assignees) on a given
-     * input text filter.
-     */
-    fromEvent(this.userInput.nativeElement, 'keyup')
-      .pipe(
-        map((event: any) => {
-          return event.target.value;
-        }),
-        filter((res) => res.length >= 0),
-        // debounceTime(1000), // if needed for delay
-        distinctUntilChanged()
-      )
-      .subscribe((text: string) => {
-        this.filteredUsers = this._filter(text);
-      });
-
-    this.surveyCtrl.valueChanges.subscribe((value) => {
-      if (value) {
-        this.filteredSurveys = this._filterSurveys(value);
-      } else {
-        this.filteredSurveys = this.allSurveys.slice();
-      }
-    });
   }
 
   editAndViewMode() {
@@ -366,19 +390,6 @@ export class JobComponent implements OnInit, AfterViewInit {
         this.alertService.error('ALERTS.something_went_wrong');
       }
     );
-  }
-
-  initRoutes() {
-    this.route.queryParams.subscribe(params => {
-      const tabIndex = params['tab'];
-      if (tabIndex == 'actions') {
-        this.selectedTabIndex = 2;
-      } else if (tabIndex == 'notes') {
-        this.selectedTabIndex = 3;
-      } else {
-        this.selectedTabIndex = 0;
-      }
-    });
   }
 
   /**
