@@ -7,16 +7,13 @@ import * as MapActions from '../../../store/map/map.actions';
 import * as fromApp from '../../../store';
 import * as moment from 'moment';
 import { TestpostEntityService } from '../../../entity-services/testpost-entity.service';
-import { Abriox, Conditions, Image, MarkerColours, Survey, Testpost, TpAction } from '../../../models';
+import { Abriox, MarkerColours, Testpost, TpAction } from '../../../models';
 import { debounceTime, tap, distinctUntilChanged, takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { AlertService, UploadService } from '../../../services';
 import { FileTypes } from '../../../components/file-upload/file-upload.component';
-import { IAlbum, Lightbox } from 'ngx-lightbox';
-import { MatDialog } from '@angular/material/dialog';
 import { environment } from 'apps/geoaudit/src/environments/environment';
 import { TpActionEntityService } from '../../../entity-services/tp-action-entity.service';
-import { SurveyEntityService } from '../../../entity-services/survey-entity.service';
 
 @Component({
   selector: 'geoaudit-testpost',
@@ -29,6 +26,8 @@ export class TestpostComponent implements OnInit, AfterViewInit {
 
   form: FormGroup;
 
+  subscriptions: Array<Subscription> = [];
+
   color: ThemePalette = 'primary';
 
   @ViewChild('dateInstallationDateTimePicker') dateInstallationDateTimePicker: any;
@@ -37,7 +36,6 @@ export class TestpostComponent implements OnInit, AfterViewInit {
   @ViewChild('lngCtrlInput') lngCtrlInput: ElementRef;
 
   latCtrl = new FormControl();
-
   lngCtrl = new FormControl();
 
   public selectedTabIndex = 0;
@@ -71,27 +69,40 @@ export class TestpostComponent implements OnInit, AfterViewInit {
   currentState = 0;
   approved = null;
 
-  // surveys: Array<Survey> = [];
-
   constructor(
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
-    private surveyEntityService: SurveyEntityService,
     private testpostEntityService: TestpostEntityService,
     private tpActionEntityService: TpActionEntityService,
     private store: Store<fromApp.State>,
     private router: Router,
     private alertService: AlertService,
     private uploadService: UploadService,
-    private _lightbox: Lightbox,
-    private dialog: MatDialog
-  ) { }
+  ) { 
+    this.subscriptions.push(this.route.queryParams.subscribe(params => {
+      const tabIndex = params['tab'];
+      if (tabIndex == 'actions') {
+        this.selectedTabIndex = 2;
+      } else if (tabIndex == 'notes') {
+        this.selectedTabIndex = 3;
+      } else {
+        this.selectedTabIndex = 0;
+      }
+    }));
+
+    this.subscriptions.push(this.route.params.subscribe(() => {
+      this.initialize();
+    }));
+  }
 
   ngOnInit(): void {
+    this.initialize();
+  }
+
+  initialize() {
     this.API_URL = environment.API_URL;
     this.id = this.route.snapshot.paramMap.get('id');
 
-    this.initRoutes();
 
     this.initForm();
 
@@ -133,18 +144,9 @@ export class TestpostComponent implements OnInit, AfterViewInit {
     });
   }
 
-  initRoutes() {
-    this.route.queryParams.subscribe(params => {
-      const tabIndex = params['tab'];
-      if (tabIndex == 'actions') {
-        this.selectedTabIndex = 2;
-      } else if (tabIndex == 'notes') {
-        this.selectedTabIndex = 3;
-      } else {
-        this.selectedTabIndex = 0;
-      }
-      console.log("tabIndex", tabIndex, this.selectedTabIndex);
-    });
+  // eslint-disable-next-line @angular-eslint/use-lifecycle-interface
+  ngOnDestroy() {
+    this.subscriptions.map(it => it.unsubscribe());
   }
 
   initForm() {
