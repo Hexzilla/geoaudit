@@ -78,7 +78,7 @@ export class TestpostComponent implements OnInit, AfterViewInit {
     private router: Router,
     private alertService: AlertService,
     private uploadService: UploadService,
-  ) { 
+  ) {
     this.subscriptions.push(this.route.queryParams.subscribe(params => {
       const tabIndex = params['tab'];
       if (tabIndex == 'actions') {
@@ -97,6 +97,11 @@ export class TestpostComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.initialize();
+  }
+
+  // eslint-disable-next-line @angular-eslint/use-lifecycle-interface
+  ngOnDestroy() {
+    this.subscriptions.map(it => it.unsubscribe());
   }
 
   initialize() {
@@ -142,11 +147,6 @@ export class TestpostComponent implements OnInit, AfterViewInit {
         });
       }
     });
-  }
-
-  // eslint-disable-next-line @angular-eslint/use-lifecycle-interface
-  ngOnDestroy() {
-    this.subscriptions.map(it => it.unsubscribe());
   }
 
   initForm() {
