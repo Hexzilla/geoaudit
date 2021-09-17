@@ -13,7 +13,7 @@ import { Store } from '@ngrx/store';
 import * as moment from 'moment';
 
 import * as fromApp from '../../../store';
-import { Status, Statuses, Survey, User, Image, Job } from '../../../models';
+import { Status, Survey, User, Job } from '../../../models';
 import { AlertService, UploadService } from '../../../services';
 import { StatusEntityService } from '../../../entity-services/status-entity.service';
 import { SurveyEntityService } from '../../../entity-services/survey-entity.service';
@@ -23,19 +23,12 @@ import {
   distinctUntilChanged,
   takeUntil,
 } from 'rxjs/operators';
-import { Subject } from 'rxjs';
-import {
-  MatAutocomplete,
-  MatAutocompleteSelectedEvent,
-} from '@angular/material/autocomplete';
+import { Subject, Subscription } from 'rxjs';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { UserEntityService } from '../../../entity-services/user-entity.service';
 
 import * as MapActions from '../../../store/map/map.actions';
 import { FileTypes } from '../../../components/file-upload/file-upload.component';
-import { IAlbum, Lightbox } from 'ngx-lightbox';
-import { environment } from 'apps/geoaudit/src/environments/environment';
-import { MatDialog } from '@angular/material/dialog';
-import { AttachmentModalComponent } from '../../../modals/attachment-modal/attachment-modal.component';
 import { JobEntityService } from '../../../entity-services/job-entity.service';
 
 @Component({
@@ -54,6 +47,8 @@ export class SurveyComponent implements OnInit {
   statuses: Array<Status>;
 
   survey: Survey;
+
+  subscriptions: Array<Subscription> = [];
 
   private unsubscribe = new Subject<void>();
 
@@ -112,59 +107,30 @@ export class SurveyComponent implements OnInit {
     private userEntityService: UserEntityService,
     private alertService: AlertService,
     private uploadService: UploadService,
-    private _lightbox: Lightbox,
-    private dialog: MatDialog
-  ) { }
+  ) {
+    this.subscriptions.push(this.route.queryParams.subscribe(params => {
+      const tabIndex = params['tab'];
+      if (tabIndex == 'actions') {
+        this.selectedTabIndex = 2;
+      } else if (tabIndex == 'notes') {
+        this.selectedTabIndex = 3;
+      } else {
+        this.selectedTabIndex = 0;
+      }
+    }));
+
+    this.subscriptions.push(this.route.params.subscribe(() => {
+      this.initialize();
+    }));
+  }
 
   ngOnInit(): void {
-    this.jobEntityService.getAll().subscribe(
-      (jobs) => {
-        this.allJobs = jobs;
-      },
+    this.initialize();
+  }
 
-      (err) => { }
-    );
-
-    // Fetch statuses
-    this.statusEntityService.getAll().subscribe(
-      (statuses) => {
-        this.statuses = statuses;
-      },
-
-      (err) => { }
-    );
-
-    // Fetch users for assignees
-    this.userEntityService.getAll().subscribe(
-      (users) => {
-        this.allUsers = users;
-      },
-
-      (err) => { }
-    );
-
-    this.store.select('map').subscribe((map) => {
-      if (map.clickMarker) {
-        this.latCtrl.setValue(map.clickMarker.lat);
-        this.lngCtrl.setValue(map.clickMarker.lng);
-      }
-    });
-
-    this.initRoutes();
-
-    /**
-     * Initialise the form with properties and
-     * validation constraints.
-     */
-    this.initForm();
-
-    this.id = this.route.snapshot.paramMap.get('id');
-
-    if (this.id) {
-      this.getSurveyAndPatchForm();
-    } else {
-      this.createMode();
-    }
+  // eslint-disable-next-line @angular-eslint/use-lifecycle-interface
+  ngOnDestroy() {
+    this.subscriptions.map(it => it.unsubscribe());
   }
 
   ngAfterViewInit() {
@@ -213,6 +179,55 @@ export class SurveyComponent implements OnInit {
         });
       }
     });
+  }
+
+  private initialize() {
+    this.jobEntityService.getAll().subscribe(
+      (jobs) => {
+        this.allJobs = jobs;
+      },
+
+      (err) => { }
+    );
+
+    // Fetch statuses
+    this.statusEntityService.getAll().subscribe(
+      (statuses) => {
+        this.statuses = statuses;
+      },
+
+      (err) => { }
+    );
+
+    // Fetch users for assignees
+    this.userEntityService.getAll().subscribe(
+      (users) => {
+        this.allUsers = users;
+      },
+
+      (err) => { }
+    );
+
+    this.store.select('map').subscribe((map) => {
+      if (map.clickMarker) {
+        this.latCtrl.setValue(map.clickMarker.lat);
+        this.lngCtrl.setValue(map.clickMarker.lng);
+      }
+    });
+
+    /**
+     * Initialise the form with properties and
+     * validation constraints.
+     */
+    this.initForm();
+
+    this.id = this.route.snapshot.paramMap.get('id');
+
+    if (this.id) {
+      this.getSurveyAndPatchForm();
+    } else {
+      this.createMode();
+    }
   }
 
   getSurveyAndPatchForm() {
@@ -366,19 +381,6 @@ export class SurveyComponent implements OnInit {
             });
         }
       });
-  }
-
-  initRoutes() {
-    this.route.queryParams.subscribe(params => {
-      const tabIndex = params['tab'];
-      if (tabIndex == 'actions') {
-        this.selectedTabIndex = 2;
-      } else if (tabIndex == 'notes') {
-        this.selectedTabIndex = 3;
-      } else {
-        this.selectedTabIndex = 0;
-      }
-    });
   }
 
   /**
