@@ -1,0 +1,382 @@
+<geoaudit-sidebar-header
+  title="CONTAINERS.home.sites.site.title"
+  [placeholder]="form?.value?.reference"
+>
+  <geoaudit-icon [visible]="true" [color]="getLatestConditionColour()" icon="radio_button_unchecked"></geoaudit-icon>
+</geoaudit-sidebar-header>
+
+<mat-tab-group
+  mat-align-tabs="start"
+  (selectedIndexChange)="selectedIndexChange($event)"
+  [(selectedIndex)]="selectedTabIndex"
+  class="tab-body-height"
+>
+  <!-- Details -->
+  <mat-tab [label]="'CONTAINERS.home.jobs.job.steps.details' | translate">
+    <mat-card-content class="mt-26">
+      <form fxLayout="column" [formGroup]="form" (ngSubmit)="submit()">
+        
+        <!-- Properties -->
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>{{
+              'CONTAINERS.home.sites.site.properties' | translate
+            }}</mat-panel-title>
+          </mat-expansion-panel-header>
+          <div fxLayout="column">
+            <!-- Reference -->
+            <mat-form-field appearance="outline">
+              <mat-label>{{
+                'CONTAINERS.home.sites.site.reference' | translate
+              }}</mat-label>
+              <input
+                matInput
+                [placeholder]="
+                  'CONTAINERS.home.sites.site.reference' | translate
+                "
+                formControlName="reference"
+                class="form-control"
+              />
+            </mat-form-field>
+
+            <!-- Name -->
+            <mat-form-field appearance="outline">
+              <mat-label>{{
+                'CONTAINERS.home.sites.site.name' | translate
+              }}</mat-label>
+              <input
+                matInput
+                [placeholder]="'CONTAINERS.home.sites.site.name' | translate"
+                formControlName="name"
+                class="form-control"
+              />
+            </mat-form-field>
+
+            <!-- Date Installation -->
+            <mat-form-field appearance="outline">
+              <mat-label>{{
+                'CONTAINERS.home.sites.site.date_installation' | translate
+              }}</mat-label>
+              <input
+                matInput
+                [ngxMatDatetimePicker]="dateInstallationDateTimePicker"
+                [placeholder]="
+                  'CONTAINERS.home.sites.site.date_installation' | translate
+                "
+                formControlName="date_installation"
+                [min]="minDate"
+                [max]="maxDate"
+                [disabled]="disabled"
+              />
+
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="dateInstallationDateTimePicker"
+              ></mat-datepicker-toggle>
+
+              <ngx-mat-datetime-picker
+                #dateInstallationDateTimePicker
+                [showSpinners]="showSpinners"
+                [showSeconds]="showSeconds"
+                [stepHour]="stepHour"
+                [stepMinute]="stepMinute"
+                [stepSecond]="stepSecond"
+                [touchUi]="touchUi"
+                [color]="color"
+                [enableMeridian]="enableMeridian"
+                [disableMinute]="disableMinute"
+                [hideTime]="hideTime"
+              >
+              </ngx-mat-datetime-picker>
+            </mat-form-field>
+          </div>
+            
+          <div fxLayout="column" formGroupName="site_detail">
+            <!-- Owner -->
+            <mat-form-field appearance="outline">
+              <mat-label>{{
+                'CONTAINERS.home.sites.site.owner' | translate
+              }}</mat-label>
+              <input
+                matInput
+                [placeholder]="
+                  'CONTAINERS.home.sites.site.owner' | translate
+                "
+                formControlName="owner"
+                class="form-control"
+              />
+            </mat-form-field>
+
+            <!-- Region -->
+            <mat-form-field appearance="outline">
+              <mat-label>{{
+                'CONTAINERS.home.sites.site.region' | translate
+              }}</mat-label>
+              <input
+                matInput
+                [placeholder]="'CONTAINERS.home.sites.site.region' | translate"
+                formControlName="region"
+                class="form-control"
+              />
+            </mat-form-field>
+
+            <!-- Address -->
+            <mat-form-field appearance="outline">
+              <mat-label>{{
+                'CONTAINERS.home.sites.site.address' | translate
+              }}</mat-label>
+              <input
+                matInput
+                [placeholder]="
+                  'CONTAINERS.home.sites.site.address' | translate
+                "
+                formControlName="address"
+                class="form-control"
+              />
+            </mat-form-field>
+
+            <!-- Scheme -->
+            <mat-form-field appearance="outline">
+              <mat-label>{{
+                'CONTAINERS.home.sites.site.scheme' | translate
+              }}</mat-label>
+              <input
+                matInput
+                [placeholder]="
+                  'CONTAINERS.home.sites.site.scheme' | translate
+                "
+                formControlName="scheme"
+                class="form-control"
+              />
+            </mat-form-field>
+          </div>
+          <div fxLayout="column">
+            <!-- SiteType -->
+            <mat-form-field appearance="outline">
+              <mat-label>{{
+                'CONTAINERS.home.sites.site.site_type' | translate
+              }}</mat-label>
+              <input
+                matInput
+                [placeholder]="
+                  'CONTAINERS.home.sites.site.site_type' | translate
+                "
+                formControlName="site_type"
+                class="form-control"
+              />
+            </mat-form-field>
+          </div>
+        </mat-expansion-panel>
+
+        
+        <!-- Traffic Management -->
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>{{
+              'CONTAINERS.home.sites.site.traffic_manage' | translate
+            }}</mat-panel-title>
+          </mat-expansion-panel-header>
+          <div fxLayout="column" formGroupName="site_detail">
+            <!-- access_detail -->
+            <mat-form-field appearance="outline">
+              <mat-label>{{
+                'CONTAINERS.home.sites.site.access_detail' | translate
+              }}</mat-label>
+              <input
+                matInput
+                [placeholder]="
+                  'CONTAINERS.home.sites.site.access_detail' | translate
+                "
+                formControlName="access_detail"
+                class="form-control"
+              />
+            </mat-form-field>
+
+            <!-- speed_limit -->
+            <mat-form-field appearance="outline">
+              <mat-label>{{
+                'CONTAINERS.home.sites.site.speed_limit' | translate
+              }}</mat-label>
+              <input
+                matInput
+                [placeholder]="'CONTAINERS.home.sites.site.speed_limit' | translate"
+                formControlName="speed_limit"
+                class="form-control"
+              />
+            </mat-form-field>
+
+            
+            <!-- distance_road -->
+            <mat-form-field appearance="outline">
+              <mat-label>{{
+                'CONTAINERS.home.sites.site.distance_road' | translate
+              }}</mat-label>
+              <input
+                matInput
+                [placeholder]="'CONTAINERS.home.sites.site.distance_road' | translate"
+                formControlName="distance_road"
+                class="form-control"
+              />
+            </mat-form-field>
+
+            <!-- road_condition -->
+            <mat-form-field appearance="outline">
+              <mat-label>{{
+                'CONTAINERS.home.sites.site.road_condition' | translate
+              }}</mat-label>
+              <input
+                matInput
+                [placeholder]="
+                  'CONTAINERS.home.sites.site.road_condition' | translate
+                "
+                formControlName="road_condition"
+                class="form-control"
+              />
+            </mat-form-field>
+          </div>
+        </mat-expansion-panel>
+
+        <!-- Health_Safety -->
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>{{
+              'CONTAINERS.home.sites.site.health_safety' | translate
+            }}</mat-panel-title>
+          </mat-expansion-panel-header>
+          <div fxLayout="column" formGroupName="site_detail">
+            <!-- toilet -->
+            <mat-form-field appearance="outline">
+              <mat-label>{{
+                'CONTAINERS.home.sites.site.toilet' | translate
+              }}</mat-label>
+              <input
+                matInput
+                [placeholder]="
+                  'CONTAINERS.home.sites.site.toilet' | translate
+                "
+                formControlName="toilet"
+                class="form-control"
+              />
+            </mat-form-field>
+
+            <!-- hospital -->
+            <mat-form-field appearance="outline">
+              <mat-label>{{
+                'CONTAINERS.home.sites.site.hospital' | translate
+              }}</mat-label>
+              <input
+                matInput
+                [placeholder]="'CONTAINERS.home.sites.site.hospital' | translate"
+                formControlName="hospital"
+                class="form-control"
+              />
+            </mat-form-field>
+
+            
+            <!-- hazards -->
+            <mat-form-field appearance="outline">
+              <mat-label>{{
+                'CONTAINERS.home.sites.site.hazards' | translate
+              }}</mat-label>
+              <input
+                matInput
+                [placeholder]="'CONTAINERS.home.sites.site.hazards' | translate"
+                formControlName="hazards"
+                class="form-control"
+              />
+            </mat-form-field>
+          </div>
+        </mat-expansion-panel>
+
+      </form>
+    </mat-card-content>
+  </mat-tab>
+
+  <!-- Attachments -->
+  <mat-tab [label]="'CONTAINERS.home.jobs.job.steps.attachments' | translate">
+    <mat-card-content>
+      <attachment-file-upload
+        label="CONTAINERS.home.jobs.job.attachments.images"
+        (preview)="onItemPreview($event)"
+        (upload)="onImageUpload($event)"
+        fileType="IMAGE"
+        [items] = "attachedImages"
+        [multiple]="true"
+      ></attachment-file-upload>
+
+      <attachment-file-upload
+        label="CONTAINERS.home.jobs.job.attachments.documents"
+        (preview)="onItemPreview($event)"
+        (upload)="onDocumentUpload($event)"
+        fileType="DOCUMENT"
+        [items] = "attachedDocuments"
+        [multiple]="true"
+      ></attachment-file-upload>
+    </mat-card-content>
+  </mat-tab>
+
+  <!-- Actions -->
+  <mat-tab [label]="'CONTAINERS.home.sites.site.actions' | translate">
+    <mat-card-content>
+      <!-- <geoaudit-action-list-item
+        *ngFor="let item of tp_actions"
+        [item]="item"
+        (onNavigate)="onNavigate($event)"
+        attribute="tp_actions">
+      </geoaudit-action-list-item> -->
+    </mat-card-content>
+  </mat-tab>
+
+
+  <!-- Notes -->
+  <mat-tab [label]="'CONTAINERS.home.jobs.job.steps.notes' | translate">
+    <mat-card-content>
+      <geoaudit-notes></geoaudit-notes>
+    </mat-card-content>
+  </mat-tab>
+</mat-tab-group>
+
+
+<div fxLayout="row-reverse" class="approve-wrapper">
+  <geoaudit-status-buttons
+    *ngIf="site!=null"
+    [completed]="completed()"
+    [approved]="approved == true"
+    (completeEvent)="updateMarkState($event)"
+  ></geoaudit-status-buttons>
+</div>
+
+<div fxLayout="row-reverse" fxLayoutAlign="space-between" class="button-area">
+  <div class="button-wrapper">
+    <button
+      *ngIf="selectedTabIndex != 3"
+      mat-icon-button
+      color="accent"
+      (click)="selectedIndexChange(selectedTabIndex + 1)"
+      class="btn-arrow"
+    >
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+  </div>
+
+  <button
+    mat-flat-button
+    color="primary"
+    (click)="submit(true)"
+    type="submit"
+    class="btn-submit"
+  >
+    {{ 'CONTAINERS.home.jobs.job.form.save' | translate }}
+  </button>
+  <div class="button-wrapper">
+    <button
+      *ngIf="selectedTabIndex != 0"
+      mat-icon-button
+      color="accent"
+      (click)="selectedIndexChange(selectedTabIndex - 1)"
+      class="btn-arrow"
+    >
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+  </div>
+</div>
