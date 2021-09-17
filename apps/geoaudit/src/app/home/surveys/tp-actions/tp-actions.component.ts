@@ -70,7 +70,7 @@ export class TpActionsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.tpActionEntityService.delete(item).subscribe(
+        this.tpActionEntityService.delete(item.id).subscribe(
           (res) => {},
           (err) => {}
         )
@@ -79,11 +79,11 @@ export class TpActionsComponent implements OnInit {
   }
 
   navigate(item) {
-    if (item.testpost) {
-      const url = `/home/testposts/${item.testpost.id}/tp_action/${item.id}`
-      console.log("navigate", item, url)
-      this.router.navigate([url]);
-    }
+    this.router.navigate([`/home/tp_action/${item.id}`]);
+  }
+
+  addAction() {
+    this.router.navigate([`/home/tp_actions/create`]);
   }
 
   completed() {
@@ -92,11 +92,6 @@ export class TpActionsComponent implements OnInit {
 
   updateMarkState(e) {
     this.change_list_state.emit(e);
-  }
-
-  addAction() {
-    const url = `/home/tp_actions/create`
-    this.router.navigate([url]);
   }
 
   submit() {

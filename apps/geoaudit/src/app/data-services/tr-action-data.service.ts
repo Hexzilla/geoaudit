@@ -35,4 +35,8 @@ export class TrActionDataService extends DefaultDataService<TrAction> {
     update(update: Update<TrAction>): Observable<any> {
         return this.http.put<any>(`${environment.API_URL}/tr-actions/${update.id}`, update.changes);
     }
+
+    delete(id: number) {
+        return this.http.delete<any>(`${environment.API_URL}/tr-actions/${id}`);
+    }
 }

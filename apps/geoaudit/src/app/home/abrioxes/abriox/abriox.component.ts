@@ -1,12 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ThemePalette } from '@angular/material/core';
-import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as moment from 'moment';
-import { environment } from 'apps/geoaudit/src/environments/environment';
-import { IAlbum, Lightbox } from 'ngx-lightbox';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import {
   debounceTime,
   tap,
@@ -19,9 +16,8 @@ import { AbrioxEntityService } from '../../../entity-services/abriox-entity.serv
 import { SurveyEntityService } from '../../../entity-services/survey-entity.service';
 import { TestpostEntityService } from '../../../entity-services/testpost-entity.service';
 import { TrEntityService } from '../../../entity-services/tr-entity.service';
-import { AttachmentModalComponent } from '../../../modals/attachment-modal/attachment-modal.component';
-import { Abriox, AbrioxAction, Image, MarkerColours, Survey } from '../../../models';
-import { AlertService, AuthService, UploadService } from '../../../services';
+import { Abriox, AbrioxAction, MarkerColours, Survey } from '../../../models';
+import { AlertService, UploadService } from '../../../services';
 
 @Component({
   selector: 'geoaudit-abriox',
@@ -32,6 +28,8 @@ export class AbrioxComponent implements OnInit {
   id: string;
 
   form: FormGroup;
+
+  subscriptions: Array<Subscription> = [];
 
   color: ThemePalette = 'primary';
 
@@ -79,25 +77,8 @@ export class AbrioxComponent implements OnInit {
     private alertService: AlertService,
     private router: Router,
     private uploadService: UploadService,
-    private authService: AuthService,
-    private _lightbox: Lightbox,
-    private dialog: MatDialog
-  ) { }
-
-  ngOnInit(): void {
-    this.id = this.route.snapshot.paramMap.get('id');
-    this.initRoutes();
-    this.initForm();
-
-    if (this.id) {
-      this.getAbrioxAndPatchForm(this.id);
-    } else {
-      this.createMode();
-    }
-  }
-
-  initRoutes() {
-    this.route.queryParams.subscribe(params => {
+  ) {
+    this.subscriptions.push(this.route.queryParams.subscribe(params => {
       const tabIndex = params['tab'];
       if (tabIndex == 'actions') {
         this.selectedTabIndex = 2;
@@ -106,7 +87,31 @@ export class AbrioxComponent implements OnInit {
       } else {
         this.selectedTabIndex = 0;
       }
-    });
+    }));
+
+    this.subscriptions.push(this.route.params.subscribe(() => {
+      this.initialize();
+    }));
+  }
+
+  ngOnInit(): void {
+    this.initialize();
+  }
+
+  // eslint-disable-next-line @angular-eslint/use-lifecycle-interface
+  ngOnDestroy() {
+    this.subscriptions.map(it => it.unsubscribe());
+  }
+
+  private initialize() {
+    this.id = this.route.snapshot.paramMap.get('id');
+    this.initForm();
+
+    if (this.id) {
+      this.getAbrioxAndPatchForm(this.id);
+    } else {
+      this.createMode();
+    }
   }
 
   initForm() {
@@ -313,7 +318,6 @@ export class AbrioxComponent implements OnInit {
   }
 
   onNavigate(actionId) {
-    console.log("onNavigate", actionId)
     this.router.navigate([`/home/tp_action/${actionId}`]);
   }
   
@@ -323,7 +327,6 @@ export class AbrioxComponent implements OnInit {
   }
 
   updateMarkState(e) {
-    console.log('updateMarkState', e)
     if (e.complete) {
       this.currentState = 1;
       this.submit(true);

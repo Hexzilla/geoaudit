@@ -47,7 +47,6 @@ export class TrActionsComponent implements OnInit {
 
   update() {
     const serveyId = this.route.snapshot.params['id'];
-    console.log("serveyId", serveyId);
 
     const parameters = qs.stringify({
       _where: {
@@ -57,7 +56,6 @@ export class TrActionsComponent implements OnInit {
     this.trActionEntityService.getWithQuery(parameters).subscribe(
       (actions) => {
         this.tr_actions = actions;
-        console.log("tr-actions", actions)
       },
       (err) => {}
     );
@@ -73,7 +71,7 @@ export class TrActionsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.trActionEntityService.delete(item).subscribe(
+        this.trActionEntityService.delete(item.id).subscribe(
           (res) => {},
           (err) => {}
         )
@@ -82,16 +80,11 @@ export class TrActionsComponent implements OnInit {
   }
 
   navigate(item) {
-    if (item.testpost) {
-      const url = `/home/testposts/${item.testpost.id}/tr_action/${item.id}`
-      console.log("navigate", item, url)
-      this.router.navigate([url]);
-    }
+    this.router.navigate([`/home/tr_action/${item.id}`]);
   }
 
   addAction() {
-    const url = `/home/tr_actions/create`
-    this.router.navigate([url]);
+    this.router.navigate([`/home/tr_actions/create`]);
   }
 
   submit() {

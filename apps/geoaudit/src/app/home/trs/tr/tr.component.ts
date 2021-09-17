@@ -9,14 +9,11 @@ import * as moment from 'moment';
 import { TrEntityService } from '../../../entity-services/tr-entity.service';
 import { Abriox, Conditions, Image, MarkerColours, Survey, Tr, TrAction } from '../../../models';
 import { debounceTime, tap, distinctUntilChanged, takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { AlertService, UploadService } from '../../../services';
 import { FileTypes } from '../../../components/file-upload/file-upload.component';
-import { IAlbum, Lightbox } from 'ngx-lightbox';
-import { MatDialog } from '@angular/material/dialog';
 import { environment } from 'apps/geoaudit/src/environments/environment';
 import { TrActionEntityService } from '../../../entity-services/tr-action-entity.service';
-import { SurveyEntityService } from '../../../entity-services/survey-entity.service';
 
 @Component({
   selector: 'geoaudit-tr',
@@ -28,6 +25,8 @@ export class TrComponent implements OnInit, AfterViewInit {
   id: string;
 
   form: FormGroup;
+  
+  subscriptions: Array<Subscription> = [];
 
   color: ThemePalette = 'primary';
 
@@ -76,36 +75,31 @@ export class TrComponent implements OnInit, AfterViewInit {
   constructor(
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
-    private surveyEntityService: SurveyEntityService,
     private trEntityService: TrEntityService,
     private trActionEntityService: TrActionEntityService,
     private store: Store<fromApp.State>,
     private router: Router,
     private alertService: AlertService,
     private uploadService: UploadService,
-    private _lightbox: Lightbox,
-    private dialog: MatDialog
-  ) { }
+  ) {
+    this.subscriptions.push(this.route.queryParams.subscribe(params => {
+      const tabIndex = params['tab'];
+      if (tabIndex == 'actions') {
+        this.selectedTabIndex = 2;
+      } else if (tabIndex == 'notes') {
+        this.selectedTabIndex = 3;
+      } else {
+        this.selectedTabIndex = 0;
+      }
+    }));
+
+    this.subscriptions.push(this.route.params.subscribe(() => {
+      this.initialize();
+    }));
+  }
 
   ngOnInit(): void {
-    this.API_URL = environment.API_URL;
-    this.id = this.route.snapshot.paramMap.get('id');
-
-    this.initRoutes();
-    this.initForm();
-
-    if (this.id) {
-      this.getTestpostAndPatchForm(this.id);
-    } else {
-      // this.createMode();
-    }
-
-    this.store.select('map').subscribe((map) => {
-      if (map.clickMarker) {
-        this.latCtrl.setValue(map.clickMarker.lat);
-        this.lngCtrl.setValue(map.clickMarker.lng);
-      }
-    });
+    this.initialize();
   }
 
   ngAfterViewInit() {
@@ -132,15 +126,22 @@ export class TrComponent implements OnInit, AfterViewInit {
     });
   }
 
-  initRoutes() {
-    this.route.queryParams.subscribe(params => {
-      const tabIndex = params['tab'];
-      if (tabIndex == 'actions') {
-        this.selectedTabIndex = 2;
-      } else if (tabIndex == 'notes') {
-        this.selectedTabIndex = 3;
-      } else {
-        this.selectedTabIndex = 0;
+  private initialize() {
+    this.API_URL = environment.API_URL;
+    this.id = this.route.snapshot.paramMap.get('id');
+
+    this.initForm();
+
+    if (this.id) {
+      this.getTestpostAndPatchForm(this.id);
+    } else {
+      // this.createMode();
+    }
+
+    this.store.select('map').subscribe((map) => {
+      if (map.clickMarker) {
+        this.latCtrl.setValue(map.clickMarker.lat);
+        this.lngCtrl.setValue(map.clickMarker.lng);
       }
     });
   }
@@ -193,7 +194,6 @@ export class TrComponent implements OnInit, AfterViewInit {
           this.trActionEntityService.getByKey(tr_action.id).subscribe(item => {
             this.tr_actions.push(item)
             this.tr_actions.sort((a, b) => moment(a.date).diff(moment(b.date), 'seconds'))
-            console.log("~~~~~~~~~~~~~~~", this.tr_actions)
             // this.surveyEntityService.getByKey(item.survey.id).subscribe(survey => {
             //   this.surveys.push(survey);
             // })
@@ -353,7 +353,6 @@ export class TrComponent implements OnInit, AfterViewInit {
   }
 
   updateMarkState(e) {
-    console.log('updateMarkState', e)
     if (e.complete) {
       this.currentState = 1;
       this.submit(true);

@@ -344,6 +344,41 @@
 					"distance": "Distance",
 					"value": "Value"
 				}
+			},
+			"sites": {
+				"site": {
+					"title": "Site {{placeholder}}",
+					"details": "Details",
+					"attachments": "Attachments",
+					"actions": "Actions",
+					"notes": "Notes",
+					"properties": "Properties",
+					"reference": "Reference",
+					"name": "Name",
+					"date_installation": "Date Installation",
+					"manufacture": "Manufacture",
+					"model": "Model",
+					"serial_number": "Serial Number",
+					"abriox": "Abriox",
+					"owner": "Owner",
+					"region": "Region",
+					"address": "Address",
+					"scheme": "Scheme",
+					"site_type": "Site Type",
+					"traffic_manage": "Traffic Management",
+					"access_detail": "Access Detail",
+					"speed_limit": "Speed Limit",
+					"distance_road": "Distance Road",
+					"road_condition": "Road Condition",
+					"tm_required": "Tm Required",
+					"tm_descr": "Tm Description",
+					"nrswa_required": "Nrswa Required",
+					"nrswa_descr": "Nrswa Description",
+					"health_safety": "Health & Safety",
+					"toilet": "Toilet",
+					"hospital": "Hospital",
+					"hazards": "Hazards"
+				}
 			}
 		},
 		"survey": {

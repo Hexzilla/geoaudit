@@ -16,16 +16,15 @@ import {
   ReferenceCell,
   TpAction,
   Status,
-  Statuses,
 } from '../../../models';
 import { AlertService, UploadService } from '../../../services';
 import { FileTypes } from '../../../components/file-upload/file-upload.component';
-import { MatDialog } from '@angular/material/dialog';
 import { StatusEntityService } from '../../../entity-services/status-entity.service';
 import { TpActionEntityService } from '../../../entity-services/tp-action-entity.service';
 import { ConditionEntityService } from '../../../entity-services/condition-entity.service';
 import { FaultTypeEntityService } from '../../../entity-services/fault-type-entity.service';
 import { ReferenceCellEntityService } from '../../../entity-services/reference-cell-entity.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'geoaudit-tp-action',
@@ -37,6 +36,8 @@ export class TpActionComponent implements OnInit, AfterViewInit {
    * The form consisting of the form fields.
    */
   form: FormGroup;
+
+  subscriptions: Array<Subscription> = [];
 
   /**
    * An array of status i.e. NOT_STARTED, ONGOING, etc.
@@ -84,9 +85,37 @@ export class TpActionComponent implements OnInit, AfterViewInit {
     private router: Router,
     private alertService: AlertService,
     private uploadService: UploadService,
-  ) {}
+  ) {
+    this.subscriptions.push(this.route.queryParams.subscribe(params => {
+      const tabIndex = params['tab'];
+      if (tabIndex == 'actions') {
+        this.selectedTabIndex = 2;
+      } else if (tabIndex == 'notes') {
+        this.selectedTabIndex = 3;
+      } else {
+        this.selectedTabIndex = 0;
+      }
+    }));
+
+    this.subscriptions.push(this.route.params.subscribe(() => {
+      this.initialize();
+    }));
+  }
 
   ngOnInit(): void {
+    this.initialize();
+  }
+
+  // eslint-disable-next-line @angular-eslint/use-lifecycle-interface
+  ngOnDestroy() {
+    this.subscriptions.map(it => it.unsubscribe());
+  }
+
+  ngAfterViewInit(): void {
+    //
+  }
+
+  private initialize() {
     // Fetch statuses
     this.statusEntityService.getAll().subscribe(
       (statuses) => {
@@ -94,8 +123,6 @@ export class TpActionComponent implements OnInit, AfterViewInit {
       },
       (err) => {}
     );
-
-    this.initRoutes();
 
     /**
      * Initialise the form with properties and validation
@@ -106,29 +133,12 @@ export class TpActionComponent implements OnInit, AfterViewInit {
     this.fetchData();
   }
 
-  ngAfterViewInit(): void {
-    //
-  }
-
   getTestpostTitle() {
     const testpost = this.tp_action?.testpost
     if (testpost) {
       return `${testpost.reference} - ${testpost.name}`;
     }
     return 'Testpost';
-  }
-
-  initRoutes() {
-    this.route.queryParams.subscribe(params => {
-      const tabIndex = params['tab'];
-      if (tabIndex == 'actions') {
-        this.selectedTabIndex = 2;
-      } else if (tabIndex == 'notes') {
-        this.selectedTabIndex = 3;
-      } else {
-        this.selectedTabIndex = 0;
-      }
-    });
   }
 
   /**
@@ -382,7 +392,6 @@ export class TpActionComponent implements OnInit, AfterViewInit {
   }
 
   updateMarkState(e) {
-    console.log('updateMarkState', e)
     if (e.complete) {
       this.currentState = 1;
       this.submit(true);

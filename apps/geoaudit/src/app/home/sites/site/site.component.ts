@@ -6,21 +6,22 @@ import { Store } from '@ngrx/store';
 import * as MapActions from '../../../store/map/map.actions';
 import * as fromApp from '../../../store';
 import * as moment from 'moment';
-import { TestpostEntityService } from '../../../entity-services/testpost-entity.service';
-import { Abriox, MarkerColours, Testpost, TpAction } from '../../../models';
+import { SiteEntityService } from '../../../entity-services/site-entity.service';
+import { Site, MarkerColours, TpAction } from '../../../models';
 import { debounceTime, tap, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { Subject, Subscription } from 'rxjs';
 import { AlertService, UploadService } from '../../../services';
 import { FileTypes } from '../../../components/file-upload/file-upload.component';
-import { environment } from 'apps/geoaudit/src/environments/environment';
+import { MatDialog } from '@angular/material/dialog';
 import { TpActionEntityService } from '../../../entity-services/tp-action-entity.service';
+import { SurveyEntityService } from '../../../entity-services/survey-entity.service';
 
 @Component({
-  selector: 'geoaudit-testpost',
-  templateUrl: './testpost.component.html',
-  styleUrls: ['./testpost.component.scss']
+  selector: 'geoaudit-site',
+  templateUrl: './site.component.html',
+  styleUrls: ['./site.component.scss']
 })
-export class TestpostComponent implements OnInit, AfterViewInit {
+export class SiteComponent implements OnInit, AfterViewInit {
 
   id: string;
 
@@ -31,12 +32,6 @@ export class TestpostComponent implements OnInit, AfterViewInit {
   color: ThemePalette = 'primary';
 
   @ViewChild('dateInstallationDateTimePicker') dateInstallationDateTimePicker: any;
-
-  @ViewChild('latCtrlInput') latCtrlInput: ElementRef;
-  @ViewChild('lngCtrlInput') lngCtrlInput: ElementRef;
-
-  latCtrl = new FormControl();
-  lngCtrl = new FormControl();
 
   public selectedTabIndex = 0;
   
@@ -58,26 +53,26 @@ export class TestpostComponent implements OnInit, AfterViewInit {
 
   private unsubscribe = new Subject<void>();
 
-  API_URL: string;
-
-  abriox: Abriox;
-
-  testpost: Testpost;
+  site: Site;
 
   tp_actions: Array<TpAction> = [];
 
   currentState = 0;
   approved = null;
 
+  // surveys: Array<Survey> = [];
+
   constructor(
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
-    private testpostEntityService: TestpostEntityService,
+    private surveyEntityService: SurveyEntityService,
+    private siteEntityService: SiteEntityService,
     private tpActionEntityService: TpActionEntityService,
     private store: Store<fromApp.State>,
     private router: Router,
     private alertService: AlertService,
     private uploadService: UploadService,
+    private dialog: MatDialog
   ) {
     this.subscriptions.push(this.route.queryParams.subscribe(params => {
       const tabIndex = params['tab'];
@@ -99,113 +94,72 @@ export class TestpostComponent implements OnInit, AfterViewInit {
     this.initialize();
   }
 
+  ngAfterViewInit() {
+    //
+  }
+
   // eslint-disable-next-line @angular-eslint/use-lifecycle-interface
   ngOnDestroy() {
     this.subscriptions.map(it => it.unsubscribe());
   }
 
-  initialize() {
-    this.API_URL = environment.API_URL;
+  private initialize() {
     this.id = this.route.snapshot.paramMap.get('id');
-
 
     this.initForm();
 
     if (this.id) {
-      this.getTestpostAndPatchForm(this.id);
+      this.fetchData(this.id);
     } else {
       // this.createMode();
     }
-
-    this.store.select('map').subscribe((map) => {
-      if (map.clickMarker) {
-        this.latCtrl.setValue(map.clickMarker.lat);
-        this.lngCtrl.setValue(map.clickMarker.lng);
-      }
-    });
-  }
-
-  ngAfterViewInit() {
-    this.latCtrl.valueChanges.subscribe((value) => {
-      if (value) {
-        this.form.patchValue({
-          geometry: {
-            ...this.form.value.geometry,
-            lat: value,
-          },
-        });
-      }
-    });
-
-    this.lngCtrl.valueChanges.subscribe((value) => {
-      if (value) {
-        this.form.patchValue({
-          geometry: {
-            ...this.form.value.geometry,
-            lng: value,
-          },
-        });
-      }
-    });
   }
 
   initForm() {
     this.form = this.formBuilder.group({
+      id: null,
+
+      site_detail: this.formBuilder.group({
+        owner: [''],
+        region: [''],
+        address: [''],
+        scheme: [''],
+
+        access_detail: [''],
+        speed_limit: [''],
+        distance_road: [''],
+        road_condition: [''],
+        tm_required: [''],
+        tm_descr: [''],
+        nrswa_required: [''],
+        nrswa_description: [''],
+
+        toilet: [''],
+        hospital: [''],
+        hazards: [''],
+      }),
 
       reference: [''],
       name: [''],
       date_installation: [moment().toISOString()],
-      manufacture: [''],
-      model: [''],
-      serial_number: [''],
-
-      geometry: [null],
+      site_type: [''],
 
       images: [],
       documents: [],
-
-
-      // datetime: moment().toISOString(),
-      // description: null,
-      // images: [[]],
-      // attachments: [[]],
-
-      // assignees: [],
-
-      // abrioxes: [],
-      // jobs: [],
-      // resistivities: [],
-      // sites: [],
-      // surveys: [],
-      // testposts: [],
-      // trs: [],
-
-      id: null, // Whilst we don't edit the id, we submit the form.
     });
   }
 
-  getTestpostAndPatchForm(id: string) {
-    this.testpostEntityService.getByKey(id).subscribe(
-      (testpost) => {
-        this.patchForm(testpost);
+  fetchData(id: string) {
+    this.siteEntityService.getByKey(id).subscribe(
+      (site) => {
+        console.log("site", site);
+        this.currentState = site.status?.id;
+        this.approved = site.approved;
 
-        this.currentState = testpost.status?.id;
-        this.approved = testpost.approved;
-        this.abriox = testpost.abriox;
-
-        testpost.tp_actions.map(tp_action => {
-          this.tpActionEntityService.getByKey(tp_action.id).subscribe(item => {
-            this.tp_actions.push(item)
-            this.tp_actions.sort((a, b) => moment(a.date).diff(moment(b.date), 'seconds'))
-            
-            // this.surveyEntityService.getByKey(item.survey.id).subscribe(survey => {
-            //   this.surveys.push(survey);
-            // })
-          })
+        this.form.patchValue({
+          ...site,
+          site_type: site.site_type?.name
         })
-
-        this.testpost = testpost;
-        this.autoSave(this.id ? false : true);
       },
 
       (err) => {}
@@ -261,56 +215,19 @@ export class TestpostComponent implements OnInit, AfterViewInit {
      *
      * If create then navigate to the job id.
      */
-    this.testpostEntityService.update(payload).subscribe(
-      (update) => {
+    this.siteEntityService.update(payload).subscribe(
+      () => {
         this.alertService.info('ALERTS.saved_changes');
 
         if (navigate) this.router.navigate([`/home/testposts`]);
       },
 
-      (err) => {
+      () => {
         this.alertService.error('ALERTS.something_went_wrong');
       },
 
       () => {}
     );
-  }
-
-  patchForm(testpost: Testpost) {
-    const {
-      id,
-
-      reference,
-      name,
-      date_installation,
-      manufacture,
-      model,
-      serial_number,
-      geometry,
-    
-      images,
-      documents
-    } = testpost;
-
-    this.form.patchValue({
-      id,
-
-      reference,
-      name,
-      date_installation,
-      manufacture,
-      model,
-      serial_number,
-      geometry,
-
-      images,
-      documents
-    })
-
-    if (geometry) {
-      this.latCtrl.setValue(geometry['lat']);
-      this.lngCtrl.setValue(geometry['lng']);
-    }
   }
 
   clickMarker(): void {
@@ -319,15 +236,6 @@ export class TestpostComponent implements OnInit, AfterViewInit {
         url: this.router.url,
       })
     );
-  }
-
-  addAbriox() {
-    const navigationExtras: NavigationExtras = {
-      queryParams: {
-        testpost: this.form.value.id
-      }
-    }
-    this.router.navigate(["/home/abrioxes/create"], navigationExtras)
   }
 
   getLatestConditionColour() {

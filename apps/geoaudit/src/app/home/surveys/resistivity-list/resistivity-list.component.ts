@@ -47,7 +47,6 @@ export class ResistivityListComponent implements OnInit {
 
   update() {
     const serveyId = this.route.snapshot.params['id'];
-    console.log("serveyId", serveyId);
 
     const parameters = qs.stringify({
       _where: {
@@ -57,7 +56,6 @@ export class ResistivityListComponent implements OnInit {
     this.resistivityEntityService.getWithQuery(parameters).subscribe(
       (actions) => {
         this.resistivities = actions.filter(it => it.reference != null);
-        console.log("resistivities", actions)
       },
       (err) => {}
     );
@@ -73,7 +71,7 @@ export class ResistivityListComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.resistivityEntityService.delete(item).subscribe(
+        this.resistivityEntityService.delete(item.id).subscribe(
           (res) => {},
           (err) => {}
         )
@@ -82,14 +80,11 @@ export class ResistivityListComponent implements OnInit {
   }
 
   navigate(item) {
-    console.log("navigate", item)
-    const url = `/home/resistivities/${item.id}`
-    this.router.navigate([url]);
+    this.router.navigate([`/home/resistivities/${item.id}`]);
   }
 
   addAction() {
-    const url = `/home/resistivities/create`
-    this.router.navigate([url]);
+    this.router.navigate([`/home/resistivities/create`]);
   }
 
   submit() {

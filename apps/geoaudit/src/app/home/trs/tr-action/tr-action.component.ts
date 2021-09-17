@@ -22,6 +22,7 @@ import { StatusEntityService } from '../../../entity-services/status-entity.serv
 import { TrActionEntityService } from '../../../entity-services/tr-action-entity.service';
 import { FaultTypeEntityService } from '../../../entity-services/fault-type-entity.service';
 import { ConditionEntityService } from '../../../entity-services/condition-entity.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'geoaudit-tp-action',
@@ -33,6 +34,8 @@ export class TrActionComponent implements OnInit, AfterViewInit {
    * The form consisting of the form fields.
    */
   form: FormGroup;
+
+  subscriptions: Array<Subscription> = [];
 
   /**
    * An array of status i.e. NOT_STARTED, ONGOING, etc.
@@ -75,9 +78,37 @@ export class TrActionComponent implements OnInit, AfterViewInit {
     private router: Router,
     private alertService: AlertService,
     private uploadService: UploadService,
-  ) {}
+  ) {
+    this.subscriptions.push(this.route.queryParams.subscribe(params => {
+      const tabIndex = params['tab'];
+      if (tabIndex == 'actions') {
+        this.selectedTabIndex = 2;
+      } else if (tabIndex == 'notes') {
+        this.selectedTabIndex = 3;
+      } else {
+        this.selectedTabIndex = 0;
+      }
+    }));
+
+    this.subscriptions.push(this.route.params.subscribe(() => {
+      this.initialize();
+    }));
+  }
 
   ngOnInit(): void {
+    this.initialize();
+  }
+
+  // eslint-disable-next-line @angular-eslint/use-lifecycle-interface
+  ngOnDestroy() {
+    this.subscriptions.map(it => it.unsubscribe());
+  }
+
+  ngAfterViewInit(): void {
+    //
+  }
+
+  private initialize() {
     // Fetch statuses
     this.statusEntityService.getAll().subscribe(
       (statuses) => {
@@ -105,17 +136,13 @@ export class TrActionComponent implements OnInit, AfterViewInit {
     this.fetchTpAction();
   }
 
-  ngAfterViewInit(): void {
-    //
-  }
-
   fetchTpAction() {
     this.actionId = this.route.snapshot.params['actionId'];
 
     this.trActionEntityService.getByKey(this.actionId).subscribe(
       (tr_action) => {
         this.tr_action = tr_action;
-        console.log("trs.tr_action", tr_action)
+        //console.log("trs.tr_action", tr_action)
 
         this.currentState = tr_action.status?.id;
         this.approved = tr_action.approved;

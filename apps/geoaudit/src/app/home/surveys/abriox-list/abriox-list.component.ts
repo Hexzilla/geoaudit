@@ -46,7 +46,6 @@ export class AbrioxListComponent implements OnInit {
 
   fetchData() {
     const serveyId = this.route.snapshot.params['id'];
-    console.log("serveyId", serveyId);
 
     const parameters = qs.stringify({
       _where: {
@@ -55,7 +54,6 @@ export class AbrioxListComponent implements OnInit {
     });
     this.abrioxEntityService.getWithQuery(parameters).subscribe(
       (abrioxes) => {
-        console.log("~~~abrioxes", abrioxes)
         this.abrioxes = abrioxes.filter(it => it.name != null)
         this.getAbrioxesFromActions(serveyId)        
       },
@@ -71,13 +69,13 @@ export class AbrioxListComponent implements OnInit {
     });
     this.tpActionEntityService.getWithQuery(parameters).subscribe(
       (actions) => {
-        console.log("~~~tp-actions", actions)
+        //console.log("tp-actions", actions)
       },
       (err) => {}
     );
     this.trActionEntityService.getWithQuery(parameters).subscribe(
       (actions) => {
-        console.log("~~~~tp-actions", actions)
+        //console.log("tp-actions", actions)
       },
       (err) => {}
     );
@@ -93,22 +91,20 @@ export class AbrioxListComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        //delete
+        this.abrioxEntityService.delete(item.id).subscribe(
+          (res) => {},
+          (err) => {}
+        )
       }
     });
   }
 
   navigate(item) {
-    if (item.testpost) {
-      const url = `/home/testpost/${item.testpost.id}/tr_action/${item.id}`
-      console.log("navigate", item, url)
-      this.router.navigate([url]);
-    }
+    this.router.navigate([`/home/abrioxes_actions/${item.id}`]);
   }
 
   addAction() {
-    const url = `/home/abrioxes_actions/create`
-    this.router.navigate([url]);
+    this.router.navigate([`/home/abrioxes_actions/create`]);
   }
 
   submit() {

@@ -446,7 +446,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.resistivityEntityService.getAll().subscribe(
       (marker_data) => {
         this.resistivities = marker_data;
-        console.log("resistivities", this.resistivities)
+        //console.log("resistivities", this.resistivities)
         
         const _resistivities = marker_data.filter(it => it.reference && it.geometry && it.approved)
         //console.log("resistivities.filtered", _resistivities)

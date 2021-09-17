@@ -16,8 +16,9 @@ export class StatusButtonsComponent implements OnInit {
   constructor(private authService: AuthService) { 
   }
 
+  // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
   ngOnInit(): void {
-    console.log("StatusButton", this.completed, this.approved, this.isManager())
+    //console.log("StatusButton", this.completed, this.approved, this.isManager())
   }
 
   isManager() {
