@@ -22,6 +22,7 @@ import { StatusEntityService } from '../../../entity-services/status-entity.serv
 import { AbrioxActionEntityService } from '../../../entity-services/abriox-action-entity.service';
 import { FaultTypeEntityService } from '../../../entity-services/fault-type-entity.service';
 import { ConditionEntityService } from '../../../entity-services/condition-entity.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'geoaudit-tp-action',
@@ -33,6 +34,8 @@ export class AbrioxActionComponent implements OnInit, AfterViewInit {
    * The form consisting of the form fields.
    */
   form: FormGroup;
+
+  subscriptions: Array<Subscription> = [];
 
   /**
    * An array of status i.e. NOT_STARTED, ONGOING, etc.
@@ -75,9 +78,37 @@ export class AbrioxActionComponent implements OnInit, AfterViewInit {
     private router: Router,
     private alertService: AlertService,
     private uploadService: UploadService,
-  ) {}
+  ) {
+    this.subscriptions.push(this.route.queryParams.subscribe(params => {
+      const tabIndex = params['tab'];
+      if (tabIndex == 'actions') {
+        this.selectedTabIndex = 2;
+      } else if (tabIndex == 'notes') {
+        this.selectedTabIndex = 3;
+      } else {
+        this.selectedTabIndex = 0;
+      }
+    }));
+
+    this.subscriptions.push(this.route.params.subscribe(() => {
+      this.initialize();
+    }));
+  }
 
   ngOnInit(): void {
+    this.initialize();
+  }
+
+  ngAfterViewInit(): void {
+    //
+  }
+
+  // eslint-disable-next-line @angular-eslint/use-lifecycle-interface
+  ngOnDestroy() {
+    this.subscriptions.map(it => it.unsubscribe());
+  }
+
+  private initialize(): void {
     // Fetch statuses
     this.statusEntityService.getAll().subscribe(
       (statuses) => {
@@ -95,7 +126,6 @@ export class AbrioxActionComponent implements OnInit, AfterViewInit {
       this.conditions = conditions
     });
 
-    this.initRoutes();
     /**
      * Initialise the form with properties and validation
      * constraints.
@@ -103,23 +133,6 @@ export class AbrioxActionComponent implements OnInit, AfterViewInit {
     this.initialiseForm();
 
     this.fetchData();
-  }
-
-  ngAfterViewInit(): void {
-    //
-  }
-
-  initRoutes() {
-    this.route.queryParams.subscribe(params => {
-      const tabIndex = params['tab'];
-      if (tabIndex == 'actions') {
-        this.selectedTabIndex = 2;
-      } else if (tabIndex == 'notes') {
-        this.selectedTabIndex = 3;
-      } else {
-        this.selectedTabIndex = 0;
-      }
-    });
   }
 
   /**
