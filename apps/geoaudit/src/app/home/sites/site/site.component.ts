@@ -9,7 +9,7 @@ import * as moment from 'moment';
 import { SiteEntityService } from '../../../entity-services/site-entity.service';
 import { Site, MarkerColours, TpAction } from '../../../models';
 import { debounceTime, tap, distinctUntilChanged, takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { AlertService, UploadService } from '../../../services';
 import { FileTypes } from '../../../components/file-upload/file-upload.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -26,6 +26,8 @@ export class SiteComponent implements OnInit, AfterViewInit {
   id: string;
 
   form: FormGroup;
+
+  subscriptions: Array<Subscription> = [];
 
   color: ThemePalette = 'primary';
 
@@ -71,28 +73,8 @@ export class SiteComponent implements OnInit, AfterViewInit {
     private alertService: AlertService,
     private uploadService: UploadService,
     private dialog: MatDialog
-  ) { }
-
-  ngOnInit(): void {
-    this.id = this.route.snapshot.paramMap.get('id');
-
-    this.initRoutes();
-
-    this.initForm();
-
-    if (this.id) {
-      this.fetchData(this.id);
-    } else {
-      // this.createMode();
-    }
-  }
-
-  ngAfterViewInit() {
-    //
-  }
-
-  initRoutes() {
-    this.route.queryParams.subscribe(params => {
+  ) {
+    this.subscriptions.push(this.route.queryParams.subscribe(params => {
       const tabIndex = params['tab'];
       if (tabIndex == 'actions') {
         this.selectedTabIndex = 2;
@@ -101,8 +83,36 @@ export class SiteComponent implements OnInit, AfterViewInit {
       } else {
         this.selectedTabIndex = 0;
       }
-      console.log("tabIndex", tabIndex, this.selectedTabIndex);
-    });
+    }));
+
+    this.subscriptions.push(this.route.params.subscribe(() => {
+      this.initialize();
+    }));
+  }
+
+  ngOnInit(): void {
+    this.initialize();
+  }
+
+  ngAfterViewInit() {
+    //
+  }
+
+  // eslint-disable-next-line @angular-eslint/use-lifecycle-interface
+  ngOnDestroy() {
+    this.subscriptions.map(it => it.unsubscribe());
+  }
+
+  private initialize() {
+    this.id = this.route.snapshot.paramMap.get('id');
+
+    this.initForm();
+
+    if (this.id) {
+      this.fetchData(this.id);
+    } else {
+      // this.createMode();
+    }
   }
 
   initForm() {
