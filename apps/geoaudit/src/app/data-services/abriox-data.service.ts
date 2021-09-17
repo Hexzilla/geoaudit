@@ -35,4 +35,8 @@ export class AbrioxDataService extends DefaultDataService<Abriox> {
     update(update: Update<Abriox>): Observable<any> {
         return this.http.put<any>(`${environment.API_URL}/abrioxes/${update.id}`, update.changes);
     }
+
+    delete(id: number) {
+        return this.http.delete<any>(`${environment.API_URL}/abrioxes/${id}`);
+    }
 }

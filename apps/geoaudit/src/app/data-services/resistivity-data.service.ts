@@ -31,4 +31,8 @@ export class ResistivityDataService extends DefaultDataService<Resistivity> {
     update(update: Update<Resistivity>): Observable<any> {
         return this.http.put<any>(`${environment.API_URL}/resistivities/${update.id}`, update.changes);
     }
+
+    delete(id: number) {
+        return this.http.delete<any>(`${environment.API_URL}/resistivities/${id}`);
+    }
 }

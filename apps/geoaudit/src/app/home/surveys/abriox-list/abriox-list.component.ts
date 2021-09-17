@@ -91,7 +91,10 @@ export class AbrioxListComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        //delete
+        this.abrioxEntityService.delete(item).subscribe(
+          (res) => {},
+          (err) => {}
+        )
       }
     });
   }
