@@ -71,7 +71,7 @@ export class ResistivityListComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.resistivityEntityService.delete(item).subscribe(
+        this.resistivityEntityService.delete(item.id).subscribe(
           (res) => {},
           (err) => {}
         )

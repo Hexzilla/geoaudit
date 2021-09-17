@@ -70,7 +70,7 @@ export class TpActionsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.tpActionEntityService.delete(item).subscribe(
+        this.tpActionEntityService.delete(item.id).subscribe(
           (res) => {},
           (err) => {}
         )

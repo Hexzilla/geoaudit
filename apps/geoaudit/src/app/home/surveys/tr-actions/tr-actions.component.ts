@@ -71,7 +71,7 @@ export class TrActionsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.trActionEntityService.delete(item).subscribe(
+        this.trActionEntityService.delete(item.id).subscribe(
           (res) => {},
           (err) => {}
         )
