@@ -84,7 +84,7 @@ export class TrActionsComponent implements OnInit {
   }
 
   addAction() {
-    this.router.navigate([`/home/tr_actions/create`]);
+    this.router.navigate([`/home/tr_action/create`]);
   }
 
   submit() {

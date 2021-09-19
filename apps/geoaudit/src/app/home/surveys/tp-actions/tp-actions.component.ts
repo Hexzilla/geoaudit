@@ -83,7 +83,7 @@ export class TpActionsComponent implements OnInit {
   }
 
   addAction() {
-    this.router.navigate([`/home/tp_actions/create`]);
+    this.router.navigate([`/home/tp_action/create`]);
   }
 
   completed() {
