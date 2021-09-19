@@ -286,7 +286,7 @@ export class AbrioxComponent implements OnInit {
       (update) => {
         this.alertService.info('ALERTS.saved_changes');
 
-        if (navigate) this.router.navigate([`/home/abrioxes`]);
+        if (navigate) this.router.navigate([`/home`]);
       },
 
       (err) => {

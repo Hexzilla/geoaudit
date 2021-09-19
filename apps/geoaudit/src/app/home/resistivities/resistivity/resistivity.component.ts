@@ -250,7 +250,7 @@ export class ResistivityComponent implements OnInit, AfterViewInit {
     this.resistivityEntityService.update(payload).subscribe(
       () => {
         this.alertService.info('Saved Changes');
-        if (navigate) this.router.navigate([`/home/resistivities`]);
+        if (navigate) this.router.navigate([`/home`]);
       },
       (err) => {
         console.error(err);

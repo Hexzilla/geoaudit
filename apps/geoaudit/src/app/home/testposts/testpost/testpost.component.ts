@@ -265,7 +265,7 @@ export class TestpostComponent implements OnInit, AfterViewInit {
       (update) => {
         this.alertService.info('ALERTS.saved_changes');
 
-        if (navigate) this.router.navigate([`/home/testposts`]);
+        if (navigate) this.router.navigate([`/home`]);
       },
 
       (err) => {
