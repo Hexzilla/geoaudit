@@ -346,7 +346,18 @@ export class TrComponent implements OnInit, AfterViewInit {
     console.log("onNavigate", actionId)
     this.router.navigate([`/home/tr_action/${actionId}`]);
   }
+
+  searchTestpost() {
+    this.router.navigate([`/home/search`]);
+  }
   
+  getDetailInfo() {
+    if (this.tr) {
+      return `${this.tr.reference} - ${this.tr.name}`;
+    }
+    return 'Tr';
+  }
+
   completed() {
     //return this.tp_action?.status?.name == Statuses.COMPLETED;
     return this.currentState == 1
