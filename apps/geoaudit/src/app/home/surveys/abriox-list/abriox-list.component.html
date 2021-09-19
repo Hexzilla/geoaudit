@@ -6,7 +6,7 @@
   Please add a new abriox to them to see it in this panel.
   </p>
 </div>
-<div *ngIf="abrioxes && abrioxes.length>0">
+<div *ngIf="abrioxes?.length">
   <mat-card
     *ngFor="let item of abrioxes"
     style="cursor: pointer; margin-top: 20px"
@@ -63,8 +63,12 @@
   </div>
 </div>
 
-<div class="approve-wrapper" *ngIf="abrioxes.length>0">
-  <geoaudit-status-buttons></geoaudit-status-buttons>
+<div class="approve-wrapper" *ngIf="abrioxes?.length">
+  <geoaudit-status-buttons
+    [completed]="completed()"
+    [approved]="false"
+    (completeEvent)="updateMarkState($event)"
+  ></geoaudit-status-buttons>
 </div>
 
 <div fxLayout="row-reverse" class="button-wrapper">
