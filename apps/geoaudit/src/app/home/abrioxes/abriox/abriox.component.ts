@@ -95,7 +95,7 @@ export class AbrioxComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.initialize();
+    //this.initialize();
   }
 
   // eslint-disable-next-line @angular-eslint/use-lifecycle-interface

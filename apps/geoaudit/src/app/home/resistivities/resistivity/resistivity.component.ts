@@ -85,10 +85,11 @@ export class ResistivityComponent implements OnInit, AfterViewInit {
 
     this.subscriptions.push(this.route.params.subscribe(() => {
       this.initialize();
-    }));}
+    }));
+  }
 
   ngOnInit(): void {
-    this.initialize();
+    //this.initialize();
   }
 
   // eslint-disable-next-line @angular-eslint/use-lifecycle-interface

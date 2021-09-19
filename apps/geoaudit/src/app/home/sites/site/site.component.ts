@@ -91,7 +91,7 @@ export class SiteComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.initialize();
+    //this.initialize();
   }
 
   ngAfterViewInit() {
