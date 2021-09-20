@@ -17,6 +17,26 @@
       <form fxLayout="column" [formGroup]="form" (ngSubmit)="submit()">
         <!--Testpost Action-->
         <div fxLayout="column">
+          <mat-card
+            style="cursor: pointer; margin-bottom: 20px; padding: 8px;"
+            fxLayout="row"
+            fxLayoutAlign="space-between"
+            (click)="searchTestpost()"
+          >
+            <div class="item-title">
+              {{ getDetailInfo() }}
+            </div>
+            <div fxLayout="row">
+              <button
+                mat-icon-button
+                color="accent"
+                aria-label="Example icon button with a plus one icon"
+                (click)="searchTestpost()"
+              >
+                <mat-icon>chevron_right</mat-icon>
+              </button>
+            </div>
+          </mat-card>
           
           <!-- Reference -->
           <mat-form-field appearance="outline">

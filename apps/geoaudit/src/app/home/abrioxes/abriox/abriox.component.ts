@@ -95,7 +95,7 @@ export class AbrioxComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.initialize();
+    //this.initialize();
   }
 
   // eslint-disable-next-line @angular-eslint/use-lifecycle-interface
@@ -286,7 +286,7 @@ export class AbrioxComponent implements OnInit {
       (update) => {
         this.alertService.info('ALERTS.saved_changes');
 
-        if (navigate) this.router.navigate([`/home/abrioxes`]);
+        if (navigate) this.router.navigate([`/home`]);
       },
 
       (err) => {
@@ -318,7 +318,7 @@ export class AbrioxComponent implements OnInit {
   }
 
   onNavigate(actionId) {
-    this.router.navigate([`/home/tp_action/${actionId}`]);
+    this.router.navigate([`/home/abriox_action/${actionId}`]);
   }
   
   completed() {

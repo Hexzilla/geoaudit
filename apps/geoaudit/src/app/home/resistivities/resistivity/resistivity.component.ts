@@ -85,10 +85,11 @@ export class ResistivityComponent implements OnInit, AfterViewInit {
 
     this.subscriptions.push(this.route.params.subscribe(() => {
       this.initialize();
-    }));}
+    }));
+  }
 
   ngOnInit(): void {
-    this.initialize();
+    //this.initialize();
   }
 
   // eslint-disable-next-line @angular-eslint/use-lifecycle-interface
@@ -249,7 +250,7 @@ export class ResistivityComponent implements OnInit, AfterViewInit {
     this.resistivityEntityService.update(payload).subscribe(
       () => {
         this.alertService.info('Saved Changes');
-        if (navigate) this.router.navigate([`/home/resistivities`]);
+        if (navigate) this.router.navigate([`/home`]);
       },
       (err) => {
         console.error(err);

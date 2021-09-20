@@ -92,14 +92,13 @@ export class TrComponent implements OnInit, AfterViewInit {
         this.selectedTabIndex = 0;
       }
     }));
-
     this.subscriptions.push(this.route.params.subscribe(() => {
       this.initialize();
     }));
   }
 
   ngOnInit(): void {
-    this.initialize();
+    //this.initialize();
   }
 
   ngAfterViewInit() {
@@ -127,6 +126,7 @@ export class TrComponent implements OnInit, AfterViewInit {
   }
 
   private initialize() {
+    console.log("initialize~~~~~~~~");
     this.API_URL = environment.API_URL;
     this.id = this.route.snapshot.paramMap.get('id');
 
@@ -190,8 +190,10 @@ export class TrComponent implements OnInit, AfterViewInit {
         this.approved = tr.approved;
         this.abriox = tr.abriox;
 
+        console.log("tr_action----tr.tr_actions", tr.tr_actions)
         tr.tr_actions.map(tr_action => {
           this.trActionEntityService.getByKey(tr_action.id).subscribe(item => {
+            console.log("tr_action~~~~~~~~~~~~", tr_action.id, item)
             this.tr_actions.push(item)
             this.tr_actions.sort((a, b) => moment(a.date).diff(moment(b.date), 'seconds'))
             // this.surveyEntityService.getByKey(item.survey.id).subscribe(survey => {
@@ -261,7 +263,7 @@ export class TrComponent implements OnInit, AfterViewInit {
       (update) => {
         this.alertService.info('ALERTS.saved_changes');
 
-        if (navigate) this.router.navigate([`/home/testposts`]);
+        if (navigate) this.router.navigate([`/home`]);
       },
 
       (err) => {
@@ -343,10 +345,20 @@ export class TrComponent implements OnInit, AfterViewInit {
   }
 
   onNavigate(actionId) {
-    console.log("onNavigate", actionId)
     this.router.navigate([`/home/tr_action/${actionId}`]);
   }
+
+  searchTestpost() {
+    this.router.navigate([`/home/search`]);
+  }
   
+  getDetailInfo() {
+    if (this.tr) {
+      return `${this.tr.reference} - ${this.tr.name}`;
+    }
+    return 'Tr';
+  }
+
   completed() {
     //return this.tp_action?.status?.name == Statuses.COMPLETED;
     return this.currentState == 1

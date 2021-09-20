@@ -1,19 +1,13 @@
 import {
-  Input,
-  Output,
   Component,
   OnInit,
-  EventEmitter,
 } from '@angular/core';
 import qs from 'qs';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Store } from '@ngrx/store';
 import * as moment from 'moment';
-
-import * as fromApp from '../../../store';
-import { TpAction } from '../../../models';
-import { AlertService } from '../../../services';
+import { Survey, TpAction } from '../../../models';
 import { MatDialog } from '@angular/material/dialog';
+import { SurveyEntityService } from '../../../entity-services/survey-entity.service';
 import { TpActionEntityService } from '../../../entity-services/tp-action-entity.service';
 import { DeleteModalComponent } from '../../../modals/delete-modal/delete-modal.component';
 
@@ -23,17 +17,17 @@ import { DeleteModalComponent } from '../../../modals/delete-modal/delete-modal.
   styleUrls: ['./tp-actions.component.scss'],
 })
 export class TpActionsComponent implements OnInit {
-  @Input() item_list_completed: boolean;
-  @Output() change_list_state: EventEmitter<any> = new EventEmitter();
+  private surveyId;
+
+  survey: Survey;
 
   tp_actions: Array<TpAction> = [];  
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private store: Store<fromApp.State>,
+    private surveyEntityService: SurveyEntityService,
     private tpActionEntityService: TpActionEntityService,
-    private alertService: AlertService,
     private dialog: MatDialog
   ) {
   }
@@ -43,20 +37,23 @@ export class TpActionsComponent implements OnInit {
   }
 
   fetchData() {
-    const serveyId = this.route.snapshot.params['id'];
-    console.log("serveyId", serveyId);
+    this.surveyId = this.route.snapshot.params['id'];
+    
+    this.surveyEntityService.getByKey(this.surveyId).subscribe(
+      (survey) => {
+        this.survey = survey;
+      },
+    );
 
     const parameters = qs.stringify({
       _where: {
-        survey: serveyId
+        survey: this.surveyId
       }
     });
     this.tpActionEntityService.getWithQuery(parameters).subscribe(
       (actions) => {
         this.tp_actions = actions;
-        console.log("tp-actions", actions)
       },
-      (err) => {}
     );
   }
 
@@ -71,9 +68,13 @@ export class TpActionsComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.tpActionEntityService.delete(item.id).subscribe(
-          (res) => {},
-          (err) => {}
-        )
+          () => {
+            const index = this.tp_actions.indexOf(item);
+            if (index >= 0) {
+              this.tp_actions.splice(index, 1);
+            }
+          }
+        );
       }
     });
   }
@@ -83,15 +84,24 @@ export class TpActionsComponent implements OnInit {
   }
 
   addAction() {
-    this.router.navigate([`/home/tp_actions/create`]);
+    this.router.navigate([`/home/tp_action/create`]);
   }
 
   completed() {
-    return this.item_list_completed
+    return this.survey?.testpost_action_list_completed;
   }
 
   updateMarkState(e) {
-    this.change_list_state.emit(e);
+    if (e.complete) {
+      const payload = {
+        id: this.surveyId,
+        testpost_action_list_completed: true
+      };
+      this.surveyEntityService.update(payload).subscribe(
+        () => {
+          this.router.navigate([`/home/surveys/${this.surveyId}`]);
+        });
+    }
   }
 
   submit() {

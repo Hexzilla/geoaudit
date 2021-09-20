@@ -21,6 +21,12 @@ export interface Survey {
     tp_actions?: []
     tr_actions?: []   
 
+    site_action_list_completed?: boolean;
+    testpost_action_list_completed?: boolean;
+    tr_action_list_completed?: boolean;
+    abriox_action_list_completed?: boolean;
+    resistivity_action_list_completed?: boolean;
+
     images?: Array<Image>;
     documents?: Array<any>;
     comment?: Array<any>;
