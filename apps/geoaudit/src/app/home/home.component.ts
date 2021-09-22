@@ -120,7 +120,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   private survey_ongoing_layer = new L.markerClusterGroup();
   private survey_refused_layer = new L.markerClusterGroup();
   private survey_na_layer = new L.markerClusterGroup();
-  private surveyFilters = [];
+  private surveyFilters = null;
 
   clickMarker;
   url: string;
@@ -263,7 +263,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.abrioxEntityService.getAll().subscribe(
       (marker_data) => {
         this.abrioxes = marker_data;
-        console.log("abrioxes", this.abrioxes)
+        //console.log("abrioxes", this.abrioxes)
         
         const _abrioxes = marker_data
           .filter(it => it.name && it.approved)
@@ -327,7 +327,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.testpostEntityService.getAll().subscribe(
       (marker_data) => {
         this.testposts = marker_data;
-        console.log("testposts", this.testposts)
+        //console.log("testposts", this.testposts)
         
         const _testposts = marker_data
           .filter(it => it.name && it.geometry && it.approved)
@@ -390,7 +390,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.trEntityService.getAll().subscribe(
       (marker_data) => {
         this.trs = marker_data;
-        console.log("trs", this.trs)
+        //console.log("trs", this.trs)
         
         const _trs = marker_data
           .filter(it => it.name && it.geometry && it.approved)
@@ -479,7 +479,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
             this.jobEntityService.getByKey(survey.job.id).subscribe((job) => {
               if (job.assignees?.find(a => a.id == this.authService.authValue.user.id)) {
                 this.survey_markers.push(survey)
-                this.drawSurveyMarker(survey, this.surveyFilters)
+                this.drawSurveyMarker(survey, null)
               }
             })
         })
@@ -919,7 +919,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
       let markerColor = 'rgba(255,255,255,0.8)'
       let outlineColor = 'black'
 
-      if (selected && !selected.find(x => x.id === survey.id)) {
+      if (selected && selected.length > 0 && !selected.find(x => x.id === survey.id)) {
         iconColor = '#E0E0E0'
         markerColor = 'rgba(140,140,140,1)'
         outlineColor = 'rgba(140,140,140)'
@@ -927,7 +927,17 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
       const busIcon = this.createFlagIconMaterial(iconColor, markerColor, outlineColor)
       const marker = this.createMarker(busIcon, survey);
-      this.survey_complete_layer.addLayer(marker);
+
+      switch (survey.status.name) {
+        case 'COMPLETED':
+          marker.addTo(this.survey_complete_layer); break;
+        case 'NOT_STARTED':
+          marker.addTo(this.survey_not_started_layer); break;
+        case 'ONGOING':
+          marker.addTo(this.survey_ongoing_layer); break;
+        case 'REFUSED':
+          marker.addTo(this.survey_refused_layer); break;
+      }
     }
     else {
       const iconColor = 'black'
