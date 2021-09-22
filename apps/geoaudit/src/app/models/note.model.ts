@@ -24,6 +24,8 @@ export interface Note {
     surveys: Array<Survey>;
     testposts: Array<Testpost>;
     trs: Array<Tr>;
+
+    approved?: boolean;
 }
 
 export type NoteFilter = 'abrioxes' | 'jobs' | 'resistivities' | 'sites' | 'surveys' | 'testposts' | 'trs';
