@@ -16,6 +16,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import {MatChipsModule} from '@angular/material/chips';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatTreeModule } from '@angular/material/tree';
 import {MatExpansionModule} from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -51,6 +52,7 @@ import { SidebarHeaderComponent } from '../components/sidebar-header/sidebar-hea
 import { ProgressChartComponent } from '../components/progress-chart/progress-chart.component';
 import { SidebarActionsComponent } from '../components/sidebar-actions/sidebar-actions.component';
 import { SurveyTableComponent } from '../components/survey-table/survey-table.component';
+import { ApproveListComponent } from '../components/approve-list/approve-list.component';
 
 import { ArchiveModalComponent } from '../modals/archive-modal/archive-modal.component';
 
@@ -191,6 +193,7 @@ const entityMetadataMap: EntityMetadataMap = {
     MatChipsModule,
     MatDatepickerModule,
     MatDialogModule,
+    MatTreeModule,
     MatExpansionModule,
     MatIconModule,
     MatFormFieldModule,
@@ -224,6 +227,7 @@ const entityMetadataMap: EntityMetadataMap = {
     NavigationModalComponent,
     RefusalModalComponent,
     SurveyTableComponent,
+    ApproveListComponent,
     MultiItemSelectorComponent,
     SingleItemSelectorComponent,
     IconComponent,

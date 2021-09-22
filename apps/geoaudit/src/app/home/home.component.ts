@@ -120,7 +120,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   private survey_ongoing_layer = new L.markerClusterGroup();
   private survey_refused_layer = new L.markerClusterGroup();
   private survey_na_layer = new L.markerClusterGroup();
-  private surveyFilters = new L.markerClusterGroup();
+  private surveyFilters = [];
 
   clickMarker;
   url: string;

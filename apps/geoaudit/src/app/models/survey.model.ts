@@ -14,12 +14,13 @@ export interface Survey {
     job?: Job
     name?: string;
     prepared_by?: User;
-    resistivities?: []
+    resistivities?: Array<any>;
     site?: any;
     status?: any;
     notes?: Array<Note>;
-    tp_actions?: []
-    tr_actions?: []   
+    tp_actions?: Array<any>;
+    tr_actions?: Array<any>;
+    abriox_actions?: Array<any>;
 
     site_action_list_completed?: boolean;
     testpost_action_list_completed?: boolean;
