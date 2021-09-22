@@ -86,10 +86,10 @@ export class ApprovalsComponent implements OnInit {
     //const testposts = [{ id: 1, text: 'Testpost 1' }, { id: 2, text: 'Testpost 2' }]
     const treeData = {
       [`Survey [${survey .reference}]`]: {
-        "Overview": null,
-        "Delivery details": null,
-        "Attachments": null,
-        "Site details": null,
+        // "Overview": null,
+        // "Delivery details": null,
+        // "Attachments": null,
+        // "Site details": null,
         "Testposts": survey.tp_actions?.map((it, index) => {
           return {
             key: 'tp_actions',
