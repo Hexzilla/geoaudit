@@ -126,7 +126,6 @@ export class TrComponent implements OnInit, AfterViewInit {
   }
 
   private initialize() {
-    console.log("initialize~~~~~~~~");
     this.API_URL = environment.API_URL;
     this.id = this.route.snapshot.paramMap.get('id');
 
@@ -318,7 +317,7 @@ export class TrComponent implements OnInit, AfterViewInit {
   addAbriox() {
     const navigationExtras: NavigationExtras = {
       queryParams: {
-        testpost: this.form.value.id
+        tr: this.form.value.id
       }
     }
     this.router.navigate(["/home/abrioxes/create"], navigationExtras)
