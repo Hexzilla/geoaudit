@@ -52,6 +52,7 @@ export class AbrioxListComponent implements OnInit {
 
     this.abrioxEntityService.getAll().subscribe(
       (abrioxes) => {
+        console.log("abriox_list, abrioxes", abrioxes)
         this.total_abrioxes = abrioxes.filter(it => it.name != null)
         this.getAbrioxesFromActions(this.surveyId)        
       },
@@ -70,7 +71,7 @@ export class AbrioxListComponent implements OnInit {
           if (action.testpost?.abriox) {
             const abrioxId = Number(action.testpost['abriox'])
             const abriox = this.total_abrioxes.find(a => a.id == abrioxId);
-            abriox && this.abrioxes.push(abriox);
+            abriox && this.addAbriox(abriox);
           }
         })
       },
@@ -78,14 +79,20 @@ export class AbrioxListComponent implements OnInit {
     this.trActionEntityService.getWithQuery(parameters).subscribe(
       (tr_actions) => {
         tr_actions.map(action => {
-          if (action.testpost?.abriox) {
-            const abrioxId = Number(action.testpost['abriox'])
+          if (action.tr?.abriox) {
+            const abrioxId = Number(action.tr['abriox'])
             const abriox = this.total_abrioxes.find(a => a.id == abrioxId);
-            abriox && this.abrioxes.push(abriox);
+            abriox && this.addAbriox(abriox);
           }
         })
       },
     );
+  }
+
+  private addAbriox(abriox) {
+    if (!this.abrioxes.find(a => a.id == abriox.id)) {
+      this.abrioxes.push(abriox);
+    }
   }
 
   delete(item): void {
