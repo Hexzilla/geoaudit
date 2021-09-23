@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ThemePalette } from '@angular/material/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as moment from 'moment';
@@ -116,7 +116,7 @@ export class AbrioxComponent implements OnInit {
 
   initForm() {
     this.form = this.formBuilder.group({
-      name: null,
+      name: [null, Validators.required],
 
       testpost: null,
       tr: null,

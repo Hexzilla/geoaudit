@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ThemePalette } from '@angular/material/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -139,8 +139,8 @@ export class SiteComponent implements OnInit, AfterViewInit {
         hazards: [''],
       }),
 
-      reference: [''],
-      name: [''],
+      reference: ['', Validators.required],
+      name: ['', Validators.required],
       date_installation: [moment().toISOString()],
       site_type: [''],
 

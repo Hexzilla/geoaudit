@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ThemePalette } from '@angular/material/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -152,14 +152,14 @@ export class TestpostComponent implements OnInit, AfterViewInit {
   initForm() {
     this.form = this.formBuilder.group({
 
-      reference: [''],
-      name: [''],
+      reference: ['', Validators.required],
+      name: ['', Validators.required],
       date_installation: [moment().toISOString()],
       manufacture: [''],
       model: [''],
       serial_number: [''],
 
-      geometry: [null],
+      geometry: [null, Validators.required],
 
       images: [],
       documents: [],

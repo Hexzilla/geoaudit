@@ -147,7 +147,7 @@ export class TpActionComponent implements OnInit, AfterViewInit {
    initialiseForm(): void {
     this.form = this.formBuilder.group({
       id: [null],
-      date: [null, Validators.required],
+      date: [moment().toISOString(), Validators.required],
       condition: [null, Validators.required],
       pipe_on: [null],
       pipe_off: [null],

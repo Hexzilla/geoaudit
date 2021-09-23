@@ -234,7 +234,7 @@ export class TrActionComponent implements OnInit, AfterViewInit {
   initialiseForm(): void {
     this.form = this.formBuilder.group({
       id: [null],
-      date: [null, Validators.required],
+      date: [moment().toISOString(), Validators.required],
       condition: [null, Validators.required],
       tr_readings: this.formBuilder.group({
         Amps: null,

@@ -5,7 +5,7 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import * as fromApp from '../../../store';
@@ -216,9 +216,9 @@ export class ResistivityComponent implements OnInit, AfterViewInit {
   initialiseForm(): void {
     this.form = this.formBuilder.group({
       id: [null],
-      date: [moment().toISOString()],
-      reference: [null],
-      geometry: [null],
+      date: [moment().toISOString(), Validators.required],
+      reference: [null, Validators.required],
+      geometry: [null, Validators.required],
       resistivity_detail: new FormArray([]),
     });
   }
