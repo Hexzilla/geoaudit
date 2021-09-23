@@ -67,6 +67,7 @@ import { NotificationEntityService } from '../entity-services/notification-entit
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { SelectionService } from '../services/selection.service';
+import { JobEntityService } from '../entity-services/job-entity.service';
 import { MyJobEntityService } from '../entity-services/my-job-entity.service';
 import { I } from '@angular/cdk/keycodes';
 
@@ -108,7 +109,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
   testposts: Array<Testpost>;
   trs: Array<Tr>;
   resistivities: Array<Resistivity>;
-  surveys: Array<Survey>;
+  surveys: Array<Survey> = [];
+  survey_markers: Array<Survey> = [];
 
   private map;
   private states;
@@ -118,7 +120,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   private survey_ongoing_layer = new L.markerClusterGroup();
   private survey_refused_layer = new L.markerClusterGroup();
   private survey_na_layer = new L.markerClusterGroup();
-  private surveyFilters = new L.markerClusterGroup();
+  private surveyFilters = null;
 
   clickMarker;
   url: string;
@@ -151,6 +153,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     private alertService: AlertService,
     private notificationEntityService: NotificationEntityService,
     private toDoListEntityService: ToDoListEntityService,
+    private jobEntityService: JobEntityService,
     private myJobEntityService: MyJobEntityService,
     private conditionEntityService: ConditionEntityService,
     private selectionService: SelectionService,
@@ -194,8 +197,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
       this.survey_refused_layer?.clearLayers();
       this.survey_na_layer?.clearLayers();
       
-      if (this.surveys) {
-        this.drawSurveyMarkers(this.surveys, selected);
+      if (this.survey_markers) {
+        this.drawSurveyMarkers(this.survey_markers, selected);
       }
     });
 
@@ -260,7 +263,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.abrioxEntityService.getAll().subscribe(
       (marker_data) => {
         this.abrioxes = marker_data;
-        console.log("abrioxes", this.abrioxes)
+        //console.log("abrioxes", this.abrioxes)
         
         const _abrioxes = marker_data
           .filter(it => it.name && it.approved)
@@ -324,7 +327,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.testpostEntityService.getAll().subscribe(
       (marker_data) => {
         this.testposts = marker_data;
-        console.log("testposts", this.testposts)
+        //console.log("testposts", this.testposts)
         
         const _testposts = marker_data
           .filter(it => it.name && it.geometry && it.approved)
@@ -387,7 +390,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.trEntityService.getAll().subscribe(
       (marker_data) => {
         this.trs = marker_data;
-        console.log("trs", this.trs)
+        //console.log("trs", this.trs)
         
         const _trs = marker_data
           .filter(it => it.name && it.geometry && it.approved)
@@ -470,7 +473,16 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.surveyEntityService.getAll().subscribe(
       (marker_data) => {
         this.surveys = marker_data;
-        this.drawSurveyMarkers(this.surveys, this.surveyFilters)
+        marker_data
+          .filter(survey => survey.job)
+          .map(survey => {
+            this.jobEntityService.getByKey(survey.job.id).subscribe((job) => {
+              if (job.assignees?.find(a => a.id == this.authService.authValue.user.id)) {
+                this.survey_markers.push(survey)
+                this.drawSurveyMarker(survey, null)
+              }
+            })
+        })
       },
 
       (err) => {
@@ -890,36 +902,51 @@ export class HomeComponent implements OnInit, AfterViewInit {
       .filter(it => it.job && it.job.assignees && it.job.assignees.length > 0)
       .filter(it => it.job.assignees.find(a => a.id == this.authService.authValue.user.id))
       .map(it => {
-        if (it.status && it.status.name) {
-          let iconColor = this.getMarkerIconColor(it.status.name);
-          let markerColor = 'rgba(255,255,255,0.8)'
-          let outlineColor = 'black'
-
-          if (selected && !selected.find(x => x.id === it.id)) {
-            iconColor = '#E0E0E0'
-            markerColor = 'rgba(140,140,140,1)'
-            outlineColor = 'rgba(140,140,140)'
-          }
-
-          const busIcon = this.createFlagIconMaterial(iconColor, markerColor, outlineColor)
-          const marker = this.createMarker(busIcon, it);
-          this.survey_complete_layer.addLayer(marker);
-        }
-        else {
-          const iconColor = 'black'
-          const markerColor = 'rgba(255,255,255,0.8)'
-          const outlineColor = 'black'
-
-          const busIcon = this.createFlagIconMaterial(iconColor, markerColor, outlineColor)
-          const marker = this.createMarker(busIcon, it);
-          this.survey_na_layer.addLayer(marker);
-        }
+        this.drawSurveyMarker(it, selected);
       })
 
     if (selected && selected.length === 1) {
       const geometry = selected[0].geometry;
       this.map.setZoom(9);
       this.map.panTo(new L.LatLng(geometry.lat, geometry.lng))
+    }
+  }
+
+  private drawSurveyMarker(survey: Survey, selected) {
+    if (!survey.geometry) return;
+    if (survey.status && survey.status.name) {
+      let iconColor = this.getMarkerIconColor(survey.status.name);
+      let markerColor = 'rgba(255,255,255,0.8)'
+      let outlineColor = 'black'
+
+      if (selected && selected.length > 0 && !selected.find(x => x.id === survey.id)) {
+        iconColor = '#E0E0E0'
+        markerColor = 'rgba(140,140,140,1)'
+        outlineColor = 'rgba(140,140,140)'
+      }
+
+      const busIcon = this.createFlagIconMaterial(iconColor, markerColor, outlineColor)
+      const marker = this.createMarker(busIcon, survey);
+
+      switch (survey.status.name) {
+        case 'COMPLETED':
+          marker.addTo(this.survey_complete_layer); break;
+        case 'NOT_STARTED':
+          marker.addTo(this.survey_not_started_layer); break;
+        case 'ONGOING':
+          marker.addTo(this.survey_ongoing_layer); break;
+        case 'REFUSED':
+          marker.addTo(this.survey_refused_layer); break;
+      }
+    }
+    else {
+      const iconColor = 'black'
+      const markerColor = 'rgba(255,255,255,0.8)'
+      const outlineColor = 'black'
+
+      const busIcon = this.createFlagIconMaterial(iconColor, markerColor, outlineColor)
+      const marker = this.createMarker(busIcon, survey);
+      this.survey_na_layer.addLayer(marker);
     }
   }
 

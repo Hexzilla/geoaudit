@@ -169,27 +169,27 @@
   >
     <geoaudit-survey-action-button
       label="site_details"
-      [item_list_completed]="site_list_completed"
+      [item_list_completed]="survey?.site_action_list_completed"
       [routerLink]="'/home/surveys/' + id + '/site_action_list'">
     </geoaudit-survey-action-button>
     <geoaudit-survey-action-button
       label="testpost"
-      [item_list_completed]="testpost_list_completed"
+      [item_list_completed]="survey?.testpost_action_list_completed"
       [routerLink]="'/home/surveys/' + id + '/tp_action_list'">
     </geoaudit-survey-action-button>
     <geoaudit-survey-action-button
       label="tr"
-      [item_list_completed]="tr_list_completed"
+      [item_list_completed]="survey?.tr_action_list_completed"
       [routerLink]="'/home/surveys/' + id + '/tr_action_list'">
     </geoaudit-survey-action-button>
     <geoaudit-survey-action-button
       label="abriox"
-      [item_list_completed]="abriox_list_completed"
+      [item_list_completed]="survey?.abriox_action_list_completed"
       [routerLink]="'/home/surveys/' + id + '/abriox_list'">
     </geoaudit-survey-action-button>
     <geoaudit-survey-action-button
       label="resistivity"
-      [item_list_completed]="resistivity_list_completed"
+      [item_list_completed]="survey?.resistivity_action_list_completed"
       [routerLink]="'/home/surveys/' + id + '/resistivity_list'">
     </geoaudit-survey-action-button>
   </mat-tab>

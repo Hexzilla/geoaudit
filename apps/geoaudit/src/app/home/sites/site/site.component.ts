@@ -91,7 +91,7 @@ export class SiteComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.initialize();
+    //this.initialize();
   }
 
   ngAfterViewInit() {
@@ -219,7 +219,7 @@ export class SiteComponent implements OnInit, AfterViewInit {
       () => {
         this.alertService.info('ALERTS.saved_changes');
 
-        if (navigate) this.router.navigate([`/home/testposts`]);
+        if (navigate) this.router.navigate([`/home`]);
       },
 
       () => {
@@ -259,8 +259,7 @@ export class SiteComponent implements OnInit, AfterViewInit {
   }
 
   onNavigate(actionId) {
-    console.log("onNavigate", actionId)
-    this.router.navigate([`/home/tp_action/${actionId}`]);
+    this.router.navigate([`/home/site_action/${actionId}`]);
   }
   
   completed() {

@@ -190,7 +190,7 @@ export class JobComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.initialize();
+    //this.initialize();
   }
 
   ngAfterViewInit(): void {

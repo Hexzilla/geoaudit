@@ -2,22 +2,12 @@ import {
   Component,
   OnInit,
 } from '@angular/core';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
 import qs from 'qs';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Store } from '@ngrx/store';
 import * as moment from 'moment';
-
-import * as fromApp from '../../../store';
-import { Resistivity } from '../../../models';
-import { AlertService } from '../../../services';
+import { Survey, Resistivity } from '../../../models';
 import { MatDialog } from '@angular/material/dialog';
-import { TestpostEntityService } from '../../../entity-services/testpost-entity.service';
+import { SurveyEntityService } from '../../../entity-services/survey-entity.service';
 import { ResistivityEntityService } from '../../../entity-services/resistivity-entity.service';
 import { DeleteModalComponent } from '../../../modals/delete-modal/delete-modal.component';
 
@@ -27,37 +17,43 @@ import { DeleteModalComponent } from '../../../modals/delete-modal/delete-modal.
   styleUrls: ['./resistivity-list.component.scss'],
 })
 export class ResistivityListComponent implements OnInit {
+  private surveyId;
+
+  survey: Survey;
+
   resistivities: Array<Resistivity> = [];
 
   constructor(
-    private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private store: Store<fromApp.State>,
-    private testpostEntityService: TestpostEntityService,
+    private surveyEntityService: SurveyEntityService,
     private resistivityEntityService: ResistivityEntityService,
-    private alertService: AlertService,
     private dialog: MatDialog
   ) {
   }
 
   ngOnInit(): void {
-    this.update();
+    this.fetchData();
   }
 
-  update() {
-    const serveyId = this.route.snapshot.params['id'];
+  fetchData() {
+    this.surveyId = this.route.snapshot.params['id'];
+    
+    this.surveyEntityService.getByKey(this.surveyId).subscribe(
+      (survey) => {
+        this.survey = survey;
+      },
+    );
 
     const parameters = qs.stringify({
       _where: {
-        survey: serveyId
+        survey: this.surveyId
       }
     });
     this.resistivityEntityService.getWithQuery(parameters).subscribe(
       (actions) => {
         this.resistivities = actions.filter(it => it.reference != null);
       },
-      (err) => {}
     );
   }
 
@@ -72,9 +68,13 @@ export class ResistivityListComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.resistivityEntityService.delete(item.id).subscribe(
-          (res) => {},
-          (err) => {}
-        )
+          () => {
+            const index = this.resistivities.indexOf(item);
+            if (index >= 0) {
+              this.resistivities.splice(index, 1);
+            }
+          }
+        );
       }
     });
   }
@@ -85,6 +85,23 @@ export class ResistivityListComponent implements OnInit {
 
   addAction() {
     this.router.navigate([`/home/resistivities/create`]);
+  }
+
+  completed() {
+    return this.survey?.resistivity_action_list_completed;
+  }
+
+  updateMarkState(e) {
+    if (e.complete) {
+      const payload = {
+        id: this.surveyId,
+        resistivity_action_list_completed: true
+      };
+      this.surveyEntityService.update(payload).subscribe(
+        () => {
+          this.router.navigate([`/home/surveys/${this.surveyId}`]);
+        });
+    }
   }
 
   submit() {

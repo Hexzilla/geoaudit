@@ -2,19 +2,11 @@ import {
   Component,
   OnInit,
 } from '@angular/core';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
 import qs from 'qs';
 import { ActivatedRoute, Router } from '@angular/router';
-import * as moment from 'moment';
-
-import { Abriox } from '../../../models';
-import { AlertService } from '../../../services';
+import { Survey, Abriox } from '../../../models';
 import { MatDialog } from '@angular/material/dialog';
+import { SurveyEntityService } from '../../../entity-services/survey-entity.service';
 import { AbrioxEntityService } from '../../../entity-services/abriox-entity.service';
 import { TpActionEntityService } from '../../../entity-services/tp-action-entity.service';
 import { TrActionEntityService } from '../../../entity-services/tr-action-entity.service';
@@ -26,16 +18,21 @@ import { DeleteModalComponent } from '../../../modals/delete-modal/delete-modal.
   styleUrls: ['./abriox-list.component.scss'],
 })
 export class AbrioxListComponent implements OnInit {
+  private surveyId;
+
+  survey: Survey;
+
+  total_abrioxes: Array<Abriox> = [];
+
   abrioxes: Array<Abriox> = [];
 
   constructor(
-    private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
+    private surveyEntityService: SurveyEntityService,
     private abrioxEntityService: AbrioxEntityService,
     private tpActionEntityService: TpActionEntityService,
     private trActionEntityService: TrActionEntityService,
-    private alertService: AlertService,
     private dialog: MatDialog
   ) {
   }
@@ -45,40 +42,57 @@ export class AbrioxListComponent implements OnInit {
   }
 
   fetchData() {
-    const serveyId = this.route.snapshot.params['id'];
-
-    const parameters = qs.stringify({
-      _where: {
-        survey: serveyId
-      }
-    });
-    this.abrioxEntityService.getWithQuery(parameters).subscribe(
-      (abrioxes) => {
-        this.abrioxes = abrioxes.filter(it => it.name != null)
-        this.getAbrioxesFromActions(serveyId)        
+    this.surveyId = this.route.snapshot.params['id'];
+    
+    this.surveyEntityService.getByKey(this.surveyId).subscribe(
+      (survey) => {
+        this.survey = survey;
       },
-      (err) => {}
+    );
+
+    this.abrioxEntityService.getAll().subscribe(
+      (abrioxes) => {
+        console.log("abriox_list, abrioxes", abrioxes)
+        this.total_abrioxes = abrioxes.filter(it => it.name != null)
+        this.getAbrioxesFromActions(this.surveyId)        
+      },
     );
   }
 
-  private getAbrioxesFromActions(serveyId) {
+  private getAbrioxesFromActions(surveyId) {
     const parameters = qs.stringify({
       _where: {
-        survey: serveyId
+        survey: surveyId
       }
     });
     this.tpActionEntityService.getWithQuery(parameters).subscribe(
-      (actions) => {
-        //console.log("tp-actions", actions)
+      (tp_actions) => {
+        tp_actions.map(action => {
+          if (action.testpost?.abriox) {
+            const abrioxId = Number(action.testpost['abriox'])
+            const abriox = this.total_abrioxes.find(a => a.id == abrioxId);
+            abriox && this.addAbriox(abriox);
+          }
+        })
       },
-      (err) => {}
     );
     this.trActionEntityService.getWithQuery(parameters).subscribe(
-      (actions) => {
-        //console.log("tp-actions", actions)
+      (tr_actions) => {
+        tr_actions.map(action => {
+          if (action.tr?.abriox) {
+            const abrioxId = Number(action.tr['abriox'])
+            const abriox = this.total_abrioxes.find(a => a.id == abrioxId);
+            abriox && this.addAbriox(abriox);
+          }
+        })
       },
-      (err) => {}
     );
+  }
+
+  private addAbriox(abriox) {
+    if (!this.abrioxes.find(a => a.id == abriox.id)) {
+      this.abrioxes.push(abriox);
+    }
   }
 
   delete(item): void {
@@ -92,19 +106,40 @@ export class AbrioxListComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.abrioxEntityService.delete(item.id).subscribe(
-          (res) => {},
-          (err) => {}
-        )
+          () => {
+            const index = this.abrioxes.indexOf(item);
+            if (index >= 0) {
+              this.abrioxes.splice(index, 1);
+            }
+          }
+        );
       }
     });
   }
 
   navigate(item) {
-    this.router.navigate([`/home/abrioxes_actions/${item.id}`]);
+    this.router.navigate([`/home/abriox_action/${item.id}`]);
   }
 
   addAction() {
-    this.router.navigate([`/home/abrioxes_actions/create`]);
+    this.router.navigate([`/home/abriox_action/create`]);
+  }
+
+  completed() {
+    return this.survey?.abriox_action_list_completed;
+  }
+
+  updateMarkState(e) {
+    if (e.complete) {
+      const payload = {
+        id: this.surveyId,
+        abriox_action_list_completed: true
+      };
+      this.surveyEntityService.update(payload).subscribe(
+        () => {
+          this.router.navigate([`/home/surveys/${this.surveyId}`]);
+        });
+    }
   }
 
   submit() {

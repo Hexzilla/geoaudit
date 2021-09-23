@@ -103,7 +103,7 @@ export class TpActionComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.initialize();
+    //this.initialize();
   }
 
   // eslint-disable-next-line @angular-eslint/use-lifecycle-interface

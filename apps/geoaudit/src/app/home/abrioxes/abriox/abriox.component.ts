@@ -95,7 +95,7 @@ export class AbrioxComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.initialize();
+    //this.initialize();
   }
 
   // eslint-disable-next-line @angular-eslint/use-lifecycle-interface
@@ -107,7 +107,7 @@ export class AbrioxComponent implements OnInit {
     this.id = this.route.snapshot.paramMap.get('id');
     this.initForm();
 
-    if (this.id) {
+    if (this.id && this.id != 'create') {
       this.getAbrioxAndPatchForm(this.id);
     } else {
       this.createMode();
@@ -156,7 +156,8 @@ export class AbrioxComponent implements OnInit {
 
         this.abriox = abriox;
 
-        this.autoSave(this.id ? false : true);
+        const createMode = !(this.id && this.id != 'create');
+        this.autoSave(createMode);
       },
 
       (err) => {}
@@ -166,10 +167,9 @@ export class AbrioxComponent implements OnInit {
   createMode() {
     this.abrioxEntityService.add(this.form.value).subscribe(
       (abriox) => {
+        console.log("createMode, abriox", abriox);
         this.patchForm(abriox);
-      },
-
-      (err) => {}
+      }
     );
   }
 
@@ -209,7 +209,6 @@ export class AbrioxComponent implements OnInit {
     });
 
     const testpostId = this.route.snapshot.queryParamMap.get('testpost');
-
     if (testpostId) {
       this.testpostEntityService.getByKey(testpostId).subscribe((item) => {
         this.form.patchValue({
@@ -219,7 +218,6 @@ export class AbrioxComponent implements OnInit {
     }
 
     const trId = this.route.snapshot.queryParamMap.get('tr');
-
     if (trId) {
       this.trEntityService.getByKey(trId).subscribe((item) => {
         this.form.patchValue({
@@ -228,7 +226,8 @@ export class AbrioxComponent implements OnInit {
       });
     }
 
-    this.autoSave(this.id ? false : true);
+    const createMode = !(this.id && this.id != 'create');
+    this.autoSave(createMode);
 
     this.ready = true;
   }
@@ -286,7 +285,7 @@ export class AbrioxComponent implements OnInit {
       (update) => {
         this.alertService.info('ALERTS.saved_changes');
 
-        if (navigate) this.router.navigate([`/home/abrioxes`]);
+        if (navigate) this.router.navigate([`/home`]);
       },
 
       (err) => {
@@ -318,7 +317,7 @@ export class AbrioxComponent implements OnInit {
   }
 
   onNavigate(actionId) {
-    this.router.navigate([`/home/tp_action/${actionId}`]);
+    this.router.navigate([`/home/abriox_action/${actionId}`]);
   }
   
   completed() {

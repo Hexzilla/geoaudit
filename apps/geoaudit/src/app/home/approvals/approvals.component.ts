@@ -12,6 +12,7 @@ import { RefusalModalComponent } from '../../modals/refusal-modal/refusal-modal.
 import { Status, Statuses, Survey } from '../../models';
 import { AuthService } from '../../services';
 import * as moment from 'moment';
+import { ApproveListComponent } from '../../components/approve-list/approve-list.component';
 
 @Component({
   selector: 'geoaudit-approvals',
@@ -19,7 +20,7 @@ import * as moment from 'moment';
   styleUrls: ['./approvals.component.scss'],
 })
 export class ApprovalsComponent implements OnInit {
-  displayedColumns: Array<String> = [
+  displayedColumns: Array<string> = [
     'select',
     'reference',
     'name',
@@ -41,7 +42,7 @@ export class ApprovalsComponent implements OnInit {
     private authService: AuthService,
     private statusEntityService: StatusEntityService,
     private surveyEntityService: SurveyEntityService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
   ) {}
 
   ngOnInit(): void {
@@ -53,8 +54,6 @@ export class ApprovalsComponent implements OnInit {
           (status) => status.name === Statuses.REFUSED
         );
       },
-
-      (err) => {}
     );
   }
 
@@ -79,20 +78,69 @@ export class ApprovalsComponent implements OnInit {
   }
 
   approve() {
-    this.selection.selected.map((survey) => {
-      this.surveyEntityService
-        .update({
-          id: survey.id,
-          approved: true,
-          approved_by: this.authService.authValue.user,
-        })
-        .subscribe(
-          (update) => {
-            this.query();
-          },
+    if (this.selection.selected?.length <= 0) {
+      return
+    }
 
-          (err) => {}
-        );
+    const survey = this.selection.selected[0];
+    //const testposts = [{ id: 1, text: 'Testpost 1' }, { id: 2, text: 'Testpost 2' }]
+    const treeData = {
+      [`Survey [${survey .reference}]`]: {
+        // "Overview": null,
+        // "Delivery details": null,
+        // "Attachments": null,
+        // "Site details": null,
+        "Testposts": survey.tp_actions?.map((it, index) => {
+          return {
+            key: 'tp_actions',
+            id: it.id,
+            approved: it.approved,
+            text: `Tp_action ${index}`,
+          };
+        }),
+        "Transformer Rectifiers (Trs)": survey.tr_actions?.map((it, index) => {
+          return {
+            key: 'tr_actions',
+            id: it.id,
+            approved: it.approved,
+            text: `Tr_action ${index}`,
+          };
+        }),
+        "Abrioxes": survey.abriox_actions?.map((it, index) => {
+          return {
+            key: 'abriox_actions',
+            id: it.id,
+            approved: it.approved,
+            text: `Abriox ${index}`,
+          };
+        }),
+        "Resistivities": survey.resistivities?.map((it, index) => {
+          return {
+            key: 'resistivities',
+            id: it.id,
+            approved: it.approved,
+            text: `Resistivity ${index}`,
+          };
+        }),
+        "Notes": survey.notes?.map((it, index) => {
+          return {
+            key: 'notes',
+            id: it.id,
+            approved: it.approved,
+            text: `Note ${index}`,
+          };
+        }),
+      }
+    }
+    const dialogRef = this.dialog.open(ApproveListComponent, {
+      data: {
+        treeData: treeData
+      },
+      width: '50%',
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      //
     });
   }
 
@@ -182,7 +230,7 @@ export class ApprovalsComponent implements OnInit {
     });
     const blob = new Blob([csv]);
 
-    var a = window.document.createElement('a');
+    const a = window.document.createElement('a');
     a.href = window.URL.createObjectURL(blob);
     a.download = `${moment().toISOString(true)}-survey-download.csv`;
     document.body.appendChild(a);
