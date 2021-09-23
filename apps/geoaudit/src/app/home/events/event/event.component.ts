@@ -1,6 +1,6 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as moment from 'moment';
 import { ThemePalette } from '@angular/material/core';
@@ -96,10 +96,10 @@ export class EventComponent implements OnInit {
 
   initForm(): void {
     this.form = this.formBuilder.group({
-      title: [null],
+      title: [null, Validators.required],
       allDay: [false],
-      start: [moment().toISOString()],
-      end: [moment().toISOString()],
+      start: [moment().toISOString(), Validators.required],
+      end: [moment().toISOString(), Validators.required],
       notes: [null],
 
       users_permissions_users: [[]],
