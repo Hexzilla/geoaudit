@@ -66,7 +66,7 @@ export class TestpostComponent implements OnInit, AfterViewInit {
 
   tp_actions: Array<TpAction> = [];
 
-  currentState = 0;
+  currentState = 3;
   approved = null;
 
   constructor(

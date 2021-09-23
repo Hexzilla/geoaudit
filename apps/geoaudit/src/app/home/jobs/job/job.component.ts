@@ -108,7 +108,7 @@ export class JobComponent implements OnInit, AfterViewInit {
   /**
    * The current job state.
    */
-  currentState = 0;
+  currentState = 3;
 
   /**
    * Whether the form has been submitted.
@@ -397,10 +397,10 @@ export class JobComponent implements OnInit, AfterViewInit {
    */
   initialiseForm(): void {
     this.form = this.formBuilder.group({
-      status: null,
-      name: null,
-      reference: null,
-      job_type: null,
+      status: [null],
+      name: [null, Validators.required],
+      reference: [null, Validators.required],
+      job_type: [null, Validators.required],
       assignees: [],
       surveys: [[]],
 

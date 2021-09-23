@@ -5,7 +5,7 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import * as fromApp from '../../../store';
@@ -49,7 +49,7 @@ export class TrActionComponent implements OnInit, AfterViewInit {
   /**
    * The current job state.
    */
-  currentState = 0;
+  currentState = 3;
 
   approved = false;
 
@@ -233,9 +233,9 @@ export class TrActionComponent implements OnInit, AfterViewInit {
    */
   initialiseForm(): void {
     this.form = this.formBuilder.group({
-      id: null,
-      date: null,
-      condition: null,
+      id: [null],
+      date: [null, Validators.required],
+      condition: [null, Validators.required],
       tr_readings: this.formBuilder.group({
         Amps: null,
         Volt: null,

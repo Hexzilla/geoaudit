@@ -5,7 +5,7 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import * as fromApp from '../../../store';
@@ -45,7 +45,7 @@ export class AbrioxActionComponent implements OnInit, AfterViewInit {
   /**
    * The current job state.
    */
-  currentState = 0;
+  currentState = 3;
 
   approved = false;
 
@@ -95,10 +95,12 @@ export class AbrioxActionComponent implements OnInit, AfterViewInit {
     }));
   }
 
+  // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
   ngOnInit(): void {
-    this.initialize();
+    //this.initialize();
   }
 
+  // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
   ngAfterViewInit(): void {
     //
   }
@@ -113,6 +115,7 @@ export class AbrioxActionComponent implements OnInit, AfterViewInit {
     this.statusEntityService.getAll().subscribe(
       (statuses) => {
         this.statuses = statuses;
+        console.log("statuses", statuses);
       },
       (err) => {}
     );
@@ -140,8 +143,8 @@ export class AbrioxActionComponent implements OnInit, AfterViewInit {
    initialiseForm(): void {
     this.form = this.formBuilder.group({
       id: [null],
-      date: [null],
-      condition: [null],
+      date: [null, Validators.required],
+      condition: [null, Validators.required],
       fault_detail: new FormArray([]),
     });
   }

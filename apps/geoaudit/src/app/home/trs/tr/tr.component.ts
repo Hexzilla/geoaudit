@@ -67,7 +67,7 @@ export class TrComponent implements OnInit, AfterViewInit {
 
   tr_actions: Array<TrAction> = [];
 
-  currentState = 0;
+  currentState = 3;
   approved = null;
 
   // surveys: Array<Survey> = [];

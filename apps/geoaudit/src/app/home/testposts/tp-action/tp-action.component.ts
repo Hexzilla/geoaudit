@@ -5,7 +5,7 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { State, Store } from '@ngrx/store';
 import * as fromApp from '../../../store';
@@ -47,7 +47,7 @@ export class TpActionComponent implements OnInit, AfterViewInit {
   /**
    * The current job state.
    */
-  currentState = 0;
+  currentState = 3;
 
   approved = false;
 
@@ -147,8 +147,8 @@ export class TpActionComponent implements OnInit, AfterViewInit {
    initialiseForm(): void {
     this.form = this.formBuilder.group({
       id: [null],
-      date: [null],
-      condition: [null],
+      date: [null, Validators.required],
+      condition: [null, Validators.required],
       pipe_on: [null],
       pipe_off: [null],
       anodes_off: [null],

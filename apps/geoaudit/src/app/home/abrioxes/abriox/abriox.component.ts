@@ -59,7 +59,7 @@ export class AbrioxComponent implements OnInit {
 
   abriox: Abriox;
 
-  currentState = 0;
+  currentState = 3;
   approved = null;
   
   ready = false;
