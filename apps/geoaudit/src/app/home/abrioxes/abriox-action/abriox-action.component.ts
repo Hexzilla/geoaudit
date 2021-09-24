@@ -16,7 +16,7 @@ import {
   Status,
   Condition,
 } from '../../../models';
-import { AlertService, UploadService } from '../../../services';
+import { AlertService, UploadService, AuthService } from '../../../services';
 import { FileTypes } from '../../../components/file-upload/file-upload.component';
 import { StatusEntityService } from '../../../entity-services/status-entity.service';
 import { AbrioxActionEntityService } from '../../../entity-services/abriox-action-entity.service';
@@ -49,6 +49,8 @@ export class AbrioxActionComponent implements OnInit, AfterViewInit {
 
   approved = false;
 
+  approved_by = 0;
+
   /**
    * Whether the form has been submitted.
    */
@@ -68,6 +70,7 @@ export class AbrioxActionComponent implements OnInit, AfterViewInit {
   attachedDocuments: Array<any>;
 
   constructor(
+    private authService: AuthService,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private statusEntityService: StatusEntityService,
@@ -253,11 +256,22 @@ export class AbrioxActionComponent implements OnInit, AfterViewInit {
     }
     else if (e.approve) {
       this.approved = true;
+      this.approved_by = this.authService.authValue.user.id
       this.submit(true);
     }
     else if (e.refuse) {
       this.approved = false;
       this.submit(true);
+
+      /*this.notificationService.post({
+        source: this.authService.authValue.user,
+        recipient: this.abriox_action.conducted_by,
+        data: {
+          type: 'ABRIOX_REFUSAL',
+          subject: this.abriox_action,
+          message: this.form.value.message,
+        }
+      })*/
     }
   }
 

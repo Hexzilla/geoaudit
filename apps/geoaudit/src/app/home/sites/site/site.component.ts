@@ -10,7 +10,7 @@ import { SiteEntityService } from '../../../entity-services/site-entity.service'
 import { Site, MarkerColours, TpAction } from '../../../models';
 import { debounceTime, tap, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { Subject, Subscription } from 'rxjs';
-import { AlertService, UploadService } from '../../../services';
+import { AlertService, UploadService, AuthService } from '../../../services';
 import { FileTypes } from '../../../components/file-upload/file-upload.component';
 import { MatDialog } from '@angular/material/dialog';
 import { TpActionEntityService } from '../../../entity-services/tp-action-entity.service';
@@ -59,10 +59,12 @@ export class SiteComponent implements OnInit, AfterViewInit {
 
   currentState = 3;
   approved = null;
+  approved_by = 0;
 
   // surveys: Array<Survey> = [];
 
   constructor(
+    private authService: AuthService, 
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private surveyEntityService: SurveyEntityService,
@@ -274,6 +276,7 @@ export class SiteComponent implements OnInit, AfterViewInit {
     }
     else if (e.approve) {
       this.approved = true;
+      this.approved_by = this.authService.authValue.user.id
       this.submit(true);
     }
     else if (e.refuse) {

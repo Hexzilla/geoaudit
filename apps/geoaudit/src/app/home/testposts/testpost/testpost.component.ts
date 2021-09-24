@@ -10,7 +10,7 @@ import { TestpostEntityService } from '../../../entity-services/testpost-entity.
 import { Abriox, MarkerColours, Testpost, TpAction } from '../../../models';
 import { debounceTime, tap, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { Subject, Subscription } from 'rxjs';
-import { AlertService, UploadService } from '../../../services';
+import { AlertService, UploadService, AuthService } from '../../../services';
 import { FileTypes } from '../../../components/file-upload/file-upload.component';
 import { environment } from 'apps/geoaudit/src/environments/environment';
 import { TpActionEntityService } from '../../../entity-services/tp-action-entity.service';
@@ -68,8 +68,10 @@ export class TestpostComponent implements OnInit, AfterViewInit {
 
   currentState = 3;
   approved = null;
+  approved_by = 0;
 
   constructor(
+    private authService: AuthService,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private testpostEntityService: TestpostEntityService,
@@ -366,6 +368,7 @@ export class TestpostComponent implements OnInit, AfterViewInit {
     }
     else if (e.approve) {
       this.approved = true;
+      this.approved_by = this.authService.authValue.user.id
       this.submit(true);
     }
     else if (e.refuse) {

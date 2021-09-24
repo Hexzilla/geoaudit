@@ -17,7 +17,7 @@ import { SurveyEntityService } from '../../../entity-services/survey-entity.serv
 import { TestpostEntityService } from '../../../entity-services/testpost-entity.service';
 import { TrEntityService } from '../../../entity-services/tr-entity.service';
 import { Abriox, AbrioxAction, MarkerColours, Survey } from '../../../models';
-import { AlertService, UploadService } from '../../../services';
+import { AlertService, UploadService, AuthService } from '../../../services';
 
 @Component({
   selector: 'geoaudit-abriox',
@@ -61,12 +61,14 @@ export class AbrioxComponent implements OnInit {
 
   currentState = 3;
   approved = null;
+  approved_by = 0;
   
   ready = false;
 
   surveys: Array<Survey> = [];
 
   constructor(
+    private authService: AuthService,
     private route: ActivatedRoute,
     private abrioxEntityService: AbrioxEntityService,
     private abrioxActionEntityService: AbrioxActionEntityService,
@@ -167,7 +169,6 @@ export class AbrioxComponent implements OnInit {
   createMode() {
     this.abrioxEntityService.add(this.form.value).subscribe(
       (abriox) => {
-        console.log("createMode, abriox", abriox);
         this.patchForm(abriox);
       }
     );
@@ -332,11 +333,22 @@ export class AbrioxComponent implements OnInit {
     }
     else if (e.approve) {
       this.approved = true;
+      this.approved_by = this.authService.authValue.user.id
       this.submit(true);
     }
     else if (e.refuse) {
       this.approved = false;
       this.submit(true);
+
+      /*this.notificationService.post({
+        source: this.authService.authValue.user,
+        recipient: this.abriox.conducted_by,
+        data: {
+          type: 'ABRIOX_REFUSAL',
+          subject: this.abriox,
+          message: this.form.value.message,
+        }
+      })*/
     }
   }
 
