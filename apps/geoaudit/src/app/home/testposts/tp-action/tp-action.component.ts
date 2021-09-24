@@ -17,7 +17,7 @@ import {
   TpAction,
   Status,
 } from '../../../models';
-import { AlertService, UploadService } from '../../../services';
+import { AlertService, UploadService, AuthService } from '../../../services';
 import { FileTypes } from '../../../components/file-upload/file-upload.component';
 import { StatusEntityService } from '../../../entity-services/status-entity.service';
 import { TpActionEntityService } from '../../../entity-services/tp-action-entity.service';
@@ -51,6 +51,8 @@ export class TpActionComponent implements OnInit, AfterViewInit {
 
   approved = false;
 
+  approved_by = 0;
+
   /**
    * Whether the form has been submitted.
    */
@@ -74,6 +76,7 @@ export class TpActionComponent implements OnInit, AfterViewInit {
   attachedDocuments: Array<any>;
 
   constructor(
+    private authService: AuthService,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private statusEntityService: StatusEntityService,
@@ -332,6 +335,7 @@ export class TpActionComponent implements OnInit, AfterViewInit {
       ...this.form.value,
       status: this.currentState,
       approved: this.approved,
+      approved_by: this.approved_by,
       tp_information: {
         anodes_off: this.form.value.anodes_off,
         anode_on: this.form.value.anode_on,
@@ -398,10 +402,12 @@ export class TpActionComponent implements OnInit, AfterViewInit {
     }
     else if (e.approve) {
       this.approved = true;
+      this.approved_by = this.authService.authValue.user.id
       this.submit(true);
     }
     else if (e.refuse) {
       this.approved = false;
+      this.approved_by = 0;
       this.submit(true);
     }
   }

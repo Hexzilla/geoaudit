@@ -15,7 +15,7 @@ import {
 } from '../../../models';
 import * as moment from 'moment';
 import * as MapActions from '../../../store/map/map.actions';
-import { AlertService, UploadService } from '../../../services';
+import { AlertService, UploadService, AuthService } from '../../../services';
 import { FileTypes } from '../../../components/file-upload/file-upload.component';
 import { StatusEntityService } from '../../../entity-services/status-entity.service';
 import { ResistivityEntityService } from '../../../entity-services/resistivity-entity.service';
@@ -47,6 +47,8 @@ export class ResistivityComponent implements OnInit, AfterViewInit {
 
   approved = false;
 
+  approved_by = 0;
+
   /**
    * Whether the form has been submitted.
    */
@@ -63,6 +65,7 @@ export class ResistivityComponent implements OnInit, AfterViewInit {
   lngCtrl = new FormControl();
 
   constructor(
+    private authService: AuthService,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private statusEntityService: StatusEntityService,
@@ -239,6 +242,7 @@ export class ResistivityComponent implements OnInit, AfterViewInit {
       ...this.form.value,
       status: this.currentState,
       approved: this.approved,
+      approved_by: this.approved_by,
     };
 
     /**
@@ -291,10 +295,12 @@ export class ResistivityComponent implements OnInit, AfterViewInit {
     }
     else if (e.approve) {
       this.approved = true;
+      this.approved_by = this.authService.authValue.user.id
       this.submit(true);
     }
     else if (e.refuse) {
       this.approved = false;
+      this.approved_by = 0;
       this.submit(true);
     }
   }

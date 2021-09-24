@@ -10,7 +10,7 @@ import { TrEntityService } from '../../../entity-services/tr-entity.service';
 import { Abriox, Conditions, Image, MarkerColours, Survey, Tr, TrAction } from '../../../models';
 import { debounceTime, tap, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { Subject, Subscription } from 'rxjs';
-import { AlertService, UploadService } from '../../../services';
+import { AlertService, UploadService, AuthService } from '../../../services';
 import { FileTypes } from '../../../components/file-upload/file-upload.component';
 import { environment } from 'apps/geoaudit/src/environments/environment';
 import { TrActionEntityService } from '../../../entity-services/tr-action-entity.service';
@@ -69,10 +69,12 @@ export class TrComponent implements OnInit, AfterViewInit {
 
   currentState = 3;
   approved = null;
+  approved_by = 0;
 
   // surveys: Array<Survey> = [];
 
   constructor(
+    private authService: AuthService,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private trEntityService: TrEntityService,
@@ -250,7 +252,8 @@ export class TrComponent implements OnInit, AfterViewInit {
     const payload = {
       ...this.form.value,
       status: this.currentState,
-      approved: this.approved
+      approved: this.approved,
+      approved_by: this.approved_by,
     }
     /**
      * Invoke the backend with a PUT request to update
@@ -370,10 +373,12 @@ export class TrComponent implements OnInit, AfterViewInit {
     }
     else if (e.approve) {
       this.approved = true;
+      this.approved_by = this.authService.authValue.user.id
       this.submit(true);
     }
     else if (e.refuse) {
       this.approved = false;
+      this.approved_by = 0;
       this.submit(true);
     }
   }
