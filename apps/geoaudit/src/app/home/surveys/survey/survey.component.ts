@@ -107,8 +107,12 @@ export class SurveyComponent implements OnInit {
   ) {
     this.subscriptions.push(this.route.queryParams.subscribe(params => {
       const tabIndex = params['tab'];
-      if (tabIndex == 'actions') {
+      if (tabIndex == 'delivery') {
+        this.selectedTabIndex = 1;
+      } else if (tabIndex == 'attachment') {
         this.selectedTabIndex = 2;
+      } else if (tabIndex == 'inspection') {
+        this.selectedTabIndex = 3;
       } else if (tabIndex == 'notes') {
         this.selectedTabIndex = 4;
       } else {
@@ -555,5 +559,17 @@ export class SurveyComponent implements OnInit {
 
   selectedIndexChange(selectedTabIndex) {
     this.selectedTabIndex = selectedTabIndex;
+    
+    let queryParams  = { tab: 'overview' };
+    if (selectedTabIndex == 1) {
+      queryParams = { tab: 'delivery' }
+    } else if (selectedTabIndex == 2) {
+      queryParams = { tab: 'attachment' }
+    } else if (selectedTabIndex == 3) {
+      queryParams = { tab: 'inspection' }
+    } else if (selectedTabIndex == 4) {
+      queryParams = { tab: 'notes' }
+    }
+    this.router.navigate(['.'], { relativeTo: this.route, queryParams: queryParams});
   }
 }
