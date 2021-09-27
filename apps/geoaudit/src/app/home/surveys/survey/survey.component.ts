@@ -110,7 +110,7 @@ export class SurveyComponent implements OnInit {
       if (tabIndex == 'actions') {
         this.selectedTabIndex = 2;
       } else if (tabIndex == 'notes') {
-        this.selectedTabIndex = 3;
+        this.selectedTabIndex = 4;
       } else {
         this.selectedTabIndex = 0;
       }
