@@ -223,6 +223,7 @@
 				"finished": "Finished"
 			},
 			"survey": {
+				"title": "Survey",
 				"add_survey": {
 					"title": "Add Survey"
 				},

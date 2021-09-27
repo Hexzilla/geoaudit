@@ -231,6 +231,7 @@ export class SurveyComponent implements OnInit {
   getSurveyAndPatchForm() {
     this.surveyEntityService.getByKey(this.id).subscribe(
       (survey) => {
+        this.currentState = survey.status?.id;
         this.patchForm(survey);
       },
 
@@ -295,7 +296,8 @@ export class SurveyComponent implements OnInit {
     this.latCtrl.setValue(geometry?.lat);
     this.lngCtrl.setValue(geometry?.lng);
 
-    this.autoSave(this.id ? false : true);
+    const createMode = !(this.id && this.id != 'create');
+    this.autoSave(createMode);
 
     this.survey = survey;
   }
