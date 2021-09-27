@@ -80,7 +80,9 @@ export class TrActionsComponent implements OnInit {
   }
 
   navigate(item) {
-    this.router.navigate([`/home/tr_action/${item.id}`]);
+    if (item.tr) {
+      this.router.navigate([`/home/trs/${item.tr.id}/tr_action/${item.id}`]);  
+    }
   }
 
   addAction() {

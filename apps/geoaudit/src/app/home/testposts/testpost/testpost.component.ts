@@ -353,7 +353,7 @@ export class TestpostComponent implements OnInit, AfterViewInit {
   }
 
   onNavigate(actionId) {
-    this.router.navigate([`/home/tp_action/${actionId}`]);
+    this.router.navigate([`/home/testposts/${this.testpost.id}/tp_action/${actionId}`]);
   }
   
   completed() {

@@ -318,7 +318,7 @@ export class AbrioxComponent implements OnInit {
   }
 
   onNavigate(actionId) {
-    this.router.navigate([`/home/abriox_action/${actionId}`]);
+    this.router.navigate([`/home/abrioxes/${this.abriox.id}/abriox_action/${actionId}`]);
   }
   
   completed() {
