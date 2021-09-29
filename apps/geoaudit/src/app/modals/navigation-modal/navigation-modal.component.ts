@@ -15,17 +15,10 @@ import '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css';
 
 import { Survey } from '../../models';
 import { environment } from 'apps/geoaudit/src/environments/environment';
-import { ActivatedRoute } from '@angular/router';
-import { Store } from '@ngrx/store';
 import { MapsAPILoader } from '@agm/core';
 
-import * as fromApp from '../../store';
 import { ThemePalette } from '@angular/material/core';
 import { FormControl } from '@angular/forms';
-import {
-  MatAutocomplete,
-  MatAutocompleteSelectedEvent,
-} from '@angular/material/autocomplete';
 import qs from 'qs';
 
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
@@ -35,6 +28,7 @@ import { GeoJson } from '../../models';
 
 export interface DialogData {
   surveys: Array<Survey>;
+  selected: Survey;
 }
 
 @Component({
@@ -69,15 +63,11 @@ export class NavigationModalComponent implements OnInit, AfterViewInit {
   selectedDestinationType: string;
   destinationTypes: Array<string> = ['survey', 'home', 'work', 'other_address'];
 
-  searchCtrl = new FormControl();
-
-  surveyCtrl = new FormControl();
-  filteredSurveys: Array<Survey>;
-
+  surveys: Array<Survey>;
+  selectedSurveyId = 0;
   selectedSurvey: Survey = null;
 
   @ViewChild('surveyInput', { static: true }) surveyInput: ElementRef;
-  @ViewChild('auto') matAutocomplete: MatAutocomplete;
   @ViewChild('searchInput') searchInput: ElementRef;
 
   constructor(
@@ -95,43 +85,13 @@ export class NavigationModalComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
+    this.surveys = [...this.data.surveys];
+    if (this.surveys.length > 0) {
+      this.selectedSurvey = this.surveys[0];
+      this.selectedSurveyId = this.selectedSurvey.id;
+    }
+
     this.initMap();
-
-    /**
-     * For when survey is selected, we use this to catch the text input
-     * and then filter the surveys against the given input.
-     */
-    this.surveyCtrl.valueChanges.subscribe((value) => {
-      if (value) {
-        this.filteredSurveys = this._filterSurveys(value);
-      } else {
-        this.filteredSurveys = this.data.surveys.slice();
-      }
-    });
-
-    this.searchCtrl.valueChanges.subscribe((value) => {
-      this.mapsAPILoader.load().then(() => {
-        let autocomplete = new google.maps.places.Autocomplete(
-          this.searchInput.nativeElement
-        );
-        autocomplete.addListener('place_changed', () => {
-          this.ngZone.run(() => {
-            //get the place result
-            let place: google.maps.places.PlaceResult = autocomplete.getPlace();
-
-            //verify result
-            if (place.geometry === undefined || place.geometry === null) {
-              return;
-            }
-
-            this.otherAddress = {
-              lat: place.geometry.location.lat(),
-              lng: place.geometry.location.lng(),
-            };
-          });
-        });
-      });
-    });
   }
 
   /**
@@ -187,36 +147,21 @@ export class NavigationModalComponent implements OnInit, AfterViewInit {
          * that that is the survey they wish to be
          * their destination.
          */
-        if (this.data.surveys.length === 1) {
-          this.surveyCtrl.setValue(this.data.surveys[0].reference);
-          this.selectedSurvey = this.data.surveys[0];
+        if (this.surveys.length === 1) {
+          this.selectedSurvey = this.surveys[0];
         }
         break;
 
       case 'home':
         // Set the users home address coordinates.
-        const { home } = this.authService.authValue.user;
-        this.home = home;
+        this.home = this.authService.authValue.user.home;
         break;
 
       case 'work':
         // Set the users work address coordinates.
-        const { work } = this.authService.authValue.user;
-        this.work = work;
+        this.work = this.authService.authValue.user.work;
         break;
     }
-  }
-
-  /**
-   * On step option selected i.e. when a user
-   * inputs text to filter a survey and then selects one.
-   *
-   * We set the input value and set as the selected survey.
-   * @param event
-   */
-  selected(event: MatAutocompleteSelectedEvent): void {
-    this.surveyCtrl.setValue(event.option.value.reference);
-    this.selectedSurvey = event.option.value;
   }
 
   /**
@@ -414,19 +359,8 @@ export class NavigationModalComponent implements OnInit, AfterViewInit {
     });
   }
 
-  /**
-   * For filtering the surveys based on a string input value
-   * @param value
-   * @returns
-   */
-  private _filterSurveys(value: string): Array<Survey> {
-    if (value && typeof value === 'string') {
-      const filterValue = value.toLowerCase();
-      return this.data.surveys.filter(
-        (survey) =>
-          survey.name.toLowerCase().indexOf(filterValue) === 0 ||
-          survey.id.toString().indexOf(filterValue) === 0
-      );
-    }
+  onChangeSelectedSurvey() {
+    this.selectedSurvey = this.surveys.find(it => it.id == this.selectedSurveyId);
+    console.log("this.selectedSurvey", this.selectedSurvey)
   }
 }

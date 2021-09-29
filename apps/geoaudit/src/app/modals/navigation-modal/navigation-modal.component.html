@@ -1,4 +1,14 @@
-<h1 mat-dialog-title>{{ 'MODALS.navigation_modal.title' | translate }}</h1>
+<div class="modal-header">
+  <h1 mat-dialog-title>{{ 'MODALS.navigation_modal.title' | translate }}</h1>
+  <button
+    mat-icon-button
+    color="accent"
+    aria-label="Example icon button with a plus one icon"
+    (click)="onNoClick()"
+  >
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
 <div mat-dialog-content>
   <p>
     {{
@@ -6,7 +16,6 @@
         | translate: { length: data.surveys.length }
     }}
   </p>
-
   <mat-horizontal-stepper (selectionChange)="selectionChange($event)">
     <mat-step
       label="Step 1"
@@ -64,25 +73,17 @@
           <form class="form">
             <mat-form-field class="full-width">
               <mat-label>Survey</mat-label>
-              <input
-                matInput
-                aria-label="Survey"
-                [matAutocomplete]="auto"
-                [formControl]="surveyCtrl"
-                #surveyInput
-              />
-              <mat-autocomplete
-                #auto="matAutocomplete"
-                (optionSelected)="selected($event)"
+              <mat-select
+                statusControlName="status"
+                name="status"
+                [(value)]="selectedSurveyId"
+                (selectionChange)="onChangeSelectedSurvey()"
               >
-                <mat-option
-                  *ngFor="let survey of filteredSurveys"
-                  [value]="survey"
-                >
+                <mat-option *ngFor="let survey of surveys" [value]="survey.id">
                   <span>{{ survey.reference }}</span> |
                   <small>ID: {{ survey.id }}</small>
                 </mat-option>
-              </mat-autocomplete>
+              </mat-select>
             </mat-form-field>
           </form>
         </ng-container>
@@ -92,7 +93,7 @@
             {{ 'MODALS.navigation_modal.home_address' | translate }}
           </p>
           <p>
-            {{ 'MODALS.navigation_modal.home.lat_lng' | translate: { lat: home.lat, lng: home.lng } }}
+            {{ 'MODALS.navigation_modal.home.lat_lng' | translate: { lat: home?.lat, lng: home?.lng } }}
           </p>
         </ng-container>
 
@@ -101,7 +102,7 @@
             {{ 'MODALS.navigation_modal.work_address' | translate }}
           </p>
           <p>
-            {{ 'MODALS.navigation_modal.work.lat_lng' | translate: { lat: work.lat, lng: work.lng } }}
+            {{ 'MODALS.navigation_modal.work.lat_lng' | translate: { lat: work?.lat, lng: work?.lng } }}
           </p>
         </ng-container>
 
@@ -136,6 +137,7 @@
     </ng-template>
   </mat-horizontal-stepper>
 </div>
+
 <div mat-dialog-actions fxLayoutAlign="space-between">
   <div *ngIf="!url"></div>
 
@@ -147,8 +149,5 @@
     [disabled]="isSubmitDisabled()"
   >
     {{ 'MODALS.navigation_modal.start' | translate }}
-  </button>
-  <button mat-flat-button color="accent" (click)="onNoClick()">
-    {{ 'MODALS.close' | translate }}
   </button>
 </div>
