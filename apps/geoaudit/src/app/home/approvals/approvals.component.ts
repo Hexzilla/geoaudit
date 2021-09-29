@@ -18,6 +18,7 @@ import { Status, Statuses, Survey } from '../../models';
 import { AuthService } from '../../services';
 import * as moment from 'moment';
 import { ApproveListComponent } from '../../components/approve-list/approve-list.component';
+import { SelectionService } from '../../services/selection.service';
 
 @Component({
   selector: 'geoaudit-approvals',
@@ -52,6 +53,7 @@ export class ApprovalsComponent implements OnInit {
     private abrioxActionEntityService: AbrioxActionEntityService,
     private resistivityEntityService: ResistivityEntityService,
     private noteEntityService: NoteEntityService,
+    private selectionService: SelectionService,
     private dialog: MatDialog,
   ) {}
 
@@ -65,6 +67,12 @@ export class ApprovalsComponent implements OnInit {
         );
       },
     );
+    this.selectionService.setSurveyMarkerFilter.emit([]);
+  }
+
+  // eslint-disable-next-line @angular-eslint/use-lifecycle-interface
+  ngOnDestroy(): void{
+    this.selectionService.setSurveyMarkerFilter.emit(null);
   }
 
   query() {
@@ -299,9 +307,23 @@ export class ApprovalsComponent implements OnInit {
 
   /** Selects all rows if they are not all selected; otherwise clear selection. */
   masterToggle() {
-    this.isAllSelected()
-      ? this.selection.clear()
-      : this.dataSource.data.forEach((row) => this.selection.select(row));
+    if (this.isAllSelected()) {
+      this.selection.clear()
+      this.selectionService.setSurveyMarkerFilter.emit([]);
+    } else {
+      this.dataSource.data.forEach((row) => this.selection.select(row));
+      this.selectionService.setSurveyMarkerFilter.emit(this.dataSource.data);
+    }
+  }
+
+  onCheckedRow(event, row) {
+    event && this.selection.toggle(row);
+    if (this.selection.selected.length == 0) {
+      this.selectionService.setSurveyMarkerFilter.emit([]);
+    } else {
+      const surveys = this.selection.selected;
+      this.selectionService.setSurveyMarkerFilter.emit(surveys);
+    }
   }
 
   /** The label for the checkbox on the passed row */
