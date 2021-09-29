@@ -52,7 +52,6 @@ export class ChecklistDatabase {
     // Build the tree nodes from Json object. The result is a list of `TodoItemNode` with nested
     //     file node as children.
     const data = this.buildFileTree(treeData, 0);
-    console.log("initialize", data);
 
     // Notify the change.
     this.dataChange.next(data);
@@ -87,6 +86,7 @@ export class ChecklistDatabase {
       node.id = item.id;
       node.key = item.key;
       node.item = item.text;
+      node.approved = item.approved;
 
       return accumulator.concat(node);
     }, []);
@@ -143,7 +143,8 @@ export class ApproveListComponent implements OnInit {
 
   // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
   ngAfterViewInit() {
-    //
+    const rootNode = this.treeControl.dataNodes[0];
+    this.treeControl.expand(rootNode);
   }
 
   getLevel = (node: TodoItemFlatNode) => node.level;
@@ -258,11 +259,16 @@ export class ApproveListComponent implements OnInit {
   }
 
   approve() {
-    //
-    console.log("approve", this.checklistSelection.selected);
+    this.dialogRef.close({
+      approve: true,
+      selected: this.checklistSelection.selected
+    });
   }
 
   refuse() {
-    //
+    this.dialogRef.close({
+      refuse: true,
+      selected: this.checklistSelection.selected
+    });
   }
 }
