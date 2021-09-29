@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ThemePalette } from '@angular/material/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as moment from 'moment';
@@ -17,7 +17,7 @@ import { SurveyEntityService } from '../../../entity-services/survey-entity.serv
 import { TestpostEntityService } from '../../../entity-services/testpost-entity.service';
 import { TrEntityService } from '../../../entity-services/tr-entity.service';
 import { Abriox, AbrioxAction, MarkerColours, Survey } from '../../../models';
-import { AlertService, UploadService } from '../../../services';
+import { AlertService, UploadService, AuthService } from '../../../services';
 
 @Component({
   selector: 'geoaudit-abriox',
@@ -59,14 +59,16 @@ export class AbrioxComponent implements OnInit {
 
   abriox: Abriox;
 
-  currentState = 0;
+  currentState = 3;
   approved = null;
+  approved_by = 0;
   
   ready = false;
 
   surveys: Array<Survey> = [];
 
   constructor(
+    private authService: AuthService,
     private route: ActivatedRoute,
     private abrioxEntityService: AbrioxEntityService,
     private abrioxActionEntityService: AbrioxActionEntityService,
@@ -107,7 +109,7 @@ export class AbrioxComponent implements OnInit {
     this.id = this.route.snapshot.paramMap.get('id');
     this.initForm();
 
-    if (this.id) {
+    if (this.id && this.id != 'create') {
       this.getAbrioxAndPatchForm(this.id);
     } else {
       this.createMode();
@@ -116,7 +118,7 @@ export class AbrioxComponent implements OnInit {
 
   initForm() {
     this.form = this.formBuilder.group({
-      name: null,
+      name: [null, Validators.required],
 
       testpost: null,
       tr: null,
@@ -156,7 +158,8 @@ export class AbrioxComponent implements OnInit {
 
         this.abriox = abriox;
 
-        this.autoSave(this.id ? false : true);
+        const createMode = !(this.id && this.id != 'create');
+        this.autoSave(createMode);
       },
 
       (err) => {}
@@ -167,9 +170,7 @@ export class AbrioxComponent implements OnInit {
     this.abrioxEntityService.add(this.form.value).subscribe(
       (abriox) => {
         this.patchForm(abriox);
-      },
-
-      (err) => {}
+      }
     );
   }
 
@@ -209,7 +210,6 @@ export class AbrioxComponent implements OnInit {
     });
 
     const testpostId = this.route.snapshot.queryParamMap.get('testpost');
-
     if (testpostId) {
       this.testpostEntityService.getByKey(testpostId).subscribe((item) => {
         this.form.patchValue({
@@ -219,7 +219,6 @@ export class AbrioxComponent implements OnInit {
     }
 
     const trId = this.route.snapshot.queryParamMap.get('tr');
-
     if (trId) {
       this.trEntityService.getByKey(trId).subscribe((item) => {
         this.form.patchValue({
@@ -228,7 +227,8 @@ export class AbrioxComponent implements OnInit {
       });
     }
 
-    this.autoSave(this.id ? false : true);
+    const createMode = !(this.id && this.id != 'create');
+    this.autoSave(createMode);
 
     this.ready = true;
   }
@@ -318,7 +318,7 @@ export class AbrioxComponent implements OnInit {
   }
 
   onNavigate(actionId) {
-    this.router.navigate([`/home/abriox_action/${actionId}`]);
+    this.router.navigate([`/home/abrioxes/${this.abriox.id}/abriox_action/${actionId}`]);
   }
   
   completed() {
@@ -333,11 +333,22 @@ export class AbrioxComponent implements OnInit {
     }
     else if (e.approve) {
       this.approved = true;
+      this.approved_by = this.authService.authValue.user.id
       this.submit(true);
     }
     else if (e.refuse) {
       this.approved = false;
       this.submit(true);
+
+      /*this.notificationService.post({
+        source: this.authService.authValue.user,
+        recipient: this.abriox.conducted_by,
+        data: {
+          type: 'ABRIOX_REFUSAL',
+          subject: this.abriox,
+          message: this.form.value.message,
+        }
+      })*/
     }
   }
 

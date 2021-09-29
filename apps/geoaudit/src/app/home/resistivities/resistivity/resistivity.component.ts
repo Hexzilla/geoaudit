@@ -5,7 +5,7 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import * as fromApp from '../../../store';
@@ -15,7 +15,7 @@ import {
 } from '../../../models';
 import * as moment from 'moment';
 import * as MapActions from '../../../store/map/map.actions';
-import { AlertService, UploadService } from '../../../services';
+import { AlertService, UploadService, AuthService } from '../../../services';
 import { FileTypes } from '../../../components/file-upload/file-upload.component';
 import { StatusEntityService } from '../../../entity-services/status-entity.service';
 import { ResistivityEntityService } from '../../../entity-services/resistivity-entity.service';
@@ -43,9 +43,11 @@ export class ResistivityComponent implements OnInit, AfterViewInit {
   /**
    * The current job state.
    */
-  currentState = 0;
+  currentState = 3;
 
   approved = false;
+
+  approved_by = 0;
 
   /**
    * Whether the form has been submitted.
@@ -63,6 +65,7 @@ export class ResistivityComponent implements OnInit, AfterViewInit {
   lngCtrl = new FormControl();
 
   constructor(
+    private authService: AuthService,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private statusEntityService: StatusEntityService,
@@ -216,9 +219,9 @@ export class ResistivityComponent implements OnInit, AfterViewInit {
   initialiseForm(): void {
     this.form = this.formBuilder.group({
       id: [null],
-      date: [moment().toISOString()],
-      reference: [null],
-      geometry: [null],
+      date: [moment().toISOString(), Validators.required],
+      reference: [null, Validators.required],
+      geometry: [null, Validators.required],
       resistivity_detail: new FormArray([]),
     });
   }
@@ -239,6 +242,7 @@ export class ResistivityComponent implements OnInit, AfterViewInit {
       ...this.form.value,
       status: this.currentState,
       approved: this.approved,
+      approved_by: this.approved_by,
     };
 
     /**
@@ -291,10 +295,12 @@ export class ResistivityComponent implements OnInit, AfterViewInit {
     }
     else if (e.approve) {
       this.approved = true;
+      this.approved_by = this.authService.authValue.user.id
       this.submit(true);
     }
     else if (e.refuse) {
       this.approved = false;
+      this.approved_by = 0;
       this.submit(true);
     }
   }

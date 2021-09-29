@@ -1,6 +1,6 @@
-<div>
+<div mat-dialog-content>
   <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
-    <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding>
+    <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding matTreeNodePaddingIndent="20">
       <button mat-icon-button disabled></button>
       <div fxLayout="row" fxLayoutAlign="space-between" style="width: 100%;">
         <mat-checkbox 
@@ -8,7 +8,7 @@
           color="primary"
           [checked]="checklistSelection.isSelected(node)"
           (change)="todoLeafItemSelectionToggle(node)">{{node.item}}</mat-checkbox>
-          <span>
+          <span *ngIf="node.level > 1">
             <svg width="20" height="20" *ngIf="node.approved" viewBox="0 0 40 40">
               <circle cx="20" cy="20" r="20" fill="#8AC926">
                 <title>APPROVED</title>
@@ -31,7 +31,7 @@
       </mat-form-field>
     </mat-tree-node> -->
   
-    <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
+    <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding matTreeNodePaddingIndent="20">
       <button mat-icon-button matTreeNodeToggle
               [attr.aria-label]="'Toggle ' + node.item">
         <mat-icon class="mat-icon-rtl-mirror">

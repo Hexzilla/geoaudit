@@ -6,6 +6,7 @@ import {
   FormBuilder,
   FormControl,
   FormGroup,
+  Validators,
 } from '@angular/forms';
 import { ThemePalette } from '@angular/material/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -15,6 +16,7 @@ import * as moment from 'moment';
 import * as fromApp from '../../../store';
 import { Status, Survey, User, Job } from '../../../models';
 import { AlertService, UploadService } from '../../../services';
+import { AuthService } from '../../../services/auth.service';
 import { StatusEntityService } from '../../../entity-services/status-entity.service';
 import { SurveyEntityService } from '../../../entity-services/survey-entity.service';
 import {
@@ -70,7 +72,7 @@ export class SurveyComponent implements OnInit {
 
   lngCtrl = new FormControl();
 
-  currentState = 0;
+  currentState = 3;
 
   // ngxMatDatetimePicker
   public disabled = false;
@@ -91,6 +93,7 @@ export class SurveyComponent implements OnInit {
   Documents: Array<any>;
 
   constructor(
+    private authService: AuthService,
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
@@ -104,10 +107,14 @@ export class SurveyComponent implements OnInit {
   ) {
     this.subscriptions.push(this.route.queryParams.subscribe(params => {
       const tabIndex = params['tab'];
-      if (tabIndex == 'actions') {
+      if (tabIndex == 'delivery') {
+        this.selectedTabIndex = 1;
+      } else if (tabIndex == 'attachment') {
         this.selectedTabIndex = 2;
-      } else if (tabIndex == 'notes') {
+      } else if (tabIndex == 'inspection') {
         this.selectedTabIndex = 3;
+      } else if (tabIndex == 'notes') {
+        this.selectedTabIndex = 4;
       } else {
         this.selectedTabIndex = 0;
       }
@@ -118,6 +125,7 @@ export class SurveyComponent implements OnInit {
     }));
   }
 
+  // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
   ngOnInit(): void {
     //this.initialize();
   }
@@ -227,6 +235,7 @@ export class SurveyComponent implements OnInit {
   getSurveyAndPatchForm() {
     this.surveyEntityService.getByKey(this.id).subscribe(
       (survey) => {
+        this.currentState = survey.status?.id;
         this.patchForm(survey);
       },
 
@@ -291,7 +300,8 @@ export class SurveyComponent implements OnInit {
     this.latCtrl.setValue(geometry?.lat);
     this.lngCtrl.setValue(geometry?.lng);
 
-    this.autoSave(this.id ? false : true);
+    const createMode = !(this.id && this.id != 'create');
+    this.autoSave(createMode);
 
     this.survey = survey;
   }
@@ -383,12 +393,12 @@ export class SurveyComponent implements OnInit {
   initForm(): void {
     this.form = this.formBuilder.group({
       status: [null],
-      name: [null],
+      name: [null, Validators.required],
 
-      date_assigned: [moment().toISOString()],
-      date_delivery: [moment().toISOString()],
+      date_assigned: [moment().toISOString(), Validators.required],
+      date_delivery: [moment().toISOString(), Validators.required],
 
-      geometry: [null],
+      geometry: [null, Validators.required],
 
       // // tp_actions: [],
       // // tr_actions: [],
@@ -397,8 +407,8 @@ export class SurveyComponent implements OnInit {
 
       // // resistivities: [],
 
-      prepared_by: [null],
-      conducted_by: [null],
+      prepared_by: [this.authService.authValue.user.id, Validators.required],
+      conducted_by: [null, Validators.required],
 
       // // site: null,
 
@@ -414,7 +424,7 @@ export class SurveyComponent implements OnInit {
       comment: [null],
 
       id: [null],
-      reference: [null],
+      reference: [null, Validators.required],
       // published: false,
     });
   }
@@ -549,5 +559,17 @@ export class SurveyComponent implements OnInit {
 
   selectedIndexChange(selectedTabIndex) {
     this.selectedTabIndex = selectedTabIndex;
+    
+    let queryParams  = { tab: 'overview' };
+    if (selectedTabIndex == 1) {
+      queryParams = { tab: 'delivery' }
+    } else if (selectedTabIndex == 2) {
+      queryParams = { tab: 'attachment' }
+    } else if (selectedTabIndex == 3) {
+      queryParams = { tab: 'inspection' }
+    } else if (selectedTabIndex == 4) {
+      queryParams = { tab: 'notes' }
+    }
+    this.router.navigate(['.'], { relativeTo: this.route, queryParams: queryParams});
   }
 }

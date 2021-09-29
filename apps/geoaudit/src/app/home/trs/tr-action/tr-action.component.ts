@@ -5,7 +5,7 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import * as fromApp from '../../../store';
@@ -16,7 +16,7 @@ import {
   FaultType,
   Condition
 } from '../../../models';
-import { AlertService, UploadService } from '../../../services';
+import { AlertService, UploadService, AuthService } from '../../../services';
 import { FileTypes } from '../../../components/file-upload/file-upload.component';
 import { StatusEntityService } from '../../../entity-services/status-entity.service';
 import { TrActionEntityService } from '../../../entity-services/tr-action-entity.service';
@@ -49,9 +49,11 @@ export class TrActionComponent implements OnInit, AfterViewInit {
   /**
    * The current job state.
    */
-  currentState = 0;
+  currentState = 3;
 
   approved = false;
+
+  approved_by = 0;
 
   /**
    * Whether the form has been submitted.
@@ -68,6 +70,7 @@ export class TrActionComponent implements OnInit, AfterViewInit {
   attachedDocuments: Array<any>;
 
   constructor(
+    private authService: AuthService,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private statusEntityService: StatusEntityService,
@@ -233,9 +236,9 @@ export class TrActionComponent implements OnInit, AfterViewInit {
    */
   initialiseForm(): void {
     this.form = this.formBuilder.group({
-      id: null,
-      date: null,
-      condition: null,
+      id: [null],
+      date: [moment().toISOString(), Validators.required],
+      condition: [null, Validators.required],
       tr_readings: this.formBuilder.group({
         Amps: null,
         Volt: null,
@@ -265,7 +268,8 @@ export class TrActionComponent implements OnInit, AfterViewInit {
         groundbed: this.form.value.anodes,
       },
       status: this.currentState,
-      approved: this.approved
+      approved: this.approved,
+      approved_by: this.approved_by,
     };
 
     /**
@@ -302,10 +306,12 @@ export class TrActionComponent implements OnInit, AfterViewInit {
     }
     else if (e.approve) {
       this.approved = true;
+      this.approved_by = this.authService.authValue.user.id
       this.submit(true);
     }
     else if (e.refuse) {
       this.approved = false;
+      this.approved_by = 0;
       this.submit(true);
     }
   }

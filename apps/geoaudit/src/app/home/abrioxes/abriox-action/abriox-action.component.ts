@@ -5,7 +5,7 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import * as fromApp from '../../../store';
@@ -16,7 +16,7 @@ import {
   Status,
   Condition,
 } from '../../../models';
-import { AlertService, UploadService } from '../../../services';
+import { AlertService, UploadService, AuthService } from '../../../services';
 import { FileTypes } from '../../../components/file-upload/file-upload.component';
 import { StatusEntityService } from '../../../entity-services/status-entity.service';
 import { AbrioxActionEntityService } from '../../../entity-services/abriox-action-entity.service';
@@ -45,9 +45,11 @@ export class AbrioxActionComponent implements OnInit, AfterViewInit {
   /**
    * The current job state.
    */
-  currentState = 0;
+  currentState = 3;
 
   approved = false;
+
+  approved_by = 0;
 
   /**
    * Whether the form has been submitted.
@@ -68,6 +70,7 @@ export class AbrioxActionComponent implements OnInit, AfterViewInit {
   attachedDocuments: Array<any>;
 
   constructor(
+    private authService: AuthService,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private statusEntityService: StatusEntityService,
@@ -95,10 +98,12 @@ export class AbrioxActionComponent implements OnInit, AfterViewInit {
     }));
   }
 
+  // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
   ngOnInit(): void {
     //this.initialize();
   }
 
+  // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
   ngAfterViewInit(): void {
     //
   }
@@ -113,6 +118,7 @@ export class AbrioxActionComponent implements OnInit, AfterViewInit {
     this.statusEntityService.getAll().subscribe(
       (statuses) => {
         this.statuses = statuses;
+        console.log("statuses", statuses);
       },
       (err) => {}
     );
@@ -140,8 +146,8 @@ export class AbrioxActionComponent implements OnInit, AfterViewInit {
    initialiseForm(): void {
     this.form = this.formBuilder.group({
       id: [null],
-      date: [null],
-      condition: [null],
+      date: [null, Validators.required],
+      condition: [null, Validators.required],
       fault_detail: new FormArray([]),
     });
   }
@@ -250,11 +256,22 @@ export class AbrioxActionComponent implements OnInit, AfterViewInit {
     }
     else if (e.approve) {
       this.approved = true;
+      this.approved_by = this.authService.authValue.user.id
       this.submit(true);
     }
     else if (e.refuse) {
       this.approved = false;
       this.submit(true);
+
+      /*this.notificationService.post({
+        source: this.authService.authValue.user,
+        recipient: this.abriox_action.conducted_by,
+        data: {
+          type: 'ABRIOX_REFUSAL',
+          subject: this.abriox_action,
+          message: this.form.value.message,
+        }
+      })*/
     }
   }
 

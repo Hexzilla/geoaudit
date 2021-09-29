@@ -80,7 +80,9 @@ export class TpActionsComponent implements OnInit {
   }
 
   navigate(item) {
-    this.router.navigate([`/home/tp_action/${item.id}`]);
+    if (item.testpost) {
+      this.router.navigate([`/home/testposts/${item.testpost.id}/tp_action/${item.id}`]);  
+    }
   }
 
   addAction() {

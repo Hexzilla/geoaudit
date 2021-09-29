@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ThemePalette } from '@angular/material/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -10,7 +10,7 @@ import { TestpostEntityService } from '../../../entity-services/testpost-entity.
 import { Abriox, MarkerColours, Testpost, TpAction } from '../../../models';
 import { debounceTime, tap, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { Subject, Subscription } from 'rxjs';
-import { AlertService, UploadService } from '../../../services';
+import { AlertService, UploadService, AuthService } from '../../../services';
 import { FileTypes } from '../../../components/file-upload/file-upload.component';
 import { environment } from 'apps/geoaudit/src/environments/environment';
 import { TpActionEntityService } from '../../../entity-services/tp-action-entity.service';
@@ -66,10 +66,12 @@ export class TestpostComponent implements OnInit, AfterViewInit {
 
   tp_actions: Array<TpAction> = [];
 
-  currentState = 0;
+  currentState = 3;
   approved = null;
+  approved_by = 0;
 
   constructor(
+    private authService: AuthService,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private testpostEntityService: TestpostEntityService,
@@ -152,14 +154,14 @@ export class TestpostComponent implements OnInit, AfterViewInit {
   initForm() {
     this.form = this.formBuilder.group({
 
-      reference: [''],
-      name: [''],
+      reference: ['', Validators.required],
+      name: ['', Validators.required],
       date_installation: [moment().toISOString()],
       manufacture: [''],
       model: [''],
       serial_number: [''],
 
-      geometry: [null],
+      geometry: [null, Validators.required],
 
       images: [],
       documents: [],
@@ -351,7 +353,7 @@ export class TestpostComponent implements OnInit, AfterViewInit {
   }
 
   onNavigate(actionId) {
-    this.router.navigate([`/home/tp_action/${actionId}`]);
+    this.router.navigate([`/home/testposts/${this.testpost.id}/tp_action/${actionId}`]);
   }
   
   completed() {
@@ -366,6 +368,7 @@ export class TestpostComponent implements OnInit, AfterViewInit {
     }
     else if (e.approve) {
       this.approved = true;
+      this.approved_by = this.authService.authValue.user.id
       this.submit(true);
     }
     else if (e.refuse) {

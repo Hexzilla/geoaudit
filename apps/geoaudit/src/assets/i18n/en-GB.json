@@ -223,6 +223,7 @@
 				"finished": "Finished"
 			},
 			"survey": {
+				"title": "Survey",
 				"add_survey": {
 					"title": "Add Survey"
 				},
@@ -315,7 +316,8 @@
 			},
 			"trs": {
 				"tr": {
-					"title": "Tr {{placeholder}}"
+					"title": "Tr {{placeholder}}",
+					"abriox": "Abriox"
 				},
 				"tr_action": {
 					"title": "TR Action",
