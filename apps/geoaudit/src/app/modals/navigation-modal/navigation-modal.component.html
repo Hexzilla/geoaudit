@@ -130,7 +130,7 @@
     >Back
   </button>
   <button
-    *ngIf="stepper.selectedIndex < 1"
+    *ngIf="stepper.selectedIndex !== 1"
     mat-flat-button
     color="primary"
     (click)="onNext(stepper)"
