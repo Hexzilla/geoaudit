@@ -14,11 +14,12 @@ import { AbrioxActionEntityService } from '../../entity-services/abriox-action-e
 import { ResistivityEntityService } from '../../entity-services/resistivity-entity.service';
 import { NoteEntityService } from '../../entity-services/note-entity.service';
 import { RefusalModalComponent } from '../../modals/refusal-modal/refusal-modal.component';
-import { Status, Statuses, Survey } from '../../models';
+import { NOTIFICATION_DATA, Status, Statuses, Survey } from '../../models';
 import { AuthService } from '../../services';
 import * as moment from 'moment';
 import { ApproveListComponent } from '../../components/approve-list/approve-list.component';
 import { SelectionService } from '../../services/selection.service';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'geoaudit-approvals',
@@ -54,6 +55,7 @@ export class ApprovalsComponent implements OnInit {
     private resistivityEntityService: ResistivityEntityService,
     private noteEntityService: NoteEntityService,
     private selectionService: SelectionService,
+    private notificationService: NotificationService,
     private dialog: MatDialog,
   ) {}
 
@@ -204,13 +206,28 @@ export class ApprovalsComponent implements OnInit {
   }
 
   disapprove() {
+    const surveys = this.selection.selected
     const dialogRef = this.dialog.open(RefusalModalComponent, {
       data: {
-        surveys: this.selection.selected,
+        surveys: surveys,
       },
     });
 
-    dialogRef.afterClosed().subscribe(() => {
+    dialogRef.afterClosed().subscribe((result) => {
+      surveys.map(survey => {
+        const data: NOTIFICATION_DATA = {
+          type: 'SURVEY_REFUSAL',
+          subject: survey,
+          message: result.message,
+        };
+        
+        this.notificationService.post({
+          source: this.authService.authValue.user,
+          recipient: survey.conducted_by,
+          data
+        }).subscribe()
+      });
+      
       this.selection.selected.map((survey) => {
         this.surveyEntityService
           .update({

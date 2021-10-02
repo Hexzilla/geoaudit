@@ -1,20 +1,20 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ThemePalette } from '@angular/material/core';
-import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import * as MapActions from '../../../store/map/map.actions';
 import * as fromApp from '../../../store';
 import * as moment from 'moment';
 import { SiteEntityService } from '../../../entity-services/site-entity.service';
-import { Site, MarkerColours, TpAction } from '../../../models';
+import { Site, MarkerColours, TpAction, NOTIFICATION_DATA } from '../../../models';
 import { debounceTime, tap, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { Subject, Subscription } from 'rxjs';
 import { AlertService, UploadService, AuthService } from '../../../services';
 import { FileTypes } from '../../../components/file-upload/file-upload.component';
 import { MatDialog } from '@angular/material/dialog';
-import { TpActionEntityService } from '../../../entity-services/tp-action-entity.service';
-import { SurveyEntityService } from '../../../entity-services/survey-entity.service';
+import { RefusalModalComponent } from '../../../modals/refusal-modal/refusal-modal.component';
+import { NotificationService } from '../../../services/notification.service';
 
 @Component({
   selector: 'geoaudit-site',
@@ -67,13 +67,12 @@ export class SiteComponent implements OnInit, AfterViewInit {
     private authService: AuthService, 
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
-    private surveyEntityService: SurveyEntityService,
     private siteEntityService: SiteEntityService,
-    private tpActionEntityService: TpActionEntityService,
     private store: Store<fromApp.State>,
     private router: Router,
     private alertService: AlertService,
     private uploadService: UploadService,
+    private notificationService: NotificationService,
     private dialog: MatDialog
   ) {
     this.subscriptions.push(this.route.queryParams.subscribe(params => {
@@ -280,9 +279,31 @@ export class SiteComponent implements OnInit, AfterViewInit {
       this.submit(true);
     }
     else if (e.refuse) {
-      this.approved = false;
-      this.submit(true);
+      this.refrush();
     }
+  }
+
+  private refrush() {
+    const dialogRef = this.dialog.open(RefusalModalComponent, {
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      const data: NOTIFICATION_DATA = {
+        type: 'SITE_REFUSAL',
+        subject: this.site,
+        message: result.message,
+      };
+      
+      this.notificationService.post({
+        source: this.authService.authValue.user,
+        recipient: null,
+        data
+      }).subscribe()
+
+      this.approved = false;
+      this.approved_by = 0;
+      this.submit(true);
+    });
   }
 
   onImageUpload(event): void {

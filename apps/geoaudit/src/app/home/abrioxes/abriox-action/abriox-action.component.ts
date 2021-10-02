@@ -6,6 +6,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import * as fromApp from '../../../store';
@@ -15,6 +16,7 @@ import {
   AbrioxAction,
   Status,
   Condition,
+  NOTIFICATION_DATA,
 } from '../../../models';
 import { AlertService, UploadService, AuthService } from '../../../services';
 import { FileTypes } from '../../../components/file-upload/file-upload.component';
@@ -23,6 +25,8 @@ import { AbrioxActionEntityService } from '../../../entity-services/abriox-actio
 import { FaultTypeEntityService } from '../../../entity-services/fault-type-entity.service';
 import { ConditionEntityService } from '../../../entity-services/condition-entity.service';
 import { Subscription } from 'rxjs';
+import { RefusalModalComponent } from '../../../modals/refusal-modal/refusal-modal.component';
+import { NotificationService } from '../../../services/notification.service';
 
 @Component({
   selector: 'geoaudit-tp-action',
@@ -81,6 +85,8 @@ export class AbrioxActionComponent implements OnInit, AfterViewInit {
     private router: Router,
     private alertService: AlertService,
     private uploadService: UploadService,
+    private notificationService: NotificationService,
+    private dialog: MatDialog,
   ) {
     this.subscriptions.push(this.route.queryParams.subscribe(params => {
       const tabIndex = params['tab'];
@@ -260,19 +266,30 @@ export class AbrioxActionComponent implements OnInit, AfterViewInit {
       this.submit(true);
     }
     else if (e.refuse) {
+      this.refrush();
+    }
+  }
+
+  private refrush() {
+    const dialogRef = this.dialog.open(RefusalModalComponent, {
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      const data: NOTIFICATION_DATA = {
+        type: 'ABRIOX_ACTION_REFUSAL',
+        subject: this.abriox_action,
+        message: result.message,
+      };
+      
+      this.notificationService.post({
+        source: this.authService.authValue.user,
+        recipient: null,
+        data
+      }).subscribe()
+
       this.approved = false;
       this.submit(true);
-
-      /*this.notificationService.post({
-        source: this.authService.authValue.user,
-        recipient: this.abriox_action.conducted_by,
-        data: {
-          type: 'ABRIOX_REFUSAL',
-          subject: this.abriox_action,
-          message: this.form.value.message,
-        }
-      })*/
-    }
+    });
   }
 
   onImageUpload(event): void {

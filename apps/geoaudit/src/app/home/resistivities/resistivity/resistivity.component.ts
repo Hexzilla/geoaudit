@@ -1,17 +1,17 @@
 import {
   AfterViewInit,
   Component,
-  ElementRef,
   OnInit,
-  ViewChild,
 } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import * as fromApp from '../../../store';
 import {
   Resistivity,
   Status,
+  NOTIFICATION_DATA
 } from '../../../models';
 import * as moment from 'moment';
 import * as MapActions from '../../../store/map/map.actions';
@@ -20,6 +20,8 @@ import { FileTypes } from '../../../components/file-upload/file-upload.component
 import { StatusEntityService } from '../../../entity-services/status-entity.service';
 import { ResistivityEntityService } from '../../../entity-services/resistivity-entity.service';
 import { Subscription } from 'rxjs';
+import { RefusalModalComponent } from '../../../modals/refusal-modal/refusal-modal.component';
+import { NotificationService } from '../../../services/notification.service';
 
 @Component({
   selector: 'geoaudit-resistivity',
@@ -74,6 +76,8 @@ export class ResistivityComponent implements OnInit, AfterViewInit {
     private router: Router,
     private alertService: AlertService,
     private uploadService: UploadService,
+    private notificationService: NotificationService,
+    private dialog: MatDialog,
   ) {
     this.subscriptions.push(this.route.queryParams.subscribe(params => {
       const tabIndex = params['tab'];
@@ -91,6 +95,7 @@ export class ResistivityComponent implements OnInit, AfterViewInit {
     }));
   }
 
+  // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
   ngOnInit(): void {
     //this.initialize();
   }
@@ -299,10 +304,31 @@ export class ResistivityComponent implements OnInit, AfterViewInit {
       this.submit(true);
     }
     else if (e.refuse) {
+      this.refrush();
+    }
+  }
+
+  private refrush() {
+    const dialogRef = this.dialog.open(RefusalModalComponent, {
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      const data: NOTIFICATION_DATA = {
+        type: 'RESISTIVITY_REFUSAL',
+        subject: this.resistivity,
+        message: result.message,
+      };
+      
+      this.notificationService.post({
+        source: this.authService.authValue.user,
+        recipient: null,
+        data
+      }).subscribe()
+
       this.approved = false;
       this.approved_by = 0;
       this.submit(true);
-    }
+    });
   }
 
   onImageUpload(event): void {

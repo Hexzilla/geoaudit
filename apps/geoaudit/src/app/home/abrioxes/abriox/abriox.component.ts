@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ThemePalette } from '@angular/material/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as moment from 'moment';
 import { Subject, Subscription } from 'rxjs';
@@ -16,8 +17,10 @@ import { AbrioxEntityService } from '../../../entity-services/abriox-entity.serv
 import { SurveyEntityService } from '../../../entity-services/survey-entity.service';
 import { TestpostEntityService } from '../../../entity-services/testpost-entity.service';
 import { TrEntityService } from '../../../entity-services/tr-entity.service';
-import { Abriox, AbrioxAction, MarkerColours, Survey } from '../../../models';
+import { Abriox, AbrioxAction, MarkerColours, NOTIFICATION_DATA, Survey } from '../../../models';
 import { AlertService, UploadService, AuthService } from '../../../services';
+import { RefusalModalComponent } from '../../../modals/refusal-modal/refusal-modal.component';
+import { NotificationService } from '../../../services/notification.service';
 
 @Component({
   selector: 'geoaudit-abriox',
@@ -79,6 +82,8 @@ export class AbrioxComponent implements OnInit {
     private alertService: AlertService,
     private router: Router,
     private uploadService: UploadService,
+    private notificationService: NotificationService,
+    private dialog: MatDialog,
   ) {
     this.subscriptions.push(this.route.queryParams.subscribe(params => {
       const tabIndex = params['tab'];
@@ -337,19 +342,31 @@ export class AbrioxComponent implements OnInit {
       this.submit(true);
     }
     else if (e.refuse) {
-      this.approved = false;
-      this.submit(true);
-
-      /*this.notificationService.post({
-        source: this.authService.authValue.user,
-        recipient: this.abriox.conducted_by,
-        data: {
-          type: 'ABRIOX_REFUSAL',
-          subject: this.abriox,
-          message: this.form.value.message,
-        }
-      })*/
+      this.refrush();
     }
+  }
+
+  private refrush() {
+    const dialogRef = this.dialog.open(RefusalModalComponent, {
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      const data: NOTIFICATION_DATA = {
+        type: 'ABRIOX_REFUSAL',
+        subject: this.abriox,
+        message: result.message,
+      };
+      
+      this.notificationService.post({
+        source: this.authService.authValue.user,
+        recipient: null,
+        data
+      }).subscribe()
+
+      this.approved = false;
+      this.approved_by = 0;
+      this.submit(true);
+    });
   }
 
   onImageUpload(event): void {
