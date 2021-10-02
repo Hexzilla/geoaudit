@@ -1,163 +1,122 @@
-<geoaudit-sidebar-header title="CONTAINERS.home.survey.add_survey.title">
-  <mat-icon (click)="delete()" style="color: red">delete</mat-icon>
-</geoaudit-sidebar-header>
-
-<mat-horizontal-stepper (selectionChange)="selectionChange($event)">
-  <mat-step [completed]="isStep1Completed()" [optional]="false">
-    <mat-card-content>
-      <form fxLayout="column" [formGroup]="form" (ngSubmit)="submit()">
+<geoaudit-sidebar-header
+  title="CONTAINERS.home.survey.add_survey.title"
+>
         <mat-form-field appearance="outline">
           <mat-label>{{
             'CONTAINERS.home.survey.status' | translate
-          }}</mat-label>
-          <mat-select formControlName="status" name="status">
+            }}</mat-label>
+          <mat-select name="status" [(value)]="currentState" (selectionChange)="onChangeState()">
             <mat-option *ngFor="let status of statuses" [value]="status.id">
               {{ 'STATUSES.' + status.name | translate }}
             </mat-option>
           </mat-select>
         </mat-form-field>
+</geoaudit-sidebar-header>
 
+<mat-tab-group mat-align-tabs="start"
+  (selectedIndexChange)="selectedIndexChange($event)"
+  [(selectedIndex)]="selectedTabIndex"
+  class="tab-body-height"
+  >
+  <!-- Details -->
+  <mat-tab
+    [label]="'CONTAINERS.home.survey.steps.overview' | translate"
+  >
+    <mat-card-content class="mt-26">
+      <form fxLayout="column" [formGroup]="form" (ngSubmit)="submit()">
         <mat-form-field appearance="outline">
           <mat-label>Job</mat-label>
-          <input
-            matInput
-            aria-label="Job"
-            [matAutocomplete]="autoJob"
-            [formControl]="jobCtrl"
-            #jobInput
-          />
-          <mat-autocomplete
-            #autoJob="matAutocomplete"
-            (optionSelected)="onJobSelect($event)"
-          >
+          <input matInput aria-label="Job" [matAutocomplete]="autoJob" [formControl]="jobCtrl" #jobInput />
+          <mat-autocomplete #autoJob="matAutocomplete" (optionSelected)="onJobSelect($event)">
             <mat-option *ngFor="let job of filteredJobs" [value]="job">
               <span>{{ job.reference }}</span> |
               <small>ID: {{ job.id }}</small>
             </mat-option>
           </mat-autocomplete>
         </mat-form-field>
-
         <mat-form-field appearance="outline">
           <mat-label>{{
             'CONTAINERS.home.jobs.job.form.reference' | translate
-          }}</mat-label>
-          <input
-            matInput
-            [placeholder]="
+            }}</mat-label>
+          <input matInput [placeholder]="
               'CONTAINERS.home.jobs.job.form.reference' | translate
-            "
-            formControlName="reference"
-            class="form-control"
-          />
+            " formControlName="reference" class="form-control" />
         </mat-form-field>
 
         <mat-form-field appearance="outline">
           <mat-label>{{
             'CONTAINERS.home.jobs.job.form.name' | translate
-          }}</mat-label>
-          <input
-            matInput
-            [placeholder]="'CONTAINERS.home.jobs.job.form.name' | translate"
-            formControlName="name"
-            class="form-control"
-          />
+            }}</mat-label>
+          <input matInput [placeholder]="'CONTAINERS.home.jobs.job.form.name' | translate" formControlName="name"
+            class="form-control" />
         </mat-form-field>
+
+        <div fxLayout="row">
+          <div>
+            <mat-form-field class="full-width" appearance="outline">
+              <mat-label>Lat</mat-label>
+              <input matInput aria-label="Latitude" [formControl]="latCtrl" />
+            </mat-form-field>
+
+            <mat-form-field class="full-width" appearance="outline">
+              <mat-label>Lng</mat-label>
+              <input matInput aria-label="Longtitude" [formControl]="lngCtrl" />
+            </mat-form-field>
+          </div>
+
+          <div fxLayoutAlign="space-between center">
+            <button mat-icon-button color="accent" type="button" aria-label="Example icon button with a plus one icon"
+              (click)="clickMarker()">
+              <mat-icon>location_on</mat-icon>
+            </button>
+          </div>
+        </div>
       </form>
     </mat-card-content>
-  </mat-step>
+  </mat-tab>
 
-  <mat-step [completed]="isStep2Completed()">
-    <mat-card-content>
+  <mat-tab
+    [label]="'CONTAINERS.home.survey.steps.delivery' | translate"
+  >
+    <mat-card-content class="mt-26">
       <form fxLayout="column" [formGroup]="form" (ngSubmit)="submit()">
         <mat-form-field appearance="outline">
           <mat-label>{{
             'CONTAINERS.survey.form.date_assigned' | translate
-          }}</mat-label>
-          <input
-            matInput
-            [ngxMatDatetimePicker]="dateAssignedDateTimePicker"
-            [placeholder]="'CONTAINERS.survey.form.date_assigned' | translate"
-            formControlName="date_assigned"
-            [min]="minDate"
-            [max]="maxDate"
-            [disabled]="disabled"
-          />
+            }}</mat-label>
+          <input matInput [ngxMatDatetimePicker]="dateAssignedDateTimePicker"
+            [placeholder]="'CONTAINERS.survey.form.date_assigned' | translate" formControlName="date_assigned"
+            [min]="minDate" [max]="maxDate" [disabled]="disabled" />
 
-          <mat-datepicker-toggle
-            matSuffix
-            [for]="dateAssignedDateTimePicker"
-          ></mat-datepicker-toggle>
+          <mat-datepicker-toggle matSuffix [for]="dateAssignedDateTimePicker"></mat-datepicker-toggle>
 
-          <ngx-mat-datetime-picker
-            #dateAssignedDateTimePicker
-            [showSpinners]="showSpinners"
-            [showSeconds]="showSeconds"
-            [stepHour]="stepHour"
-            [stepMinute]="stepMinute"
-            [stepSecond]="stepSecond"
-            [touchUi]="touchUi"
-            [color]="color"
-            [enableMeridian]="enableMeridian"
-            [disableMinute]="disableMinute"
-            [hideTime]="hideTime"
-          >
+          <ngx-mat-datetime-picker #dateAssignedDateTimePicker [showSpinners]="showSpinners" [showSeconds]="showSeconds"
+            [stepHour]="stepHour" [stepMinute]="stepMinute" [stepSecond]="stepSecond" [touchUi]="touchUi"
+            [color]="color" [enableMeridian]="enableMeridian" [disableMinute]="disableMinute" [hideTime]="hideTime">
           </ngx-mat-datetime-picker>
         </mat-form-field>
 
         <mat-form-field appearance="outline">
           <mat-label>{{
             'CONTAINERS.survey.form.date_delivery' | translate
-          }}</mat-label>
-          <input
-            matInput
-            [ngxMatDatetimePicker]="dateDeliveryDateTimePicker"
-            [placeholder]="'CONTAINERS.survey.form.date_delivery' | translate"
-            formControlName="date_delivery"
-            [min]="minDate"
-            [max]="maxDate"
-            [disabled]="disabled"
-          />
+            }}</mat-label>
+          <input matInput [ngxMatDatetimePicker]="dateDeliveryDateTimePicker"
+            [placeholder]="'CONTAINERS.survey.form.date_delivery' | translate" formControlName="date_delivery"
+            [min]="minDate" [max]="maxDate" [disabled]="disabled" />
 
-          <mat-datepicker-toggle
-            matSuffix
-            [for]="dateDeliveryDateTimePicker"
-          ></mat-datepicker-toggle>
+          <mat-datepicker-toggle matSuffix [for]="dateDeliveryDateTimePicker"></mat-datepicker-toggle>
 
-          <ngx-mat-datetime-picker
-            #dateDeliveryDateTimePicker
-            [showSpinners]="showSpinners"
-            [showSeconds]="showSeconds"
-            [stepHour]="stepHour"
-            [stepMinute]="stepMinute"
-            [stepSecond]="stepSecond"
-            [touchUi]="touchUi"
-            [color]="color"
-            [enableMeridian]="enableMeridian"
-            [disableMinute]="disableMinute"
-            [hideTime]="hideTime"
-          >
+          <ngx-mat-datetime-picker #dateDeliveryDateTimePicker [showSpinners]="showSpinners" [showSeconds]="showSeconds"
+            [stepHour]="stepHour" [stepMinute]="stepMinute" [stepSecond]="stepSecond" [touchUi]="touchUi"
+            [color]="color" [enableMeridian]="enableMeridian" [disableMinute]="disableMinute" [hideTime]="hideTime">
           </ngx-mat-datetime-picker>
         </mat-form-field>
-      </form>
-    </mat-card-content>
-  </mat-step>
 
-  <mat-step [completed]="isStep3Completed()">
-    <mat-card-content>
-      <form fxLayout="column" [formGroup]="form" (ngSubmit)="submit()">
         <mat-form-field class="full-width" appearance="outline">
           <mat-label>Prepared By</mat-label>
-          <input
-            matInput
-            aria-label="Prepared By"
-            [matAutocomplete]="autoPreparedBy"
-            [formControl]="preparedByCtrl"
-            #preparedByInput
-          />
-          <mat-autocomplete
-            #autoPreparedBy="matAutocomplete"
-            (optionSelected)="onPreparedBySelect($event)"
-          >
+          <input matInput aria-label="Prepared By" [matAutocomplete]="autoPreparedBy" [formControl]="preparedByCtrl"
+            #preparedByInput />
+          <mat-autocomplete #autoPreparedBy="matAutocomplete" (optionSelected)="onPreparedBySelect($event)">
             <mat-option *ngFor="let user of filteredUsers" [value]="user">
               <span>{{ user.username }}</span> |
               <small>ID: {{ user.id }}</small>
@@ -167,17 +126,9 @@
 
         <mat-form-field class="full-width" appearance="outline">
           <mat-label>Conducted By</mat-label>
-          <input
-            matInput
-            aria-label="Conducted By"
-            [matAutocomplete]="autoConductedBy"
-            [formControl]="conductedByCtrl"
-            #conductedByInput
-          />
-          <mat-autocomplete
-            #autoConductedBy="matAutocomplete"
-            (optionSelected)="onConductedBySelect($event)"
-          >
+          <input matInput aria-label="Conducted By" [matAutocomplete]="autoConductedBy" [formControl]="conductedByCtrl"
+            #conductedByInput />
+          <mat-autocomplete #autoConductedBy="matAutocomplete" (optionSelected)="onConductedBySelect($event)">
             <mat-option *ngFor="let user of filteredUsers" [value]="user">
               <span>{{ user.username }}</span> |
               <small>ID: {{ user.id }}</small>
@@ -186,68 +137,73 @@
         </mat-form-field>
       </form>
     </mat-card-content>
-  </mat-step>
+  </mat-tab>
 
-  <mat-step [completed]="isStep4Completed()">
-    <form fxLayout="column" [formGroup]="form" (ngSubmit)="submit()">
-      <div fxLayout="row">
-        <div>
-          <mat-form-field class="full-width" appearance="outline">
-            <mat-label>Lat</mat-label>
-            <input
-              matInput
-              aria-label="Latitude"
-              [formControl]="latCtrl"
-              #latCtrlInput
-            />
-          </mat-form-field>
+  <!-- Attachments -->
+  <mat-tab
+    [label]="'CONTAINERS.home.jobs.job.steps.attachments' | translate"
+  >
+    <mat-card-content>
+      <attachment-file-upload
+        label="CONTAINERS.home.jobs.job.attachments.images"
+        (preview)="onItemPreview($event)"
+        (upload)="onImageUpload($event)"
+        fileType="IMAGE"
+        [items] = "attachedImages"
+        [multiple]="true"
+      ></attachment-file-upload>
 
-          <mat-form-field class="full-width" appearance="outline">
-            <mat-label>Lng</mat-label>
-            <input
-              matInput
-              aria-label="Longtitude"
-              [formControl]="lngCtrl"
-              #lngCtrlInput
-            />
-          </mat-form-field>
-        </div>
+      <attachment-file-upload
+        label="CONTAINERS.home.jobs.job.attachments.documents"
+        (preview)="onItemPreview($event)"
+        (upload)="onDocumentUpload($event)"
+        fileType="DOCUMENT"
+        [items] = "Documents"
+        [multiple]="true"
+      ></attachment-file-upload>
+    </mat-card-content>
+  </mat-tab>
 
-        <div fxLayoutAlign="space-between center">
-          <button
-            mat-icon-button
-            color="accent"
-            type="button"
-            aria-label="Example icon button with a plus one icon"
-            (click)="clickMarker()"
-          >
-            <mat-icon>location_on</mat-icon>
-          </button>
-        </div>
-      </div>
-    </form>
-  </mat-step>
+  <mat-tab
+    [label]="'CONTAINERS.home.survey.steps.inspection' | translate"
+  >
+    <geoaudit-survey-action-button
+      label="site_details"
+      [item_list_completed]="site_list_completed"
+      [routerLink]="'/home/surveys/' + id + '/site_action_list'">
+    </geoaudit-survey-action-button>
+    <geoaudit-survey-action-button
+      label="testpost"
+      [item_list_completed]="testpost_list_completed"
+      [routerLink]="'/home/surveys/' + id + '/tp_action_list'">
+    </geoaudit-survey-action-button>
+    <geoaudit-survey-action-button
+      label="tr"
+      [item_list_completed]="tr_list_completed"
+      [routerLink]="'/home/surveys/' + id + '/tr_action_list'">
+    </geoaudit-survey-action-button>
+    <geoaudit-survey-action-button
+      label="abriox"
+      [item_list_completed]="abriox_list_completed"
+      [routerLink]="'/home/surveys/' + id + '/abriox_list'">
+    </geoaudit-survey-action-button>
+    <geoaudit-survey-action-button
+      label="resistivity"
+      [item_list_completed]="resistivity_list_completed"
+      [routerLink]="'/home/surveys/' + id + '/resistivity_list'">
+    </geoaudit-survey-action-button>
+  </mat-tab>
 
-  <mat-step [completed]="isStep5Completed()">
-    <geoaudit-file-upload
-      label="CONTAINERS.home.jobs.job.attachments.images"
-      (preview)="onPreview($event)"
-      (upload)="onImageUpload($event)"
-      fileType="IMAGE"
-      [multiple]="true"
-    ></geoaudit-file-upload>
+  <mat-tab
+    [label]="'CONTAINERS.home.survey.steps.notes' | translate"
+  >
+    <mat-card-content>
+      <geoaudit-notes></geoaudit-notes>
+    </mat-card-content>
+  </mat-tab>
+</mat-tab-group>
 
-    <geoaudit-file-upload
-      label="CONTAINERS.home.jobs.job.attachments.documents"
-      (preview)="onPreview($event)"
-      (upload)="onDocumentUpload($event)"
-      fileType="DOCUMENT"
-      [multiple]="true"
-    ></geoaudit-file-upload>
-  </mat-step>
-</mat-horizontal-stepper>
-
-<div fxLayout="row-reverse">
+<!-- <div fxLayout="row-reverse">
   <button
     mat-flat-button
     color="primary"
@@ -257,4 +213,27 @@
   >
     {{ 'CONTAINERS.home.jobs.job.form.save' | translate }}
   </button>
+</div> -->
+
+<div fxLayout="row-reverse" fxLayoutAlign="space-between" class="button-area">
+  <div class="button-wrapper">
+    <button *ngIf="selectedTabIndex != 3" mat-icon-button color="accent" (click)="selectedIndexChange(selectedTabIndex + 1)" class="btn-arrow">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+  </div>
+  
+  <button
+    mat-flat-button
+    color="primary"
+    (click)="submit()"
+    type="submit"
+    class="btn-submit"
+  >
+    {{ 'CONTAINERS.home.jobs.job.form.save' | translate }}
+  </button>
+  <div class="button-wrapper">
+    <button *ngIf="selectedTabIndex != 0" mat-icon-button color="accent" (click)="selectedIndexChange(selectedTabIndex - 1)" class="btn-arrow">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+  </div>
 </div>

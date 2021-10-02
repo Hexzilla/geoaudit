@@ -6,7 +6,7 @@ import { HomeRoutingModule } from './home-routing.module';
 // Declarations
 import { HomeComponent } from './home.component';
 import { ToDoListComponent } from './to-do-list/to-do-list.component';
-import { SearchComponent } from './search/search.component';
+// import { SearchComponent } from './search/search.component';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { ProfileComponent } from './profile/profile.component';
 import { ApprovalsComponent } from './approvals/approvals.component';
@@ -19,7 +19,7 @@ import { ArchiveComponent } from './archive/archive.component';
   declarations: [
     HomeComponent,
     ToDoListComponent,
-    SearchComponent,
+    // SearchComponent,
     NotificationsComponent,
     ProfileComponent,
     ApprovalsComponent,

@@ -1,0 +1,25 @@
+.half-width{
+    width: 48%;
+}
+.full-width{
+    width: 100%;
+}
+.top-divider {
+    border-top: solid 1px #e0dddc;
+    padding-top: 16px;
+}
+.button-area{
+    position: absolute;
+    width: 92%;
+    bottom: 8px;
+    z-index:1;
+}
+
+.button-wrapper {
+    min-width: 50px;
+    text-align: center;
+}
+
+.btn-submit{
+    width: 60%;
+}

@@ -124,8 +124,6 @@ export class EventComponent implements OnInit {
       users_permissions_users,
     } = event;
 
-    console.log('event', event.surveys);
-
     this.form.patchValue({
       id,
       title,
@@ -155,7 +153,6 @@ export class EventComponent implements OnInit {
     if (jobIds) {
       JSON.parse(jobIds).map((jobId) => {
         this.jobEntityService.getByKey(jobId).subscribe((job) => {
-          console.log('job', job)
           this.form.patchValue({
             jobs: [...this.form.value.jobs, job],
           });
@@ -228,19 +225,19 @@ export class EventComponent implements OnInit {
     this.alertService.clear();
 
     if (this.form.invalid) {
-      this.alertService.error('Invalid');
+      this.alertService.error('ALERTS.invalid');
       return;
     }
 
     this.eventEntityService.update(this.form.value).subscribe(
       (update) => {
-        this.alertService.info('Saved Changes');
+        this.alertService.info('ALERTS.saved_changes');
 
         if (navigate) this.router.navigate([`/home/events`]);
       },
 
       (err) => {
-        this.alertService.error('Something went wrong');
+        this.alertService.error('ALERTS.something_went_wrong');
       },
 
       () => {}

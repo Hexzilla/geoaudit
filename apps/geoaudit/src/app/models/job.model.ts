@@ -1,4 +1,4 @@
-import { Footer } from './footer.model';
+import { Image } from "./image.model";
 import { JobType } from "./job-type.model";
 import { Note } from './note.model';
 import { Status } from "./status.model";
@@ -7,7 +7,6 @@ import { User } from "./user.model";
 
 export interface Job {
     created_at: string;
-    footer: Footer;
     id: number;
     reference: string;
     job_type: JobType;
@@ -18,4 +17,11 @@ export interface Job {
     surveys: Array<Survey>;
     updated_at: any;
     published: boolean;
+    archived: boolean;
+    
+    images: Array<Image>;
+    documents: Array<any>;
+    comment: Array<any>;
+    approved: boolean;
+    approved_by: User;
 }

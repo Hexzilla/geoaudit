@@ -9,6 +9,7 @@ import {
   
 import { Alert, AlertType } from '../../models';
 import { AlertService } from '../../services';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'geoaudit-alert',
@@ -26,7 +27,10 @@ export class AlertComponent implements OnInit, OnDestroy {
   alertSubscription: Subscription;
   routeSubscription: Subscription;
 
-  constructor(private router: Router, private alertService: AlertService, private _snackBar: MatSnackBar) { }
+  messages;
+
+  constructor(private router: Router, private alertService: AlertService, private _snackBar: MatSnackBar, private translate: TranslateService) { 
+  }
 
   ngOnInit() {
       // subscribe to new alert notifications
@@ -44,12 +48,14 @@ export class AlertComponent implements OnInit, OnDestroy {
 
               // add alert to array
               this.alerts.push(alert);
-
-              this._snackBar.open(alert.message, 'Dismiss', {
-                horizontalPosition: this.horizontalPosition,
-                verticalPosition: this.verticalPosition,
-                duration: 5000
-              });
+              
+              this.translate.get(alert.message).subscribe((message: string) => {
+                this._snackBar.open(message, 'Dismiss', {
+                    horizontalPosition: this.horizontalPosition,
+                    verticalPosition: this.verticalPosition,
+                    duration: 5000
+                  });
+                }).unsubscribe();
 
               // auto close alert if required
               if (alert.autoClose) {

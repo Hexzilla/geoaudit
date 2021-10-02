@@ -29,7 +29,7 @@ import {MatStepperModule} from '@angular/material/stepper';
 import {MatTabsModule} from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTableModule } from '@angular/material/table';
-
+import { NgApexchartsModule } from "ng-apexcharts";
 
 // Modals
 import { AttachmentModalComponent } from '../modals/attachment-modal/attachment-modal.component';
@@ -43,9 +43,18 @@ import { LightboxModule } from 'ngx-lightbox';
 // Declarations
 import { CardButtonComponent } from '../components/card-button/card-button.component';
 import { FileUploadComponent } from '../components/file-upload/file-upload.component';
+import { AttachmentUploadComponent } from '../components/file-upload/attachment-upload.component';
+import { StatusButtonsComponent } from '../components/status-buttons/status-buttons.component';
+import { ActionListItemComponent } from '../components/action-list-item/action-list-item.component';
+
 import { SidebarHeaderComponent } from '../components/sidebar-header/sidebar-header.component';
+import { ProgressChartComponent } from '../components/progress-chart/progress-chart.component';
 import { SidebarActionsComponent } from '../components/sidebar-actions/sidebar-actions.component';
 import { SurveyTableComponent } from '../components/survey-table/survey-table.component';
+
+import { ArchiveModalComponent } from '../modals/archive-modal/archive-modal.component';
+
+import { IconComponent } from '../components/icon/icon.component';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -58,6 +67,7 @@ import { JobTypeEntityService } from '../entity-services/job-type-entity.service
 import { UserEntityService } from '../entity-services/user-entity.service';
 import { UserDataService } from '../data-services/user-data.service';
 import { AbrioxDataService } from '../data-services/abriox-data.service';
+import { AbrioxEntityService } from '../entity-services/abriox-entity.service';
 import { TestpostDataService } from '../data-services/testpost-data.service';
 import { ResistivityDataService } from '../data-services/resistivity-data.service';
 import { TrDataService } from '../data-services/tr-data.service';
@@ -81,6 +91,20 @@ import { EventEntityService } from '../entity-services/event-entity.service';
 import { SingleItemSelectorComponent } from '../components/single-item-selector/single-item-selector.component';
 import { ConditionEntityService } from '../entity-services/condition-entity.service';
 import { ConditionDataService } from '../data-services/condition-data.service';
+import { TpActionDataService } from '../data-services/tp-action-data.service';
+import { TrActionDataService } from '../data-services/tr-action-data.service';
+import { TpActionEntityService } from '../entity-services/tp-action-entity.service';
+import { TrActionEntityService } from '../entity-services/tr-action-entity.service';
+import { AbrioxActionEntityService } from '../entity-services/abriox-action-entity.service';
+import { AbrioxActionDataService } from '../data-services/abriox-action-data.service';
+import { FaultTypeDataService } from '../data-services/fault-type-data.service';
+import { FaultTypeEntityService } from '../entity-services/fault-type-entity.service';
+import { ReferenceCellDataService } from '../data-services/reference-cell-data.service';
+import { ReferenceCellEntityService } from '../entity-services/reference-cell-entity.service';
+
+import { SurveyActionButtonComponent } from '../components/survey-action-button/survey-action-button.component';
+import { MyJobEntityService } from '../entity-services/my-job-entity.service';
+import { MyJobDataService } from '../data-services/my-job-data.service';
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient) {
@@ -102,6 +126,8 @@ const CUSTOM_MOMENT_FORMATS: NgxMatDateFormats = {
 
 const entityMetadataMap: EntityMetadataMap = {
 
+  AbrioxAction: {},
+
   Condition: {},
 
   Event: {},
@@ -115,6 +141,8 @@ const entityMetadataMap: EntityMetadataMap = {
     },
   },
   JobType: {},
+  FaultType: {},
+  ReferenceCell: {},
   User: {},
   Abriox:{},
   Testpost:{},
@@ -127,7 +155,12 @@ const entityMetadataMap: EntityMetadataMap = {
 
   Notification: {},
 
-  ToDoList:{}
+  ToDoList:{},
+
+  TpAction: {},
+  TrAction: {},
+
+  MyJob: {}
 }
 
 @NgModule({
@@ -177,20 +210,31 @@ const entityMetadataMap: EntityMetadataMap = {
     NgxMatDatetimePickerModule,
     NgxMatMomentModule,
     LightboxModule,
+    NgApexchartsModule,
   ],
   declarations: [
     CardButtonComponent,
     FileUploadComponent,
+    AttachmentUploadComponent,
+    StatusButtonsComponent,
     SidebarHeaderComponent,
+    ProgressChartComponent,
     SidebarActionsComponent,
     AttachmentModalComponent,
     NavigationModalComponent,
     RefusalModalComponent,
     SurveyTableComponent,
     MultiItemSelectorComponent,
-    SingleItemSelectorComponent
+    SingleItemSelectorComponent,
+    IconComponent,
+    SurveyActionButtonComponent,
+    ActionListItemComponent,
+    ArchiveModalComponent
   ],
   providers: [
+
+    AbrioxActionEntityService,
+    AbrioxActionDataService,
 
     ConditionEntityService,
     ConditionDataService,
@@ -203,6 +247,15 @@ const entityMetadataMap: EntityMetadataMap = {
 
     JobTypeEntityService,
     JobTypeDataService,
+
+    FaultTypeDataService,
+    FaultTypeEntityService,
+
+    ReferenceCellDataService,
+    ReferenceCellEntityService,
+
+    MyJobEntityService,
+    MyJobDataService,
 
     NoteEntityService,
     NoteDataService,
@@ -222,8 +275,14 @@ const entityMetadataMap: EntityMetadataMap = {
     UserDataService,
 
     AbrioxDataService,
+    AbrioxEntityService,
 
     TestpostDataService,
+
+    TpActionDataService,
+    TrActionDataService,
+    TpActionEntityService,
+    TrActionEntityService,
     
     TrDataService,
     
@@ -257,13 +316,20 @@ const entityMetadataMap: EntityMetadataMap = {
     // Declarations
     CardButtonComponent,
     FileUploadComponent,
+    AttachmentUploadComponent,
+    StatusButtonsComponent,
     SidebarHeaderComponent,
+    ProgressChartComponent,
     SidebarActionsComponent,
     AttachmentModalComponent,
     RefusalModalComponent,
     SurveyTableComponent,
     MultiItemSelectorComponent,
     SingleItemSelectorComponent,
+    IconComponent,
+    SurveyActionButtonComponent,
+    ActionListItemComponent,
+    ArchiveModalComponent,
     
     // Material
     MatAutocompleteModule,
@@ -302,10 +368,15 @@ export class SharedModule {
   constructor(
     private entityDefinitionService: EntityDefinitionService,
     private entityDataService: EntityDataService,
+
+    private abrioxActionDataService: AbrioxActionDataService,
     private conditionDataService: ConditionDataService,
     private eventDataService: EventDataService,
     private jobDataService: JobDataService,
     private jobTypeDataService: JobTypeDataService,
+    private faultTypeDataService: FaultTypeDataService,
+    private referenceCellDataService: ReferenceCellDataService,
+    private myJobDataService: MyJobDataService,
     private noteDataService: NoteDataService,
     private notificationDataService: NotificationDataService,
     private statusDataService: StatusDataService,
@@ -313,6 +384,8 @@ export class SharedModule {
     private userDataService: UserDataService,
     private abrioxDataService: AbrioxDataService,
     private testpostDataService: TestpostDataService,
+    private tpActionDataService: TpActionDataService,
+    private trActionDataService: TrActionDataService,
     private trDataService: TrDataService,
     private resistivityDataService: ResistivityDataService,
     private toDoListDataService: ToDoListDataService,
@@ -323,15 +396,21 @@ export class SharedModule {
     // entityDataService.registerService('Status', statusDataService);
     entityDataService.registerServices(
       { 
+        AbrioxAction: abrioxActionDataService,
         Condition: conditionDataService,
         Event: eventDataService,
         Status: statusDataService,
         Survey: surveyDataService,
         Job: jobDataService,
         JobType: jobTypeDataService,
+        FaultType: faultTypeDataService,
+        ReferenceCell: referenceCellDataService,
+        MyJob: myJobDataService,
         User: userDataService,
         Abriox: abrioxDataService,
         Testpost: testpostDataService,
+        TpAction: tpActionDataService,
+        TrAction: trActionDataService,
         Tr: trDataService,
         Resistivity: resistivityDataService,
         Note: noteDataService,

@@ -61,7 +61,7 @@ export class ApprovalsComponent implements OnInit {
   query() {
     const parameters = qs.stringify({
       _where: {
-        // "footer.approved": false,
+        // "approved": false,
         'status.name': Statuses.COMPLETED,
       },
       _sort: 'created_at:DESC',
@@ -70,7 +70,7 @@ export class ApprovalsComponent implements OnInit {
     this.surveyEntityService.getWithQuery(parameters).subscribe(
       (surveys) => {
         this.dataSource = new MatTableDataSource(
-          surveys.filter((survey) => !survey?.footer?.approved)
+          surveys.filter((survey) => !survey?.approved)
         );
       },
 
@@ -83,15 +83,11 @@ export class ApprovalsComponent implements OnInit {
       this.surveyEntityService
         .update({
           id: survey.id,
-          footer: {
-            ...survey?.footer,
-            approved: true,
-            approved_by: this.authService.authValue.user,
-          },
+          approved: true,
+          approved_by: this.authService.authValue.user,
         })
         .subscribe(
           (update) => {
-            console.log('update', update);
             this.query();
           },
 
@@ -113,14 +109,10 @@ export class ApprovalsComponent implements OnInit {
           .update({
             ...survey,
             status: this.refusedStatus,
-            footer: {
-              ...survey?.footer,
-              approved: false,
-            },
+            approved: false,
           })
           .subscribe(
             (update) => {
-              console.log('update', update);
               this.query();
             },
 

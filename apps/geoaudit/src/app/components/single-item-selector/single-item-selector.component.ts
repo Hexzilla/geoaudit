@@ -180,7 +180,6 @@ export class SingleItemSelectorComponent implements OnInit {
   setSelectedItem() {
     if (this.item) {
       const find = this.allItems.find(item => item.id === this.item);
-      console.log('find', find, this.item)
       if (find) this.itemControl.setValue(find[this.attribute]);
     }
   }

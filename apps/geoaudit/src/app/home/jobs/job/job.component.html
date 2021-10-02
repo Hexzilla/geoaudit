@@ -1,17 +1,31 @@
 <geoaudit-sidebar-header
   title="CONTAINERS.home.jobs.job.overview.title"
-></geoaudit-sidebar-header>
+  [(reference)]= selectedReference
+> 
+  <mat-form-field appearance="outline">
+    <mat-label>{{
+      'CONTAINERS.home.jobs.job.status' | translate
+    }}</mat-label>
+    <mat-select statusControlName="status" name="status" [(value)]="currentState">
+      <mat-option *ngFor="let status of statuses" [value]="status.id">
+        {{ 'STATUSES.' + status.name | translate }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</geoaudit-sidebar-header>
 
-<mat-horizontal-stepper (selectionChange)="selectionChange($event)">
-  <!-- Details -->
-  <mat-step
-    [label]="'CONTAINERS.home.jobs.job.steps.details' | translate"
-    [completed]="isDetailsStepCompleted()"
-    [optional]="false"
+<mat-tab-group mat-align-tabs="start"
+  (selectedIndexChange)="selectedIndexChange($event)"
+  [(selectedIndex)]="selectedTabIndex"
+  class="tab-body-height"
   >
-    <mat-card-content>
+  <!-- Details -->
+  <mat-tab
+    [label]="'CONTAINERS.home.jobs.job.steps.details' | translate"
+  >
+    <mat-card-content class="mt-26">
       <form fxLayout="column" [formGroup]="form" (ngSubmit)="submit()">
-        <mat-form-field appearance="outline">
+        <!-- <mat-form-field appearance="outline">
           <mat-label>{{
             'CONTAINERS.home.jobs.job.status' | translate
           }}</mat-label>
@@ -20,7 +34,7 @@
               {{ 'STATUSES.' + status.name | translate }}
             </mat-option>
           </mat-select>
-        </mat-form-field>
+        </mat-form-field> -->
 
         <mat-form-field appearance="outline">
           <mat-label>{{
@@ -96,116 +110,113 @@
         </mat-form-field>
       </form>
     </mat-card-content>
-  </mat-step>
+  </mat-tab>
 
   <!-- Attachments -->
-  <mat-step
+  <mat-tab
     [label]="'CONTAINERS.home.jobs.job.steps.attachments' | translate"
-    [completed]="isAttachmentStepCompleted()"
-    [optional]="false"
   >
-    <!-- 
-  <geoaudit-attachment-card title="CONTAINERS.home.jobs.job.attachments.images" icon="add_a_photo" type="IMAGE" [multiple]="true">
+    <mat-card-content>
+      <attachment-file-upload
+        label="CONTAINERS.home.jobs.job.attachments.images"
+        (preview)="onItemPreview($event)"
+        (upload)="onImageUpload($event)"
+        fileType="IMAGE"
+        [items] = "attachedImages"
+        [multiple]="true"
+      ></attachment-file-upload>
 
-  </geoaudit-attachment-card>
-  
-  <geoaudit-attachment-card title="CONTAINERS.home.jobs.job.attachments.documents" icon="upload_file" type="DOCUMENT" [multiple]="true">
-
-  </geoaudit-attachment-card> -->
-
-    <geoaudit-file-upload
-      label="CONTAINERS.home.jobs.job.attachments.images"
-      (preview)="onPreview($event)"
-      (upload)="onImageUpload($event)"
-      fileType="IMAGE"
-      [multiple]="true"
-    ></geoaudit-file-upload>
-
-    <geoaudit-file-upload
-      label="CONTAINERS.home.jobs.job.attachments.documents"
-      (preview)="onPreview($event)"
-      (upload)="onDocumentUpload($event)"
-      fileType="DOCUMENT"
-      [multiple]="true"
-    ></geoaudit-file-upload>
-  </mat-step>
+      <attachment-file-upload
+        label="CONTAINERS.home.jobs.job.attachments.documents"
+        (preview)="onItemPreview($event)"
+        (upload)="onDocumentUpload($event)"
+        fileType="DOCUMENT"
+        [items] = "Documents"
+        [multiple]="true"
+      ></attachment-file-upload>
+    </mat-card-content>
+  </mat-tab>
 
   <!-- Surveys -->
-  <mat-step
+  <mat-tab fxFlexFill
     [label]="'CONTAINERS.home.jobs.job.steps.surveys' | translate"
-    [completed]="isSurveysStepCompleted()"
-    [optional]="false"
   >
-    <div fxLayout="row" fxLayoutAlign="space-between center">
-      <div fxLayout="column">
-        <h3>Surveys</h3>
-        <p>Progress</p>
+     <mat-card-content>
+      <div class="progress-chart" *ngIf="selectedTabIndex == 2 && chartSeries">
+        <geoaudit-progress-chart 
+          [series]="chartSeries"
+        >
+        </geoaudit-progress-chart>
       </div>
-      <!-- Progress -->
-      <apx-chart
-        [series]="chartOptions.series"
-        [chart]="chartOptions.chart"
-        [dataLabels]="chartOptions.dataLabels"
-        [plotOptions]="chartOptions.plotOptions"
-        [xaxis]="chartOptions.xaxis"
-        [yaxis]="chartOptions.yaxis"
-        [stroke]="chartOptions.stroke"
-        [fill]="chartOptions.fill"
-        [title]="chartOptions.title"
-        [tooltip]="chartOptions.tooltip"
-        [legend]="chartOptions.legend"
-      ></apx-chart>
-    </div>
+      <div fxLayout="row" fxLayoutAlign="space-between center">
+        <div fxLayout="column">
+          <h3>Surveys</h3>
+        </div>
+      </div>
+      <!-- Reusable survey table component -->
+      <geoaudit-survey-table
+        [filterMode]="'LOCAL'"
+        [dataSource]="dataSource"
+        [pageSize]="pageSize"
+        (onDelete)="delete($event)"
+        [job]="job"
+      ></geoaudit-survey-table>
+         
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Survey</mat-label>
+        <input
+          matInput
+          aria-label="Survey"
+          [matAutocomplete]="autoSurvey"
+          [formControl]="surveyCtrl"
+          #surveyInput
+        />
+        <mat-autocomplete
+          #autoSurvey="matAutocomplete"
+          (optionSelected)="onSurveySelect($event)"
+        >
+          <mat-option *ngFor="let survey of filteredSurveys" [value]="survey">
+            <span>{{ survey.reference }}</span> |
+            <small>ID: {{ survey.id }}</small>
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </mat-card-content>
+    <!-- <geoaudit-status-buttons
+      [completed] = "completed"
+      [approved] = "false"
+      (completeEvent)="complete($event)"
+    ></geoaudit-status-buttons> -->
+  </mat-tab>
 
-    <div id="chart"></div>
+  <mat-tab [label]="'CONTAINERS.home.jobs.job.steps.notes' | translate">
+    <mat-card-content>
+      <geoaudit-notes></geoaudit-notes>
+    </mat-card-content>
+  </mat-tab>
+</mat-tab-group>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Survey</mat-label>
-      <input
-        matInput
-        aria-label="Survey"
-        [matAutocomplete]="autoSurvey"
-        [formControl]="surveyCtrl"
-        #surveyInput
-      />
-      <mat-autocomplete
-        #autoSurvey="matAutocomplete"
-        (optionSelected)="onSurveySelect($event)"
-      >
-        <mat-option *ngFor="let survey of filteredSurveys" [value]="survey">
-          <span>{{ survey.reference }}</span> |
-          <small>ID: {{ survey.id }}</small>
-        </mat-option>
-      </mat-autocomplete>
-    </mat-form-field>
-
-    <!-- Reusable survey table component -->
-    <geoaudit-survey-table
-      *ngIf="dataSource"
-      [filterMode]="'LOCAL'"
-      [dataSource]="dataSource"
-      [length]="length"
-      [pageSize]="pageSize"
-      [pageSizeOptions]="pageSizeOptions"
-      (onDelete)="delete($event)"
-      [job]="job"
-    ></geoaudit-survey-table>
-  </mat-step>
-
-  <mat-step
-  [label]="'CONTAINERS.home.jobs.job.steps.notes' | translate">
-  <geoaudit-notes></geoaudit-notes>
-</mat-step>
-</mat-horizontal-stepper>
-
-<div fxLayout="row-reverse">
+<div fxLayout="row-reverse" fxLayoutAlign="space-between" class="button-area">
+  <div class="button-wrapper">
+    <button *ngIf="selectedTabIndex != 3" mat-icon-button color="accent" (click)="selectedIndexChange(selectedTabIndex + 1)" class="btn-arrow">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+  </div>
+  
   <button
     mat-flat-button
     color="primary"
     (click)="submit()"
-    fxFlexFill
     type="submit"
+    class="btn-submit"
   >
     {{ 'CONTAINERS.home.jobs.job.form.save' | translate }}
   </button>
+  <div class="button-wrapper">
+    <button *ngIf="selectedTabIndex != 0" mat-icon-button color="accent" (click)="selectedIndexChange(selectedTabIndex - 1)" class="btn-arrow">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+  </div>
 </div>
+  
+
