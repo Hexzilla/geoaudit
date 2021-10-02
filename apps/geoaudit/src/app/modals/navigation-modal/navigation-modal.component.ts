@@ -208,7 +208,7 @@ export class NavigationModalComponent implements OnInit, AfterViewInit {
       case 'other_address':
         return this.otherAddress !== null;
       default:
-        return false;
+        return true;
     }
   }
 
