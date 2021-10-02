@@ -205,6 +205,10 @@ export class NavigationModalComponent implements OnInit, AfterViewInit {
     switch (this.selectedDestinationType) {
       case 'survey':
         return this.selectedSurvey !== null;
+      case 'home':
+        return this.home !== null;
+      case 'work':
+        return this.work !== null;
       case 'other_address':
         return this.otherAddress !== null;
       default:
@@ -271,13 +275,13 @@ export class NavigationModalComponent implements OnInit, AfterViewInit {
        */
       case 'home':
         // pull the user home address
-        destination = `${Number(this.home.lat)},${Number(this.home.lng)}`;
+        destination = `${Number(this.home?.lat)},${Number(this.home?.lng)}`;
 
         waypoints = this.generateWaypoints(this.data.surveys);
 
         this.directions.setDestination([
-          Number(this.home.lng),
-          Number(this.home.lat),
+          Number(this.home?.lng),
+          Number(this.home?.lat),
         ]);
 
         break;
@@ -288,13 +292,13 @@ export class NavigationModalComponent implements OnInit, AfterViewInit {
        */
       case 'work':
         // pull the user work address
-        destination = `${Number(this.work.lat)},${Number(this.work.lng)}`;
+        destination = `${Number(this.work?.lat)},${Number(this.work?.lng)}`;
 
         waypoints = this.generateWaypoints(this.data.surveys);
 
         this.directions.setDestination([
-          Number(this.work.lng),
-          Number(this.work.lat),
+          Number(this.work?.lng),
+          Number(this.work?.lat),
         ]);
 
         // First need to add as field on the user
