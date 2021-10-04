@@ -9,12 +9,14 @@ import { ErrorInterceptor, JwtInterceptor } from '../../helpers';
 import { SharedModule } from '../shared.module';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AbrioxComponent } from './abriox/abriox.component';
+import { AbrioxActionComponent } from './abriox-action/abriox-action.component';
 import { NotesModule } from '../notes/notes.module';
 
 @NgModule({
   declarations: [
   
-    AbrioxComponent
+    AbrioxComponent,
+    AbrioxActionComponent
   ],
   imports: [
     AbrioxesRoutingModule,

@@ -1,10 +1,6 @@
-import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import {
-  AfterViewInit,
   Component,
-  ElementRef,
   OnInit,
-  ViewChild,
 } from '@angular/core';
 import {
   FormBuilder,
@@ -18,8 +14,9 @@ import { Store } from '@ngrx/store';
 import * as moment from 'moment';
 
 import * as fromApp from '../../../store';
-import { Status, Statuses, Survey, User, Image, Job } from '../../../models';
-import { AlertService } from '../../../services';
+import { Status, Survey, User, Job } from '../../../models';
+import { AlertService, UploadService } from '../../../services';
+import { AuthService } from '../../../services/auth.service';
 import { StatusEntityService } from '../../../entity-services/status-entity.service';
 import { SurveyEntityService } from '../../../entity-services/survey-entity.service';
 import {
@@ -28,19 +25,12 @@ import {
   distinctUntilChanged,
   takeUntil,
 } from 'rxjs/operators';
-import { Subject } from 'rxjs';
-import {
-  MatAutocomplete,
-  MatAutocompleteSelectedEvent,
-} from '@angular/material/autocomplete';
+import { Subject, Subscription } from 'rxjs';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { UserEntityService } from '../../../entity-services/user-entity.service';
 
 import * as MapActions from '../../../store/map/map.actions';
 import { FileTypes } from '../../../components/file-upload/file-upload.component';
-import { IAlbum, Lightbox } from 'ngx-lightbox';
-import { environment } from 'apps/geoaudit/src/environments/environment';
-import { MatDialog } from '@angular/material/dialog';
-import { AttachmentModalComponent } from '../../../modals/attachment-modal/attachment-modal.component';
 import { JobEntityService } from '../../../entity-services/job-entity.service';
 
 @Component({
@@ -49,67 +39,42 @@ import { JobEntityService } from '../../../entity-services/job-entity.service';
   styleUrls: ['./survey.component.scss'],
 })
 export class SurveyComponent implements OnInit {
-  API_URL: string;
 
   color: ThemePalette = 'primary';
 
   id: string;
 
-  jobId: string;
-
-  newJob = false;
-
   form: FormGroup;
 
-  mode: 'CREATE' | 'EDIT_VIEW';
-
-  selectedStatus: string;
-
-  /**
-   * An array of status i.e. NOT_STARTED, ONGOING, etc.
-   */
   statuses: Array<Status>;
-
-  submitted = false;
 
   survey: Survey;
 
+  subscriptions: Array<Subscription> = [];
+
   private unsubscribe = new Subject<void>();
 
-  @ViewChild('dateAssignedDateTimePicker') dateAssignedDateTimePicker: any;
-  @ViewChild('dateDeliveryDateTimePicker') dateDeliveryDateTimePicker: any;
-
   preparedByCtrl = new FormControl();
-  @ViewChild('autoPreparedBy') matAutocompletePreparedBy: MatAutocomplete;
-  selectedPreparedBy: User = null;
 
   conductedByCtrl = new FormControl();
-  @ViewChild('autoConductedBy') autoConductedBy: MatAutocomplete;
-  selectedConductedBy: User = null;
 
   filteredUsers: Array<User>;
-
-  users: Array<User>;
 
   allUsers: Array<User> = [];
 
   allJobs: Array<Job> = [];
 
   jobCtrl = new FormControl();
-  @ViewChild('autoJob') autoJob: MatAutocomplete;
-  selectedJob: Job = null;
 
   filteredJobs: Array<Job>;
-
-  // @ViewChild('auto') matAutocomplete: MatAutocomplete;
-
-  @ViewChild('latCtrlInput') latCtrlInput: ElementRef;
-  @ViewChild('lngCtrlInput') lngCtrlInput: ElementRef;
 
   latCtrl = new FormControl();
 
   lngCtrl = new FormControl();
 
+  currentState = 3;
+
+  // ngxMatDatetimePicker
   public disabled = false;
   public showSpinners = true;
   public showSeconds = false;
@@ -123,7 +88,12 @@ export class SurveyComponent implements OnInit {
   public disableMinute = false;
   public hideTime = false;
 
+  public selectedTabIndex = 0;
+  attachedImages: Array<any>;
+  Documents: Array<any>;
+
   constructor(
+    private authService: AuthService,
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
@@ -133,78 +103,36 @@ export class SurveyComponent implements OnInit {
     private surveyEntityService: SurveyEntityService,
     private userEntityService: UserEntityService,
     private alertService: AlertService,
-    private _lightbox: Lightbox,
-    private dialog: MatDialog
-  ) {}
-
-  ngOnInit(): void {
-    this.API_URL = environment.API_URL;
-
-    this.jobEntityService.getAll().subscribe(
-      (jobs) => {
-        this.allJobs = jobs;
-      },
-
-      (err) => {}
-    );
-
-    // Fetch statuses
-    this.statusEntityService.getAll().subscribe(
-      (statuses) => {
-        this.statuses = statuses;
-      },
-
-      (err) => {}
-    );
-
-    // Fetch users for assignees
-    this.userEntityService.getAll().subscribe(
-      (users) => {
-        this.allUsers = users;
-      },
-
-      (err) => {}
-    );
-
-    this.store.select('map').subscribe((map) => {
-      if (map.clickMarker) {
-        this.latCtrl.setValue(map.clickMarker.lat);
-        this.lngCtrl.setValue(map.clickMarker.lng);
+    private uploadService: UploadService,
+  ) {
+    this.subscriptions.push(this.route.queryParams.subscribe(params => {
+      const tabIndex = params['tab'];
+      if (tabIndex == 'delivery') {
+        this.selectedTabIndex = 1;
+      } else if (tabIndex == 'attachment') {
+        this.selectedTabIndex = 2;
+      } else if (tabIndex == 'inspection') {
+        this.selectedTabIndex = 3;
+      } else if (tabIndex == 'notes') {
+        this.selectedTabIndex = 4;
+      } else {
+        this.selectedTabIndex = 0;
       }
-    });
+    }));
 
-    /**
-     * Initialise the form with properties and
-     * validation constraints.
-     */
-    this.initialiseForm();
+    this.subscriptions.push(this.route.params.subscribe(() => {
+      this.initialize();
+    }));
+  }
 
-    this.id = this.route.snapshot.paramMap.get('id');
+  // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
+  ngOnInit(): void {
+    //this.initialize();
+  }
 
-    if (this.id) {
-      this.mode = 'EDIT_VIEW';
-      this.editAndViewMode();
-    } else {
-      this.mode = 'CREATE';
-      this.createMode();
-    }
-
-    // this.jobId = this.route.snapshot.queryParamMap.get('job');
-
-    // if (this.jobId) {
-    //   this.jobEntityService.getByKey(this.jobId).subscribe(
-    //     (job) => {
-    //       console.log('job', job);
-    //       this.form.patchValue({
-    //         job,
-    //       });
-
-    //       console.log('this', this.form.value);
-    //     },
-
-    //     (err) => {}
-    //   );
-    // }
+  // eslint-disable-next-line @angular-eslint/use-lifecycle-interface
+  ngOnDestroy() {
+    this.subscriptions.map(it => it.unsubscribe());
   }
 
   ngAfterViewInit() {
@@ -255,63 +183,127 @@ export class SurveyComponent implements OnInit {
     });
   }
 
-  editAndViewMode() {
-    this.surveyEntityService.getByKey(this.id).subscribe(
-      (survey) => {
-        this.survey = survey;
-
-        const {
-          status,
-          name,
-          job,
-          id,
-          prepared_by,
-          conducted_by,
-          geometry,
-          footer,
-          reference,
-        } = survey;
-
-        this.form.patchValue({
-          status: status?.id,
-          name,
-
-          job,
-
-          reference,
-
-          prepared_by: prepared_by?.id,
-          conducted_by: conducted_by?.id,
-
-          geometry,
-
-          footer: footer
-            ? footer
-            : {
-                images: [],
-                documents: [],
-              },
-
-          id,
-        });
-
-        this.jobCtrl.setValue(job?.reference);
-        this.selectedJob = job;
-
-        this.preparedByCtrl.setValue(prepared_by?.username);
-        this.selectedPreparedBy = prepared_by;
-
-        this.conductedByCtrl.setValue(conducted_by?.username);
-        this.selectedConductedBy = conducted_by;
-
-        this.latCtrl.setValue(geometry?.lat);
-        this.lngCtrl.setValue(geometry?.lng);
-
-        this.autoSave();
+  private initialize() {
+    this.jobEntityService.getAll().subscribe(
+      (jobs) => {
+        this.allJobs = jobs;
       },
 
-      (err) => {}
+      (err) => { }
     );
+
+    // Fetch statuses
+    this.statusEntityService.getAll().subscribe(
+      (statuses) => {
+        this.statuses = statuses;
+      },
+
+      (err) => { }
+    );
+
+    // Fetch users for assignees
+    this.userEntityService.getAll().subscribe(
+      (users) => {
+        this.allUsers = users;
+      },
+
+      (err) => { }
+    );
+
+    this.store.select('map').subscribe((map) => {
+      if (map.clickMarker) {
+        this.latCtrl.setValue(map.clickMarker.lat);
+        this.lngCtrl.setValue(map.clickMarker.lng);
+      }
+    });
+
+    /**
+     * Initialise the form with properties and
+     * validation constraints.
+     */
+    this.initForm();
+
+    this.id = this.route.snapshot.paramMap.get('id');
+
+    if (this.id) {
+      this.getSurveyAndPatchForm();
+    } else {
+      this.createMode();
+    }
+  }
+
+  getSurveyAndPatchForm() {
+    this.surveyEntityService.getByKey(this.id).subscribe(
+      (survey) => {
+        this.currentState = survey.status?.id;
+        this.patchForm(survey);
+      },
+
+      (err) => { }
+    );
+  }
+
+  patchForm(survey: Survey) {
+    const {
+      status,
+      name,
+      job,
+      id,
+      prepared_by,
+      conducted_by,
+      geometry,
+      reference,
+
+      comment,
+
+      images,
+      documents,
+    } = survey;
+
+    this.form.patchValue({
+      status: status?.id,
+      name,
+
+      job,
+
+      reference,
+
+      prepared_by: prepared_by?.id,
+      conducted_by: conducted_by?.id,
+
+      geometry,
+
+      comment,
+
+      images,
+      documents,
+
+      id,
+    });
+
+    const jobId = this.route.snapshot.queryParamMap.get('job');
+
+    if (jobId) {
+      this.jobEntityService.getByKey(jobId).subscribe((item) => {
+        this.form.patchValue({
+          job: item,
+        });
+      });
+    }
+
+    this.jobCtrl.setValue(job?.reference);
+
+    this.preparedByCtrl.setValue(prepared_by?.username);
+
+    this.conductedByCtrl.setValue(conducted_by?.username);
+
+    this.latCtrl.setValue(geometry?.lat);
+    this.lngCtrl.setValue(geometry?.lng);
+
+    const createMode = !(this.id && this.id != 'create');
+    this.autoSave(createMode);
+
+    this.survey = survey;
   }
 
   createMode() {
@@ -322,28 +314,28 @@ export class SurveyComponent implements OnInit {
      */
     this.surveyEntityService.add(this.form.value).subscribe(
       (survey) => {
-        this.survey = survey;
+        // this.survey = survey;
 
-        this.form.patchValue({
-          id: survey.id,
-        });
+        // this.form.patchValue({
+        //   id: survey.id,
+        // });
 
-        this.autoSave();
+        // this.autoSave();
 
-        this.router.navigate([`/home/surveys/${this.form.value.id}`], {
-          replaceUrl: true,
-        });
+        // this.router.navigate([`/home/surveys/${this.form.value.id}`], {
+        //   replaceUrl: true,
+        // });
+        this.patchForm(survey);
       },
 
       (err) => {
-        this.alertService.error('Something went wrong');
+        this.alertService.error('ALERTS.something_went_wrong');
       }
     );
   }
 
   onJobSelect(event: MatAutocompleteSelectedEvent): void {
     this.jobCtrl.setValue(event.option.value.reference);
-    this.selectedJob = event.option.value;
 
     this.form.patchValue({
       job: event.option.value.id,
@@ -352,7 +344,6 @@ export class SurveyComponent implements OnInit {
 
   onPreparedBySelect(event: MatAutocompleteSelectedEvent): void {
     this.preparedByCtrl.setValue(event.option.value.username);
-    this.selectedPreparedBy = event.option.value;
 
     this.form.patchValue({
       prepared_by: event.option.value.id,
@@ -361,14 +352,13 @@ export class SurveyComponent implements OnInit {
 
   onConductedBySelect(event: MatAutocompleteSelectedEvent): void {
     this.conductedByCtrl.setValue(event.option.value.username);
-    this.selectedConductedBy = event.option.value;
 
     this.form.patchValue({
       conducted_by: event.option.value.id,
     });
   }
 
-  autoSave() {
+  autoSave(reload = false) {
     this.form.valueChanges
       .pipe(
         debounceTime(500),
@@ -378,26 +368,37 @@ export class SurveyComponent implements OnInit {
         distinctUntilChanged(),
         takeUntil(this.unsubscribe)
       )
-      .subscribe();
+      .subscribe(() => {
+        /**
+         * Workaround.
+         *
+         * When we navigate to the create a note component. We may have
+         * provided a jobs query parameter. However the jobs selector is not
+         * updated with that and therefore we're reloading such that it
+         * goes into edit mode.
+         */
+        if (reload) {
+          this.router
+            .navigate([`/home/surveys/${this.form.value.id}`])
+            .then(() => {
+              window.location.reload();
+            });
+        }
+      });
   }
 
   /**
    * Initialisation of the form, properties, and validation.
    */
-  initialiseForm(): void {
+  initForm(): void {
     this.form = this.formBuilder.group({
-      status: [null, Validators.required],
+      status: [null],
       name: [null, Validators.required],
 
       date_assigned: [moment().toISOString(), Validators.required],
       date_delivery: [moment().toISOString(), Validators.required],
 
-      // footer: [{
-      //   images: [[]],
-      //   documents: [[]],
-      // }],
-
-      geometry: [null],
+      geometry: [null, Validators.required],
 
       // // tp_actions: [],
       // // tr_actions: [],
@@ -406,8 +407,8 @@ export class SurveyComponent implements OnInit {
 
       // // resistivities: [],
 
-      prepared_by: [null],
-      conducted_by: [null],
+      prepared_by: [this.authService.authValue.user.id, Validators.required],
+      conducted_by: [null, Validators.required],
 
       // // site: null,
 
@@ -417,27 +418,23 @@ export class SurveyComponent implements OnInit {
 
       // // calendar_events: [],
 
-      // footer: [
-      //   {
-      //     images: [[]],
-      //     documents: [[]],
-      //   },
-      // ],
+      images: [],
+      documents: [],
+
+      comment: [null],
 
       id: [null],
-      reference: [null],
+      reference: [null, Validators.required],
       // published: false,
     });
   }
 
   submit(navigate = true): void {
-    this.submitted = true;
-
     // reset alerts on submit
     this.alertService.clear();
 
     if (this.form.invalid) {
-      this.alertService.error('Invalid');
+      this.alertService.error('ALERTS.invalid');
       return;
     }
 
@@ -449,17 +446,24 @@ export class SurveyComponent implements OnInit {
      */
     this.surveyEntityService.update(this.form.value).subscribe(
       (update) => {
-        this.alertService.info('Saved Changes');
+        this.alertService.info('ALERTS.saved_changes');
 
         if (navigate) this.router.navigate([`/home`]);
       },
 
       (err) => {
-        this.alertService.error('Something went wrong');
+        this.alertService.error('ALERTS.something_went_wrong');
       },
 
-      () => {}
+      () => { }
     );
+  }
+
+  onChangeState() {
+    this.form.patchValue({
+      status: this.currentState
+    })
+    this.submit(false);
   }
 
   clickMarker(): void {
@@ -470,114 +474,42 @@ export class SurveyComponent implements OnInit {
     );
   }
 
-  /**
-   * On selection change of the steps i.e.
-   * click on step 1 -> catch event -> do something.
-   * @param event
-   */
-  selectionChange(event: StepperSelectionEvent) {
-    switch (event.selectedIndex) {
-      case 0:
-        break;
-
-      case 1:
-        break;
-
-      case 2:
-        break;
-
-      case 3:
-        break;
-
-      case 4:
-        break;
-
-      case 5:
-        break;
-    }
-  }
-
-  isStep1Completed(): boolean {
-    return false;
-  }
-
-  isStep2Completed(): boolean {
-    return false;
-  }
-
-  isStep3Completed(): boolean {
-    return false;
-  }
-
-  isStep4Completed(): boolean {
-    return false;
-  }
-
-  isStep5Completed(): boolean {
-    return false;
-  }
-
   onImageUpload(event): void {
-    const { images } = this.form.value.footer;
-
-    // this.images.push(event)
-
-    // May be multiple so just preserving the previous object on the array of images
+    const { images } = this.form.value;
 
     this.form.patchValue({
-      footer: {
-        ...this.form.value.footer,
-        images: [...images, event],
-      },
+      images: [...images, event],
     });
 
+    this.getUploadFiles();
     this.submit(false);
   }
 
   onDocumentUpload(event): void {
-    const { documents } = this.form.value.footer;
+    const { documents } = this.form.value;
 
     this.form.patchValue({
-      footer: {
-        ...this.form.value.footer,
-        documents: [...documents, event],
-      },
+      documents: [...documents, event],
     });
 
+    this.getUploadFiles();
     this.submit(false);
   }
 
   onPreview(fileType: FileTypes): void {
-    const { images, documents } = this.form.value.footer;
+    const { images, documents } = this.form.value;
+    this.uploadService.onPreview(fileType, images, documents);
+  }
 
-    switch (fileType) {
-      case FileTypes.IMAGE:
-        let _album: Array<IAlbum> = [];
+  onItemPreview(param: any): void {
+    const { images, documents } = this.form.value;
+    this.uploadService.onItemPreview(param.fileType, images, documents, param.index);
+  }
 
-        images.map((image: Image) => {
-          const album = {
-            src: `${this.API_URL}${image.url}`,
-            caption: image.name,
-            thumb: `${this.API_URL}${image.formats.thumbnail.url}`,
-          };
-
-          _album.push(album);
-        });
-
-        if (_album.length >= 1) this._lightbox.open(_album, 0);
-        break;
-
-      case FileTypes.DOCUMENT:
-        const dialogRef = this.dialog.open(AttachmentModalComponent, {
-          data: {
-            fileType,
-            documents,
-          },
-        });
-
-        dialogRef.afterClosed().subscribe((result) => {});
-        break;
-    }
+  getUploadFiles(): void {
+      const { images, documents } = this.form.value;
+      this.attachedImages = this.uploadService.getImageUploadFiles(images);
+      this.Documents = this.uploadService.getDocumentUploadFiles(documents);
   }
 
   /**
@@ -621,7 +553,23 @@ export class SurveyComponent implements OnInit {
         this.router.navigate(['/home/todolist']);
       },
 
-      (err) => {}
+      (err) => { }
     );
+  }
+
+  selectedIndexChange(selectedTabIndex) {
+    this.selectedTabIndex = selectedTabIndex;
+    
+    let queryParams  = { tab: 'overview' };
+    if (selectedTabIndex == 1) {
+      queryParams = { tab: 'delivery' }
+    } else if (selectedTabIndex == 2) {
+      queryParams = { tab: 'attachment' }
+    } else if (selectedTabIndex == 3) {
+      queryParams = { tab: 'inspection' }
+    } else if (selectedTabIndex == 4) {
+      queryParams = { tab: 'notes' }
+    }
+    this.router.navigate(['.'], { relativeTo: this.route, queryParams: queryParams});
   }
 }

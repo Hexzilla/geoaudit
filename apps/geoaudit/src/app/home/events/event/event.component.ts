@@ -1,6 +1,6 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as moment from 'moment';
 import { ThemePalette } from '@angular/material/core';
@@ -96,10 +96,10 @@ export class EventComponent implements OnInit {
 
   initForm(): void {
     this.form = this.formBuilder.group({
-      title: [null],
+      title: [null, Validators.required],
       allDay: [false],
-      start: [moment().toISOString()],
-      end: [moment().toISOString()],
+      start: [moment().toISOString(), Validators.required],
+      end: [moment().toISOString(), Validators.required],
       notes: [null],
 
       users_permissions_users: [[]],
@@ -123,8 +123,6 @@ export class EventComponent implements OnInit {
       jobs,
       users_permissions_users,
     } = event;
-
-    console.log('event', event.surveys);
 
     this.form.patchValue({
       id,
@@ -155,7 +153,6 @@ export class EventComponent implements OnInit {
     if (jobIds) {
       JSON.parse(jobIds).map((jobId) => {
         this.jobEntityService.getByKey(jobId).subscribe((job) => {
-          console.log('job', job)
           this.form.patchValue({
             jobs: [...this.form.value.jobs, job],
           });
@@ -172,8 +169,7 @@ export class EventComponent implements OnInit {
     this.eventEntityService.add(this.form.value).subscribe(
       (calendarEvent) => {
         this.patchForm(calendarEvent);
-
-        this.autoSave(true);
+        this.autoSave(false);
       },
 
       (err) => {}
@@ -228,19 +224,19 @@ export class EventComponent implements OnInit {
     this.alertService.clear();
 
     if (this.form.invalid) {
-      this.alertService.error('Invalid');
+      this.alertService.error('ALERTS.invalid');
       return;
     }
 
     this.eventEntityService.update(this.form.value).subscribe(
       (update) => {
-        this.alertService.info('Saved Changes');
+        this.alertService.info('ALERTS.saved_changes');
 
         if (navigate) this.router.navigate([`/home/events`]);
       },
 
       (err) => {
-        this.alertService.error('Something went wrong');
+        this.alertService.error('ALERTS.something_went_wrong');
       },
 
       () => {}

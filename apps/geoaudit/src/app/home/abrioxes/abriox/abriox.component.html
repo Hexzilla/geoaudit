@@ -1,149 +1,219 @@
 <geoaudit-sidebar-header
   title="CONTAINERS.home.abrioxes.abriox.title"
-  [placeholder]="form.value.name"
-></geoaudit-sidebar-header>
+  [placeholder]="form?.value?.name"
+>
+  <geoaudit-icon [visible]="true" [color]="getLatestConditionColour()" icon="radio_button_unchecked"></geoaudit-icon>
+</geoaudit-sidebar-header>
 
-<mat-horizontal-stepper>
-  <mat-step [label]="'CONTAINERS.home.abrioxes.abriox.details' | translate">
-    <geoaudit-single-item-selector
-      selector="status"
-      label="CONTAINERS.home.abrioxes.abriox.status"
-      placeholder="CONTAINERS.home.abrioxes.abriox.new_status"
-      [item]="form.value.status"
-      (itemChange)="onItemChange($event, 'status')"
-      attribute="name"
-    ></geoaudit-single-item-selector>
+<mat-tab-group
+  mat-align-tabs="start"
+  (selectedIndexChange)="selectedIndexChange($event)"
+  [(selectedIndex)]="selectedTabIndex"
+  class="tab-body-height"
+>
+  <!-- Details -->
+  <mat-tab [label]="'CONTAINERS.home.jobs.job.steps.details' | translate">
+    <mat-card-content class="mt-26">
+      <form fxLayout="column" [formGroup]="form" (ngSubmit)="submit()">
+        <!--Testpost Action-->
+        <div fxLayout="column">
+          
+        <!-- Name -->
+        <mat-form-field appearance="outline">
+          <mat-label>{{
+            'CONTAINERS.home.abrioxes.abriox.name' | translate
+          }}</mat-label>
+          <input
+            matInput
+            [placeholder]="'CONTAINERS.home.abrioxes.abriox.name' | translate"
+            formControlName="name"
+            class="form-control"
+          />
+        </mat-form-field>
 
-    <geoaudit-single-item-selector
-      selector="tp"
-      label="CONTAINERS.home.abrioxes.abriox.testpost"
-      placeholder="CONTAINERS.home.abrioxes.abriox.new_testpost"
-      [item]="form.value.testpost"
-      (itemChange)="onItemChange($event, 'testpost')"
-      attribute="name"
-    ></geoaudit-single-item-selector>
-
-    <geoaudit-single-item-selector
-      selector="tr"
-      label="CONTAINERS.home.abrioxes.abriox.tr"
-      placeholder="CONTAINERS.home.abrioxes.abriox.new_tr"
-      [item]="form.value.tr"
-      (itemChange)="onItemChange($event, 'tr')"
-      attribute="name"
-    ></geoaudit-single-item-selector>
-
-    <form [formGroup]="form">
-      <!-- Name -->
-      <mat-form-field appearance="outline">
-        <mat-label>{{
-          'CONTAINERS.home.abrioxes.abriox.name' | translate
-        }}</mat-label>
-        <input
-          matInput
-          [placeholder]="'CONTAINERS.home.abrioxes.abriox.name' | translate"
-          formControlName="name"
-          class="form-control"
-        />
-      </mat-form-field>
-
-      <!-- Serial Number -->
-      <mat-form-field appearance="outline">
-        <mat-label>{{
-          'CONTAINERS.home.abrioxes.abriox.serial_number' | translate
-        }}</mat-label>
-        <input
-          matInput
-          [placeholder]="
+        <!-- Serial Number -->
+        <mat-form-field appearance="outline">
+          <mat-label>{{
             'CONTAINERS.home.abrioxes.abriox.serial_number' | translate
-          "
-          formControlName="serial_number"
-          class="form-control"
-        />
-      </mat-form-field>
+          }}</mat-label>
+          <input
+            matInput
+            [placeholder]="
+              'CONTAINERS.home.abrioxes.abriox.serial_number' | translate
+            "
+            formControlName="serial_number"
+            class="form-control"
+          />
+        </mat-form-field>
 
-      <!-- Telephone -->
-      <mat-form-field appearance="outline">
-        <mat-label>{{
-          'CONTAINERS.home.abrioxes.abriox.telephone' | translate
-        }}</mat-label>
-        <input
-          matInput
-          [placeholder]="
+        <!-- Telephone -->
+        <mat-form-field appearance="outline">
+          <mat-label>{{
             'CONTAINERS.home.abrioxes.abriox.telephone' | translate
-          "
-          formControlName="telephone"
-          class="form-control"
-        />
-      </mat-form-field>
+          }}</mat-label>
+          <input
+            matInput
+            [placeholder]="
+              'CONTAINERS.home.abrioxes.abriox.telephone' | translate
+            "
+            formControlName="telephone"
+            class="form-control"
+          />
+        </mat-form-field>
 
-      <!-- Date Installation -->
-      <mat-form-field appearance="outline">
-        <mat-label>{{
-          'CONTAINERS.home.testposts.testpost.date_installation' | translate
-        }}</mat-label>
-        <input
-          matInput
-          [ngxMatDatetimePicker]="dateInstallationDateTimePicker"
-          [placeholder]="
-            'CONTAINERS.home.abrioxes.abriox.date_installation' | translate
-          "
-          formControlName="date_installation"
-          [min]="minDate"
-          [max]="maxDate"
-          [disabled]="disabled"
-        />
+        <!-- Date Installation -->
+        <mat-form-field appearance="outline">
+          <mat-label>{{
+            'CONTAINERS.home.testposts.testpost.date_installation' | translate
+          }}</mat-label>
+          <input
+            matInput
+            [ngxMatDatetimePicker]="dateInstallationDateTimePicker"
+            [placeholder]="
+              'CONTAINERS.home.abrioxes.abriox.date_installation' | translate
+            "
+            formControlName="date_installation"
+            [min]="minDate"
+            [max]="maxDate"
+            [disabled]="disabled"
+          />
 
-        <mat-datepicker-toggle
-          matSuffix
-          [for]="dateInstallationDateTimePicker"
-        ></mat-datepicker-toggle>
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="dateInstallationDateTimePicker"
+          ></mat-datepicker-toggle>
 
-        <ngx-mat-datetime-picker
-          #dateInstallationDateTimePicker
-          [showSpinners]="showSpinners"
-          [showSeconds]="showSeconds"
-          [stepHour]="stepHour"
-          [stepMinute]="stepMinute"
-          [stepSecond]="stepSecond"
-          [touchUi]="touchUi"
-          [color]="color"
-          [enableMeridian]="enableMeridian"
-          [disableMinute]="disableMinute"
-          [hideTime]="hideTime"
-        >
-        </ngx-mat-datetime-picker>
-      </mat-form-field>
-    </form>
+          <ngx-mat-datetime-picker
+            #dateInstallationDateTimePicker
+            [showSpinners]="showSpinners"
+            [showSeconds]="showSeconds"
+            [stepHour]="stepHour"
+            [stepMinute]="stepMinute"
+            [stepSecond]="stepSecond"
+            [touchUi]="touchUi"
+            [color]="color"
+            [enableMeridian]="enableMeridian"
+            [disableMinute]="disableMinute"
+            [hideTime]="hideTime"
+          >
+          </ngx-mat-datetime-picker>
+        </mat-form-field>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-tab>
 
-    <geoaudit-single-item-selector
-      selector="condition"
-      label="CONTAINERS.home.abrioxes.abriox.condition"
-      placeholder="CONTAINERS.home.abrioxes.abriox.new_condition"
-      [item]="form.value.condition"
-      (itemChange)="onItemChange($event, 'condition')"
-      attribute="name"
-    ></geoaudit-single-item-selector>
-  </mat-step>
+  <!-- Abriox -->
+  <!-- <mat-tab [label]="'CONTAINERS.home.testposts.testpost.abriox' | translate">
+    <mat-card-content>
+      <div fxLayout="column">
+        <p>{{ abriox.date_installation | date: 'HH:mm dd/MM/yyyy' }}</p>
+        <p *ngIf="abriox.name">
+          <em>{{ abriox.name | slice: 0:100 }} </em
+          ><span *ngIf="abriox.name?.length >= 10">...</span>
+        </p>
 
-  <mat-step [label]="'CONTAINERS.home.abrioxes.abriox.attachments' | translate">
-    <geoaudit-file-upload
-      label="CONTAINERS.home.jobs.job.attachments.images"
-      (preview)="onPreview($event)"
-      (upload)="onImageUpload($event)"
-      fileType="IMAGE"
-      [multiple]="true"
-    ></geoaudit-file-upload>
+        <div fxLayout="row"></div>
+      </div>
+      <button
+        mat-icon-button
+        color="accent"
+        aria-label="Example icon button with a plus one icon"
+      >
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </mat-card-content>
+  </mat-tab> -->
 
-    <geoaudit-file-upload
-      label="CONTAINERS.home.jobs.job.attachments.documents"
-      (preview)="onPreview($event)"
-      (upload)="onDocumentUpload($event)"
-      fileType="DOCUMENT"
-      [multiple]="true"
-    ></geoaudit-file-upload>
-  </mat-step>
+  <!-- Attachments -->
+  <mat-tab [label]="'CONTAINERS.home.jobs.job.steps.attachments' | translate">
+    <mat-card-content>
+      <attachment-file-upload
+        label="CONTAINERS.home.jobs.job.attachments.images"
+        (preview)="onItemPreview($event)"
+        (upload)="onImageUpload($event)"
+        fileType="IMAGE"
+        [items] = "attachedImages"
+        [multiple]="true"
+      ></attachment-file-upload>
 
-  <mat-step [label]="'CONTAINERS.home.abrioxes.abriox.notes' | translate">
-    <geoaudit-notes></geoaudit-notes>
-  </mat-step>
-</mat-horizontal-stepper>
+      <attachment-file-upload
+        label="CONTAINERS.home.jobs.job.attachments.documents"
+        (preview)="onItemPreview($event)"
+        (upload)="onDocumentUpload($event)"
+        fileType="DOCUMENT"
+        [items] = "attachedDocuments"
+        [multiple]="true"
+      ></attachment-file-upload>
+    </mat-card-content>
+  </mat-tab>
+
+  <!-- Actions -->
+  <mat-tab [label]="'CONTAINERS.home.testposts.testpost.actions' | translate">
+    <mat-card-content *ngIf="abriox_actions">
+      <div *ngFor="let item of abriox_actions">
+        <geoaudit-action-list-item
+          [item]="item"
+          [surveyId]="item.survey?.id"
+          [date]="item.date"
+          [iconColor]="getActionIconColor(item)"
+          (onNavigate)="onActionNavigation($event)"
+          attribute="abriox_actions">
+        </geoaudit-action-list-item>
+      </div>
+    </mat-card-content>
+  </mat-tab>
+
+
+  <!-- Notes -->
+  <mat-tab [label]="'CONTAINERS.home.jobs.job.steps.notes' | translate">
+    <mat-card-content>
+      <geoaudit-notes></geoaudit-notes>
+    </mat-card-content>
+  </mat-tab>
+</mat-tab-group>
+
+
+<div fxLayout="row-reverse" class="approve-wrapper">
+  <geoaudit-status-buttons
+    *ngIf="abriox!=null"
+    [completed]="completed()"
+    [approved]="approved == true"
+    (completeEvent)="updateMarkState($event)"
+  ></geoaudit-status-buttons>
+</div>
+
+<div fxLayout="row-reverse" fxLayoutAlign="space-between" class="button-area">
+  <div class="button-wrapper">
+    <button
+      *ngIf="selectedTabIndex != 3"
+      mat-icon-button
+      color="accent"
+      (click)="selectedIndexChange(selectedTabIndex + 1)"
+      class="btn-arrow"
+    >
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+  </div>
+
+  <button
+    mat-flat-button
+    color="primary"
+    (click)="submit(true)"
+    type="submit"
+    class="btn-submit"
+  >
+    {{ 'CONTAINERS.home.jobs.job.form.save' | translate }}
+  </button>
+  <div class="button-wrapper">
+    <button
+      *ngIf="selectedTabIndex != 0"
+      mat-icon-button
+      color="accent"
+      (click)="selectedIndexChange(selectedTabIndex - 1)"
+      class="btn-arrow"
+    >
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+  </div>
+</div>

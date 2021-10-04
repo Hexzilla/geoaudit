@@ -1,0 +1,28 @@
+<mat-card
+  style="cursor: pointer; margin-top: 20px"
+  fxLayout="row"
+  fxLayoutAlign="space-between"
+>
+  <div>
+    <h3>{{ 'CONTAINERS.home.survey.' + label | translate }}</h3>
+  </div>
+
+  <div fxLayout="row">
+    <button *ngIf="item_list_completed==true"
+      mat-icon-button
+      color="#8AC926"
+      style="color: #ffffff; background-color: #8ac926"
+      aria-label="Example icon button with a plus one icon"
+    >
+      <mat-icon>done</mat-icon>
+    </button>
+
+    <button
+      mat-icon-button
+      color="accent"
+      aria-label="Example icon button with a plus one icon"
+    >
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+  </div>
+</mat-card>

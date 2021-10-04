@@ -1,3 +1,8 @@
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+}
+
 .match-parent {
   width: 100vh;
   height: 100vh;
@@ -17,6 +22,9 @@
   margin: 5px;
 }
 
+.map-container {
+  display: none;
+}
 
 .form {
   width: 100%;
@@ -34,4 +42,8 @@
 [dir='rtl'] .option-img {
   margin-right: 0;
   margin-left: 8px;
+}
+
+::ng-deep .mat-horizontal-stepper-header-container {
+  display: none !important;
 }

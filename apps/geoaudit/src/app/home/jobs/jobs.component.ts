@@ -28,43 +28,14 @@ import {
 import { DeleteModalComponent } from '../../modals/delete-modal/delete-modal.component';
 import { Job, Statuses } from '../../models';
 
-import {
-  ApexAxisChartSeries,
-  ApexChart,
-  ChartComponent,
-  ApexDataLabels,
-  ApexXAxis,
-  ApexPlotOptions,
-  ApexStroke,
-  ApexTitleSubtitle,
-  ApexTooltip,
-  ApexFill,
-  ApexLegend,
-  ApexYAxis,
-  ApexGrid,
-} from 'ng-apexcharts';
-
 // Store
 import * as fromApp from '../../store';
 import * as JobActions from '../../store/job/job.actions';
 import { ShareModalComponent } from '../../modals/share-modal/share-modal.component';
-import { JobEntityService } from '../../entity-services/job-entity.service';
+import { SelectionService } from '../../services/selection.service';
 import { AuthService } from '../../services';
-
-export type ChartOptions = {
-  series: ApexAxisChartSeries;
-  chart: ApexChart;
-  dataLabels: ApexDataLabels;
-  plotOptions: ApexPlotOptions;
-  xaxis: ApexXAxis;
-  yaxis: ApexYAxis;
-  stroke: ApexStroke;
-  title: ApexTitleSubtitle;
-  tooltip: ApexTooltip;
-  fill: ApexFill;
-  legend: ApexLegend;
-  grid: ApexGrid;
-};
+import { MyJobEntityService } from '../../entity-services/my-job-entity.service';
+import { ArchiveModalComponent } from '../../modals/archive-modal/archive-modal.component';
 
 @Component({
   selector: 'geoaudit-jobs',
@@ -74,7 +45,7 @@ export type ChartOptions = {
 export class JobsComponent implements OnInit {
   displayedColumns: string[] = [
     'select',
-    'reference',
+    //'reference',
     'name',
     'status',
     'job_type',
@@ -99,169 +70,51 @@ export class JobsComponent implements OnInit {
   // MatPaginator Output
   pageEvent: PageEvent;
 
-  @ViewChild('chart') chart: ChartComponent;
+  jobs$ = this.myJobEntityService.entities$
+  
+  // .pipe(
+  //   map(jobs => {
+  //     return jobs.filter(job => !job.archived)
+  //   })
+  // )
 
-  jobs$ = this.jobEntityService.entities$;
-
-  public chartOptions: Partial<ChartOptions>;
+  public chartSeries = null;
 
   constructor(
     public dialog: MatDialog,
     private formBuilder: FormBuilder,
     private router: Router,
-    private jobEntityService: JobEntityService,
+    private myJobEntityService: MyJobEntityService,
+    private selectionService: SelectionService,
     private authService: AuthService
   ) {
     this.form = this.formBuilder.group({
       filter: [''],
     });
-
-    this.chartOptions = {
-      series: [
-        {
-          name: Statuses.NOT_STARTED,
-          data: [44],
-          color: '#FF0000',
-        },
-        {
-          name: Statuses.ONGOING,
-          data: [53],
-          color: '#FFA500',
-        },
-        {
-          name: Statuses.COMPLETED,
-          data: [12],
-          color: '#90EE90',
-        },
-        {
-          name: Statuses.REFUSED,
-          data: [9],
-          color: '#000000',
-        },
-      ],
-      chart: {
-        type: 'bar',
-        height: 100,
-        stacked: true,
-        stackType: '100%',
-
-        dropShadow: {
-          enabled: false,
-        },
-
-        toolbar: {
-          show: false,
-        },
-
-        sparkline: {
-          // enabled: true
-        },
-      },
-      plotOptions: {
-        bar: {
-          horizontal: true,
-          // borderRadius: 15
-        },
-      },
-      stroke: {
-        width: 0,
-        colors: ['#fff'],
-      },
-      title: {
-        // text: "100% Stacked Bar"
-        text: '',
-      },
-      xaxis: {
-        // categories: [2008, 2009, 2010, 2011, 2012, 2013, 2014]
-        categories: [],
-        labels: {
-          show: false,
-        },
-        axisBorder: {
-          show: false,
-        },
-        axisTicks: {
-          show: false,
-        },
-      },
-      yaxis: {
-        labels: {
-          show: false,
-        },
-        axisBorder: {
-          show: false,
-        },
-      },
-      tooltip: {
-        // y: {
-        //   formatter: function(val) {
-        //     return val + "K";
-        //   }
-        // }
-        x: {
-          show: false,
-        },
-      },
-      fill: {
-        opacity: 1,
-      },
-      legend: {
-        show: false,
-        position: 'bottom',
-        horizontalAlign: 'left',
-        offsetX: 40,
-      },
-    };
   }
 
   ngOnInit(): void {
     const parameters = qs.stringify({
       _where: {
         assignees: this.authService.authValue.user.id,
+        _or: [
+          {
+            archived: false
+          },
+          {
+            archived_null: true
+          }
+        ]
       },
       _sort: 'created_at:DESC',
     });
 
-    this.jobEntityService.getWithQuery(parameters).subscribe(
+    this.myJobEntityService.getWithQuery(parameters).subscribe(
       (jobs) => {
-        let notStartedJobs = [];
-        let onGoingJobs = [];
-        let completedJobs = [];
-        let refusedJobs = [];
-
-        jobs.map((job) => {
-          if (job?.status?.name === Statuses.NOT_STARTED)
-            notStartedJobs.push(job);
-          if (job?.status?.name === Statuses.ONGOING) onGoingJobs.push(job);
-          if (job?.status?.name === Statuses.COMPLETED) completedJobs.push(job);
-          if (job?.status?.name === Statuses.REFUSED) refusedJobs.push(job);
-        });
-
-        this.chartOptions.series = [
-          {
-            name: Statuses.NOT_STARTED,
-            data: [notStartedJobs.length],
-            color: '#FF0000',
-          },
-          {
-            name: Statuses.ONGOING,
-            data: [onGoingJobs.length],
-            color: '#FFA500',
-          },
-          {
-            name: Statuses.COMPLETED,
-            data: [completedJobs.length],
-            color: '#90EE90',
-          },
-          {
-            name: Statuses.REFUSED,
-            data: [refusedJobs.length],
-            color: '#000000',
-          },
-        ];
+        this.updateJobChartSeries(jobs);
       },
-
-      (err) => {}
+      (err) => {
+      }
     );
 
     this.jobs$.subscribe(
@@ -272,7 +125,14 @@ export class JobsComponent implements OnInit {
         this.dataSource.sort = this.sort;
       }
     )
+
+    this.selectionService.setSurveyMarkerFilter.emit([]);
   }
+
+  // eslint-disable-next-line @angular-eslint/use-lifecycle-interface
+  ngOnDestroy(): void{
+    this.selectionService.setSurveyMarkerFilter.emit(null);
+  } 
 
   calendar(): void {
     const jobs = this.selection.isEmpty()
@@ -324,13 +184,15 @@ export class JobsComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      this.selection.selected.map((job) => {
-        this.jobEntityService.delete(job).subscribe(
-          (res) => {},
-
-          (err) => {}
-        );
-      });
+      if (result) {
+        this.selection.selected.map((job) => {
+          this.myJobEntityService.delete(job).subscribe(
+            (res) => {},
+  
+            (err) => {}
+          );
+        });
+      }
     });
   }
 
@@ -418,5 +280,99 @@ export class JobsComponent implements OnInit {
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${
       row.id + 1
     }`;
+  }
+
+  private updateJobChartSeries(jobs) {
+    const validJobs = jobs.filter(it => it.status != null);
+    const notStartedJobs = validJobs.filter(it => it.status.name === Statuses.NOT_STARTED)
+    const onGoingJobs = validJobs.filter(it => it.status.name === Statuses.ONGOING)
+    const completedJobs = validJobs.filter(it => it.status.name === Statuses.COMPLETED)
+    const refusedJobs = validJobs.filter(it => it.status.name === Statuses.REFUSED)
+
+    this.chartSeries = []
+    if (notStartedJobs.length > 0) {
+      this.chartSeries.push({
+        name: Statuses.NOT_STARTED,
+        data: [notStartedJobs.length],
+        color: '#E71D36',
+      })
+    }
+    if (onGoingJobs.length > 0) {
+      this.chartSeries.push({
+        name: Statuses.ONGOING,
+        data: [onGoingJobs.length],
+        color: '#FFBE0B',
+      })
+    }
+    if (completedJobs.length > 0) {
+      this.chartSeries.push({
+        name: Statuses.COMPLETED,
+        data: [completedJobs.length],
+        color: '#8AC926',
+      })
+    }
+    if (refusedJobs.length > 0) {
+      this.chartSeries.push({
+        name: Statuses.REFUSED,
+        data: [refusedJobs.length],
+        color: '#3A86FF',
+      })
+    }
+  }
+
+  onCheckedRow(event, selections) {
+    if (selections.selected.length == 0) {
+      this.jobs$.subscribe(
+        () => {
+          /*const surveys = jobs.reduce((_surveys, job) => {
+            return _surveys.concat(job.surveys)
+          }, [])*/
+          this.selectionService.setSurveyMarkerFilter.emit([]);
+        }
+      )
+    }
+    else {
+      const surveys = selections.selected.reduce((_surveys, job) => {
+        return _surveys.concat(job.surveys)
+      }, [])
+      this.selectionService.setSurveyMarkerFilter.emit(surveys);
+    }
+  }
+
+  canArchive() {
+    const hasSelected = this.selection.selected.length > 0;
+
+    const areCompleted = this.selection.selected.filter(item => item.status.name === Statuses.COMPLETED);
+
+    // Are all that are selected completed?
+    return hasSelected && areCompleted.length === this.selection.selected.length;
+  }
+
+  archive() {
+    // Change `archived` to be true.
+    const dialogRef = this.dialog.open(ArchiveModalComponent, {
+      data: {
+        length: this.selection.selected.length,
+      },
+      autoFocus: true,
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.selection.selected.map((job) => {
+          this.myJobEntityService.update({
+            ...job,
+            archived: true
+          }).subscribe(
+            (res) => {
+              // Remove locally (not from database) as we only fetch our own jobs and jobs of which are NOT archived.
+              this.myJobEntityService.removeOneFromCache(job);
+            },
+  
+            (err) => {}
+          );
+        });
+      }
+    });
   }
 }

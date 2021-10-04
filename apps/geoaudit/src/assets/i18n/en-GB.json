@@ -30,7 +30,11 @@
 					"condition": "Condition",
 					"new_condition": "New condition",
 					"status": "Status",
-					"new_status": "New status"
+					"new_status": "New status",
+					"actions": "Actions"
+				},
+				"abriox_action": {
+					"title": "Abriox Action"
 				}
 			},
 			"approval": {
@@ -39,7 +43,7 @@
 			"archive": {
 				"title": "Archive",
 				"show_all_jobs": "Show all jobs",
-				"show_some_jobs": "Show some jobs"
+				"show_my_jobs": "Show my jobs"
 			},
 			"notes": {
 				"title": "Notes",
@@ -70,9 +74,18 @@
 				"trs": "TRs",
 				"new_tr": "New tr"
 			},
+			"search": {
+				"title": "Search",
+				"categories": "Categories",
+				"select": "Select",
+				"form": {
+					"mylocation": "Near My Location",
+					"address": "address"
+				}
+			},
 			"buttons": {
 				"approvals": {
-					"text": "N approvals required",
+					"text": "{{placeholder}} approvals to complete",
 					"title": "Approve"
 				},
 				"jobs": {
@@ -210,12 +223,30 @@
 				"finished": "Finished"
 			},
 			"survey": {
+				"title": "Survey",
 				"add_survey": {
 					"title": "Add Survey"
 				},
 				"status": "Status",
 				"new_job": "New Job",
-				"job": "Job"
+				"job": "Job",
+				"site_details": "Site Details",
+				"testpost": "Testpost",
+				"tr": "Transformer Rectifier",
+				"abriox": "Abriox",
+				"resistivity": "Resistivity",
+				"comments": "Comments",
+				"steps": {
+					"overview": "Overview",
+					"delivery": "Delivery",
+					"attachments": "Attachments",
+					"inspection": "Inspection",
+					"notes": "Notes"
+				},
+				"abriox_list": "Abriox List",
+				"tp_action_list": "Testpost Action List",
+				"tr_action_list": "Testpost Action List",
+				"resistivity_list": "Resistivity List"
 			},
 			"testposts": {
 				"testpost": {
@@ -231,6 +262,124 @@
 					"model": "Model",
 					"serial_number": "Serial Number",
 					"abriox": "Abriox"
+				},
+				"tp_action": {
+					"title": "Testpost Action",
+					"date": "Date",
+					"condition": "Condition",
+					"reading": "Reading",
+					"pipe_title": "Pipe",
+					"pipe_on": "pipe_on",
+					"pipe_off": "pipe_off",
+					"anodes_title": "Anodes",
+					"anodes_on": "anodes_on",
+					"anodes_off": "anodes_off",
+					"anodes_current": "anodes_current",
+					"dead_title": "Dead",
+					"dead_on": "Dead_on",
+					"dead_off": "Dead_off",
+					"dead_current": "Dead_current",
+					"sleeve_title": "Sleeve",
+					"sleeve_on": "sleeve_on",
+					"sleeve_off": "sleeve_off",
+					"sleeve_current": "sleeve_current",
+					"coupon": {
+						"title": "Coupon",
+						"on": "coupon_on",
+						"off": "coupon_off",
+						"current_ac": "coupon_current_ac",
+						"current_dc": "coupon_current_dc"
+					},
+					"others": {
+						"title": "Others",
+						"reedswitch": "Reedswitch Quantity",
+						"refcell": "Reference Cell"
+					},
+					"current_drain": {
+						"title": "Current Drain",
+						"input_v": "Cd_input_v",
+						"input_a": "Cd_input_a",
+						"output_v": "Cd_output_v",
+						"output_a": "Cd_output_a"
+					},
+					"asset": {
+						"title": "Asset Information",
+						"pipe_depth": "Pipe_depth",
+						"reinstatement": "Reinstatement"
+					},
+					"fault": {
+						"title": "Fault Details",
+						"type": "Fault Type",
+						"desc": "Fault Description"
+					}
+				}
+			},
+			"trs": {
+				"tr": {
+					"title": "Tr {{placeholder}}",
+					"abriox": "Abriox"
+				},
+				"tr_action": {
+					"title": "TR Action",
+					"reading": {
+						"title": "Reading",
+						"volt": "Volt",
+						"amps": "Amps",
+						"current_setting": "Current Setting",
+						"anodes": {
+							"title": "Anodes",
+							"subtitle": "Anode No. 1",
+							"anode_off": "Anode off",
+							"anode_current": "Anode current"
+						}
+					}
+				}
+			},
+			"resistivity": {
+				"title": "Resistivity",
+				"reference": "Reference",
+				"date": "Date",
+				"latitude": "Latitude",
+				"longitude": "Longitude",
+				"reading": {
+					"title": "Reading",
+					"distance": "Distance",
+					"value": "Value"
+				}
+			},
+			"sites": {
+				"site": {
+					"title": "Site {{placeholder}}",
+					"details": "Details",
+					"attachments": "Attachments",
+					"actions": "Actions",
+					"notes": "Notes",
+					"properties": "Properties",
+					"reference": "Reference",
+					"name": "Name",
+					"date_installation": "Date Installation",
+					"manufacture": "Manufacture",
+					"model": "Model",
+					"serial_number": "Serial Number",
+					"abriox": "Abriox",
+					"owner": "Owner",
+					"region": "Region",
+					"address": "Address",
+					"scheme": "Scheme",
+					"site_type": "Site Type",
+					"traffic_manage": "Traffic Management",
+					"access_detail": "Access Detail",
+					"speed_limit": "Speed Limit",
+					"distance_road": "Distance Road",
+					"road_condition": "Road Condition",
+					"tm_required": "Tm Required",
+					"tm_descr": "Tm Description",
+					"nrswa_required": "Nrswa Required",
+					"nrswa_descr": "Nrswa Description",
+					"health_safety": "Health & Safety",
+					"toilet": "Toilet",
+					"hospital": "Hospital",
+					"hazards": "Hazards"
 				}
 			}
 		},
@@ -242,6 +391,11 @@
 		}
 	},
 	"MODALS": {
+		"archive_modal": {
+			"title": "Archive",
+			"archive_surveys": "You're about to archive {{length}} record(s). Do you wish to continue?",
+			"confirm": "Confirm"
+		},
 		"attachment_modal": {
 			"title": "Attachments"
 		},
@@ -297,5 +451,14 @@
 		"AAA": "AAA",
 		"CAT5": "CAT5",
 		"CIPS": "CIPS"
+	},
+	"ALERTS": {
+		"failed": "Failed",
+		"success": "Success",
+		"saved_changed": "Saved Changes",
+		"invalid": "Invalid",
+		"something_went_wrong": "Something went wrong",
+		"updated": "Update Successful",
+		"user_added": "User Added Successfully"
 	}
 }

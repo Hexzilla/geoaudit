@@ -5,6 +5,7 @@ import { AuthGuard } from '../../guards';
 
 import { NotesComponent } from '../notes/notes.component';
 import { SearchComponent } from '../search/search.component';
+import { SiteComponent } from './site/site.component';
 
 const routes: Routes = [
     { 
@@ -29,7 +30,7 @@ const routes: Routes = [
     // },
 
     {
-        path: ':id', component: SearchComponent
+        path: ':id', component: SiteComponent
     },
 
     {

@@ -1,0 +1,55 @@
+<div mat-dialog-content>
+  <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+    <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding matTreeNodePaddingIndent="20">
+      <button mat-icon-button disabled></button>
+      <div fxLayout="row" fxLayoutAlign="space-between" style="width: 100%;">
+        <mat-checkbox 
+          class="checklist-leaf-node"
+          color="primary"
+          [checked]="checklistSelection.isSelected(node)"
+          (change)="todoLeafItemSelectionToggle(node)">{{node.item}}</mat-checkbox>
+          <span *ngIf="node.level > 1">
+            <svg width="20" height="20" *ngIf="node.approved" viewBox="0 0 40 40">
+              <circle cx="20" cy="20" r="20" fill="#8AC926">
+                <title>APPROVED</title>
+              </circle>
+            </svg>
+            <svg width="20" height="20" *ngIf="!node.approved" viewBox="0 0 40 40">
+              <circle cx="20" cy="20" r="20" fill="#E71D36">
+                <title>NOT APPROVED</title>
+              </circle>
+            </svg>
+          </span>
+      </div>
+    </mat-tree-node>
+  
+    <!-- <mat-tree-node *matTreeNodeDef="let node; when: hasNoContent" matTreeNodePadding>
+      <button mat-icon-button disabled></button>
+      <mat-form-field appearance="fill">
+        <mat-label>New item...</mat-label>
+        <input matInput #itemValue placeholder="Ex. Lettuce">
+      </mat-form-field>
+    </mat-tree-node> -->
+  
+    <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding matTreeNodePaddingIndent="20">
+      <button mat-icon-button matTreeNodeToggle
+              [attr.aria-label]="'Toggle ' + node.item">
+        <mat-icon class="mat-icon-rtl-mirror">
+          {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+        </mat-icon>
+      </button>
+      <mat-checkbox
+        color="primary"
+        [checked]="descendantsAllSelected(node)"
+        [indeterminate]="descendantsPartiallySelected(node)"
+        (change)="todoItemSelectionToggle(node)">{{node.item}}</mat-checkbox>
+    </mat-tree-node>
+  </mat-tree>
+</div>
+
+<div *ngIf="isManager()">
+  <div fxLayout="row" fxLayoutAlign="space-between" class="buttons-wrapper">
+    <mat-icon class="statusButton crimson" (click)="refuse()">clear</mat-icon>
+    <mat-icon class="statusButton limegreen" (click)="approve()">thumb_up</mat-icon>
+  </div>
+</div>

@@ -1,0 +1,74 @@
+@mixin md-icon-size($size: 24px) {
+    font-size: $size;
+    height: $size;
+    width: $size;
+    line-height: $size;
+}
+
+.mt-26 {
+    margin-top: 26px;
+}
+
+.mat-expansion-panel {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.item-title {
+    display: flex;
+    align-items: center;
+}
+
+.fx-col-6 {
+    width: 48%;
+}
+
+.fx-col-4 {
+    width: 30%;
+}
+
+.button-area{
+    position: absolute;
+    width: 92%;
+    bottom: 8px;
+    z-index:1;
+}
+
+.approve-wrapper {
+    position: absolute;
+    right: 20px;
+    bottom: 62px;
+    z-index: 1;
+}
+
+.button-wrapper {
+    min-width: 50px;
+    text-align: center;
+}
+
+.btn-submit{
+    width: 60%;
+}
+
+.btn-arrow{
+    justify-content: center;
+
+    .mat-icon{
+        font-size: 32px;
+        color: #464646;
+    }
+}
+
+.tp-bottom {
+    text-align: center;
+    margin-bottom: 20px;
+
+    mat-icon {
+        color: #505050;
+        @include md-icon-size(36px);
+    }
+}
+
+.geolocation {
+    width: 45%;
+}

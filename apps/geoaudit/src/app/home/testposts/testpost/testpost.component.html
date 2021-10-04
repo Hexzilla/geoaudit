@@ -1,201 +1,303 @@
 <geoaudit-sidebar-header
   title="CONTAINERS.home.testposts.testpost.title"
   [placeholder]="form?.value?.reference"
-></geoaudit-sidebar-header>
+>
+  <geoaudit-icon [visible]="true" [color]="getLatestConditionColour()" icon="radio_button_unchecked"></geoaudit-icon>
+</geoaudit-sidebar-header>
 
-<mat-horizontal-stepper>
+<mat-tab-group
+  mat-align-tabs="start"
+  (selectedIndexChange)="selectedIndexChange($event)"
+  [(selectedIndex)]="selectedTabIndex"
+  class="tab-body-height"
+>
   <!-- Details -->
-  <mat-step [label]="'CONTAINERS.home.testposts.testpost.details' | translate">
-    <form [formGroup]="form">
-      <!-- Reference -->
-      <mat-form-field appearance="outline">
-        <mat-label>{{
-          'CONTAINERS.home.testposts.testpost.reference' | translate
-        }}</mat-label>
-        <input
-          matInput
-          [placeholder]="
-            'CONTAINERS.home.testposts.testpost.reference' | translate
-          "
-          formControlName="reference"
-          class="form-control"
-        />
-      </mat-form-field>
-
-      <!-- Name -->
-      <mat-form-field appearance="outline">
-        <mat-label>{{
-          'CONTAINERS.home.testposts.testpost.name' | translate
-        }}</mat-label>
-        <input
-          matInput
-          [placeholder]="'CONTAINERS.home.testposts.testpost.name' | translate"
-          formControlName="name"
-          class="form-control"
-        />
-      </mat-form-field>
-
-      <!-- Date Installation -->
-      <mat-form-field appearance="outline">
-        <mat-label>{{
-          'CONTAINERS.home.testposts.testpost.date_installation' | translate
-        }}</mat-label>
-        <input
-          matInput
-          [ngxMatDatetimePicker]="dateInstallationDateTimePicker"
-          [placeholder]="
-            'CONTAINERS.home.testposts.testpost.date_installation' | translate
-          "
-          formControlName="date_installation"
-          [min]="minDate"
-          [max]="maxDate"
-          [disabled]="disabled"
-        />
-
-        <mat-datepicker-toggle
-          matSuffix
-          [for]="dateInstallationDateTimePicker"
-        ></mat-datepicker-toggle>
-
-        <ngx-mat-datetime-picker
-          #dateInstallationDateTimePicker
-          [showSpinners]="showSpinners"
-          [showSeconds]="showSeconds"
-          [stepHour]="stepHour"
-          [stepMinute]="stepMinute"
-          [stepSecond]="stepSecond"
-          [touchUi]="touchUi"
-          [color]="color"
-          [enableMeridian]="enableMeridian"
-          [disableMinute]="disableMinute"
-          [hideTime]="hideTime"
-        >
-        </ngx-mat-datetime-picker>
-      </mat-form-field>
-
-      <!-- Manufacture -->
-      <mat-form-field appearance="outline">
-        <mat-label>{{
-          'CONTAINERS.home.testposts.testpost.manufacture' | translate
-        }}</mat-label>
-        <input
-          matInput
-          [placeholder]="
-            'CONTAINERS.home.testposts.testpost.manufacture' | translate
-          "
-          formControlName="manufacture"
-          class="form-control"
-        />
-      </mat-form-field>
-
-      <!-- Model -->
-      <mat-form-field appearance="outline">
-        <mat-label>{{
-          'CONTAINERS.home.testposts.testpost.model' | translate
-        }}</mat-label>
-        <input
-          matInput
-          [placeholder]="'CONTAINERS.home.testposts.testpost.model' | translate"
-          formControlName="model"
-          class="form-control"
-        />
-      </mat-form-field>
-
-      <!-- Manufacture -->
-      <mat-form-field appearance="outline">
-        <mat-label>{{
-          'CONTAINERS.home.testposts.testpost.serial_number' | translate
-        }}</mat-label>
-        <input
-          matInput
-          [placeholder]="
-            'CONTAINERS.home.testposts.testpost.serial_number' | translate
-          "
-          formControlName="serial_number"
-          class="form-control"
-        />
-      </mat-form-field>
-
-      <!-- Geo -->
-      <div fxLayout="row">
-        <div>
-          <mat-form-field class="full-width" appearance="outline">
-            <mat-label>Lat</mat-label>
+  <mat-tab [label]="'CONTAINERS.home.jobs.job.steps.details' | translate">
+    <mat-card-content class="mt-26">
+      <form fxLayout="column" [formGroup]="form" (ngSubmit)="submit()">
+        <!--Testpost Action-->
+        <div fxLayout="column">
+          
+          <!-- Reference -->
+          <mat-form-field appearance="outline">
+            <mat-label>{{
+              'CONTAINERS.home.testposts.testpost.reference' | translate
+            }}</mat-label>
             <input
               matInput
-              aria-label="Latitude"
-              [formControl]="latCtrl"
-              #latCtrlInput
+              [placeholder]="
+                'CONTAINERS.home.testposts.testpost.reference' | translate
+              "
+              formControlName="reference"
+              class="form-control"
             />
           </mat-form-field>
 
-          <mat-form-field class="full-width" appearance="outline">
-            <mat-label>Lng</mat-label>
+          <!-- Name -->
+          <mat-form-field appearance="outline">
+            <mat-label>{{
+              'CONTAINERS.home.testposts.testpost.name' | translate
+            }}</mat-label>
             <input
               matInput
-              aria-label="Longtitude"
-              [formControl]="lngCtrl"
-              #lngCtrlInput
+              [placeholder]="'CONTAINERS.home.testposts.testpost.name' | translate"
+              formControlName="name"
+              class="form-control"
             />
           </mat-form-field>
-        </div>
 
-        <div fxLayoutAlign="space-between center">
-          <button
-            mat-icon-button
-            color="accent"
-            type="button"
-            aria-label="Example icon button with a plus one icon"
-            (click)="clickMarker()"
-          >
-            <mat-icon>location_on</mat-icon>
-          </button>
+          <!-- Date Installation -->
+          <mat-form-field appearance="outline">
+            <mat-label>{{
+              'CONTAINERS.home.testposts.testpost.date_installation' | translate
+            }}</mat-label>
+            <input
+              matInput
+              [ngxMatDatetimePicker]="dateInstallationDateTimePicker"
+              [placeholder]="
+                'CONTAINERS.home.testposts.testpost.date_installation' | translate
+              "
+              formControlName="date_installation"
+              [min]="minDate"
+              [max]="maxDate"
+              [disabled]="disabled"
+            />
+
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="dateInstallationDateTimePicker"
+            ></mat-datepicker-toggle>
+
+            <ngx-mat-datetime-picker
+              #dateInstallationDateTimePicker
+              [showSpinners]="showSpinners"
+              [showSeconds]="showSeconds"
+              [stepHour]="stepHour"
+              [stepMinute]="stepMinute"
+              [stepSecond]="stepSecond"
+              [touchUi]="touchUi"
+              [color]="color"
+              [enableMeridian]="enableMeridian"
+              [disableMinute]="disableMinute"
+              [hideTime]="hideTime"
+            >
+            </ngx-mat-datetime-picker>
+          </mat-form-field>
+
+          <!-- Manufacture -->
+          <mat-form-field appearance="outline">
+            <mat-label>{{
+              'CONTAINERS.home.testposts.testpost.manufacture' | translate
+            }}</mat-label>
+            <input
+              matInput
+              [placeholder]="
+                'CONTAINERS.home.testposts.testpost.manufacture' | translate
+              "
+              formControlName="manufacture"
+              class="form-control"
+            />
+          </mat-form-field>
+
+          <!-- Model -->
+          <mat-form-field appearance="outline">
+            <mat-label>{{
+              'CONTAINERS.home.testposts.testpost.model' | translate
+            }}</mat-label>
+            <input
+              matInput
+              [placeholder]="'CONTAINERS.home.testposts.testpost.model' | translate"
+              formControlName="model"
+              class="form-control"
+            />
+          </mat-form-field>
+
+          <!-- Manufacture -->
+          <mat-form-field appearance="outline">
+            <mat-label>{{
+              'CONTAINERS.home.testposts.testpost.serial_number' | translate
+            }}</mat-label>
+            <input
+              matInput
+              [placeholder]="
+                'CONTAINERS.home.testposts.testpost.serial_number' | translate
+              "
+              formControlName="serial_number"
+              class="form-control"
+            />
+          </mat-form-field>
+
+          <!-- Geo -->
+          <div fxLayout="row" fxLayoutAlign="space-between">
+            <mat-form-field appearance="outline" class="geolocation">
+              <mat-label>{{
+                'CONTAINERS.home.resistivity.latitude' | translate
+              }}</mat-label>
+              <input
+                matInput
+                [placeholder]="
+                  'CONTAINERS.home.resistivity.latitude' | translate
+                "
+                [formControl]="latCtrl"
+                class="form-control"
+              />
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="geolocation">
+              <mat-label>{{
+                'CONTAINERS.home.resistivity.longitude' | translate
+              }}</mat-label>
+              <input
+                matInput
+                [placeholder]="
+                  'CONTAINERS.home.resistivity.longitude' | translate
+                "
+                [formControl]="lngCtrl"
+                class="form-control"
+              />
+            </mat-form-field>
+            <div fxLayoutAlign="space-between center">
+              <button mat-icon-button color="accent" type="button" aria-label="Example icon button with a plus one icon"
+                (click)="clickMarker()">
+                <mat-icon>location_on</mat-icon>
+              </button>
+            </div>
+          </div>
+
+          <!--Abriox-->
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>{{
+                'CONTAINERS.home.trs.tr.abriox' | translate
+              }}</mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="tp-bottom">
+              <button
+                  mat-icon-button
+                  color="accent"
+                  aria-label="add icon button"
+                  inline="true"
+                  (click)="addAbriox()"
+                >
+                  <mat-icon>add_circle_outline</mat-icon>
+                </button>
+            </div>
+          </mat-expansion-panel>
         </div>
-      </div>
-    </form>
-  </mat-step>
+      </form>
+    </mat-card-content>
+  </mat-tab>
 
   <!-- Abriox -->
-  <mat-step [label]="'CONTAINERS.home.testposts.testpost.abriox' | translate">
-    <div fxLayout="row-reverse">
+  <!-- <mat-tab [label]="'CONTAINERS.home.testposts.testpost.abriox' | translate">
+    <mat-card-content>
+      <div fxLayout="column">
+        <p>{{ abriox.date_installation | date: 'HH:mm dd/MM/yyyy' }}</p>
+        <p *ngIf="abriox.name">
+          <em>{{ abriox.name | slice: 0:100 }} </em
+          ><span *ngIf="abriox.name?.length >= 10">...</span>
+        </p>
+
+        <div fxLayout="row"></div>
+      </div>
       <button
-        mat-flat-button
-        fxFlexFill
-        color="primary"
-        (click)="abriox()"
-        >
-        <mat-icon>add</mat-icon>
+        mat-icon-button
+        color="accent"
+        aria-label="Example icon button with a plus one icon"
+      >
+        <mat-icon>chevron_right</mat-icon>
       </button>
-    </div>
-  </mat-step>
+    </mat-card-content>
+  </mat-tab> -->
 
   <!-- Attachments -->
-  <mat-step
-    [label]="'CONTAINERS.home.testposts.testpost.attachments' | translate"
-  >
-    <geoaudit-file-upload
-      label="CONTAINERS.home.jobs.job.attachments.images"
-      (preview)="onPreview($event)"
-      (upload)="onImageUpload($event)"
-      fileType="IMAGE"
-      [multiple]="true"
-    ></geoaudit-file-upload>
+  <mat-tab [label]="'CONTAINERS.home.jobs.job.steps.attachments' | translate">
+    <mat-card-content>
+      <attachment-file-upload
+        label="CONTAINERS.home.jobs.job.attachments.images"
+        (preview)="onItemPreview($event)"
+        (upload)="onImageUpload($event)"
+        fileType="IMAGE"
+        [items] = "attachedImages"
+        [multiple]="true"
+      ></attachment-file-upload>
 
-    <geoaudit-file-upload
-      label="CONTAINERS.home.jobs.job.attachments.documents"
-      (preview)="onPreview($event)"
-      (upload)="onDocumentUpload($event)"
-      fileType="DOCUMENT"
-      [multiple]="true"
-    ></geoaudit-file-upload>
-  </mat-step>
+      <attachment-file-upload
+        label="CONTAINERS.home.jobs.job.attachments.documents"
+        (preview)="onItemPreview($event)"
+        (upload)="onDocumentUpload($event)"
+        fileType="DOCUMENT"
+        [items] = "attachedDocuments"
+        [multiple]="true"
+      ></attachment-file-upload>
+    </mat-card-content>
+  </mat-tab>
 
   <!-- Actions -->
-  <mat-step [label]="'CONTAINERS.home.testposts.testpost.actions' | translate">
-  </mat-step>
+  <mat-tab [label]="'CONTAINERS.home.testposts.testpost.actions' | translate">
+    <mat-card-content *ngIf="tp_actions">
+      <div *ngFor="let item of tp_actions">
+        <geoaudit-action-list-item
+          [item]="item"
+          [surveyId]="item.survey?.id"
+          [date]="item.date"
+          [iconColor]="getActionIconColor(item)"
+          (onNavigate)="onActionNavigation($event)"
+          attribute="tp_actions">
+        </geoaudit-action-list-item>
+      </div>
+    </mat-card-content>
+  </mat-tab>
+
 
   <!-- Notes -->
-  <mat-step [label]="'CONTAINERS.home.testposts.testpost.notes' | translate">
-    <geoaudit-notes></geoaudit-notes>
-  </mat-step>
-</mat-horizontal-stepper>
+  <mat-tab [label]="'CONTAINERS.home.jobs.job.steps.notes' | translate">
+    <mat-card-content>
+      <geoaudit-notes></geoaudit-notes>
+    </mat-card-content>
+  </mat-tab>
+</mat-tab-group>
+
+
+<div fxLayout="row-reverse" class="approve-wrapper">
+  <geoaudit-status-buttons
+    *ngIf="testpost!=null"
+    [completed]="completed()"
+    [approved]="approved == true"
+    (completeEvent)="updateMarkState($event)"
+  ></geoaudit-status-buttons>
+</div>
+
+<div fxLayout="row-reverse" fxLayoutAlign="space-between" class="button-area">
+  <div class="button-wrapper">
+    <button
+      *ngIf="selectedTabIndex != 3"
+      mat-icon-button
+      color="accent"
+      (click)="selectedIndexChange(selectedTabIndex + 1)"
+      class="btn-arrow"
+    >
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+  </div>
+
+  <button
+    mat-flat-button
+    color="primary"
+    (click)="submit(true)"
+    type="submit"
+    class="btn-submit"
+  >
+    {{ 'CONTAINERS.home.jobs.job.form.save' | translate }}
+  </button>
+  <div class="button-wrapper">
+    <button
+      *ngIf="selectedTabIndex != 0"
+      mat-icon-button
+      color="accent"
+      (click)="selectedIndexChange(selectedTabIndex - 1)"
+      class="btn-arrow"
+    >
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+  </div>
+</div>

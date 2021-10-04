@@ -1,4 +1,14 @@
-<h1 mat-dialog-title>{{ 'MODALS.navigation_modal.title' | translate }}</h1>
+<div class="modal-header">
+  <h1 mat-dialog-title>{{ 'MODALS.navigation_modal.title' | translate }}</h1>
+  <button
+    mat-icon-button
+    color="accent"
+    aria-label="Example icon button with a plus one icon"
+    (click)="onNoClick()"
+  >
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
 <div mat-dialog-content>
   <p>
     {{
@@ -6,8 +16,7 @@
         | translate: { length: data.surveys.length }
     }}
   </p>
-
-  <mat-horizontal-stepper (selectionChange)="selectionChange($event)">
+  <mat-horizontal-stepper #stepper>
     <mat-step
       label="Step 1"
       state="phone"
@@ -37,17 +46,6 @@
           </mat-radio-button>
         </mat-radio-group>
       </div>
-
-      <div>
-        <button
-          mat-button
-          matStepperNext
-          type="button"
-          [disabled]="!selectedDestinationType"
-        >
-          Next
-        </button>
-      </div>
     </mat-step>
     <mat-step
       label="Step 2"
@@ -64,25 +62,17 @@
           <form class="form">
             <mat-form-field class="full-width">
               <mat-label>Survey</mat-label>
-              <input
-                matInput
-                aria-label="Survey"
-                [matAutocomplete]="auto"
-                [formControl]="surveyCtrl"
-                #surveyInput
-              />
-              <mat-autocomplete
-                #auto="matAutocomplete"
-                (optionSelected)="selected($event)"
+              <mat-select
+                statusControlName="status"
+                name="status"
+                [(value)]="selectedSurveyId"
+                (selectionChange)="onChangeSelectedSurvey()"
               >
-                <mat-option
-                  *ngFor="let survey of filteredSurveys"
-                  [value]="survey"
-                >
+                <mat-option *ngFor="let survey of surveys" [value]="survey.id">
                   <span>{{ survey.reference }}</span> |
                   <small>ID: {{ survey.id }}</small>
                 </mat-option>
-              </mat-autocomplete>
+              </mat-select>
             </mat-form-field>
           </form>
         </ng-container>
@@ -92,7 +82,7 @@
             {{ 'MODALS.navigation_modal.home_address' | translate }}
           </p>
           <p>
-            {{ 'MODALS.navigation_modal.home.lat_lng' | translate: { lat: home.lat, lng: home.lng } }}
+            {{ 'MODALS.navigation_modal.home.lat_lng' | translate: { lat: home?.lat, lng: home?.lng } }}
           </p>
         </ng-container>
 
@@ -101,7 +91,7 @@
             {{ 'MODALS.navigation_modal.work_address' | translate }}
           </p>
           <p>
-            {{ 'MODALS.navigation_modal.work.lat_lng' | translate: { lat: work.lat, lng: work.lng } }}
+            {{ 'MODALS.navigation_modal.work.lat_lng' | translate: { lat: work?.lat, lng: work?.lng } }}
           </p>
         </ng-container>
 
@@ -113,18 +103,17 @@
           <form class="form">
             <mat-form-field class="full-width">
               <mat-label>{{ 'MODALS.navigation_modal.enter_address' | translate }}</mat-label>
-              <input matInput type="text" class="form-control" (keydown.enter)="$event.preventDefault()" [placeholder]="'MODALS.navigation_modal.enter_address' | translate" autocorrect="off" autocapitalize="off" spellcheck="off" type="text" [formControl]="searchCtrl" #searchInput>
+              <input matInput type="text" class="form-control" (keydown.enter)="$event.preventDefault()"
+                [placeholder]="'MODALS.navigation_modal.enter_address' | translate" autocorrect="off"
+                autocapitalize="off" spellcheck="off" type="text" [formControl]="searchCtrl" #searchInput>
             </mat-form-field>
           </form>
         </ng-container>
+
+        <div class="map-container">
+          <div class="mapbox" id="mapbox" class="match-parent"></div>
+        </div>
       </ng-container>
-      <div>
-        <button mat-button matStepperPrevious>Back</button>
-        <button mat-button matStepperNext>Next</button>
-      </div>
-    </mat-step>
-    <mat-step label="Step 3">
-      <div class="mapbox" id="mapbox" class="match-parent"></div>
     </mat-step>
 
     <!-- Icon overrides. -->
@@ -136,19 +125,30 @@
     </ng-template>
   </mat-horizontal-stepper>
 </div>
-<div mat-dialog-actions fxLayoutAlign="space-between">
-  <div *ngIf="!url"></div>
 
+<div mat-dialog-actions fxLayoutAlign="space-between">
   <button
-    *ngIf="url"
+      mat-flat-button
+      color="primary"
+      (click)="onBack(stepper)"
+      [disabled]="stepper.selectedIndex === 0"
+    >Back
+  </button>
+  <button
+    *ngIf="stepper.selectedIndex !== 1"
+    mat-flat-button
+    color="primary"
+    (click)="onNext(stepper)"
+    [disabled]="!selectedDestinationType"
+  >Next
+  </button>
+  <button
+    *ngIf="stepper.selectedIndex === 1"
     mat-flat-button
     color="primary"
     (click)="onYesClick()"
-    [disabled]="isSubmitDisabled()"
+    [disabled]="!isStep2Completed()"
   >
     {{ 'MODALS.navigation_modal.start' | translate }}
-  </button>
-  <button mat-flat-button color="accent" (click)="onNoClick()">
-    {{ 'MODALS.close' | translate }}
   </button>
 </div>

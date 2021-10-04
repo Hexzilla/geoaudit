@@ -5,6 +5,7 @@ import { AuthGuard } from '../../guards';
 
 import { NotesComponent } from '../notes/notes.component';
 import { SearchComponent } from '../search/search.component';
+import { ResistivityComponent } from './resistivity/resistivity.component';
 
 const routes: Routes = [
     { 
@@ -24,12 +25,12 @@ const routes: Routes = [
         path: 'drive', component: SearchComponent
     },
 
-    // {
-    //     path: 'create', component: AbrioxComponent
-    // },
+    {
+        path: 'create', component: ResistivityComponent
+    },
 
     {
-        path: ':id', component: SearchComponent
+        path: ':id', component: ResistivityComponent
     },
 
     {
