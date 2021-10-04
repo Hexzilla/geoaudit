@@ -11,3 +11,11 @@ export const SurveyColours = {
     NOT_STARTED: '#E71D36',
     REFUSED: '#3A86FF'
 }
+
+export const SiteActionColours = {
+    ACCESSIBLE: '#8AC926',
+    BAD_WORKING_ORDER : '#E71D36',
+    CLEARANCE_REQUIRED: '#FFBE0B',
+    INACCESSIBLE: '#000000',
+    REQUIRES_INTERVENTION: '#FFBE0B'
+}

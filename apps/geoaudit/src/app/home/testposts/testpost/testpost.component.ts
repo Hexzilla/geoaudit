@@ -2,18 +2,21 @@ import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angula
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ThemePalette } from '@angular/material/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import * as MapActions from '../../../store/map/map.actions';
 import * as fromApp from '../../../store';
 import * as moment from 'moment';
 import { TestpostEntityService } from '../../../entity-services/testpost-entity.service';
-import { Abriox, MarkerColours, Testpost, TpAction } from '../../../models';
+import { Abriox, MarkerColours, NOTIFICATION_DATA, Testpost, TpAction } from '../../../models';
 import { debounceTime, tap, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { Subject, Subscription } from 'rxjs';
 import { AlertService, UploadService, AuthService } from '../../../services';
 import { FileTypes } from '../../../components/file-upload/file-upload.component';
 import { environment } from 'apps/geoaudit/src/environments/environment';
 import { TpActionEntityService } from '../../../entity-services/tp-action-entity.service';
+import { RefusalModalComponent } from '../../../modals/refusal-modal/refusal-modal.component';
+import { NotificationService } from '../../../services/notification.service';
 
 @Component({
   selector: 'geoaudit-testpost',
@@ -80,6 +83,8 @@ export class TestpostComponent implements OnInit, AfterViewInit {
     private router: Router,
     private alertService: AlertService,
     private uploadService: UploadService,
+    private notificationService: NotificationService,
+    private dialog: MatDialog,
   ) {
     this.subscriptions.push(this.route.queryParams.subscribe(params => {
       const tabIndex = params['tab'];
@@ -97,6 +102,7 @@ export class TestpostComponent implements OnInit, AfterViewInit {
     }));
   }
 
+  // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
   ngOnInit(): void {
     //this.initialize();
   }
@@ -273,8 +279,6 @@ export class TestpostComponent implements OnInit, AfterViewInit {
       (err) => {
         this.alertService.error('ALERTS.something_went_wrong');
       },
-
-      () => {}
     );
   }
 
@@ -352,8 +356,8 @@ export class TestpostComponent implements OnInit, AfterViewInit {
     this.selectedTabIndex = selectedTabIndex;
   }
 
-  onNavigate(actionId) {
-    this.router.navigate([`/home/testposts/${this.testpost.id}/tp_action/${actionId}`]);
+  onActionNavigation(action) {
+    this.router.navigate([`/home/testposts/${this.testpost.id}/tp_action/${action.id}`]);
   }
   
   completed() {
@@ -372,9 +376,35 @@ export class TestpostComponent implements OnInit, AfterViewInit {
       this.submit(true);
     }
     else if (e.refuse) {
-      this.approved = false;
-      this.submit(true);
+      this.refuse();
     }
+  }
+
+  private refuse() {
+    const dialogRef = this.dialog.open(RefusalModalComponent, {
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      const data: NOTIFICATION_DATA = {
+        type: 'TESTPOST_REFUSAL',
+        subject: this.testpost,
+        message: result.message,
+      };
+      
+      this.notificationService.post({
+        source: this.authService.authValue.user,
+        recipient: null,
+        data
+      }).subscribe()
+
+      this.approved = false;
+      this.approved_by = 0;
+      this.submit(true);
+    });
+  }
+
+  getActionIconColor(action: TpAction) {
+    return (action && action.condition) ? MarkerColours[action.condition.name] : "00FFFFFF";
   }
 
   onImageUpload(event): void {

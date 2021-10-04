@@ -1,12 +1,11 @@
 import {
   AfterViewInit,
   Component,
-  ElementRef,
   OnInit,
-  ViewChild,
 } from '@angular/core';
 import { FormArray, FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
 import { State, Store } from '@ngrx/store';
 import * as fromApp from '../../../store';
 import * as moment from 'moment';
@@ -16,11 +15,14 @@ import {
   ReferenceCell,
   TpAction,
   Status,
+  NOTIFICATION_DATA,
 } from '../../../models';
 import { AlertService, UploadService, AuthService } from '../../../services';
 import { FileTypes } from '../../../components/file-upload/file-upload.component';
 import { StatusEntityService } from '../../../entity-services/status-entity.service';
 import { TpActionEntityService } from '../../../entity-services/tp-action-entity.service';
+import { RefusalModalComponent } from '../../../modals/refusal-modal/refusal-modal.component';
+import { NotificationService } from '../../../services/notification.service';
 import { ConditionEntityService } from '../../../entity-services/condition-entity.service';
 import { FaultTypeEntityService } from '../../../entity-services/fault-type-entity.service';
 import { ReferenceCellEntityService } from '../../../entity-services/reference-cell-entity.service';
@@ -88,6 +90,8 @@ export class TpActionComponent implements OnInit, AfterViewInit {
     private router: Router,
     private alertService: AlertService,
     private uploadService: UploadService,
+    private notificationService: NotificationService,
+    private dialog: MatDialog,
   ) {
     this.subscriptions.push(this.route.queryParams.subscribe(params => {
       const tabIndex = params['tab'];
@@ -406,10 +410,31 @@ export class TpActionComponent implements OnInit, AfterViewInit {
       this.submit(true);
     }
     else if (e.refuse) {
+      this.refuse();
+    }
+  }
+
+  private refuse() {
+    const dialogRef = this.dialog.open(RefusalModalComponent, {
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      const data: NOTIFICATION_DATA = {
+        type: 'TPACTION_REFUSAL',
+        subject: this.tp_action,
+        message: result.message,
+      };
+      
+      this.notificationService.post({
+        source: this.authService.authValue.user,
+        recipient: null,
+        data
+      }).subscribe()
+
       this.approved = false;
       this.approved_by = 0;
       this.submit(true);
-    }
+    });
   }
 
   onImageUpload(event): void {

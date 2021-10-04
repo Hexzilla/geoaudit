@@ -1,20 +1,20 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ThemePalette } from '@angular/material/core';
-import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import * as MapActions from '../../../store/map/map.actions';
 import * as fromApp from '../../../store';
 import * as moment from 'moment';
 import { SiteEntityService } from '../../../entity-services/site-entity.service';
-import { Site, MarkerColours, TpAction } from '../../../models';
+import { Site, SiteAction, NOTIFICATION_DATA, SiteActionColours } from '../../../models';
 import { debounceTime, tap, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { Subject, Subscription } from 'rxjs';
 import { AlertService, UploadService, AuthService } from '../../../services';
 import { FileTypes } from '../../../components/file-upload/file-upload.component';
 import { MatDialog } from '@angular/material/dialog';
-import { TpActionEntityService } from '../../../entity-services/tp-action-entity.service';
-import { SurveyEntityService } from '../../../entity-services/survey-entity.service';
+import { RefusalModalComponent } from '../../../modals/refusal-modal/refusal-modal.component';
+import { NotificationService } from '../../../services/notification.service';
 
 @Component({
   selector: 'geoaudit-site',
@@ -55,25 +55,20 @@ export class SiteComponent implements OnInit, AfterViewInit {
 
   site: Site;
 
-  tp_actions: Array<TpAction> = [];
-
   currentState = 3;
   approved = null;
   approved_by = 0;
-
-  // surveys: Array<Survey> = [];
 
   constructor(
     private authService: AuthService, 
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
-    private surveyEntityService: SurveyEntityService,
     private siteEntityService: SiteEntityService,
-    private tpActionEntityService: TpActionEntityService,
     private store: Store<fromApp.State>,
     private router: Router,
     private alertService: AlertService,
     private uploadService: UploadService,
+    private notificationService: NotificationService,
     private dialog: MatDialog
   ) {
     this.subscriptions.push(this.route.queryParams.subscribe(params => {
@@ -92,10 +87,12 @@ export class SiteComponent implements OnInit, AfterViewInit {
     }));
   }
 
+  // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
   ngOnInit(): void {
     //this.initialize();
   }
 
+  // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
   ngAfterViewInit() {
     //
   }
@@ -128,12 +125,12 @@ export class SiteComponent implements OnInit, AfterViewInit {
         scheme: [''],
 
         access_detail: [''],
-        speed_limit: [''],
+        speed_limit: [0],
         distance_road: [''],
         road_condition: [''],
-        tm_required: [''],
+        tm_required: [false],
         tm_descr: [''],
-        nrswa_required: [''],
+        nrswa_required: [false],
         nrswa_description: [''],
 
         toilet: [''],
@@ -155,6 +152,7 @@ export class SiteComponent implements OnInit, AfterViewInit {
     this.siteEntityService.getByKey(id).subscribe(
       (site) => {
         console.log("site", site);
+        this.site = site;
         this.currentState = site.status?.id;
         this.approved = site.approved;
 
@@ -163,8 +161,6 @@ export class SiteComponent implements OnInit, AfterViewInit {
           site_type: site.site_type?.name
         })
       },
-
-      (err) => {}
     )
   }
 
@@ -189,7 +185,7 @@ export class SiteComponent implements OnInit, AfterViewInit {
          */
         if (reload) {
           this.router
-            .navigate([`/home/testposts/${this.form.value.id}`])
+            .navigate([`/home/sites/${this.form.value.id}`])
             .then(() => {
               window.location.reload();
             });
@@ -223,12 +219,9 @@ export class SiteComponent implements OnInit, AfterViewInit {
 
         if (navigate) this.router.navigate([`/home`]);
       },
-
       () => {
         this.alertService.error('ALERTS.something_went_wrong');
       },
-
-      () => {}
     );
   }
 
@@ -240,28 +233,12 @@ export class SiteComponent implements OnInit, AfterViewInit {
     );
   }
 
-  getLatestConditionColour() {
-    if (this.tp_actions && this.tp_actions.length > 0) {      
-      const tp_action = this.tp_actions
-        .filter(it => it.condition)
-        .reduce((previous, current) => {
-          if (!previous) return current;
-          const diff = moment(previous.date).diff(moment(current.date), 'seconds')
-          return (diff > 0) ? previous : current
-        }, null);
-      if (tp_action) {
-        return MarkerColours[tp_action.condition.name];
-      }
-    }  
-    return "00FFFFFF";
-  }
-
   selectedIndexChange(selectedTabIndex) {
     this.selectedTabIndex = selectedTabIndex;
   }
 
-  onNavigate(actionId) {
-    this.router.navigate([`/home/site_action/${actionId}`]);
+  onActionNavigation(action) {
+    this.router.navigate([`/home/sites/${this.site.id}/site_action/${action.id}`]);
   }
   
   completed() {
@@ -280,9 +257,46 @@ export class SiteComponent implements OnInit, AfterViewInit {
       this.submit(true);
     }
     else if (e.refuse) {
-      this.approved = false;
-      this.submit(true);
+      this.refuse();
     }
+  }
+
+  private refuse() {
+    const dialogRef = this.dialog.open(RefusalModalComponent, {
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      const data: NOTIFICATION_DATA = {
+        type: 'SITE_REFUSAL',
+        subject: this.site,
+        message: result.message,
+      };
+      
+      this.notificationService.post({
+        source: this.authService.authValue.user,
+        recipient: null,
+        data
+      }).subscribe()
+
+      this.approved = false;
+      this.approved_by = 0;
+      this.submit(true);
+    });
+  }
+
+  getActionIconColor(action: SiteAction) {
+    if (action.site_status == 1) {
+      return SiteActionColours.ACCESSIBLE;
+    } else if (action.site_status == 2) {
+      return SiteActionColours.BAD_WORKING_ORDER;
+    } else if (action.site_status == 3) {
+      return SiteActionColours.CLEARANCE_REQUIRED;
+    } else if (action.site_status == 4) {
+      return SiteActionColours.INACCESSIBLE;
+    } else if (action.site_status == 5) {
+      return SiteActionColours.REQUIRES_INTERVENTION;
+    }
+    return "00FFFFFF";
   }
 
   onImageUpload(event): void {

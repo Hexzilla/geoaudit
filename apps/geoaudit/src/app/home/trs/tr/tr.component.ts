@@ -2,18 +2,21 @@ import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angula
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ThemePalette } from '@angular/material/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import * as MapActions from '../../../store/map/map.actions';
 import * as fromApp from '../../../store';
 import * as moment from 'moment';
 import { TrEntityService } from '../../../entity-services/tr-entity.service';
-import { Abriox, Conditions, Image, MarkerColours, Survey, Tr, TrAction } from '../../../models';
+import { Abriox, NOTIFICATION_DATA, MarkerColours, Tr, TrAction } from '../../../models';
 import { debounceTime, tap, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { Subject, Subscription } from 'rxjs';
 import { AlertService, UploadService, AuthService } from '../../../services';
 import { FileTypes } from '../../../components/file-upload/file-upload.component';
 import { environment } from 'apps/geoaudit/src/environments/environment';
 import { TrActionEntityService } from '../../../entity-services/tr-action-entity.service';
+import { RefusalModalComponent } from '../../../modals/refusal-modal/refusal-modal.component';
+import { NotificationService } from '../../../services/notification.service';
 
 @Component({
   selector: 'geoaudit-tr',
@@ -83,6 +86,8 @@ export class TrComponent implements OnInit, AfterViewInit {
     private router: Router,
     private alertService: AlertService,
     private uploadService: UploadService,
+    private notificationService: NotificationService,
+    private dialog: MatDialog,
   ) {
     this.subscriptions.push(this.route.queryParams.subscribe(params => {
       const tabIndex = params['tab'];
@@ -271,8 +276,6 @@ export class TrComponent implements OnInit, AfterViewInit {
       (err) => {
         this.alertService.error('ALERTS.something_went_wrong');
       },
-
-      () => {}
     );
   }
 
@@ -346,8 +349,8 @@ export class TrComponent implements OnInit, AfterViewInit {
     this.selectedTabIndex = selectedTabIndex;
   }
 
-  onNavigate(actionId) {
-    this.router.navigate([`/home/trs/${this.tr.id}/tr_action/${actionId}`]);
+  onActionNavigation(action) {
+    this.router.navigate([`/home/trs/${this.tr.id}/tr_action/${action.id}`]);
   }
 
   searchTestpost() {
@@ -377,10 +380,35 @@ export class TrComponent implements OnInit, AfterViewInit {
       this.submit(true);
     }
     else if (e.refuse) {
+      this.refuse();
+    }
+  }
+
+  private refuse() {
+    const dialogRef = this.dialog.open(RefusalModalComponent, {
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      const data: NOTIFICATION_DATA = {
+        type: 'TR_REFUSAL',
+        subject: this.tr,
+        message: result.message,
+      };
+      
+      this.notificationService.post({
+        source: this.authService.authValue.user,
+        recipient: null,
+        data
+      }).subscribe()
+
       this.approved = false;
       this.approved_by = 0;
       this.submit(true);
-    }
+    });
+  }
+
+  getActionIconColor(action: TrAction) {
+    return (action && action.condition) ? MarkerColours[action.condition.name] : "00FFFFFF";
   }
 
   onImageUpload(event): void {

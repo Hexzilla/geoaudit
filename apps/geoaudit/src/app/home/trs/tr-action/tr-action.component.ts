@@ -1,12 +1,11 @@
 import {
   AfterViewInit,
   Component,
-  ElementRef,
   OnInit,
-  ViewChild,
 } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import * as fromApp from '../../../store';
 import * as moment from 'moment';
@@ -14,12 +13,15 @@ import {
   TrAction,
   Status,
   FaultType,
-  Condition
+  Condition,
+  NOTIFICATION_DATA
 } from '../../../models';
 import { AlertService, UploadService, AuthService } from '../../../services';
 import { FileTypes } from '../../../components/file-upload/file-upload.component';
 import { StatusEntityService } from '../../../entity-services/status-entity.service';
 import { TrActionEntityService } from '../../../entity-services/tr-action-entity.service';
+import { RefusalModalComponent } from '../../../modals/refusal-modal/refusal-modal.component';
+import { NotificationService } from '../../../services/notification.service';
 import { FaultTypeEntityService } from '../../../entity-services/fault-type-entity.service';
 import { ConditionEntityService } from '../../../entity-services/condition-entity.service';
 import { Subscription } from 'rxjs';
@@ -81,6 +83,8 @@ export class TrActionComponent implements OnInit, AfterViewInit {
     private router: Router,
     private alertService: AlertService,
     private uploadService: UploadService,
+    private notificationService: NotificationService,
+    private dialog: MatDialog,
   ) {
     this.subscriptions.push(this.route.queryParams.subscribe(params => {
       const tabIndex = params['tab'];
@@ -310,10 +314,31 @@ export class TrActionComponent implements OnInit, AfterViewInit {
       this.submit(true);
     }
     else if (e.refuse) {
+      this.refuse();
+    }
+  }
+
+  private refuse() {
+    const dialogRef = this.dialog.open(RefusalModalComponent, {
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      const data: NOTIFICATION_DATA = {
+        type: 'TR_REFUSAL',
+        subject: this.tr_action,
+        message: result.message,
+      };
+      
+      this.notificationService.post({
+        source: this.authService.authValue.user,
+        recipient: null,
+        data
+      }).subscribe()
+
       this.approved = false;
       this.approved_by = 0;
       this.submit(true);
-    }
+    });
   }
 
   onImageUpload(event): void {
