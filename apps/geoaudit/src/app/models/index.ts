@@ -32,6 +32,7 @@ export * from './site-detail.model';
 export * from './site-status.model';
 export * from './site-type.model';
 export * from './site.model';
+export * from './site-action.model';
 export * from './sleeve.model';
 export * from './status.model';
 export * from './survey.model';

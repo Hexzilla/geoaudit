@@ -47,6 +47,7 @@ import { FileUploadComponent } from '../components/file-upload/file-upload.compo
 import { AttachmentUploadComponent } from '../components/file-upload/attachment-upload.component';
 import { StatusButtonsComponent } from '../components/status-buttons/status-buttons.component';
 import { ActionListItemComponent } from '../components/action-list-item/action-list-item.component';
+import { SiteActionItemComponent } from '../components/site-action-item/site-action-item.component';
 
 import { SidebarHeaderComponent } from '../components/sidebar-header/sidebar-header.component';
 import { ProgressChartComponent } from '../components/progress-chart/progress-chart.component';
@@ -233,6 +234,7 @@ const entityMetadataMap: EntityMetadataMap = {
     IconComponent,
     SurveyActionButtonComponent,
     ActionListItemComponent,
+    SiteActionItemComponent,
     ArchiveModalComponent
   ],
   providers: [

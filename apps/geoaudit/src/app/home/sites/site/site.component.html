@@ -2,7 +2,6 @@
   title="CONTAINERS.home.sites.site.title"
   [placeholder]="form?.value?.reference"
 >
-  <geoaudit-icon [visible]="true" [color]="getLatestConditionColour()" icon="radio_button_unchecked"></geoaudit-icon>
 </geoaudit-sidebar-header>
 
 <mat-tab-group
@@ -372,13 +371,13 @@
 
   <!-- Actions -->
   <mat-tab [label]="'CONTAINERS.home.sites.site.actions' | translate">
-    <mat-card-content>
-      <!-- <geoaudit-action-list-item
-        *ngFor="let item of tp_actions"
+    <mat-card-content *ngIf="site!=null">
+      <geoaudit-site-action-item
+        *ngFor="let item of site.site_actions"
         [item]="item"
         (onNavigate)="onNavigate($event)"
-        attribute="tp_actions">
-      </geoaudit-action-list-item> -->
+        attribute="site_actions">
+      </geoaudit-site-action-item>
     </mat-card-content>
   </mat-tab>
 

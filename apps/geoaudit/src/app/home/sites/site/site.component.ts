@@ -7,7 +7,7 @@ import * as MapActions from '../../../store/map/map.actions';
 import * as fromApp from '../../../store';
 import * as moment from 'moment';
 import { SiteEntityService } from '../../../entity-services/site-entity.service';
-import { Site, MarkerColours, TpAction, NOTIFICATION_DATA } from '../../../models';
+import { Site, NOTIFICATION_DATA } from '../../../models';
 import { debounceTime, tap, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { Subject, Subscription } from 'rxjs';
 import { AlertService, UploadService, AuthService } from '../../../services';
@@ -55,13 +55,9 @@ export class SiteComponent implements OnInit, AfterViewInit {
 
   site: Site;
 
-  tp_actions: Array<TpAction> = [];
-
   currentState = 3;
   approved = null;
   approved_by = 0;
-
-  // surveys: Array<Survey> = [];
 
   constructor(
     private authService: AuthService, 
@@ -91,10 +87,12 @@ export class SiteComponent implements OnInit, AfterViewInit {
     }));
   }
 
+  // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
   ngOnInit(): void {
     //this.initialize();
   }
 
+  // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
   ngAfterViewInit() {
     //
   }
@@ -154,6 +152,7 @@ export class SiteComponent implements OnInit, AfterViewInit {
     this.siteEntityService.getByKey(id).subscribe(
       (site) => {
         console.log("site", site);
+        this.site = site;
         this.currentState = site.status?.id;
         this.approved = site.approved;
 
@@ -162,8 +161,6 @@ export class SiteComponent implements OnInit, AfterViewInit {
           site_type: site.site_type?.name
         })
       },
-
-      (err) => {}
     )
   }
 
@@ -188,7 +185,7 @@ export class SiteComponent implements OnInit, AfterViewInit {
          */
         if (reload) {
           this.router
-            .navigate([`/home/testposts/${this.form.value.id}`])
+            .navigate([`/home/sites/${this.form.value.id}`])
             .then(() => {
               window.location.reload();
             });
@@ -222,12 +219,9 @@ export class SiteComponent implements OnInit, AfterViewInit {
 
         if (navigate) this.router.navigate([`/home`]);
       },
-
       () => {
         this.alertService.error('ALERTS.something_went_wrong');
       },
-
-      () => {}
     );
   }
 
@@ -237,22 +231,6 @@ export class SiteComponent implements OnInit, AfterViewInit {
         url: this.router.url,
       })
     );
-  }
-
-  getLatestConditionColour() {
-    if (this.tp_actions && this.tp_actions.length > 0) {      
-      const tp_action = this.tp_actions
-        .filter(it => it.condition)
-        .reduce((previous, current) => {
-          if (!previous) return current;
-          const diff = moment(previous.date).diff(moment(current.date), 'seconds')
-          return (diff > 0) ? previous : current
-        }, null);
-      if (tp_action) {
-        return MarkerColours[tp_action.condition.name];
-      }
-    }  
-    return "00FFFFFF";
   }
 
   selectedIndexChange(selectedTabIndex) {

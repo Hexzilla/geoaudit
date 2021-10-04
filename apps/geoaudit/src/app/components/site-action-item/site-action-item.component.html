@@ -1,0 +1,29 @@
+<mat-card style="cursor: pointer; margin-top: 20px">
+  <div fxLayout="row" fxLayoutAlign="space-between">
+    <div fxLayout="row" class="card-wrapper">
+      <div class="mr-40">{{ item.date | date: 'HH:mm dd/MM/yyyy' }}</div>
+      <geoaudit-icon
+        class="mr-40"
+        [visible]="true"
+        [color]="getStatusColour(item)" 
+        icon="radio_button_unchecked">
+      </geoaudit-icon>
+      <img
+        class="mr-40"
+        mat-card-avatar
+        [src]="getAvatar()"
+      />
+      <div>{{ survey?.reference }}</div>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="space-between">
+      <button
+        mat-icon-button
+        color="accent"
+        aria-label="Example icon button with a plus one icon"
+        (click)="navigate()"
+      >
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </div>
+  </div>
+</mat-card>

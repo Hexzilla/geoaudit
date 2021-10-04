@@ -1,19 +1,19 @@
 import { Component, Input, Output, OnInit, EventEmitter } from '@angular/core';
 import { environment } from 'apps/geoaudit/src/environments/environment';
 import { SurveyEntityService } from '../../entity-services/survey-entity.service';
-import { MarkerColours, Survey } from '../../models';
+import { Survey, SiteAction } from '../../models';
 
 type Selectors =
   | 'tp_actions';
 
 @Component({
-  selector: 'geoaudit-action-list-item',
-  templateUrl: './action-list-item.component.html',
-  styleUrls: ['./action-list-item.component.scss']
+  selector: 'geoaudit-site-action-item',
+  templateUrl: './site-action-item.component.html',
+  styleUrls: ['./site-action-item.component.scss']
 })
-export class ActionListItemComponent implements OnInit {
+export class SiteActionItemComponent implements OnInit {
 
-  @Input() item;
+  @Input() item: SiteAction;
   
   @Input() selector: Selectors;
 
@@ -27,8 +27,7 @@ export class ActionListItemComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.item && this.item.survey) {
-      const surveyId = (typeof this.item.survey === 'number') ? this.item.survey : this.item.survey.id
-      this.surveyEntityService.getByKey(surveyId).subscribe(survey => {
+      this.surveyEntityService.getByKey(this.item.survey).subscribe(survey => {
         this.survey = survey;
       })
     }
@@ -42,8 +41,19 @@ export class ActionListItemComponent implements OnInit {
     return "https://bestoked.ams3.digitaloceanspaces.com/geoaudit/static/assets/Avatar%20-%20Geoaudit.png"
   }
 
-  getConditionColour(action?: any) {
-    return (action && action.condition) ? MarkerColours[action.condition.name] : "00FFFFFF";
+  getStatusColour(action?: SiteAction) {
+    if (action.site_status == 1) {
+      return '008AC926'
+    } else if (action.site_status == 2) {
+      return '00E71D36'
+    } else if (action.site_status == 3) {
+      return '00FFBE0B'
+    } else if (action.site_status == 4) {
+      return '00000000'
+    } else if (action.site_status == 5) {
+      return '00FFBE0B'
+    }
+    return "00FFFFFF";
   }
 
   navigate() {
