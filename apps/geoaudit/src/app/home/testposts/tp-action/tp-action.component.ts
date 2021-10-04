@@ -410,11 +410,11 @@ export class TpActionComponent implements OnInit, AfterViewInit {
       this.submit(true);
     }
     else if (e.refuse) {
-      this.refrush();
+      this.refuse();
     }
   }
 
-  private refrush() {
+  private refuse() {
     const dialogRef = this.dialog.open(RefusalModalComponent, {
     });
 
