@@ -369,6 +369,10 @@ export class AbrioxComponent implements OnInit {
     });
   }
 
+  getActionIconColor(action: AbrioxAction) {
+    return (action && action.condition) ? MarkerColours[action.condition.name] : "00FFFFFF";
+  }
+
   onImageUpload(event): void {
     const { images } = this.form.value;
     this.form.patchValue({

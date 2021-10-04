@@ -153,9 +153,12 @@
     <mat-card-content>
       <geoaudit-action-list-item
         *ngFor="let item of abriox_actions"
-        [item]="item"
+        [actionId]="item.id"
+        [surveyId]="item.survey.id"
+        [date]="item.date"
+        [iconColor]="getActionIconColor(item)"
         (onNavigate)="onNavigate($event)"
-        attribute="tp_actions">
+        attribute="abriox_actions">
       </geoaudit-action-list-item>
     </mat-card-content>
   </mat-tab>

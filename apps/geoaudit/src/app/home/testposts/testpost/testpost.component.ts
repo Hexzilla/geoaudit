@@ -403,6 +403,10 @@ export class TestpostComponent implements OnInit, AfterViewInit {
     });
   }
 
+  getActionIconColor(action: TpAction) {
+    return (action && action.condition) ? MarkerColours[action.condition.name] : "00FFFFFF";
+  }
+
   onImageUpload(event): void {
     const { images } = this.form.value;
     this.form.patchValue({

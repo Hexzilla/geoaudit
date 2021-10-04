@@ -7,7 +7,7 @@ import * as MapActions from '../../../store/map/map.actions';
 import * as fromApp from '../../../store';
 import * as moment from 'moment';
 import { SiteEntityService } from '../../../entity-services/site-entity.service';
-import { Site, NOTIFICATION_DATA } from '../../../models';
+import { Site, SiteAction, NOTIFICATION_DATA, SiteActionColours } from '../../../models';
 import { debounceTime, tap, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { Subject, Subscription } from 'rxjs';
 import { AlertService, UploadService, AuthService } from '../../../services';
@@ -282,6 +282,21 @@ export class SiteComponent implements OnInit, AfterViewInit {
       this.approved_by = 0;
       this.submit(true);
     });
+  }
+
+  getActionIconColor(action: SiteAction) {
+    if (action.site_status == 1) {
+      return SiteActionColours.ACCESSIBLE;
+    } else if (action.site_status == 2) {
+      return SiteActionColours.BAD_WORKING_ORDER;
+    } else if (action.site_status == 3) {
+      return SiteActionColours.CLEARANCE_REQUIRED;
+    } else if (action.site_status == 4) {
+      return SiteActionColours.INACCESSIBLE;
+    } else if (action.site_status == 5) {
+      return SiteActionColours.REQUIRES_INTERVENTION;
+    }
+    return "00FFFFFF";
   }
 
   onImageUpload(event): void {

@@ -13,10 +13,11 @@ type Selectors =
 })
 export class ActionListItemComponent implements OnInit {
 
-  @Input() item;
-  
+  @Input() actionId: number;
+  @Input() surveyId: number;
+  @Input() date: string;
+  @Input() iconColor: string;
   @Input() selector: Selectors;
-
   @Output() onNavigate?: EventEmitter<number> = new EventEmitter();
 
   survey: Survey;
@@ -26,9 +27,8 @@ export class ActionListItemComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    if (this.item && this.item.survey) {
-      const surveyId = (typeof this.item.survey === 'number') ? this.item.survey : this.item.survey.id
-      this.surveyEntityService.getByKey(surveyId).subscribe(survey => {
+    if (this.surveyId) {
+      this.surveyEntityService.getByKey(this.surveyId).subscribe(survey => {
         this.survey = survey;
       })
     }
@@ -42,11 +42,7 @@ export class ActionListItemComponent implements OnInit {
     return "https://bestoked.ams3.digitaloceanspaces.com/geoaudit/static/assets/Avatar%20-%20Geoaudit.png"
   }
 
-  getConditionColour(action?: any) {
-    return (action && action.condition) ? MarkerColours[action.condition.name] : "00FFFFFF";
-  }
-
   navigate() {
-    this.onNavigate?.emit(this.item.id)
+    this.onNavigate?.emit(this.actionId)
   }
 }

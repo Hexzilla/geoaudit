@@ -1,11 +1,11 @@
 <mat-card style="cursor: pointer; margin-top: 20px">
   <div fxLayout="row" fxLayoutAlign="space-between">
     <div fxLayout="row" class="card-wrapper">
-      <div class="mr-40">{{ item.date | date: 'HH:mm dd/MM/yyyy' }}</div>
+      <div class="mr-40">{{ date | date: 'HH:mm dd/MM/yyyy' }}</div>
       <geoaudit-icon
         class="mr-40"
         [visible]="true"
-        [color]="getConditionColour(item)" 
+        [color]="iconColor" 
         icon="radio_button_unchecked">
       </geoaudit-icon>
       <img
