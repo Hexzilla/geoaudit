@@ -372,15 +372,16 @@
   <!-- Actions -->
   <mat-tab [label]="'CONTAINERS.home.sites.site.actions' | translate">
     <mat-card-content *ngIf="site!=null">
-      <geoaudit-action-list-item
-        *ngFor="let item of site.site_actions"
-        [actionId]="item.id"
-        [surveyId]="item.survey"
-        [date]="item.date"
-        [iconColor]="getActionIconColor(item)"
-        (onNavigate)="onNavigate($event)"
-        attribute="site_actions">
-      </geoaudit-action-list-item>
+      <div *ngFor="let item of site.site_actions">
+        <geoaudit-action-list-item
+          [item]="item"
+          [surveyId]="item.survey"
+          [date]="item.date"
+          [iconColor]="getActionIconColor(item)"
+          (onNavigate)="onActionNavigation($event)"
+          attribute="site_actions">
+        </geoaudit-action-list-item>
+      </div>
     </mat-card-content>
   </mat-tab>
 

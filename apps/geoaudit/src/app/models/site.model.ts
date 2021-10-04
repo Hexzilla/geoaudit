@@ -9,6 +9,7 @@ import { User } from "./user.model";
 import { SiteAction } from "./site-action.model";
 
 export interface Site {
+    id: string;
     site_detail: SiteDetail;
     reference: string;
     name: string;

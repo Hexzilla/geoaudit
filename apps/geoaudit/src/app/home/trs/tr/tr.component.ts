@@ -349,8 +349,8 @@ export class TrComponent implements OnInit, AfterViewInit {
     this.selectedTabIndex = selectedTabIndex;
   }
 
-  onNavigate(actionId) {
-    this.router.navigate([`/home/trs/${this.tr.id}/tr_action/${actionId}`]);
+  onActionNavigation(action) {
+    this.router.navigate([`/home/trs/${this.tr.id}/tr_action/${action.id}`]);
   }
 
   searchTestpost() {

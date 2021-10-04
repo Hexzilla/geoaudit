@@ -13,7 +13,7 @@ type Selectors =
 })
 export class ActionListItemComponent implements OnInit {
 
-  @Input() actionId: number;
+  @Input() item;
   @Input() surveyId: number;
   @Input() date: string;
   @Input() iconColor: string;
@@ -43,6 +43,6 @@ export class ActionListItemComponent implements OnInit {
   }
 
   navigate() {
-    this.onNavigate?.emit(this.actionId)
+    this.onNavigate?.emit(this.item)
   }
 }

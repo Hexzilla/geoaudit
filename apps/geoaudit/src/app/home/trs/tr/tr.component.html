@@ -227,16 +227,17 @@
 
   <!-- Actions -->
   <mat-tab [label]="'CONTAINERS.home.testposts.testpost.actions' | translate">
-    <mat-card-content>
-      <geoaudit-action-list-item
-        *ngFor="let item of tr_actions"
-        [actionId]="item.id"
-        [surveyId]="item.survey.id"
-        [date]="item.date"
-        [iconColor]="getActionIconColor(item)"
-        (onNavigate)="onNavigate($event)"
-        attribute="tr_actions">
-      </geoaudit-action-list-item>
+    <mat-card-content *ngIf="tr_actions">
+      <div *ngFor="let item of tr_actions">
+        <geoaudit-action-list-item
+          [item]="item"
+          [surveyId]="item.survey?.id"
+          [date]="item.date"
+          [iconColor]="getActionIconColor(item)"
+          (onNavigate)="onActionNavigation($event)"
+          attribute="tr_actions">
+        </geoaudit-action-list-item>
+      </div>
     </mat-card-content>
   </mat-tab>
 

@@ -101,6 +101,7 @@ export class AbrioxComponent implements OnInit {
     }));
   }
 
+  // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
   ngOnInit(): void {
     //this.initialize();
   }
@@ -293,12 +294,9 @@ export class AbrioxComponent implements OnInit {
 
         if (navigate) this.router.navigate([`/home`]);
       },
-
       (err) => {
         this.alertService.error('ALERTS.something_went_wrong');
       },
-
-      () => {}
     );
   }
 
@@ -322,8 +320,8 @@ export class AbrioxComponent implements OnInit {
     this.selectedTabIndex = selectedTabIndex;
   }
 
-  onNavigate(actionId) {
-    this.router.navigate([`/home/abrioxes/${this.abriox.id}/abriox_action/${actionId}`]);
+  onActionNavigation(action) {
+    this.router.navigate([`/home/abrioxes/${this.abriox.id}/abriox_action/${action.id}`]);
   }
   
   completed() {

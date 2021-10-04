@@ -237,8 +237,8 @@ export class SiteComponent implements OnInit, AfterViewInit {
     this.selectedTabIndex = selectedTabIndex;
   }
 
-  onNavigate(actionId) {
-    this.router.navigate([`/home/site_action/${actionId}`]);
+  onActionNavigation(action) {
+    this.router.navigate([`/home/sites/${this.site.id}/site_action/${action.id}`]);
   }
   
   completed() {

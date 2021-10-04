@@ -356,8 +356,8 @@ export class TestpostComponent implements OnInit, AfterViewInit {
     this.selectedTabIndex = selectedTabIndex;
   }
 
-  onNavigate(actionId) {
-    this.router.navigate([`/home/testposts/${this.testpost.id}/tp_action/${actionId}`]);
+  onActionNavigation(action) {
+    this.router.navigate([`/home/testposts/${this.testpost.id}/tp_action/${action.id}`]);
   }
   
   completed() {
