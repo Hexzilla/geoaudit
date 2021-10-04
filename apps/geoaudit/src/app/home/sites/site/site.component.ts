@@ -125,12 +125,12 @@ export class SiteComponent implements OnInit, AfterViewInit {
         scheme: [''],
 
         access_detail: [''],
-        speed_limit: [''],
+        speed_limit: [0],
         distance_road: [''],
         road_condition: [''],
-        tm_required: [''],
+        tm_required: [false],
         tm_descr: [''],
-        nrswa_required: [''],
+        nrswa_required: [false],
         nrswa_description: [''],
 
         toilet: [''],
