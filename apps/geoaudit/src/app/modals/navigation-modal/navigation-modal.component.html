@@ -127,13 +127,24 @@
 </div>
 
 <div mat-dialog-actions fxLayoutAlign="space-between">
-  <button
-      mat-flat-button
-      color="primary"
-      (click)="onBack(stepper)"
-      [disabled]="stepper.selectedIndex === 0"
-    >Back
+  <button 
+    *ngIf="stepper.selectedIndex > 0"
+    mat-icon-button
+    color="accent"
+    class="btn-arrow"
+    (click)="onBack(stepper)">
+    <mat-icon>chevron_left</mat-icon>
   </button>
+  <div *ngIf="stepper.selectedIndex === 0"></div>
+  <!-- <button 
+    *ngIf="stepper.selectedIndex !== 1"
+    mat-icon-button
+    color="accent"
+    class="btn-arrow"
+    (click)="onNext(stepper)"
+    [disabled]="!selectedDestinationType">
+    <mat-icon>chevron_right</mat-icon>
+  </button> -->
   <button
     *ngIf="stepper.selectedIndex !== 1"
     mat-flat-button
