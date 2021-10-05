@@ -155,14 +155,11 @@
               <mat-label>{{
                 'CONTAINERS.home.sites.site.site_type' | translate
               }}</mat-label>
-              <input
-                matInput
-                [placeholder]="
-                  'CONTAINERS.home.sites.site.site_type' | translate
-                "
-                formControlName="site_type"
-                class="form-control"
-              />
+              <mat-select formControlName="site_type" name="site_type">
+                <mat-option *ngFor="let site_type of site_types" [value]="site_type.id">
+                  {{ site_type.name }}
+                </mat-option>
+              </mat-select>
             </mat-form-field>
           </div>
         </mat-expansion-panel>
@@ -332,12 +329,34 @@
               <mat-label>{{
                 'CONTAINERS.home.sites.site.hazards' | translate
               }}</mat-label>
-              <input
-                matInput
-                [placeholder]="'CONTAINERS.home.sites.site.hazards' | translate"
-                formControlName="hazards"
-                class="form-control"
-              />
+              <mat-chip-list #harzardList aria-label="Harzard selection">
+                <mat-chip
+                  *ngFor="let user of users"
+                  [selectable]="true"
+                  [removable]="true"
+                  (removed)="removeHazard(user)"
+                >
+                  {{ user.username }}
+                  <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                </mat-chip>
+                <input
+                  [placeholder]="'CONTAINERS.home.sites.site.hazards' | translate"
+                  #userInput
+                  [formControl]="userControl"
+                  [matAutocomplete]="auto"
+                  [matChipInputFor]="harzardList"
+                  [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                  (matChipInputTokenEnd)="addHazard($event)"
+                />
+              </mat-chip-list>
+              <mat-autocomplete
+                #auto="matAutocomplete"
+                (optionSelected)="hazardSelected($event)"
+              >
+                <mat-option *ngFor="let user of filteredUsers" [value]="user">
+                  {{ user.username }}
+                </mat-option>
+              </mat-autocomplete>
             </mat-form-field>
           </div>
         </mat-expansion-panel>

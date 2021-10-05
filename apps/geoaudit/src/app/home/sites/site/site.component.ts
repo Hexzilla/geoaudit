@@ -1,13 +1,15 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ThemePalette } from '@angular/material/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { ENTER, COMMA } from '@angular/cdk/keycodes';
 import * as MapActions from '../../../store/map/map.actions';
 import * as fromApp from '../../../store';
 import * as moment from 'moment';
 import { SiteEntityService } from '../../../entity-services/site-entity.service';
-import { Site, SiteAction, NOTIFICATION_DATA, SiteActionColours } from '../../../models';
+import { SiteTypeEntityService } from '../../../entity-services/site-type-entity.service';
+import { Site, SiteAction, NOTIFICATION_DATA, SiteActionColours, SiteType, User } from '../../../models';
 import { debounceTime, tap, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { Subject, Subscription } from 'rxjs';
 import { AlertService, UploadService, AuthService } from '../../../services';
@@ -15,6 +17,9 @@ import { FileTypes } from '../../../components/file-upload/file-upload.component
 import { MatDialog } from '@angular/material/dialog';
 import { RefusalModalComponent } from '../../../modals/refusal-modal/refusal-modal.component';
 import { NotificationService } from '../../../services/notification.service';
+import { MatChipInputEvent } from '@angular/material/chips';
+import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { UserEntityService } from '../../../entity-services/user-entity.service';
 
 @Component({
   selector: 'geoaudit-site',
@@ -38,6 +43,8 @@ export class SiteComponent implements OnInit, AfterViewInit {
   attachedImages: Array<any>;
   attachedDocuments: Array<any>;
 
+  site_types: Array<SiteType>;
+
   public disabled = false;
   public showSpinners = true;
   public showSeconds = false;
@@ -52,6 +59,14 @@ export class SiteComponent implements OnInit, AfterViewInit {
   public hideTime = false;
 
   private unsubscribe = new Subject<void>();
+
+  @ViewChild('userInput') userInput: ElementRef<HTMLInputElement>;
+  @ViewChild('auto') matAutocomplete: MatAutocomplete;
+  userControl = new FormControl();
+  separatorKeysCodes: number[] = [ENTER, COMMA];
+  filteredUsers: Array<User>;
+  users: Array<User> = [];
+  allUsers: Array<User> = [];
 
   site: Site;
 
@@ -69,6 +84,8 @@ export class SiteComponent implements OnInit, AfterViewInit {
     private alertService: AlertService,
     private uploadService: UploadService,
     private notificationService: NotificationService,
+    private siteTypeEntityService: SiteTypeEntityService,
+    private userEntityService: UserEntityService,
     private dialog: MatDialog
   ) {
     this.subscriptions.push(this.route.queryParams.subscribe(params => {
@@ -105,12 +122,24 @@ export class SiteComponent implements OnInit, AfterViewInit {
   private initialize() {
     this.id = this.route.snapshot.paramMap.get('id');
 
+    this.siteTypeEntityService.getAll().subscribe((items) => {
+      this.site_types = items;
+      console.log("this.site_types", this.site_types);
+    })
+
+    // Fetch users for assignees
+    this.userEntityService.getAll().subscribe(
+      (users) => {
+        this.allUsers = users;
+      },
+    );
+
     this.initForm();
 
-    if (this.id) {
+    if (this.id && this.id != 'create') {
       this.fetchData(this.id);
     } else {
-      // this.createMode();
+      this.createMode();
     }
   }
 
@@ -146,6 +175,15 @@ export class SiteComponent implements OnInit, AfterViewInit {
       images: [],
       documents: [],
     });
+  }
+
+  createMode() {
+    this.siteEntityService.add(this.form.value).subscribe(
+      (site) => {
+        this.form.patchValue(site);
+        this.autoSave(true);
+      }
+    );
   }
 
   fetchData(id: string) {
@@ -297,6 +335,59 @@ export class SiteComponent implements OnInit, AfterViewInit {
       return SiteActionColours.REQUIRES_INTERVENTION;
     }
     return "00FFFFFF";
+  }
+
+  addHazard(event: MatChipInputEvent): void {
+    const value = (event.value || '').trim();
+
+    // Add our user
+    if (value) {
+      const filterAllUsersOnValue = this.filterHazard(value);
+      if (filterAllUsersOnValue.length >= 1) {
+        this.users.push(filterAllUsersOnValue[0]);
+      }
+    }
+
+    // Clear the input value
+    this.userInput.nativeElement.value = '';
+    this.userControl.setValue(null);
+    this.hazardsChange();
+  }
+
+  removeHazard(user: User): void {
+    const exists = this.users.find((item) => item.id === user.id);
+    if (exists) {
+      this.users = this.users.filter((item) => item.id !== exists.id);
+    }
+    this.hazardsChange();
+  }
+
+  private filterHazard(value: string): Array<User> {
+    const filterValue = value.toLowerCase();
+
+    return this.allUsers.filter((user) => {
+      return (
+        user.username.toLowerCase().indexOf(filterValue) === 0 ||
+        user.email.toLowerCase().indexOf(filterValue) === 0 ||
+        user.id.toString() === filterValue
+      );
+    });
+  }
+
+  hazardsChange(): void {
+    this.form.patchValue({
+      site_detail: {
+        ...this.form.value.site_detail,
+        hazards: this.users.map((user) => user.id),
+      }
+    });
+  }
+
+  hazardSelected(event: MatAutocompleteSelectedEvent): void {
+    this.users.push(event.option.value);
+    this.userInput.nativeElement.value = '';
+    this.userControl.setValue(null);
+    this.hazardsChange();
   }
 
   onImageUpload(event): void {

@@ -103,6 +103,8 @@ import { FaultTypeDataService } from '../data-services/fault-type-data.service';
 import { FaultTypeEntityService } from '../entity-services/fault-type-entity.service';
 import { ReferenceCellDataService } from '../data-services/reference-cell-data.service';
 import { ReferenceCellEntityService } from '../entity-services/reference-cell-entity.service';
+import { SiteTypeDataService } from '../data-services/site-type-data.service';
+import { SiteTypeEntityService } from '../entity-services/site-type-entity.service';
 
 import { SurveyActionButtonComponent } from '../components/survey-action-button/survey-action-button.component';
 import { MyJobEntityService } from '../entity-services/my-job-entity.service';
@@ -144,6 +146,7 @@ const entityMetadataMap: EntityMetadataMap = {
   },
   JobType: {},
   FaultType: {},
+  SiteType: {},
   ReferenceCell: {},
   User: {},
   Abriox:{},
@@ -254,6 +257,9 @@ const entityMetadataMap: EntityMetadataMap = {
 
     FaultTypeDataService,
     FaultTypeEntityService,
+
+    SiteTypeDataService,
+    SiteTypeEntityService,
 
     ReferenceCellDataService,
     ReferenceCellEntityService,
@@ -379,6 +385,7 @@ export class SharedModule {
     private jobDataService: JobDataService,
     private jobTypeDataService: JobTypeDataService,
     private faultTypeDataService: FaultTypeDataService,
+    private siteTypeDataService: SiteTypeDataService,
     private referenceCellDataService: ReferenceCellDataService,
     private myJobDataService: MyJobDataService,
     private noteDataService: NoteDataService,
@@ -408,6 +415,7 @@ export class SharedModule {
         Job: jobDataService,
         JobType: jobTypeDataService,
         FaultType: faultTypeDataService,
+        SiteType: siteTypeDataService,
         ReferenceCell: referenceCellDataService,
         MyJob: myJobDataService,
         User: userDataService,
