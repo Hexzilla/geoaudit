@@ -8,6 +8,7 @@ import autoTable from 'jspdf-autotable';
 import Papa from 'papaparse';
 import { StatusEntityService } from '../../entity-services/status-entity.service';
 import { SurveyEntityService } from '../../entity-services/survey-entity.service';
+import { SiteEntityService } from '../../entity-services/site-entity.service';
 import { TpActionEntityService } from '../../entity-services/tp-action-entity.service';
 import { TrActionEntityService } from '../../entity-services/tr-action-entity.service';
 import { AbrioxActionEntityService } from '../../entity-services/abriox-action-entity.service';
@@ -49,6 +50,7 @@ export class ApprovalsComponent implements OnInit {
     private authService: AuthService,
     private statusEntityService: StatusEntityService,
     private surveyEntityService: SurveyEntityService,
+    private siteEntityService: SiteEntityService,
     private tpActionEntityService: TpActionEntityService,
     private trActionEntityService: TrActionEntityService,
     private abrioxActionEntityService: AbrioxActionEntityService,
@@ -109,7 +111,14 @@ export class ApprovalsComponent implements OnInit {
         // "Overview": null,
         // "Delivery details": null,
         // "Attachments": null,
-        // "Site details": null,
+        "Site details": survey.site?.map((it, index) => {
+          return {
+            key: 'site',
+            id: it.id,
+            approved: it.approved,
+            text: `Site ${index + 1}`,
+          };
+        }),
         "Testposts": survey.tp_actions?.map((it, index) => {
           return {
             key: 'tp_actions',
@@ -142,14 +151,14 @@ export class ApprovalsComponent implements OnInit {
             text: `Resistivity ${index + 1}`,
           };
         }),
-        "Notes": survey.notes?.map((it, index) => {
+        /*"Notes": survey.notes?.map((it, index) => {
           return {
             key: 'notes',
             id: it.id,
             approved: it.approved,
             text: `Note ${index + 1}`,
           };
-        }),
+        }),*/
       }
     }
     const dialogRef = this.dialog.open(ApproveListComponent, {
@@ -174,7 +183,9 @@ export class ApprovalsComponent implements OnInit {
           approved_by: this.authService.authValue.user.id
         };
         const service = this.getEntityService(item.key);
-        service?.update(payload);
+        service?.update(payload).subscribe(() => {
+          this.query();
+        });
     })
   }
 
@@ -184,14 +195,19 @@ export class ApprovalsComponent implements OnInit {
         const payload = {
           id: item.id,
           approved: false,
+          approved_by: 0,
         };
         const service = this.getEntityService(item.key);
-        service?.update(payload);
+        service?.update(payload).subscribe(() => {
+          this.query();
+        });
     })
   }
 
   private getEntityService(key) : any {
-    if (key == 'tp_actions') {
+    if (key == 'site') {
+      return this.siteEntityService;
+    } else if (key == 'tp_actions') {
       return this.tpActionEntityService;
     } else if (key == 'tr_actions') {
       return this.trActionEntityService;
