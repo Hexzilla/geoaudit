@@ -237,7 +237,7 @@ export class TrComponent implements OnInit, AfterViewInit {
          */
         if (reload) {
           this.router
-            .navigate([`/home/testposts/${this.form.value.id}`])
+            .navigate([`/home/trs/${this.form.value.id}`])
             .then(() => {
               window.location.reload();
             });

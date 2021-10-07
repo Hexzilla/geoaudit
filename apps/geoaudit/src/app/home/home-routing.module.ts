@@ -18,6 +18,8 @@ const sitesModule = () =>
   import('./sites/sites.module').then((x) => x.SitesModule);
 const testpostsModule = () =>
   import('./testposts/testposts.module').then((x) => x.TestpostsModule);
+const tpActionsModule = () =>
+  import('./tpactions/tpactions.module').then((x) => x.TpActionsModule);
 const trsModule = () => import('./trs/trs.module').then((x) => x.TrsModule);
 
 const searchModule = () =>
@@ -100,6 +102,10 @@ const routes: Routes = [
       {
         path: 'testposts',
         loadChildren: testpostsModule,
+      },
+      {
+        path: 'tp_actions',
+        loadChildren: tpActionsModule,
       },
       {
         path: 'trs',
