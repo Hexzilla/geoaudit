@@ -350,7 +350,7 @@ export class TrComponent implements OnInit, AfterViewInit {
   }
 
   onActionNavigation(action) {
-    this.router.navigate([`/home/trs/${this.tr.id}/tr_action/${action.id}`]);
+    this.router.navigate([`/home/tr_actions/${action.id}`]);
   }
 
   searchTestpost() {

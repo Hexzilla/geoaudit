@@ -1,22 +1,22 @@
 import { NgModule } from '@angular/core';
 
 // Routing
-import { TestpostsRoutingModule } from './testposts-routing.module';
+import { TractionsRoutingModule } from './tractions-routing.module';
 
 import { ErrorInterceptor, JwtInterceptor } from '../../helpers';
 
 // Declarations
 import { SharedModule } from '../shared.module';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { TestpostComponent } from './testpost/testpost.component';
+import { TrActionComponent } from './tr-action/tr-action.component';
 import { NotesModule } from '../notes/notes.module';
 
 @NgModule({
   declarations: [
-    TestpostComponent,
+    TrActionComponent
   ],
   imports: [
-    TestpostsRoutingModule,
+    TractionsRoutingModule,
 
     SharedModule,
     NotesModule
@@ -26,4 +26,4 @@ import { NotesModule } from '../notes/notes.module';
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
   ]
 })
-export class TestpostsModule {}
+export class TrActionsModule {}

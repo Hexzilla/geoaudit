@@ -5,7 +5,7 @@ import { AuthGuard } from '../../guards';
 
 import { NotesComponent } from '../notes/notes.component';
 import { SearchComponent } from '../search/search.component';
-import { TpActionComponent } from './tp-action/tp-action.component';
+import { TrActionComponent } from './tr-action/tr-action.component';
 
 const routes: Routes = [
     { 
@@ -26,7 +26,7 @@ const routes: Routes = [
     },
 
     {
-        path: ':id', component: TpActionComponent
+        path: ':id', component: TrActionComponent
     },
 
     {
@@ -41,4 +41,4 @@ const routes: Routes = [
     imports: [RouterModule.forChild(routes)],
     exports: [RouterModule]
 })
-export class TpActionsRoutingModule { }
+export class TractionsRoutingModule { }

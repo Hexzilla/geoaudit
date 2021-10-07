@@ -6,7 +6,6 @@ import { AuthGuard } from '../../guards';
 import { NotesComponent } from '../notes/notes.component';
 import { SearchComponent } from '../search/search.component';
 import { TrComponent } from './tr/tr.component';
-import { TrActionComponent } from './tr-action/tr-action.component';
 
 const routes: Routes = [
     { 
@@ -26,20 +25,12 @@ const routes: Routes = [
         path: 'drive', component: SearchComponent
     },
 
-    // {
-    //     path: 'create', component: AbrioxComponent
-    // },
-
     {
         path: ':id', component: TrComponent
     },
 
     {
         path: ':id/notes', component: NotesComponent
-    },
-
-    {
-        path: ':id/tr_action/:actionId', component: TrActionComponent
     },
 
     // otherwise redirect to home

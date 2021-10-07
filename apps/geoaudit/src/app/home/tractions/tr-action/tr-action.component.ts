@@ -3,7 +3,7 @@ import {
   Component,
   OnInit,
 } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
@@ -24,7 +24,8 @@ import { RefusalModalComponent } from '../../../modals/refusal-modal/refusal-mod
 import { NotificationService } from '../../../services/notification.service';
 import { FaultTypeEntityService } from '../../../entity-services/fault-type-entity.service';
 import { ConditionEntityService } from '../../../entity-services/condition-entity.service';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'geoaudit-tp-action',
@@ -62,11 +63,13 @@ export class TrActionComponent implements OnInit, AfterViewInit {
    */
   submitted = false;
 
-  actionId = 0;
+  id;
 
   public tr_action: TrAction = null;
 
   public selectedTabIndex = 0;
+
+  private unsubscribe = new Subject<void>();
   
   attachedImages: Array<any>;
   attachedDocuments: Array<any>;
@@ -102,6 +105,7 @@ export class TrActionComponent implements OnInit, AfterViewInit {
     }));
   }
 
+  // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
   ngOnInit(): void {
     //this.initialize();
   }
@@ -111,11 +115,15 @@ export class TrActionComponent implements OnInit, AfterViewInit {
     this.subscriptions.map(it => it.unsubscribe());
   }
 
+  // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
   ngAfterViewInit(): void {
     //
   }
 
   private initialize() {
+    this.id = this.route.snapshot.params['id'];
+    console.log("id", this.id)
+
     // Fetch statuses
     this.statusEntityService.getAll().subscribe(
       (statuses) => {
@@ -140,13 +148,24 @@ export class TrActionComponent implements OnInit, AfterViewInit {
      */
     this.initialiseForm();
 
-    this.fetchTpAction();
+    if (this.id && this.id != 'create') {
+      this.fetchData(this.id);
+    } else {
+      this.createMode();
+    }
   }
 
-  fetchTpAction() {
-    this.actionId = this.route.snapshot.params['actionId'];
-
-    this.trActionEntityService.getByKey(this.actionId).subscribe(
+  createMode() {
+    this.trActionEntityService.add(this.form.value).subscribe(
+      (item) => {
+        this.form.patchValue(item);
+        this.autoSave(true);
+      }
+    );
+  }
+  
+  fetchData(actionId) {
+    this.trActionEntityService.getByKey(actionId).subscribe(
       (tr_action) => {
         this.tr_action = tr_action;
         //console.log("trs.tr_action", tr_action)
@@ -180,7 +199,6 @@ export class TrActionComponent implements OnInit, AfterViewInit {
           this.fault_detail.push(this.formBuilder.group(fault))
         });
       },
-      (err) => {}
     )
   }
 
@@ -222,6 +240,18 @@ export class TrActionComponent implements OnInit, AfterViewInit {
     }));
   }
 
+  autoSave(reload = false) {
+    this.form.valueChanges
+      .pipe(
+        debounceTime(500),
+        tap(() => {
+          this.submit(false);
+        }),
+        distinctUntilChanged(),
+        takeUntil(this.unsubscribe)
+      )
+  }
+  
   initRoutes() {
     this.route.queryParams.subscribe(params => {
       const tabIndex = params['tab'];
