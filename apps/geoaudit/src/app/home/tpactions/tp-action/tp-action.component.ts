@@ -26,7 +26,8 @@ import { NotificationService } from '../../../services/notification.service';
 import { ConditionEntityService } from '../../../entity-services/condition-entity.service';
 import { FaultTypeEntityService } from '../../../entity-services/fault-type-entity.service';
 import { ReferenceCellEntityService } from '../../../entity-services/reference-cell-entity.service';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'geoaudit-tp-action',
@@ -66,13 +67,13 @@ export class TpActionComponent implements OnInit, AfterViewInit {
 
   referenceCells: Array<ReferenceCell>
 
-  testpostId = 0;
-
-  actionId = 0;
+  id;
 
   public tp_action: TpAction = null;
 
   public selectedTabIndex = 0;
+
+  private unsubscribe = new Subject<void>();
   
   attachedImages: Array<any>;
   attachedDocuments: Array<any>;
@@ -123,6 +124,9 @@ export class TpActionComponent implements OnInit, AfterViewInit {
   }
 
   private initialize() {
+    this.id = this.route.snapshot.params['id'];
+    console.log("id", this.id)
+
     // Fetch statuses
     this.statusEntityService.getAll().subscribe(
       (statuses) => {
@@ -130,6 +134,24 @@ export class TpActionComponent implements OnInit, AfterViewInit {
       },
       (err) => {}
     );
+    this.conditionEntityService.getAll().subscribe(
+      (conditions) => {
+        this.conditions = conditions;
+        console.log("conditions", conditions);
+      }
+    )
+    this.faultTypeEntityService.getAll().subscribe(
+      (faultTypes) => {
+        this.faultTypes = faultTypes;
+        console.log("faultTypes", faultTypes);
+      }
+    )
+    this.referenceCellEntityService.getAll().subscribe(
+      (referenceCells) => {
+        this.referenceCells = referenceCells;
+        console.log("referenceCells", referenceCells);
+      }
+    )
 
     /**
      * Initialise the form with properties and validation
@@ -137,7 +159,11 @@ export class TpActionComponent implements OnInit, AfterViewInit {
      */
     this.initialiseForm();
 
-    this.fetchData();
+    if (this.id && this.id != 'create') {
+      this.fetchData(this.id);
+    } else {
+      this.createMode();
+    }
   }
 
   getTestpostTitle() {
@@ -173,32 +199,18 @@ export class TpActionComponent implements OnInit, AfterViewInit {
       fault_detail: new FormArray([]),
     });
   }
-
-  fetchData() {
-    this.conditionEntityService.getAll().subscribe(
-      (conditions) => {
-        this.conditions = conditions;
-        console.log("conditions", conditions);
+  
+  createMode() {
+    this.tpActionEntityService.add(this.form.value).subscribe(
+      (item) => {
+        this.form.patchValue(item);
+        this.autoSave(true);
       }
-    )
-    this.faultTypeEntityService.getAll().subscribe(
-      (faultTypes) => {
-        this.faultTypes = faultTypes;
-        console.log("faultTypes", faultTypes);
-      }
-    )
-    this.referenceCellEntityService.getAll().subscribe(
-      (referenceCells) => {
-        this.referenceCells = referenceCells;
-        console.log("referenceCells", referenceCells);
-      }
-    )
+    );
+  }
 
-    this.testpostId = this.route.snapshot.params['id']
-    this.actionId = this.route.snapshot.params['actionId'];
-    console.log("actionId", this.actionId)
-
-    this.tpActionEntityService.getByKey(this.actionId).subscribe(
+  fetchData(actionId) {
+    this.tpActionEntityService.getByKey(actionId).subscribe(
       (tpaction) => {
         this.tp_action = tpaction;
         console.log("tp_action", tpaction);
@@ -233,7 +245,6 @@ export class TpActionComponent implements OnInit, AfterViewInit {
         this.current_drain.clear();
         tpaction.current_drain?.map(item => this.current_drain.push(this.formBuilder.group(item)));
       },
-      (err) => {}
     )
   }
 
@@ -321,6 +332,27 @@ export class TpActionComponent implements OnInit, AfterViewInit {
       fault_type: '',
       fault_desc: ''
     }));
+  }
+
+  autoSave(reload = false) {
+    this.form.valueChanges
+      .pipe(
+        debounceTime(500),
+        tap(() => {
+          this.submit(false);
+        }),
+        distinctUntilChanged(),
+        takeUntil(this.unsubscribe)
+      )
+      .subscribe(() => {
+        if (reload) {
+          this.router
+            .navigate([`/home/tp_actions/${this.form.value.id}`])
+            .then(() => {
+              window.location.reload();
+            });
+        }
+      });
   }
 
   submit(navigate = true) {

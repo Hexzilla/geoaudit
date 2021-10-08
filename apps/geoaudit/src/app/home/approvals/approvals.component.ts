@@ -8,6 +8,7 @@ import autoTable from 'jspdf-autotable';
 import Papa from 'papaparse';
 import { StatusEntityService } from '../../entity-services/status-entity.service';
 import { SurveyEntityService } from '../../entity-services/survey-entity.service';
+import { SiteActionEntityService } from '../../entity-services/site-action-entity.service';
 import { TpActionEntityService } from '../../entity-services/tp-action-entity.service';
 import { TrActionEntityService } from '../../entity-services/tr-action-entity.service';
 import { AbrioxActionEntityService } from '../../entity-services/abriox-action-entity.service';
@@ -15,7 +16,7 @@ import { ResistivityEntityService } from '../../entity-services/resistivity-enti
 import { NoteEntityService } from '../../entity-services/note-entity.service';
 import { RefusalModalComponent } from '../../modals/refusal-modal/refusal-modal.component';
 import { NOTIFICATION_DATA, Status, Statuses, Survey } from '../../models';
-import { AuthService } from '../../services';
+import { AlertService, AuthService } from '../../services';
 import * as moment from 'moment';
 import { ApproveListComponent } from '../../components/approve-list/approve-list.component';
 import { SelectionService } from '../../services/selection.service';
@@ -47,8 +48,10 @@ export class ApprovalsComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
+    private alertService: AlertService,
     private statusEntityService: StatusEntityService,
     private surveyEntityService: SurveyEntityService,
+    private siteActionEntityService: SiteActionEntityService,
     private tpActionEntityService: TpActionEntityService,
     private trActionEntityService: TrActionEntityService,
     private abrioxActionEntityService: AbrioxActionEntityService,
@@ -103,13 +106,27 @@ export class ApprovalsComponent implements OnInit {
     }
 
     const survey = this.selection.selected[0];
+    this.surveyEntityService.getByKey(survey.id).subscribe((survey) => {
+      console.log("survey~~~~~~~~~", survey);
+      this.openApproveDialog(survey)
+    })
+  }
+
+  private openApproveDialog(survey) {    
     //const testposts = [{ id: 1, text: 'Testpost 1' }, { id: 2, text: 'Testpost 2' }]
     const treeData = {
       [`Survey [${survey .reference}]`]: {
         // "Overview": null,
         // "Delivery details": null,
         // "Attachments": null,
-        // "Site details": null,
+        "Site details": survey.site_actions?.map((it, index) => {
+          return {
+            key: 'site',
+            id: it.id,
+            approved: it.approved,
+            text: `Site ${index + 1}`,
+          };
+        }),
         "Testposts": survey.tp_actions?.map((it, index) => {
           return {
             key: 'tp_actions',
@@ -142,14 +159,14 @@ export class ApprovalsComponent implements OnInit {
             text: `Resistivity ${index + 1}`,
           };
         }),
-        "Notes": survey.notes?.map((it, index) => {
+        /*"Notes": survey.notes?.map((it, index) => {
           return {
             key: 'notes',
             id: it.id,
             approved: it.approved,
             text: `Note ${index + 1}`,
           };
-        }),
+        }),*/
       }
     }
     const dialogRef = this.dialog.open(ApproveListComponent, {
@@ -160,38 +177,59 @@ export class ApprovalsComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      result.approve && this.approveItems(result.selected);
-      result.refuse && this.refuseItems(result.selected);
+      if (result) {
+        result.approve && this.approveItems(survey, result.selected);
+        result.refuse && this.refuseItems(survey, result.selected);
+      }
     });
   }
 
-  private approveItems(items) {
+  private approveItems(survey, items) {
+    this.alertService.clear();
+    const payload: any = {
+      id: survey.id,
+      approved: true,
+      approved_by: this.authService.authValue.user.id
+    };
+    this.surveyEntityService.update(payload).subscribe(() => {
+      this.alertService.info('Saved Changes');
+    })
+    
     items?.filter(item => item.key && item.level > 1 && !item.approved)
       .map(item => {
-        const payload = {
-          id: item.id,
-          approved: true,
-          approved_by: this.authService.authValue.user.id
-        };
+        const data = {...payload, id: item.id};
         const service = this.getEntityService(item.key);
-        service?.update(payload);
+        service?.update(data).subscribe(() => {
+          this.alertService.info('Saved Changes');
+        })
     })
   }
 
-  private refuseItems(items) {
+  private refuseItems(survey, items) {
+    this.alertService.clear();
+    const payload: any = {
+      id: survey.id,
+      approved: false,
+      approved_by: 0,
+    };
+    this.surveyEntityService.update(payload).subscribe(() => {
+      this.alertService.info('Saved Changes');
+    })
+
     items?.filter(item => item.key && item.level > 1 && item.approved)
       .map(item => {
-        const payload = {
-          id: item.id,
-          approved: false,
-        };
+        const data = {...payload, id: item.id};
         const service = this.getEntityService(item.key);
-        service?.update(payload);
+        service?.update(data).subscribe(() => {
+          this.alertService.info('Saved Changes');
+        })
     })
   }
 
   private getEntityService(key) : any {
-    if (key == 'tp_actions') {
+    if (key == 'site') {
+      return this.siteActionEntityService;
+    } else if (key == 'tp_actions') {
       return this.tpActionEntityService;
     } else if (key == 'tr_actions') {
       return this.trActionEntityService;

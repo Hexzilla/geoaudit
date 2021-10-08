@@ -81,12 +81,12 @@ export class TpActionsComponent implements OnInit {
 
   navigate(item) {
     if (item.testpost) {
-      this.router.navigate([`/home/testposts/${item.testpost.id}/tp_action/${item.id}`]);  
+      this.router.navigate([`/home/tp_actions/${item.id}`]);  
     }
   }
 
   addAction() {
-    this.router.navigate([`/home/tp_action/create`]);
+    this.router.navigate([`/home/tp_actions/create`]);
   }
 
   completed() {

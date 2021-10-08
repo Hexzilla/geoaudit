@@ -237,7 +237,7 @@ export class TrComponent implements OnInit, AfterViewInit {
          */
         if (reload) {
           this.router
-            .navigate([`/home/testposts/${this.form.value.id}`])
+            .navigate([`/home/trs/${this.form.value.id}`])
             .then(() => {
               window.location.reload();
             });
@@ -350,7 +350,7 @@ export class TrComponent implements OnInit, AfterViewInit {
   }
 
   onActionNavigation(action) {
-    this.router.navigate([`/home/trs/${this.tr.id}/tr_action/${action.id}`]);
+    this.router.navigate([`/home/tr_actions/${action.id}`]);
   }
 
   searchTestpost() {

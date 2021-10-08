@@ -9,13 +9,11 @@ import { ErrorInterceptor, JwtInterceptor } from '../../helpers';
 import { SharedModule } from '../shared.module';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TrComponent } from './tr/tr.component';
-import { TrActionComponent } from './tr-action/tr-action.component';
 import { NotesModule } from '../notes/notes.module';
 
 @NgModule({
   declarations: [
     TrComponent,
-    TrActionComponent
   ],
   imports: [
     TrsRoutingModule,

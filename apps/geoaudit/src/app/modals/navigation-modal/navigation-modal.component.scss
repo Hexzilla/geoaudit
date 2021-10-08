@@ -39,6 +39,15 @@
   margin-right: 8px;
 }
 
+.btn-arrow{
+  justify-content: center;
+
+  .mat-icon{
+      font-size: 32px;
+      color: #464646;
+  }
+}
+
 [dir='rtl'] .option-img {
   margin-right: 0;
   margin-left: 8px;

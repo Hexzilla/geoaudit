@@ -93,6 +93,8 @@ import { EventEntityService } from '../entity-services/event-entity.service';
 import { SingleItemSelectorComponent } from '../components/single-item-selector/single-item-selector.component';
 import { ConditionEntityService } from '../entity-services/condition-entity.service';
 import { ConditionDataService } from '../data-services/condition-data.service';
+import { SiteActionEntityService } from '../entity-services/site-action-entity.service';
+import { SiteActionDataService } from '../data-services/site-action-data.service';
 import { TpActionDataService } from '../data-services/tp-action-data.service';
 import { TrActionDataService } from '../data-services/tr-action-data.service';
 import { TpActionEntityService } from '../entity-services/tp-action-entity.service';
@@ -103,6 +105,8 @@ import { FaultTypeDataService } from '../data-services/fault-type-data.service';
 import { FaultTypeEntityService } from '../entity-services/fault-type-entity.service';
 import { ReferenceCellDataService } from '../data-services/reference-cell-data.service';
 import { ReferenceCellEntityService } from '../entity-services/reference-cell-entity.service';
+import { SiteTypeDataService } from '../data-services/site-type-data.service';
+import { SiteTypeEntityService } from '../entity-services/site-type-entity.service';
 
 import { SurveyActionButtonComponent } from '../components/survey-action-button/survey-action-button.component';
 import { MyJobEntityService } from '../entity-services/my-job-entity.service';
@@ -144,6 +148,7 @@ const entityMetadataMap: EntityMetadataMap = {
   },
   JobType: {},
   FaultType: {},
+  SiteType: {},
   ReferenceCell: {},
   User: {},
   Abriox:{},
@@ -152,6 +157,7 @@ const entityMetadataMap: EntityMetadataMap = {
   Resistivity:{},
 
   Site: {},
+  SiteAction: {},
 
   Note: {},
 
@@ -255,6 +261,9 @@ const entityMetadataMap: EntityMetadataMap = {
     FaultTypeDataService,
     FaultTypeEntityService,
 
+    SiteTypeDataService,
+    SiteTypeEntityService,
+
     ReferenceCellDataService,
     ReferenceCellEntityService,
 
@@ -287,6 +296,8 @@ const entityMetadataMap: EntityMetadataMap = {
     TrActionDataService,
     TpActionEntityService,
     TrActionEntityService,
+    SiteActionEntityService,
+    SiteActionDataService,
     
     TrDataService,
     
@@ -379,6 +390,7 @@ export class SharedModule {
     private jobDataService: JobDataService,
     private jobTypeDataService: JobTypeDataService,
     private faultTypeDataService: FaultTypeDataService,
+    private siteTypeDataService: SiteTypeDataService,
     private referenceCellDataService: ReferenceCellDataService,
     private myJobDataService: MyJobDataService,
     private noteDataService: NoteDataService,
@@ -393,7 +405,8 @@ export class SharedModule {
     private trDataService: TrDataService,
     private resistivityDataService: ResistivityDataService,
     private toDoListDataService: ToDoListDataService,
-    private siteDataService: SiteDataService
+    private siteDataService: SiteDataService,
+    private siteActionDataService: SiteActionDataService
   ) {
     entityDefinitionService.registerMetadataMap(entityMetadataMap);
 
@@ -408,6 +421,7 @@ export class SharedModule {
         Job: jobDataService,
         JobType: jobTypeDataService,
         FaultType: faultTypeDataService,
+        SiteType: siteTypeDataService,
         ReferenceCell: referenceCellDataService,
         MyJob: myJobDataService,
         User: userDataService,
@@ -420,7 +434,8 @@ export class SharedModule {
         Note: noteDataService,
         Notification: notificationDataService,
         ToDoList: toDoListDataService,
-        Site: siteDataService
+        Site: siteDataService,
+        SiteAction: siteActionDataService
       }
     )
   }

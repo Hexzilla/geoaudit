@@ -5,7 +5,7 @@ import { AuthGuard } from '../../guards';
 
 import { NotesComponent } from '../notes/notes.component';
 import { SearchComponent } from '../search/search.component';
-import { TestpostComponent } from './testpost/testpost.component';
+import { TpActionComponent } from './tp-action/tp-action.component';
 
 const routes: Routes = [
     { 
@@ -25,16 +25,8 @@ const routes: Routes = [
         path: 'drive', component: SearchComponent
     },
 
-    // {
-    //     path: 'create', component: AbrioxComponent
-    // },
-
     {
-        path: 'create', component: TestpostComponent
-    },
-
-    {
-        path: ':id', component: TestpostComponent
+        path: ':id', component: TpActionComponent
     },
 
     {
@@ -49,4 +41,4 @@ const routes: Routes = [
     imports: [RouterModule.forChild(routes)],
     exports: [RouterModule]
 })
-export class TestpostsRoutingModule { }
+export class TpActionsRoutingModule { }

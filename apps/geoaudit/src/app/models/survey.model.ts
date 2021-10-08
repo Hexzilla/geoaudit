@@ -16,6 +16,7 @@ export interface Survey {
     prepared_by?: User;
     resistivities?: Array<any>;
     site?: any;
+    site_actions?: Array<any>;
     status?: any;
     notes?: Array<Note>;
     tp_actions?: Array<any>;
