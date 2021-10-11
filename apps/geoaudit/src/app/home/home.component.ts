@@ -868,7 +868,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
             instance.router.navigate([navigate_url], { queryParams: { tab: 'notes' }});
             break;
           case "drive":
-            instance.driveTo();
+            instance.driveTo(instance.getGeolocation(type, id));
             break;
         }
         
@@ -894,6 +894,27 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
     }
     })
+  }
+
+  private getGeolocation(type, id) {
+    console.log('getGeolocation', type, id)
+    if (type == 'surveys') {
+      const item = this.surveys.find(it => it.id == id);
+      return item?.geometry
+    }
+    if (type == 'testposts') {
+      const item = this.testposts.find(it => it.id == id);
+      return item?.geometry
+    }
+    if (type == 'trs') {
+      const item = this.trs.find(it => it.id == id);
+      return item?.geometry
+    }
+    if (type == 'resistivities') {
+      const item = this.resistivities.find(it => it.id == id);
+      return item?.geometry
+    }
+    return undefined;
   }
 
   private drawSurveyMarkers(items: Array<Survey>, selected) {
@@ -1232,11 +1253,13 @@ export class HomeComponent implements OnInit, AfterViewInit {
     return this.authService.authValue.user.role.name === Roles.MANAGER;
   }
 
-  driveTo(): void {
+  driveTo(geometry: any): void {
+    console.log("driveTo", geometry);
     // Open modal
     const dialogRef = this.dialog.open(NavigationModalComponent, {
       data: {
         surveys: [],
+        geometry: geometry
       },
       autoFocus: true,
     });
