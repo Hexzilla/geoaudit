@@ -28,6 +28,7 @@ import { MatStepper } from '@angular/material/stepper';
 export interface DialogData {
   surveys: Array<Survey>;
   selected: Survey;
+  geometry: any;
 }
 
 @Component({
@@ -59,11 +60,12 @@ export class NavigationModalComponent implements OnInit, AfterViewInit {
 
   url: string;
 
-  selectedDestinationType: string;
-  destinationTypes: Array<string> = ['survey', 'home', 'work', 'other_address'];
+  selectedDestinationType = 'only_selection';
+  destinationTypes: Array<string> = ['survey', 'home', 'work', 'other_address', 'only_selection'];
 
   searchCtrl = new FormControl();
   surveys: Array<Survey>;
+  geometry: any;
   selectedSurveyId = 0;
   selectedSurvey: Survey = null;
 
@@ -86,6 +88,7 @@ export class NavigationModalComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.surveys = [...this.data.surveys];
+    this.geometry = this.data.geometry;
     if (this.surveys.length > 0) {
       this.selectedSurvey = this.surveys[0];
       this.selectedSurveyId = this.selectedSurvey.id;
@@ -211,6 +214,8 @@ export class NavigationModalComponent implements OnInit, AfterViewInit {
         return this.work !== null;
       case 'other_address':
         return this.otherAddress !== null;
+      case 'only_selection':
+        return this.geometry !== null;
       default:
         return true;
     }
@@ -310,15 +315,27 @@ export class NavigationModalComponent implements OnInit, AfterViewInit {
        */
       case 'other_address':
         // Do something esle
-        destination = `${Number(this.otherAddress.lat)},${Number(
-          this.otherAddress.lng
-        )}`;
-
+        destination = `${Number(this.otherAddress.lat)},${Number(this.otherAddress.lng)}`;
         waypoints = this.generateWaypoints(this.data.surveys);
 
         this.directions.setDestination([
           Number(this.otherAddress.lng),
           Number(this.otherAddress.lat),
+        ]);
+        break;
+
+      /**
+       * Other address is the destination, and all the selected surveys
+       * are waypoints.
+       */
+      case 'only_selection':
+        // Do something esle
+        destination = `${Number(this.geometry.lat)},${Number(this.geometry.lng)}`;
+        waypoints = this.generateWaypoints(this.data.surveys);
+
+        this.directions.setDestination([
+          Number(this.geometry.lng),
+          Number(this.geometry.lat),
         ]);
         break;
     }

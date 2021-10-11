@@ -37,6 +37,7 @@
             class="radio-button"
             *ngFor="let destinationType of destinationTypes"
             [value]="destinationType"
+            [checked]="destinationType == selectedDestinationType"
             (click)="onDestinationTypeClick(destinationType)"
           >
             {{
@@ -108,6 +109,15 @@
                 autocapitalize="off" spellcheck="off" type="text" [formControl]="searchCtrl" #searchInput>
             </mat-form-field>
           </form>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="'only_selection'">
+          <p class="radio-group-label">
+            {{ 'MODALS.navigation_modal.only_selection' | translate }}
+          </p>
+          <p>
+            {{ 'MODALS.navigation_modal.work.lat_lng' | translate: { lat: geometry?.lat, lng: geometry?.lng } }}
+          </p>
         </ng-container>
 
         <div class="map-container">
