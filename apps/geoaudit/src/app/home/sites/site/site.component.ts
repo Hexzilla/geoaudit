@@ -9,9 +9,9 @@ import * as fromApp from '../../../store';
 import * as moment from 'moment';
 import { SiteEntityService } from '../../../entity-services/site-entity.service';
 import { SiteTypeEntityService } from '../../../entity-services/site-type-entity.service';
-import { Site, SiteAction, NOTIFICATION_DATA, SiteActionColours, SiteType, User } from '../../../models';
-import { debounceTime, tap, distinctUntilChanged, takeUntil } from 'rxjs/operators';
-import { Subject, Subscription } from 'rxjs';
+import { Site, SiteAction, NOTIFICATION_DATA, SiteActionColours, SiteType, User, Hazard } from '../../../models';
+import { debounceTime, tap, distinctUntilChanged, takeUntil, map, filter } from 'rxjs/operators';
+import { fromEvent,Subject, Subscription } from 'rxjs';
 import { AlertService, UploadService, AuthService } from '../../../services';
 import { FileTypes } from '../../../components/file-upload/file-upload.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -20,6 +20,7 @@ import { NotificationService } from '../../../services/notification.service';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { UserEntityService } from '../../../entity-services/user-entity.service';
+import { HazardEntityService } from '../../../entity-services/hazard-entity.service';
 
 @Component({
   selector: 'geoaudit-site',
@@ -60,13 +61,13 @@ export class SiteComponent implements OnInit, AfterViewInit {
 
   private unsubscribe = new Subject<void>();
 
-  @ViewChild('userInput') userInput: ElementRef<HTMLInputElement>;
+  @ViewChild('hazardInput') hazardInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto') matAutocomplete: MatAutocomplete;
-  userControl = new FormControl();
+  hazardControl = new FormControl();
   separatorKeysCodes: number[] = [ENTER, COMMA];
-  filteredUsers: Array<User>;
-  users: Array<User> = [];
-  allUsers: Array<User> = [];
+  filteredHazards: Array<Hazard>;
+  hazards: Array<Hazard> = [];
+  allHazards: Array<Hazard> = [];
 
   site: Site;
 
@@ -86,6 +87,7 @@ export class SiteComponent implements OnInit, AfterViewInit {
     private notificationService: NotificationService,
     private siteTypeEntityService: SiteTypeEntityService,
     private userEntityService: UserEntityService,
+    private hazardEntityService: HazardEntityService,
     private dialog: MatDialog
   ) {
     this.subscriptions.push(this.route.queryParams.subscribe(params => {
@@ -111,7 +113,21 @@ export class SiteComponent implements OnInit, AfterViewInit {
 
   // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
   ngAfterViewInit() {
-    //
+    /**
+     * Used for filtering users (assignees) on a given
+     * input text filter.
+     */
+     fromEvent(this.hazardInput.nativeElement, 'keyup')
+     .pipe(
+       map((event: any) => {
+         return event.target.value;
+       }),
+       filter((res) => res.length >= 0),
+       distinctUntilChanged()
+     )
+     .subscribe((text: string) => {
+       this.filteredHazards = this.filterHazard(text);
+     });
   }
 
   // eslint-disable-next-line @angular-eslint/use-lifecycle-interface
@@ -127,12 +143,11 @@ export class SiteComponent implements OnInit, AfterViewInit {
       console.log("this.site_types", this.site_types);
     })
 
-    // Fetch users for assignees
-    this.userEntityService.getAll().subscribe(
-      (users) => {
-        this.allUsers = users;
-      },
-    );
+    // Fetch hazards
+    this.hazardEntityService.getAll().subscribe((hazards) => {
+      this.allHazards = hazards;
+      console.log("hazards", hazards);
+    })
 
     this.initForm();
 
@@ -194,9 +209,15 @@ export class SiteComponent implements OnInit, AfterViewInit {
         this.currentState = site.status?.id;
         this.approved = site.approved;
 
+        site.site_detail.hazard?.map((hazard) => {
+          if (!this.hazards.find((item) => item.id === hazard.id)) {
+            this.hazards.push(hazard);
+          }
+        });
+
         this.form.patchValue({
           ...site,
-          site_type: site.site_type?.name
+          site_type: site.site_type?.id
         })
       },
     )
@@ -344,32 +365,29 @@ export class SiteComponent implements OnInit, AfterViewInit {
     if (value) {
       const filterAllUsersOnValue = this.filterHazard(value);
       if (filterAllUsersOnValue.length >= 1) {
-        this.users.push(filterAllUsersOnValue[0]);
+        this.hazards.push(filterAllUsersOnValue[0]);
       }
     }
 
     // Clear the input value
-    this.userInput.nativeElement.value = '';
-    this.userControl.setValue(null);
+    this.hazardInput.nativeElement.value = '';
+    this.hazardControl.setValue(null);
     this.hazardsChange();
   }
 
-  removeHazard(user: User): void {
-    const exists = this.users.find((item) => item.id === user.id);
+  removeHazard(hazard: Hazard): void {
+    const exists = this.hazards.find((item) => item.id === hazard.id);
     if (exists) {
-      this.users = this.users.filter((item) => item.id !== exists.id);
+      this.hazards = this.hazards.filter((item) => item.id !== exists.id);
     }
     this.hazardsChange();
   }
 
-  private filterHazard(value: string): Array<User> {
+  private filterHazard(value: string): Array<Hazard> {
     const filterValue = value.toLowerCase();
-
-    return this.allUsers.filter((user) => {
+    return this.allHazards.filter((hazard) => {
       return (
-        user.username.toLowerCase().indexOf(filterValue) === 0 ||
-        user.email.toLowerCase().indexOf(filterValue) === 0 ||
-        user.id.toString() === filterValue
+        hazard.name.toLowerCase().indexOf(filterValue) === 0
       );
     });
   }
@@ -378,15 +396,15 @@ export class SiteComponent implements OnInit, AfterViewInit {
     this.form.patchValue({
       site_detail: {
         ...this.form.value.site_detail,
-        hazards: this.users.map((user) => user.id),
+        hazards: this.hazards.map((hazard) => hazard.name),
       }
     });
   }
 
   hazardSelected(event: MatAutocompleteSelectedEvent): void {
-    this.users.push(event.option.value);
-    this.userInput.nativeElement.value = '';
-    this.userControl.setValue(null);
+    this.hazards.push(event.option.value);
+    this.hazardInput.nativeElement.value = '';
+    this.hazardControl.setValue(null);
     this.hazardsChange();
   }
 
