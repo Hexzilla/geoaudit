@@ -80,13 +80,11 @@ export class TpActionsComponent implements OnInit {
   }
 
   navigate(item) {
-    if (item.testpost) {
-      this.router.navigate([`/home/tp_actions/${item.id}`], {
-        queryParams: {
-          survey: this.surveyId,
-        }
-      });
-    }
+    this.router.navigate([`/home/tp_actions/${item.id}`], {
+      queryParams: {
+        survey: this.surveyId,
+      }
+    });
   }
 
   addAction() {

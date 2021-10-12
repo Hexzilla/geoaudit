@@ -80,13 +80,11 @@ export class TrActionsComponent implements OnInit {
   }
 
   navigate(item) {
-    if (item.tr) {
-      this.router.navigate([`/home/tr_actions/${item.id}`], {
-        queryParams: {
-          survey: this.surveyId,
-        }
-      });
-    }
+    this.router.navigate([`/home/tr_actions/${item.id}`], {
+      queryParams: {
+        survey: this.surveyId,
+      }
+    });
   }
 
   addAction() {
