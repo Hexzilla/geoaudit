@@ -179,7 +179,7 @@ export class SiteComponent implements OnInit, AfterViewInit {
 
         toilet: [''],
         hospital: [''],
-        hazards: [''],
+        hazard: [''],
       }),
 
       reference: ['', Validators.required],
@@ -211,7 +211,8 @@ export class SiteComponent implements OnInit, AfterViewInit {
 
         site.site_detail.hazard?.map((hazard) => {
           if (!this.hazards.find((item) => item.id === hazard.id)) {
-            this.hazards.push(hazard);
+            const item = this.allHazards.find((item) => item.id == hazard.id)
+            item && this.hazards.push(item);
           }
         });
 
@@ -360,7 +361,6 @@ export class SiteComponent implements OnInit, AfterViewInit {
 
   addHazard(event: MatChipInputEvent): void {
     const value = (event.value || '').trim();
-
     // Add our user
     if (value) {
       const filterAllUsersOnValue = this.filterHazard(value);
@@ -396,7 +396,7 @@ export class SiteComponent implements OnInit, AfterViewInit {
     this.form.patchValue({
       site_detail: {
         ...this.form.value.site_detail,
-        hazards: this.hazards.map((hazard) => hazard.name),
+        hazard: this.hazards,
       }
     });
   }
