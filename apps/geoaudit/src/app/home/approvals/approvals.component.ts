@@ -252,35 +252,37 @@ export class ApprovalsComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      surveys.map(survey => {
-        const data: NOTIFICATION_DATA = {
-          type: 'SURVEY_REFUSAL',
-          subject: survey,
-          message: result.message,
-        };
+      if (result) {
+        surveys.map(survey => {
+          const data: NOTIFICATION_DATA = {
+            type: 'SURVEY_REFUSAL',
+            subject: survey,
+            message: result.message,
+          };
+          
+          this.notificationService.post({
+            source: this.authService.authValue.user,
+            recipient: survey.conducted_by,
+            data
+          }).subscribe()
+        });
         
-        this.notificationService.post({
-          source: this.authService.authValue.user,
-          recipient: survey.conducted_by,
-          data
-        }).subscribe()
-      });
-      
-      this.selection.selected.map((survey) => {
-        this.surveyEntityService
-          .update({
-            ...survey,
-            status: this.refusedStatus,
-            approved: false,
-          })
-          .subscribe(
-            (update) => {
-              this.query();
-            },
+        this.selection.selected.map((survey) => {
+          this.surveyEntityService
+            .update({
+              ...survey,
+              status: this.refusedStatus,
+              approved: false,
+            })
+            .subscribe(
+              (update) => {
+                this.query();
+              },
 
-            (err) => {}
-          );
-      });
+              (err) => {}
+            );
+        });
+      }
     });
   }
 

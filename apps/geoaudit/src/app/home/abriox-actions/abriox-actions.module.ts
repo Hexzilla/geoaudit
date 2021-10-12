@@ -1,22 +1,22 @@
 import { NgModule } from '@angular/core';
 
 // Routing
-import { AbrioxesRoutingModule } from './abrioxes-routing.module';
+import { AbrioxActionsRoutingModule } from './abriox-actions-routing.module';
 
 import { ErrorInterceptor, JwtInterceptor } from '../../helpers';
 
 // Declarations
 import { SharedModule } from '../shared.module';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { AbrioxComponent } from './abriox/abriox.component';
+import { AbrioxActionComponent } from './abriox-action/abriox-action.component';
 import { NotesModule } from '../notes/notes.module';
 
 @NgModule({
   declarations: [
-    AbrioxComponent,
+    AbrioxActionComponent
   ],
   imports: [
-    AbrioxesRoutingModule,
+    AbrioxActionsRoutingModule,
 
     SharedModule,
     NotesModule
@@ -26,4 +26,4 @@ import { NotesModule } from '../notes/notes.module';
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
   ]
 })
-export class AbrioxesModule {}
+export class AbrioxActionsModule {}

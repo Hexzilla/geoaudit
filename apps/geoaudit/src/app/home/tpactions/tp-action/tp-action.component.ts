@@ -69,6 +69,8 @@ export class TpActionComponent implements OnInit, AfterViewInit {
 
   id;
 
+  surveyId: string;
+
   public tp_action: TpAction = null;
 
   public selectedTabIndex = 0;
@@ -110,6 +112,7 @@ export class TpActionComponent implements OnInit, AfterViewInit {
     }));
   }
 
+  // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
   ngOnInit(): void {
     //this.initialize();
   }
@@ -119,13 +122,15 @@ export class TpActionComponent implements OnInit, AfterViewInit {
     this.subscriptions.map(it => it.unsubscribe());
   }
 
+  // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
   ngAfterViewInit(): void {
     //
   }
 
   private initialize() {
     this.id = this.route.snapshot.params['id'];
-    console.log("id", this.id)
+    this.surveyId = this.route.snapshot.queryParams['survey'];
+    console.log("id", this.id, this.surveyId)
 
     // Fetch statuses
     this.statusEntityService.getAll().subscribe(
@@ -166,14 +171,6 @@ export class TpActionComponent implements OnInit, AfterViewInit {
     }
   }
 
-  getTestpostTitle() {
-    const testpost = this.tp_action?.testpost
-    if (testpost) {
-      return `${testpost.reference} - ${testpost.name}`;
-    }
-    return 'Testpost';
-  }
-
   /**
    * Initialisation of the form, properties, and validation.
    */
@@ -201,10 +198,20 @@ export class TpActionComponent implements OnInit, AfterViewInit {
   }
   
   createMode() {
-    this.tpActionEntityService.add(this.form.value).subscribe(
+    const payload = {
+      ...this.form.value,
+      survey: this.surveyId
+    }
+    this.tpActionEntityService.add(payload).subscribe(
       (item) => {
         this.form.patchValue(item);
-        this.autoSave(true);
+        /*this.router
+          .navigate([`/home/tp_actions/${this.form.value.id}`], {
+            queryParams: { survey: this.surveyId }
+          })
+          .then(() => {
+            window.location.reload();
+          });*/
       }
     );
   }
@@ -334,27 +341,6 @@ export class TpActionComponent implements OnInit, AfterViewInit {
     }));
   }
 
-  autoSave(reload = false) {
-    this.form.valueChanges
-      .pipe(
-        debounceTime(500),
-        tap(() => {
-          this.submit(false);
-        }),
-        distinctUntilChanged(),
-        takeUntil(this.unsubscribe)
-      )
-      .subscribe(() => {
-        if (reload) {
-          this.router
-            .navigate([`/home/tp_actions/${this.form.value.id}`])
-            .then(() => {
-              window.location.reload();
-            });
-        }
-      });
-  }
-
   submit(navigate = true) {
     console.log('submit');
     this.submitted = true;
@@ -397,13 +383,9 @@ export class TpActionComponent implements OnInit, AfterViewInit {
     this.tpActionEntityService.update(payload).subscribe(
       () => {
         this.alertService.info('Saved Changes');
-
         if (navigate) {
-          const surveyId = this.tp_action?.survey?.id;
-          if (surveyId) {
-            const url = `/home/surveys/${surveyId}/tp_action_list`;
-            this.router.navigate([url]);
-          }
+          const url = `/home/surveys/${this.surveyId}/tr_action_list`;
+          this.router.navigate([url]);
         }
       },
 
@@ -417,8 +399,19 @@ export class TpActionComponent implements OnInit, AfterViewInit {
     this.selectedTabIndex = selectedTabIndex;
   }
 
-  searchTestpost() {
-    this.router.navigate([`/home/search`]);
+  getItemTitle() {
+    const item = this.tp_action?.testpost
+    if (item) {
+      return `${item.reference} - ${item.name}`;
+    }
+    return 'Testpost';
+  }
+
+  navigate() {
+    const item = this.tp_action?.testpost
+    if (item) {
+      this.router.navigate([`/home/testposts/${item.id}`]);
+    }
   }
   
   completed() {

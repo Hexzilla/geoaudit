@@ -5,7 +5,7 @@ import { AuthGuard } from '../../guards';
 
 import { NotesComponent } from '../notes/notes.component';
 import { SearchComponent } from '../search/search.component';
-import { AbrioxComponent } from './abriox/abriox.component';
+import { AbrioxActionComponent } from './abriox-action/abriox-action.component';
 
 const routes: Routes = [
     { 
@@ -26,11 +26,11 @@ const routes: Routes = [
     },
 
     {
-        path: 'create', component: AbrioxComponent
+        path: 'create', component: AbrioxActionComponent
     },
 
     {
-        path: ':id', component: AbrioxComponent
+        path: ':id', component: AbrioxActionComponent
     },
 
     {
@@ -45,4 +45,4 @@ const routes: Routes = [
     imports: [RouterModule.forChild(routes)],
     exports: [RouterModule]
 })
-export class AbrioxesRoutingModule { }
+export class AbrioxActionsRoutingModule { }

@@ -86,6 +86,8 @@ import { NotificationService } from '../services/notification.service';
 import { NoteEntityService } from '../entity-services/note-entity.service';
 import { NoteDataService } from '../data-services/note-data.service';
 import { MultiItemSelectorComponent } from '../components/multi-item-selector/multi-item-selector.component';
+import { HazardEntityService } from '../entity-services/hazard-entity.service';
+import { HazardDataService } from '../data-services/hazard-data.service';
 import { SiteEntityService } from '../entity-services/site-entity.service';
 import { SiteDataService } from '../data-services/site-data.service';
 import { EventDataService } from '../data-services/event-data.service';
@@ -158,6 +160,8 @@ const entityMetadataMap: EntityMetadataMap = {
 
   Site: {},
   SiteAction: {},
+
+  Hazard: {},
 
   Note: {},
 
@@ -311,6 +315,9 @@ const entityMetadataMap: EntityMetadataMap = {
     SiteEntityService,
     SiteDataService,
 
+    HazardEntityService,
+    HazardDataService,
+
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     
@@ -406,7 +413,8 @@ export class SharedModule {
     private resistivityDataService: ResistivityDataService,
     private toDoListDataService: ToDoListDataService,
     private siteDataService: SiteDataService,
-    private siteActionDataService: SiteActionDataService
+    private siteActionDataService: SiteActionDataService,
+    private hazardDataService: HazardDataService,
   ) {
     entityDefinitionService.registerMetadataMap(entityMetadataMap);
 
@@ -435,7 +443,8 @@ export class SharedModule {
         Notification: notificationDataService,
         ToDoList: toDoListDataService,
         Site: siteDataService,
-        SiteAction: siteActionDataService
+        SiteAction: siteActionDataService,
+        Hazard: hazardDataService,
       }
     )
   }

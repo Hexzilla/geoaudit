@@ -65,6 +65,8 @@ export class TrActionComponent implements OnInit, AfterViewInit {
 
   id;
 
+  surveyId: string;
+
   public tr_action: TrAction = null;
 
   public selectedTabIndex = 0;
@@ -122,14 +124,14 @@ export class TrActionComponent implements OnInit, AfterViewInit {
 
   private initialize() {
     this.id = this.route.snapshot.params['id'];
-    console.log("id", this.id)
+    this.surveyId = this.route.snapshot.queryParams['survey'];
+    console.log("id", this.id, this.surveyId)
 
     // Fetch statuses
     this.statusEntityService.getAll().subscribe(
       (statuses) => {
         this.statuses = statuses;
       },
-      (err) => {}
     );
 
     this.faultTypeEntityService.getAll().subscribe((faultTypes) => {
@@ -156,10 +158,20 @@ export class TrActionComponent implements OnInit, AfterViewInit {
   }
 
   createMode() {
-    this.trActionEntityService.add(this.form.value).subscribe(
+    const payload = {
+      ...this.form.value,
+      survey: this.surveyId
+    }
+    this.trActionEntityService.add(payload).subscribe(
       (item) => {
         this.form.patchValue(item);
-        this.autoSave(true);
+        /*this.router
+          .navigate([`/home/tr_actions/${this.form.value.id}`], {
+            queryParams: { survey: this.surveyId }
+          })
+          .then(() => {
+            window.location.reload();
+          });*/
       }
     );
   }
@@ -239,18 +251,6 @@ export class TrActionComponent implements OnInit, AfterViewInit {
       fault_desc: ''
     }));
   }
-
-  autoSave(reload = false) {
-    this.form.valueChanges
-      .pipe(
-        debounceTime(500),
-        tap(() => {
-          this.submit(false);
-        }),
-        distinctUntilChanged(),
-        takeUntil(this.unsubscribe)
-      )
-  }
   
   initRoutes() {
     this.route.queryParams.subscribe(params => {
@@ -312,7 +312,10 @@ export class TrActionComponent implements OnInit, AfterViewInit {
     this.trActionEntityService.update(payload).subscribe(
       () => {
         this.alertService.info('Saved Changes');
-        if (navigate) this.router.navigate([`/home/trs`]);
+        if (navigate) {
+          const url = `/home/surveys/${this.surveyId}/tr_action_list`;
+          this.router.navigate([url]);
+        }
       },
       () => {
         this.alertService.error('Something went wrong');
@@ -322,6 +325,21 @@ export class TrActionComponent implements OnInit, AfterViewInit {
 
   selectedIndexChange(selectedTabIndex) {
     this.selectedTabIndex = selectedTabIndex;
+  }
+
+  getItemTitle() {
+    const item = this.tr_action?.tr
+    if (item) {
+      return `${item.reference} - ${item.name}`;
+    }
+    return 'Tr';
+  }
+
+  navigate() {
+    const item = this.tr_action?.tr
+    if (item) {
+      this.router.navigate([`/home/trs/${item.id}`]);
+    }
   }
   
   completed() {

@@ -331,18 +331,18 @@
               }}</mat-label>
               <mat-chip-list #harzardList aria-label="Harzard selection">
                 <mat-chip
-                  *ngFor="let user of users"
+                  *ngFor="let hazard of hazards"
                   [selectable]="true"
                   [removable]="true"
-                  (removed)="removeHazard(user)"
+                  (removed)="removeHazard(hazard)"
                 >
-                  {{ user.username }}
+                  {{ hazard.name }}
                   <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
                 </mat-chip>
                 <input
                   [placeholder]="'CONTAINERS.home.sites.site.hazards' | translate"
-                  #userInput
-                  [formControl]="userControl"
+                  #hazardInput
+                  [formControl]="hazardControl"
                   [matAutocomplete]="auto"
                   [matChipInputFor]="harzardList"
                   [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
@@ -353,8 +353,8 @@
                 #auto="matAutocomplete"
                 (optionSelected)="hazardSelected($event)"
               >
-                <mat-option *ngFor="let user of filteredUsers" [value]="user">
-                  {{ user.username }}
+                <mat-option *ngFor="let hazard of filteredHazards" [value]="hazard">
+                  {{ hazard.name }}
                 </mat-option>
               </mat-autocomplete>
             </mat-form-field>
