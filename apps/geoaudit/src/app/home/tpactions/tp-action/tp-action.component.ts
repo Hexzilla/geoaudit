@@ -341,6 +341,27 @@ export class TpActionComponent implements OnInit, AfterViewInit {
     }));
   }
 
+  autoSave(reload = false) {
+    this.form.valueChanges
+      .pipe(
+        debounceTime(500),
+        tap(() => {
+          this.submit(false);
+        }),
+        distinctUntilChanged(),
+        takeUntil(this.unsubscribe)
+      )
+      .subscribe(() => {
+        if (reload) {
+          this.router
+            .navigate([`/home/tp_actions/${this.form.value.id}`])
+            .then(() => {
+              window.location.reload();
+            });
+        }
+      });
+  }
+
   submit(navigate = true) {
     console.log('submit');
     this.submitted = true;
