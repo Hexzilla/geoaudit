@@ -33,17 +33,17 @@
             style="cursor: pointer; margin-bottom: 20px; padding: 8px;"
             fxLayout="row"
             fxLayoutAlign="space-between"
-            (click)="searchTestpost()"
+            (click)="navigate()"
           >
             <div class="item-title">
-              {{ getTestpostTitle() }}
+              {{ getItemTitle() }}
             </div>
             <div fxLayout="row">
               <button
                 mat-icon-button
                 color="accent"
                 aria-label="Example icon button with a plus one icon"
-                (click)="searchTestpost()"
+                (click)="navigate()"
               >
                 <mat-icon>chevron_right</mat-icon>
               </button>

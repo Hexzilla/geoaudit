@@ -28,39 +28,51 @@
     <mat-card-content class="mt-26">
       <form fxLayout="column" [formGroup]="form" (ngSubmit)="submit()">
         <!--Testpost Action-->
-        <mat-expansion-panel [expanded]="true">
-          <mat-expansion-panel-header>
-            <mat-panel-title>{{
-              'CONTAINERS.home.testposts.tp_action.date' | translate
-            }}</mat-panel-title>
-          </mat-expansion-panel-header>
-          <div fxLayout="column">
-            <mat-form-field appearance="outline">
-              <mat-label>{{
-                'CONTAINERS.home.testposts.tp_action.date' | translate
-              }}</mat-label>
-              <input
-                matInput
-                [placeholder]="
-                  'CONTAINERS.home.testposts.tp_action.date' | translate
-                "
-                formControlName="date"
-                class="form-control"
-              />
-            </mat-form-field>
-            <mat-form-field appearance="outline">
-              <mat-label>{{
-                'CONTAINERS.home.testposts.tp_action.condition' | translate
-              }}</mat-label>
-              <mat-select formControlName="condition" name="condition">
-                <mat-option *ngFor="let condition of conditions" [value]="condition.id">
-                  {{ condition.name }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
+        <div fxLayout="column">
+          <mat-card
+          style="cursor: pointer; margin-bottom: 20px; padding: 8px;"
+          fxLayout="row"
+          fxLayoutAlign="space-between"
+          (click)="navigate()"
+        >
+          <div class="item-title">
+            {{ getItemTitle() }}
           </div>
-        </mat-expansion-panel>
-
+          <div fxLayout="row">
+            <button
+              mat-icon-button
+              color="accent"
+              aria-label="Example icon button with a plus one icon"
+              (click)="navigate()"
+            >
+              <mat-icon>chevron_right</mat-icon>
+            </button>
+          </div>
+          </mat-card>
+          <mat-form-field appearance="outline">
+            <mat-label>{{
+              'CONTAINERS.home.testposts.tp_action.date' | translate
+            }}</mat-label>
+            <input
+              matInput
+              [placeholder]="
+                'CONTAINERS.home.testposts.tp_action.date' | translate
+              "
+              formControlName="date"
+              class="form-control"
+            />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>{{
+              'CONTAINERS.home.testposts.tp_action.condition' | translate
+            }}</mat-label>
+            <mat-select formControlName="condition" name="condition">
+              <mat-option *ngFor="let condition of conditions" [value]="condition.id">
+                {{ condition.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
         <div *ngIf="tr_action && tr_action.tr!=null">
           <!--Reading-->
           <mat-expansion-panel>
