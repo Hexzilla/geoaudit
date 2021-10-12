@@ -118,11 +118,21 @@ export class AbrioxListComponent implements OnInit {
   }
 
   navigate(item) {
-    this.router.navigate([`/home/abriox_action/${item.id}`]);
+    this.router.navigate([`/home/abriox_actions/${item.id}`], {
+      queryParams: {
+        survey: this.surveyId,
+        testpost: item.testpost?.id,
+        tr: item.tr?.id
+      }
+    });
   }
 
   addAction() {
-    this.router.navigate([`/home/abriox_action/create`]);
+    this.router.navigate([`/home/abriox_actions/create`], {
+      queryParams: {
+        survey: this.surveyId,
+      }
+    });
   }
 
   completed() {

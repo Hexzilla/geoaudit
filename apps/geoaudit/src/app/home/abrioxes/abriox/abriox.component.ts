@@ -167,8 +167,6 @@ export class AbrioxComponent implements OnInit {
         const createMode = !(this.id && this.id != 'create');
         this.autoSave(createMode);
       },
-
-      (err) => {}
     );
   }
 

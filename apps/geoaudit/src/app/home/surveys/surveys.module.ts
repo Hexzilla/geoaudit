@@ -10,6 +10,7 @@ import { SharedModule } from '../shared.module';
 import { SurveyComponent } from './survey/survey.component';
 import { NotesModule } from '../notes/notes.module';
 import { AbrioxListComponent } from './abriox-list/abriox-list.component';
+import { AbrioxSelectModalComponent } from './abriox-select-modal/abriox-select-modal.component';
 import { TpActionsComponent } from './tp-actions/tp-actions.component';
 import { TrActionsComponent } from './tr-actions/tr-actions.component';
 import { ResistivityListComponent } from './resistivity-list/resistivity-list.component';
@@ -19,6 +20,7 @@ import { ResistivityListComponent } from './resistivity-list/resistivity-list.co
     SurveysComponent,
     SurveyComponent,
     AbrioxListComponent,
+    AbrioxSelectModalComponent,
     TpActionsComponent,
     TrActionsComponent,
     ResistivityListComponent,

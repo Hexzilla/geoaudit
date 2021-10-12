@@ -3,6 +3,8 @@ import { Routes, RouterModule } from '@angular/router';
 
 const abrioxesModule = () =>
   import('./abrioxes/abrioxes.module').then((x) => x.AbrioxesModule);
+const abrioxActionsModule = () =>
+  import('./abriox-actions/abriox-actions.module').then((x) => x.AbrioxActionsModule);
 const eventsModule = () =>
   import('./events/events.module').then((x) => x.EventsModule);
 const surveysModule = () =>
@@ -80,6 +82,11 @@ const routes: Routes = [
       {
         path: 'abrioxes',
         loadChildren: abrioxesModule,
+      },
+
+      {
+        path: 'abriox_actions',
+        loadChildren: abrioxActionsModule,
       },
 
       {
